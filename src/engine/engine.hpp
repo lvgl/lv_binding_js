@@ -1,0 +1,3 @@
+
+
+SJSRuntime* GetSJSInstance ();
