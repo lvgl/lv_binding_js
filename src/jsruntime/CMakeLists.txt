@@ -24,7 +24,7 @@ set_target_properties(runtime
 )
 
 add_custom_command(OUTPUT bundle.js
-    COMMAND npm run bundle -- --outfile=./debug/bundle.js
+    COMMAND npm run bundle -- --outfile=${PROJECT_BINARY_DIR}/bundle.js
 )
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 

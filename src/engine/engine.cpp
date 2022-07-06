@@ -1,80 +1,95 @@
-extern "C" {
-    #include <jsapi.h>
-    #include "quickjs-libc.h"
-    #include <sjs.h>
-    #include <uv.h>
-};
-#include "render/render.h"
-#include "engine.hpp"
+#include "engine/engine.hpp"
 
-#include <signal.h>
-#include <pthread.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-
-#include "engineUtils.hpp"
+Engine* LVEngine;
 
 static SJSRuntime* qrt = nullptr;
-static uv_loop_t *loop;
 
-void FreeJSRuntime (int signal) {
-    SJSDisableForeverLoop(qrt);
-}
-
-SJSRuntime* GetSJSInstance () {
-    if (qrt == nullptr) {
-        SJSRunOptions options;
-
-        SJSDefaultOptions(&options);
-
-        qrt = SJSNewRuntimeOptions(&options);
+static void JSRuntimeFree (int signal) {
+    if (qrt != nullptr) {
+        SJSDisableForeverLoop(qrt);
     }
-    
-    return qrt;
-}
+};
 
-class Engine {
-    Engine::Engine () {
-        SJSSetupArgs (argc, argv);
-
-    };
-}
-
-void* StartJSRuntime (int argc, char *argv[]) {
-    printf("js vm Start\n");
-
-    char* filePath = argv[1];
-
-    SJSRuntime* qrt;
-
+Engine::Engine (char* filePath) {
     qrt = GetSJSInstance();
     qrt->foreverLoop = 1;
-
-    NativeRenderInit(qrt->ctx);
 
     char* path = (char*)malloc(PATH_MAX);
     GetBundlePath(path);
     SJSBootStrapGlobals(qrt->ctx, path);
     free(path);
 
-    // signal(SIGSEGV, FreeJSRuntime);
-    signal(SIGINT, FreeJSRuntime);
+    signal(SIGINT, JSRuntimeFree);
 
-    char* absolutePath = SetJSEntryPath(filePath);
-    SJSRunMain(qrt, absolutePath);
-    SJSRun(qrt);
+    SetJSEntryPath(filePath);
+};
 
-    free(absolutePath);
+Engine::~Engine () {
     SJSFreeRuntime(qrt);
     SJSClearJSApi();
-    printf("js vm End \n");
-}
+};
+
+void Engine::Start () {
+    SJSRunMain(qrt);
+    SJSRun(qrt);
+};
+
+SJSRuntime* Engine::GetSJSInstance () {
+    if (qrt == nullptr) {
+        SJSRunOptions options;
+        SJSDefaultOptions(&options);
+        qrt = SJSNewRuntimeOptions(&options);
+    }
+    
+    return qrt;
+};
+
+void Engine::GetEngineDir (char* buf) {
+    GetProgramDir(buf);
+};
+
+void Engine::GetBuiltInLibPath (char* result) {
+    char path[1000];
+    GetEngineDir(path);
+    strcat(path, "/");
+    strcat(path, "lib");
+    realpath(path, result);
+};
+
+void Engine::GetEngineAssetPath (char* buf, char* relativePath) {
+    GetEngineDir(buf);
+    strcat(buf, "/");
+    strcat(buf, relativePath);
+};
+
+void Engine::GetBundlePath (char* buf) {
+    GetEngineDir(buf);
+    strcat(buf, "/bundle.js");
+};
+
+std::string Engine::SetJSEntryPath (char* filePath) {
+    char buf[1000]; 
+    realpath(filePath, buf);
+    JSEntryPath = buf;
+
+    return JSEntryPath;
+};
+
+void Engine::GetJSAssetsPath (char* buf, const char* url) {
+    strcpy(buf, JSEntryPath.c_str());
+    dirname(buf);
+    strcat(buf, url);
+};
 
 int main (int argc, char *argv[]) {
     SJSSetupArgs (argc, argv);
+    char* filePath = argv[1];
 
-    StartJSRuntime(argc, argv);
+    printf("program start \n");
 
-    printf("program end\n");
-}
+    LVEngine = new Engine(filePath);
+    LVEngine->Start();
+    delete LVEngine;
+
+    printf("program end \n");
+};

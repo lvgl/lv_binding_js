@@ -743,6 +743,6 @@ void SJSXHRInit(SJSRuntime* qrt, JSValue ns) {
 
     /* XHR object */
     obj = JS_NewCFunction2(qrt->ctx, sjsXhrConstructor, "XMLHttpRequest", 1, JS_CFUNC_constructor, 0);
-    JS_SetPropertyFunctionList(qrt->ctx, obj, XhrClassFuncs, countof(XhrClassFuncs));
+    JS_SetPropertyFunctionList(qrt->ctx, obj, SJSXhrClassFuncs, countof(SJSXhrClassFuncs));
     JS_DefinePropertyValueStr(qrt->ctx, ns, "XMLHttpRequest", obj, JS_PROP_C_W_E);
 };

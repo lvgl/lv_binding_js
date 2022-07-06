@@ -5,34 +5,6 @@
 #include <unistd.h>
 #include <stdio.h>
 
-static JSValue SJSEvalModule(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    char* content = JS_ToCString(ctx, argv[0]);
-    char* fileName = JS_ToCString(ctx, argv[1]);
-    JSValue func_val = JS_Eval(
-        ctx,
-        content,
-        strlen(content),
-        fileName,
-        JS_EVAL_TYPE_MODULE | JS_EVAL_FLAG_COMPILE_ONLY
-    );
-    if (JS_IsException(func_val)) {
-        SJSDumpError(ctx);
-        goto done;
-    }
-    JSModuleSetImportMeta(ctx, func_val, FALSE);
-
-    JSValue ret = JS_EvalFunction(ctx, func_val);
-    if (JS_IsException(ret)) {
-        SJSDumpError(ctx);
-    }
-
-done:
-    JS_FreeCString(ctx, content);
-    JS_FreeCString(ctx, fileName);
-    JS_FreeValue(ctx, ret);
-    return JS_UNDEFINED;
-};
-
 void* SJSGetRuntimeOpaque (JSContext* ctx) {
     SJSRuntime* qrt = JS_GetContextOpaque(ctx);
     return qrt->user_opaque;
@@ -49,12 +21,6 @@ static void UVStop(uv_async_t *handle) {
 }
 
 #define SJS_DEFAULT_STACK_SIZE 1048576
-
-BOOL COREJSAPI_INITED = FALSE;
-
-static const JSCFunctionListEntry SJSNativeFunction[] = {
-    SJS_CFUNC_DEF("__NativeEvalModule", 2, SJSEvalModule),
-};
 
 void SJSDefaultOptions(SJSRunOptions *options) {
     static SJSRunOptions default_options = {
@@ -114,7 +80,7 @@ static char* SJSMakeEntryCommonJS (char* buf, size_t *pbuf_len, char* filePath) 
     *pbuf_len = strlen(buf);
 };
 
-void SJSRunMain(SJSRuntime *qrt, const char *filePath) {
+void SJSRunMain(SJSRuntime *qrt) {
     size_t buf_len;
     char buf[1000]= {0};
     JSContext *ctx = qrt->ctx;

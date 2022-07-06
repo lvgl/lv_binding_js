@@ -2,6 +2,40 @@
 #include "utils.h"
 #include <stdlib.h>
 
+static BOOL COREJSAPI_INITED = FALSE;
+
+static JSValue SJSEvalModule(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    char* content = JS_ToCString(ctx, argv[0]);
+    char* fileName = JS_ToCString(ctx, argv[1]);
+    JSValue func_val = JS_Eval(
+        ctx,
+        content,
+        strlen(content),
+        fileName,
+        JS_EVAL_TYPE_MODULE | JS_EVAL_FLAG_COMPILE_ONLY
+    );
+    if (JS_IsException(func_val)) {
+        SJSDumpError(ctx);
+        goto done;
+    }
+    JSModuleSetImportMeta(ctx, func_val, FALSE);
+
+    JSValue ret = JS_EvalFunction(ctx, func_val);
+    if (JS_IsException(ret)) {
+        SJSDumpError(ctx);
+    }
+
+done:
+    JS_FreeCString(ctx, content);
+    JS_FreeCString(ctx, fileName);
+    JS_FreeValue(ctx, ret);
+    return JS_UNDEFINED;
+};
+
+static const JSCFunctionListEntry SJSNativeFunction[] = {
+    SJS_CFUNC_DEF("__NativeEvalModule", 2, SJSEvalModule),
+};
+
 BOOL SJSBootStrapCore (SJSRuntime* qrt) {
     if (!COREJSAPI_INITED) {
         JSValue global_obj = JS_GetGlobalObject(qrt->ctx);

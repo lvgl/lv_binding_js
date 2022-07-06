@@ -44,7 +44,7 @@ SJSRuntime *SJSNewRuntimeInternal(BOOL is_worker, SJSRunOptions *options);
 
 void SJSDefaultOptions(SJSRunOptions *options);
 
-void SJSRunMain(SJSRuntime *qrt, const char *filename);
+void SJSRunMain(SJSRuntime *qrt);
 
 BOOL SJSRun(SJSRuntime *qrt);
 

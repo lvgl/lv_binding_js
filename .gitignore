@@ -1,0 +1,5 @@
+node_modules
+debug
+.vscode
+render/native/deps
+src/jsruntime/deps
