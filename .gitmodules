@@ -1,0 +1,3 @@
+[submodule "src/render/native/deps/lvgl"]
+	path = src/render/native/deps/lvgl
+	url = https://github.com/lvgl/lvgl.git
