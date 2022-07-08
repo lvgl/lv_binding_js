@@ -4,6 +4,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 void* SJSGetRuntimeOpaque (JSContext* ctx) {
     SJSRuntime* qrt = JS_GetContextOpaque(ctx);
@@ -115,21 +116,26 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
     free(qrt);
 };
 
-static void UVIdleCb(uv_idle_t *handle) {
+#define UI_TIME 16;
+
+static void SJSUVIdleCallback(uv_idle_t *handle) {
     SJSRuntime *qrt = handle->data;
 
-    if (qrt->uv_loop_inject) {
-        qrt->uv_loop_inject();
+    if (qrt->ui_handler) {
+        struct timeval tstart,tcur,tsub;
+        gettimeofday(&tstart, NULL);
+
+        while (1) {
+            qrt->ui_handler();
+            gettimeofday(&tcur, NULL);
+            timersub(tcur, tstart, tsub);
+            if ((tsub.tv_sec * 1000 + (1.0 * tsub.tv_usec) / 1000) > UI_TIME) {
+                return;
+            }
+        }
     }
 
     SJSExecuteJobs(qrt->ctx);
-};
-
-static void UVMaybeIdle(SJSRuntime *qrt) {
-    if (JS_IsJobPending(qrt->rt))
-        uv_idle_start(&qrt->jobs.idle, UVIdleCb);
-    else
-        uv_idle_stop(&qrt->jobs.idle);
 };
 
 void SJSExecuteJobs(JSContext *ctx) {
@@ -147,28 +153,12 @@ void SJSExecuteJobs(JSContext *ctx) {
     }
 };
 
-static void UVCheckCb(uv_check_t *handle) {
-    SJSRuntime *qrt = handle->data;
-
-    SJSExecuteJobs(qrt->ctx);
-};
-
-static void UVPrepareCb(uv_prepare_t *handle) {
-    SJSRuntime *qrt = handle->data;
-
-    if (qrt->uv_loop_inject) {
-        qrt->uv_loop_inject();
-    }
-
-    UVMaybeIdle(qrt);
-};
-
 BOOL SJSDisableForeverLoop (SJSRuntime *qrt) {
     uv_unref((uv_handle_t *) &qrt->jobs.idle);
 };
 
-BOOL SJSRun(SJSRuntime *qrt) {
-    uv_idle_start(&qrt->jobs.idle, UVIdleCb);
+BOOL SJSRunLoop(SJSRuntime *qrt) {
+    uv_idle_start(&qrt->jobs.idle, SJSUVIdleCallback);
 
     if (!qrt->foreverLoop) {
         uv_unref((uv_handle_t *) &qrt->jobs.idle);

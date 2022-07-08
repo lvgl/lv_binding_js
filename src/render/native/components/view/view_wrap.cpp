@@ -14,7 +14,7 @@ static JSValue NativeCompInsertChildBefore(JSContext *ctx, JSValueConst this_val
         JSValue beforeChildFlexNode = JS_Invoke(ctx, argv[0], flexNodeAtom, 0, NULL);
         JSValue childFlexNode = JS_Invoke(ctx, argv[1], flexNodeAtom, 0, NULL);
         
-        qDebug("view %s insertChild %s %s", parent->uid, child->uid, beforeChild->uid);
+        LV_LOG_INFO("view %s insertChild %s %s", parent->uid, child->uid, beforeChild->uid);
         ((SWidget*)(parent->comp))->insertChildBefore((void*)(child->comp), JS_GetOpaque3(beforeChildFlexNode), JS_GetOpaque3(childFlexNode));
         JS_FreeValue(ctx, childFlexNode);
         JS_FreeValue(ctx, beforeChildFlexNode);
@@ -27,12 +27,9 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
     if (argc >= 1 && JS_IsObject(argv[0])) {
         COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
-
-        JSAtom flexNodeAtom = JS_NewAtom(ctx, "getFlexNode");
-        JSValue childFlexNode = JS_Invoke(ctx, argv[0], flexNodeAtom, 0, NULL);
         
-        qDebug("view %s remove child %s", parent->uid, child->uid);
-        ((SWidget*)(parent->comp))->removeChild((void*)(child->comp), JS_GetOpaque3(childFlexNode));
+        LV_LOG_INFO("view %s remove child %s", parent->uid, child->uid);
+        ((View*)(parent->comp))->removeChild((void*)(child->comp));
         JS_FreeValue(ctx, childFlexNode);
         JS_FreeAtom(ctx, flexNodeAtom);
     }
@@ -44,41 +41,18 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
         
-        JSAtom flexNodeAtom = JS_NewAtom(ctx, "getFlexNode");
-        JSValue childFlexNode = JS_Invoke(ctx, argv[0], flexNodeAtom, 0, NULL);
-
-        ((SWidget*)(parent->comp))->appendChild((void*)(child->comp), JS_GetOpaque3(childFlexNode));
+        ((View*)(parent->comp))->appendChild((void*)(child->comp));
         JS_FreeValue(ctx, childFlexNode);
         JS_FreeAtom(ctx, flexNodeAtom);
-        qDebug("view %s append child %s", parent->uid, child->uid);
+        LV_LOG_INFO("view %s append child %s", parent->uid, child->uid);
     }
     return JS_UNDEFINED;
 };
 
-static JSValue NativeCompSetFlexNodeSizeControlled(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (JS_IsBool(argv[0])) {
-        COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
-        bool isSizeControlled = (bool)JS_ToBool(ctx, argv[0]);
-        ((SWidget*)(s->comp))->setFlexNodeSizeControlled(isSizeControlled);
-    }
-};
-
-// static JSValue native_comp_setLayout(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-//     if (argc >= 1 && JS_IsObject(argv[0])) {
-//         COMP_REF* layout = (COMP_REF*)JS_GetOpaque3(argv[0]);
-//         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
-//         ((SWidget*)(parent->comp))->setLayout((QLayout*)(layout->comp));
-//         printf("view %s setLayout \n", parent->uid);
-//     }
-// }
-
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    WRAPPED_JS_METHODS_REGISTER
     SJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
-    SJS_CFUNC_DEF("setFlexNodeSizeControlled", 0, NativeCompSetFlexNodeSizeControlled),
-    // SJS_CFUNC_DEF("setLayout", 0, native_comp_setLayout),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -116,16 +90,15 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
     s->uid = uid;
-    s->comp = new SWidget();
+    s->comp = lv_obj_create(NULL);
 
-    (static_cast<SWidget*>(s->comp))->setObjectName(QString(uid));
     JS_FreeCString(ctx, uid);
 
     if (!s)
         goto fail;
 
     JS_SetOpaque(obj, s);
-    qDebug("view %s created", uid);
+    LV_LOG_INFO("view %s created", uid);
     return obj;
  fail:
     JS_FreeValue(ctx, obj);
@@ -134,7 +107,7 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
 
 static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ViewClassID);
-    qDebug("view %s release", th->uid);
+    LV_LOG_INFO("view %s release", th->uid);
     if (th) {
         free(th);
     }

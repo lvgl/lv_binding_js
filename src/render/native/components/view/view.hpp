@@ -1,14 +1,11 @@
 #pragma once
 #include <stdlib.h>
 
-#include "components/Components.hpp"
+#include "native/components/component.hpp"
+#include "native/core/basic/comp.hpp"
 
-class View {
+class View : public BasicComponent {
  public:
-  View(QWidget *parentWidget = nullptr);
+  View(lv_obj_t* parent = nullptr);
   ~View();
-  void appendChild(void* child, void* flexNode);
-  void removeChild(void* child, void* flexNode);
-  void insertChildBefore(void *childWidget, void* beforeChildNode, void* childNode);
-  bool event(QEvent *e) override;
 };

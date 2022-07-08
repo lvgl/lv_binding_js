@@ -28,7 +28,7 @@ typedef struct SJSRuntime {
         uv_timer_t timer;
     } curl_ctx;
     uv_async_t stop;
-    void (*uv_loop_inject)();
+    void (*ui_handler)();
     BOOL is_worker;
     BOOL foreverLoop;
     void *user_opaque;
@@ -46,7 +46,7 @@ void SJSDefaultOptions(SJSRunOptions *options);
 
 void SJSRunMain(SJSRuntime *qrt);
 
-BOOL SJSRun(SJSRuntime *qrt);
+BOOL SJSRunLoop(SJSRuntime *qrt);
 
 BOOL SJSFreeRuntime(SJSRuntime* qrt);
 

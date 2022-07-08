@@ -1,5 +1,5 @@
 node_modules
 debug
 .vscode
-src/render/native/deps
+src/deps
 src/jsruntime/deps

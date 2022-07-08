@@ -31,7 +31,7 @@ Engine::~Engine () {
 
 void Engine::Start () {
     SJSRunMain(qrt);
-    SJSRun(qrt);
+    SJSRunLoop(qrt);
 };
 
 SJSRuntime* Engine::GetSJSInstance () {
