@@ -57,10 +57,10 @@ RM = /usr/local/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/hgfs/kaifaban/jsengine
+CMAKE_SOURCE_DIR = /mnt/hgfs/kaifaban/lvgljs
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/hgfs/kaifaban/jsengine
+CMAKE_BINARY_DIR = /mnt/hgfs/kaifaban/lvgljs/debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,14 +87,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /mnt/hgfs/kaifaban/jsengine && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/hgfs/kaifaban/jsengine/CMakeFiles /mnt/hgfs/kaifaban/jsengine/runtime//CMakeFiles/progress.marks
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/hgfs/kaifaban/jsengine/CMakeFiles 0
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(CMAKE_COMMAND) -E cmake_progress_start /mnt/hgfs/kaifaban/lvgljs/debug/CMakeFiles /mnt/hgfs/kaifaban/lvgljs/src/jsruntime//CMakeFiles/progress.marks
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/hgfs/kaifaban/lvgljs/debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/clean
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/clean
 .PHONY : clean
 
 # The main clean target
@@ -103,190 +103,176 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/preinstall
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/preinstall
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /mnt/hgfs/kaifaban/jsengine && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
-runtime/CMakeFiles/libsjs.dir/rule:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/CMakeFiles/libsjs.dir/rule
-.PHONY : runtime/CMakeFiles/libsjs.dir/rule
+/mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/rule:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/rule
+.PHONY : /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/rule
 
 # Convenience name for target.
-libsjs: runtime/CMakeFiles/libsjs.dir/rule
-.PHONY : libsjs
+qjs: /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/rule
+.PHONY : qjs
 
 # fast build rule for target.
-libsjs/fast:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/build
-.PHONY : libsjs/fast
+qjs/fast:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build
+.PHONY : qjs/fast
 
-# Convenience name for target.
-runtime/CMakeFiles/_runtime.dir/rule:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 runtime/CMakeFiles/_runtime.dir/rule
-.PHONY : runtime/CMakeFiles/_runtime.dir/rule
-
-# Convenience name for target.
-_runtime: runtime/CMakeFiles/_runtime.dir/rule
-.PHONY : _runtime
-
-# fast build rule for target.
-_runtime/fast:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/_runtime.dir/build.make runtime/CMakeFiles/_runtime.dir/build
-.PHONY : _runtime/fast
-
-error.o: error.c.o
-.PHONY : error.o
+src/cutils.o: src/cutils.c.o
+.PHONY : src/cutils.o
 
 # target to build an object file
-error.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/error.c.o
-.PHONY : error.c.o
+src/cutils.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/cutils.c.o
+.PHONY : src/cutils.c.o
 
-error.i: error.c.i
-.PHONY : error.i
+src/cutils.i: src/cutils.c.i
+.PHONY : src/cutils.i
 
 # target to preprocess a source file
-error.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/error.c.i
-.PHONY : error.c.i
+src/cutils.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/cutils.c.i
+.PHONY : src/cutils.c.i
 
-error.s: error.c.s
-.PHONY : error.s
+src/cutils.s: src/cutils.c.s
+.PHONY : src/cutils.s
 
 # target to generate assembly for a file
-error.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/error.c.s
-.PHONY : error.c.s
+src/cutils.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/cutils.c.s
+.PHONY : src/cutils.c.s
 
-jsapi.o: jsapi.c.o
-.PHONY : jsapi.o
+src/libbf.o: src/libbf.c.o
+.PHONY : src/libbf.o
 
 # target to build an object file
-jsapi.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/jsapi.c.o
-.PHONY : jsapi.c.o
+src/libbf.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libbf.c.o
+.PHONY : src/libbf.c.o
 
-jsapi.i: jsapi.c.i
-.PHONY : jsapi.i
+src/libbf.i: src/libbf.c.i
+.PHONY : src/libbf.i
 
 # target to preprocess a source file
-jsapi.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/jsapi.c.i
-.PHONY : jsapi.c.i
+src/libbf.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libbf.c.i
+.PHONY : src/libbf.c.i
 
-jsapi.s: jsapi.c.s
-.PHONY : jsapi.s
+src/libbf.s: src/libbf.c.s
+.PHONY : src/libbf.s
 
 # target to generate assembly for a file
-jsapi.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/jsapi.c.s
-.PHONY : jsapi.c.s
+src/libbf.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libbf.c.s
+.PHONY : src/libbf.c.s
 
-network.o: network.c.o
-.PHONY : network.o
+src/libregexp.o: src/libregexp.c.o
+.PHONY : src/libregexp.o
 
 # target to build an object file
-network.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/network.c.o
-.PHONY : network.c.o
+src/libregexp.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libregexp.c.o
+.PHONY : src/libregexp.c.o
 
-network.i: network.c.i
-.PHONY : network.i
+src/libregexp.i: src/libregexp.c.i
+.PHONY : src/libregexp.i
 
 # target to preprocess a source file
-network.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/network.c.i
-.PHONY : network.c.i
+src/libregexp.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libregexp.c.i
+.PHONY : src/libregexp.c.i
 
-network.s: network.c.s
-.PHONY : network.s
+src/libregexp.s: src/libregexp.c.s
+.PHONY : src/libregexp.s
 
 # target to generate assembly for a file
-network.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/network.c.s
-.PHONY : network.c.s
+src/libregexp.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libregexp.c.s
+.PHONY : src/libregexp.c.s
 
-std.o: std.c.o
-.PHONY : std.o
+src/libunicode.o: src/libunicode.c.o
+.PHONY : src/libunicode.o
 
 # target to build an object file
-std.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/std.c.o
-.PHONY : std.c.o
+src/libunicode.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libunicode.c.o
+.PHONY : src/libunicode.c.o
 
-std.i: std.c.i
-.PHONY : std.i
+src/libunicode.i: src/libunicode.c.i
+.PHONY : src/libunicode.i
 
 # target to preprocess a source file
-std.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/std.c.i
-.PHONY : std.c.i
+src/libunicode.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libunicode.c.i
+.PHONY : src/libunicode.c.i
 
-std.s: std.c.s
-.PHONY : std.s
+src/libunicode.s: src/libunicode.c.s
+.PHONY : src/libunicode.s
 
 # target to generate assembly for a file
-std.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/std.c.s
-.PHONY : std.c.s
+src/libunicode.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/libunicode.c.s
+.PHONY : src/libunicode.c.s
 
-util.o: util.c.o
-.PHONY : util.o
+src/quickjs-libc.o: src/quickjs-libc.c.o
+.PHONY : src/quickjs-libc.o
 
 # target to build an object file
-util.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/util.c.o
-.PHONY : util.c.o
+src/quickjs-libc.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs-libc.c.o
+.PHONY : src/quickjs-libc.c.o
 
-util.i: util.c.i
-.PHONY : util.i
+src/quickjs-libc.i: src/quickjs-libc.c.i
+.PHONY : src/quickjs-libc.i
 
 # target to preprocess a source file
-util.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/util.c.i
-.PHONY : util.c.i
+src/quickjs-libc.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs-libc.c.i
+.PHONY : src/quickjs-libc.c.i
 
-util.s: util.c.s
-.PHONY : util.s
+src/quickjs-libc.s: src/quickjs-libc.c.s
+.PHONY : src/quickjs-libc.s
 
 # target to generate assembly for a file
-util.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/util.c.s
-.PHONY : util.c.s
+src/quickjs-libc.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs-libc.c.s
+.PHONY : src/quickjs-libc.c.s
 
-vm.o: vm.c.o
-.PHONY : vm.o
+src/quickjs.o: src/quickjs.c.o
+.PHONY : src/quickjs.o
 
 # target to build an object file
-vm.c.o:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/vm.c.o
-.PHONY : vm.c.o
+src/quickjs.c.o:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs.c.o
+.PHONY : src/quickjs.c.o
 
-vm.i: vm.c.i
-.PHONY : vm.i
+src/quickjs.i: src/quickjs.c.i
+.PHONY : src/quickjs.i
 
 # target to preprocess a source file
-vm.c.i:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/vm.c.i
-.PHONY : vm.c.i
+src/quickjs.c.i:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs.c.i
+.PHONY : src/quickjs.c.i
 
-vm.s: vm.c.s
-.PHONY : vm.s
+src/quickjs.s: src/quickjs.c.s
+.PHONY : src/quickjs.s
 
 # target to generate assembly for a file
-vm.c.s:
-	cd /mnt/hgfs/kaifaban/jsengine && $(MAKE) $(MAKESILENT) -f runtime/CMakeFiles/libsjs.dir/build.make runtime/CMakeFiles/libsjs.dir/vm.c.s
-.PHONY : vm.c.s
+src/quickjs.c.s:
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(MAKE) $(MAKESILENT) -f /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/build.make /mnt/hgfs/kaifaban/lvgljs/src/jsruntime/CMakeFiles/qjs.dir/src/quickjs.c.s
+.PHONY : src/quickjs.c.s
 
 # Help Target
 help:
@@ -296,26 +282,25 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
-	@echo "... _runtime"
-	@echo "... libsjs"
-	@echo "... error.o"
-	@echo "... error.i"
-	@echo "... error.s"
-	@echo "... jsapi.o"
-	@echo "... jsapi.i"
-	@echo "... jsapi.s"
-	@echo "... network.o"
-	@echo "... network.i"
-	@echo "... network.s"
-	@echo "... std.o"
-	@echo "... std.i"
-	@echo "... std.s"
-	@echo "... util.o"
-	@echo "... util.i"
-	@echo "... util.s"
-	@echo "... vm.o"
-	@echo "... vm.i"
-	@echo "... vm.s"
+	@echo "... qjs"
+	@echo "... src/cutils.o"
+	@echo "... src/cutils.i"
+	@echo "... src/cutils.s"
+	@echo "... src/libbf.o"
+	@echo "... src/libbf.i"
+	@echo "... src/libbf.s"
+	@echo "... src/libregexp.o"
+	@echo "... src/libregexp.i"
+	@echo "... src/libregexp.s"
+	@echo "... src/libunicode.o"
+	@echo "... src/libunicode.i"
+	@echo "... src/libunicode.s"
+	@echo "... src/quickjs-libc.o"
+	@echo "... src/quickjs-libc.i"
+	@echo "... src/quickjs-libc.s"
+	@echo "... src/quickjs.o"
+	@echo "... src/quickjs.i"
+	@echo "... src/quickjs.s"
 .PHONY : help
 
 
@@ -327,6 +312,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /mnt/hgfs/kaifaban/jsengine && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /mnt/hgfs/kaifaban/lvgljs/debug && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

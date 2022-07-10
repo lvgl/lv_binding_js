@@ -116,7 +116,7 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
     free(qrt);
 };
 
-#define UI_TIME 16;
+#define UI_TIME 16
 
 static void SJSUVIdleCallback(uv_idle_t *handle) {
     SJSRuntime *qrt = handle->data;
@@ -127,8 +127,9 @@ static void SJSUVIdleCallback(uv_idle_t *handle) {
 
         while (1) {
             qrt->ui_handler();
+            usleep(5 * 1000);
             gettimeofday(&tcur, NULL);
-            timersub(tcur, tstart, tsub);
+            timersub(&tcur, &tstart, &tsub);
             if ((tsub.tv_sec * 1000 + (1.0 * tsub.tv_usec) / 1000) > UI_TIME) {
                 return;
             }

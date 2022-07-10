@@ -1,16 +1,14 @@
-#include "View.hpp"
+#include "window.hpp"
 
-static JSClassID ViewClassID;
-
-WRAPPED_JS_SETSTYLE(View, "view")
+static JSClassID WindowClassID;
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
         COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
+        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, WindowClassID);
         
-        ((View*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("View %s remove child %s", parent->uid, child->uid);
+        ((Window*)(parent->comp))->removeChild((void*)(child->comp));
+        LV_LOG_USER("Window %s remove child %s", parent->uid, child->uid);
     }
     return JS_UNDEFINED;
 };
@@ -18,16 +16,15 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
 static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
         COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
+        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, WindowClassID);
         
-        ((View*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("View %s append child %s", parent->uid, child->uid);
+        ((Window*)(parent->comp))->appendChild((void*)(child->comp));
+        LV_LOG_USER("Window %s append child %s", parent->uid, child->uid);
     }
     return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    WRAPPED_JS_METHODS_REGISTER
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
 };
@@ -35,7 +32,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
-static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
+static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
     JSValue proto;
     JSValue obj;
     JSValue arg;
@@ -54,14 +51,14 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
     }
 
     if (JS_IsUndefined(new_target)) {
-        proto = JS_GetClassProto(ctx, ViewClassID);
+        proto = JS_GetClassProto(ctx, WindowClassID);
     } else {
         proto = JS_GetPropertyStr(ctx, new_target, "prototype");
         if (JS_IsException(proto))
             goto fail;
     }
 
-    obj = JS_NewObjectProtoClass(ctx, proto, ViewClassID);
+    obj = JS_NewObjectProtoClass(ctx, proto, WindowClassID);
     JS_FreeValue(ctx, proto);
     if (JS_IsException(obj))
         goto fail;
@@ -75,36 +72,36 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
         goto fail;
 
     JS_SetOpaque(obj, s);
-    LV_LOG_USER("view %s created", uid);
+    LV_LOG_USER("window %s created", uid);
     return obj;
  fail:
     JS_FreeValue(ctx, obj);
     return JS_EXCEPTION;
 };
 
-static void ViewFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ViewClassID);
-    LV_LOG_USER("view %s release", th->uid);
+static void WindowFinalizer(JSRuntime *rt, JSValue val) {
+    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, WindowClassID);
+    LV_LOG_USER("window %s release", th->uid);
     if (th) {
         free(th);
     }
 };
 
-static JSClassDef ViewClass = {
-    "view",
-    .finalizer = ViewFinalizer,
+static JSClassDef WindowClass = {
+    "Window",
+    .finalizer = WindowFinalizer,
 };
 
-void NativeComponentViewInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ViewClassID);
-    JS_NewClass(JS_GetRuntime(ctx), ViewClassID, &ViewClass);
+void NativeComponentWindowInit (JSContext* ctx, JSValue ns) {
+    JS_NewClassID(&WindowClassID);
+    JS_NewClass(JS_GetRuntime(ctx), WindowClassID, &WindowClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));
-    JS_SetClassProto(ctx, ViewClassID, proto);
+    JS_SetClassProto(ctx, WindowClassID, proto);
 
-    JSValue obj = JS_NewCFunction2(ctx, ViewConstructor, "View", 1, JS_CFUNC_constructor, 0);
+    JSValue obj = JS_NewCFunction2(ctx, WindowConstructor, "Window", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
     JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
-    JS_DefinePropertyValueStr(ctx, ns, "View", obj, JS_PROP_C_W_E);
+    JS_DefinePropertyValueStr(ctx, ns, "Window", obj, JS_PROP_C_W_E);
 };
 

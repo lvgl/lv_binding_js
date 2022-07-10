@@ -28,17 +28,10 @@ export class ViewComp extends NativeView {
     insertBefore(child, beforeChild) {
         this.insertChildBefore(child, beforeChild)
     }
-    static tagName = "view";
     appendInitialChild(child) {
         this.appendChild(child);
     }
     appendChild(child) {
-        // if (!this.layout) {
-        //     const flexLayout = new NativeFlexLayout();
-        //     this.setLayout(flexLayout);
-        //     this.layout = flexLayout;
-        // }
-        // this.layout.appendChild(child);
         super.appendChild(child)
     }
     removeChild(child) {

@@ -13,6 +13,9 @@ extern "C" {
 #include <unistd.h>
 #include <string>
 
+#include "render/native/bootstrap/render_bootstrap.hpp"
+#include "./dev/monitor.hpp"
+
 class Engine {
   public:  
     std::string JSEntryPath;

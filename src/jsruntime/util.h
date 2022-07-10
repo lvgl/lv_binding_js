@@ -2,9 +2,9 @@
 #ifndef SJS_UTIL_H
 #define SJS_UTIL_H
 
-#include <uv.h>
-#include <quickjs.h>
-#include <cutils.h>
+#include "uv.h"
+#include "quickjs.h"
+#include "cutils.h"
 
 typedef struct Array {
     size_t *array;

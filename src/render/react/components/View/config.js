@@ -1,8 +1,7 @@
 import { ViewComp } from './comp'
 
 export default class ViewConfig {
-    tagName = 'view';
-    native = null;
+    tagName = 'View';
     shouldSetTextContent() {
         return false;
     }
@@ -32,7 +31,6 @@ export default class ViewConfig {
         instance.setProps(newProps, oldProps);
     }
     commitUnmount (instance) {
-        instance.unMount()
     }
     setProps(newProps, oldProps) {
     }

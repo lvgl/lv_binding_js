@@ -10,4 +10,6 @@ void NativeRenderInit (JSContext* ctx) {
     JS_FreeValue(ctx, JSBridge);
     
     NativeComponentInit(ctx, obj);
+
+    lv_init();
 };

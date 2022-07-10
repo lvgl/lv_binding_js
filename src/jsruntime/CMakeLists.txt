@@ -4,7 +4,7 @@ set(LIBUV_PATH /home/sxs/libuv)
 
 find_package(CURL REQUIRED)
 
-add_subdirectory(deps/quickjs EXCLUDE_FROM_ALL)
+add_subdirectory(./deps/quickjs EXCLUDE_FROM_ALL)
 
 file(GLOB SRC_LIST ./*.c ./*.cpp)
 add_library(libsjs STATIC ${SRC_LIST})
@@ -18,8 +18,8 @@ add_custom_command(OUTPUT libruntime.a
 
 add_custom_target(_runtime ALL DEPENDS libruntime.a)
 
-add_library(runtime STATIC IMPORTED GLOBAL)
-set_target_properties(runtime
+add_library(jsruntime STATIC IMPORTED GLOBAL)
+set_target_properties(jsruntime
     PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_BINARY_DIR}/libruntime.a
 )
 
@@ -28,9 +28,9 @@ add_custom_command(OUTPUT bundle.js
 )
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 
-add_dependencies(runtime _runtime)
+add_dependencies(jsruntime _runtime)
 
-target_link_libraries(runtime INTERFACE -lrt -lcrypto -lssl ${CMAKE_CURRENT_BINARY_DIR}/libruntime.a)
+target_link_libraries(jsruntime INTERFACE -lrt -lcrypto -lssl ${CMAKE_CURRENT_BINARY_DIR}/libruntime.a)
 
 execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${CMAKE_BINARY_DIR})
 

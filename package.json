@@ -8,7 +8,8 @@
   },
   "scripts": {
     "bundle": "./node_modules/esbuild-linux-64/bin/esbuild src/jsruntime/bundle/index.js --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
-    "install": "npm install --no-bin-links"
+    "install": "npm install --no-bin-links",
+    "test-bundle": "node ./test/build/dev-esbuild.js"
   },
   "dependencies": {
     "buffer": "^6.0.3",

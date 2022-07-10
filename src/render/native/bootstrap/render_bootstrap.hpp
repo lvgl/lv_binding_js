@@ -1,5 +1,9 @@
 #pragma once
 
-#include <native/components/component.hpp>
+extern "C" {
+    #include "jsapi.h"
+};
+
+#include "native/components/component.hpp"
 
 void NativeRenderInit (JSContext* ctx);

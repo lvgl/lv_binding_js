@@ -28,7 +28,7 @@ typedef struct SJSRuntime {
         uv_timer_t timer;
     } curl_ctx;
     uv_async_t stop;
-    void (*ui_handler)();
+    uint32_t (*ui_handler)();
     BOOL is_worker;
     BOOL foreverLoop;
     void *user_opaque;

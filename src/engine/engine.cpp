@@ -14,6 +14,14 @@ Engine::Engine (char* filePath) {
     qrt = GetSJSInstance();
     qrt->foreverLoop = 1;
 
+    qrt->ui_handler = &lv_timer_handler;
+
+    NativeRenderInit(qrt->ctx);
+
+    if (1) {
+        hal_init();
+    }
+
     char* path = (char*)malloc(PATH_MAX);
     GetBundlePath(path);
     SJSBootStrapGlobals(qrt->ctx, path);

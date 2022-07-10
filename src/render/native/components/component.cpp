@@ -1,4 +1,4 @@
-#include "Components.h"
+#include "component.hpp"
 
 #define NATIVE_COMPONENT "NativeComponents"
 
@@ -7,4 +7,5 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);
 
     NativeComponentViewInit(ctx, component_obj);
+    NativeComponentWindowInit (ctx, component_obj);
 };

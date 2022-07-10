@@ -4,8 +4,8 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class View : public BasicComponent {
+class Window : public BasicComponent {
  public:
-  View(std::string uid, lv_obj_t* parent = nullptr);
-  ~View();
+  Window(std::string uid);
+  ~Window();
 };
