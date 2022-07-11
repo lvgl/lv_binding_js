@@ -39,11 +39,9 @@ export function registerComponents(
 }
 
 export function setStyle (comp, obj) {
-    const styleObj = Array.isArray(obj) ? Object.assign(...obj) : obj
-    let str = StyleSheet.transform(styleObj)
-    str = `#${comp.uid} {${str}}`
-
-    comp.setStyle(str)
+    obj = Array.isArray(obj) ? Object.assign(...obj) : obj
+    const keys = Object.keys(obj)
+    comp.setStyle(obj, keys, keys.length)
 }
 
 export function handleOnClick (comp, fn) {
