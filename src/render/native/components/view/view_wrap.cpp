@@ -75,7 +75,7 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
         goto fail;
 
     JS_SetOpaque(obj, s);
-    LV_LOG_USER("view %s created", uid);
+    LV_LOG_USER("View %s created", uid);
     return obj;
  fail:
     JS_FreeValue(ctx, obj);
@@ -84,14 +84,14 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
 
 static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ViewClassID);
-    LV_LOG_USER("view %s release", th->uid);
+    LV_LOG_USER("View %s release", th->uid);
     if (th) {
         free(th);
     }
 };
 
 static JSClassDef ViewClass = {
-    "view",
+    "View",
     .finalizer = ViewFinalizer,
 };
 

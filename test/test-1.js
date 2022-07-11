@@ -18140,10 +18140,9 @@ function registerComponent(config) {
   return config.tagName;
 }
 function setStyle(comp, obj) {
-  const styleObj = Array.isArray(obj) ? Object.assign(...obj) : obj;
-  let str = StyleSheet.transform(styleObj);
-  str = `#${comp.uid} {${str}}`;
-  comp.setStyle(str);
+  obj = Array.isArray(obj) ? Object.assign(...obj) : obj;
+  const keys = Object.keys(obj);
+  comp.setStyle(obj, keys, keys.length);
 }
 function handleOnClick(comp, fn) {
   if (fn) {
@@ -18292,9 +18291,9 @@ var WindowConfig = class {
 };
 
 // src/render/react/core/style/index.js
-var StyleSheet2 = class {
+var StyleSheet = class {
 };
-var style_default = StyleSheet2;
+var style_default = StyleSheet;
 
 // src/render/react/core/reconciler/index.js
 var import_react_reconciler = __toESM(require_react_reconciler());
@@ -18392,8 +18391,25 @@ globalThis.StyleSheet = style_default;
 // test/1/index.jsx
 var import_react = __toESM(require_react());
 function App() {
-  return /* @__PURE__ */ import_react.default.createElement(Window2, null, /* @__PURE__ */ import_react.default.createElement(View, null));
+  return /* @__PURE__ */ import_react.default.createElement(Window2, {
+    style: style.window
+  }, /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.view
+  }));
 }
+var style = {
+  window: {
+    width: 600,
+    height: 600
+  },
+  view: {
+    width: 300,
+    height: 300,
+    left: 50,
+    top: 50,
+    "background-color": "ff0000"
+  }
+};
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
 /*
 object-assign

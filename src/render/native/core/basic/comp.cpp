@@ -28,7 +28,7 @@ BasicComponent::BasicComponent () {
     
 };
 
-void BasicComponent::setStyle(JSContext* ctx, JSValue obj, JSValue keys) {
+void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys) {
     lv_style_init(&this->style);
 
     for(int i=0; i < keys.size(); i++) {
@@ -38,6 +38,7 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, JSValue keys) {
             CompSetStyle* func = StyleManager::styles.at(key);
             JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
             func(this->instance, &this->style, ctx, value);
+            JS_FreeValue(ctx, value);
         }
     }
 

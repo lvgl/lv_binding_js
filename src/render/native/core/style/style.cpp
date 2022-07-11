@@ -25,13 +25,14 @@ static void CompSetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue
 };
 
 static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    std::string color = JS_ToCString(ctx, obj);
+    const char* str = JS_ToCString(ctx, obj);
+    std::string color = str;
+    JS_FreeCString(ctx, str);
     size_t len;
     JS_ToCStringLen(ctx, &len, obj);
     color.resize(len);
-    int color1 = std::stoi(color);
-
-    lv_style_set_bg_color(style, lv_color_hex3(color1));
+    int color1 = std::stoi(color, nullptr, 16);
+    lv_style_set_bg_color(style, lv_color_hex(color1));
 };
 
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
@@ -42,5 +43,5 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"top", &CompSetY},
 
     /* color */
-    {"background-color", &CompSetY},
+    {"background-color", &CompSetBackgroundColor},
 };

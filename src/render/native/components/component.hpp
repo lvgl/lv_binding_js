@@ -31,22 +31,26 @@ void NativeComponentWindowInit (JSContext* ctx, JSValue ns);
             std::string key;                                                                                                \
             size_t keylen;                                                                                                  \
             JSValue value;                                                                                                  \
+            const char* ori_str;                                                                                                  \
                                                                                                                             \
             COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);                                                             \
             JS_ToInt32(ctx, &len, argv[2]);                                                                                 \
             for (int i=0; i<len; i++) {                                                                                     \
-                value = JS_GetPropertyUint32(ctx, argv[2], i);                                                              \
-                key = JS_ToCStringLen(ctx, &keylen, value);                                                                 \
+                value = JS_GetPropertyUint32(ctx, argv[1], i);                                                              \
+                ori_str = JS_ToCStringLen(ctx, &keylen, value);                                                             \
+                key = ori_str;                                                                                              \
+                JS_FreeCString(ctx, ori_str);                                                                           \
                 key.resize(keylen);                                                                                         \
-                keys.append(key);                                                                                           \
+                keys.push_back(key);                                                                                        \
+                JS_FreeValue(ctx, value);                                                                                   \
             }                                                                                                               \
                                                                                                                             \
-            BasicComponent::setStyle(ctx, argv[0], keys);                                                                   \
+            static_cast<COMPONENT*>(ref->comp)->BasicComponent::setStyle(ctx, argv[0], keys);                               \
             LV_LOG_USER("%s %s setStyle", COMPONENT_NAME, ref->uid);                                                        \
         }                                                                                                                   \
     }                                                                                                                       \
                                                                                                                             \
 
 #define WRAPPED_JS_METHODS_REGISTER                                                                       \
-    SJS_CFUNC_DEF("setStyle", 0, NativeCompSetStyle),                                                     \
+    SJS_CFUNC_DEF("setStyle", 4, NativeCompSetStyle),                                                     \
                                                                                                     
