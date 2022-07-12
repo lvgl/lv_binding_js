@@ -30,6 +30,7 @@ BasicComponent::BasicComponent () {
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys) {
     lv_style_init(&this->style);
+    lv_style_reset(&this->style);
 
     for(int i=0; i < keys.size(); i++) {
         std::string key = keys[i];
@@ -42,8 +43,8 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
         }
     }
 
-    lv_obj_add_style(this->instance, &this->style, LV_PART_ANY);
-    lv_obj_refresh_style(this->instance, LV_PART_ANY, LV_STYLE_PROP_ANY);
+    lv_obj_add_style(this->instance, &this->style, 0);
+    lv_obj_invalidate(this->instance);
 };
 
 BasicComponent::~BasicComponent () {

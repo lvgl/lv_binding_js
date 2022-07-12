@@ -32,7 +32,15 @@ static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext
     JS_ToCStringLen(ctx, &len, obj);
     color.resize(len);
     int color1 = std::stoi(color, nullptr, 16);
+
     lv_style_set_bg_color(style, lv_color_hex(color1));
+};
+
+static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_radius(style, x);
 };
 
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
@@ -42,6 +50,10 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"left", &CompSetX},
     {"top", &CompSetY},
 
-    /* color */
+    /* background */
     {"background-color", &CompSetBackgroundColor},
+
+    /* border-radius */
+    {"border-radius", &CompSetBorderRadius},
+
 };

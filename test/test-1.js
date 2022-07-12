@@ -18399,15 +18399,16 @@ function App() {
 }
 var style = {
   window: {
-    width: 600,
-    height: 600
+    width: 480,
+    height: 320
   },
   view: {
-    width: 300,
-    height: 300,
-    left: 50,
-    top: 50,
-    "background-color": "ff0000"
+    width: 200,
+    height: 50,
+    left: 0,
+    top: 0,
+    "background-color": "ff0000",
+    "border-radius": 0
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
