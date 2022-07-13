@@ -1,14 +1,22 @@
 #include "./comp.hpp"
 
-void BasicComponent::addEventListener (std::string eventType) {
+void BasicComponent::addEventListener (int eventType) {
     this->registeEvents.insert({ eventType, true });
+
+    lv_obj_add_event_cb(this->instance, &BasicComponent::EventCallback, LV_EVENT_ALL, this);
 };
 
-void BasicComponent::removeEventListener (std::string eventType) {
+void BasicComponent::EventCallback (lv_event_t * event) {
+    
+};
+
+void BasicComponent::removeEventListener (int eventType) {
     this->registeEvents.erase(eventType);
+
+    lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
 };
 
-bool BasicComponent::isEventRegist(std::string eventType) {
+bool BasicComponent::isEventRegist(int eventType) {
     return this->registeEvents.count(eventType) > 0;
 };
 

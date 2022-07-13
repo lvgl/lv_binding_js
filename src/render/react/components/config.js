@@ -1,5 +1,5 @@
 
-import { registEvent, unRegistEvent } from '../core/event'
+import { registEvent, unRegistEvent, EVENTTYPE_MAP } from '../core/event'
 
 const components = new Map;
 
@@ -46,10 +46,10 @@ export function setStyle (comp, obj) {
 
 export function handleOnClick (comp, fn) {
     if (fn) {
-        registEvent(comp.uid, 'click', fn)
-        comp.addEventListener('click')
+        registEvent(comp.uid, EVENTTYPE_MAP.EVENT_PRESSED, fn)
+        comp.addEventListener(EVENTTYPE_MAP.EVENT_PRESSED)
     } else {
-        unRegistEvent(comp.uid, 'click')
-        comp.removeEventListener('click')
+        unRegistEvent(comp.uid, EVENTTYPE_MAP.EVENT_PRESSED)
+        comp.removeEventListener(EVENTTYPE_MAP.EVENT_PRESSED)
     }
 }

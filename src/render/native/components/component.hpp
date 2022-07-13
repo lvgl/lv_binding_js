@@ -51,6 +51,17 @@ void NativeComponentWindowInit (JSContext* ctx, JSValue ns);
     }                                                                                                                       \
                                                                                                                             \
 
-#define WRAPPED_JS_METHODS_REGISTER                                                                       \
-    SJS_CFUNC_DEF("setStyle", 4, NativeCompSetStyle),                                                     \
+#define WRAPPED_JS_AddEventListener(COMPONENT,COMPONENT_NAME)                                                               \
+    static JSValue NativeCompAddEventListener(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {        \
+        if (argc >= 1 && JS_IsNumber(argv[0])) {                                                                            \
+            COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                               \
+            int event_type;                                                                                                 \
+            JS_ToInt32(ctx, &event_type, argv[0]);                                                                          \
+            ((COMPONENT*)(s->comp))->addEventListener(event_type);                                                          \
+            return JS_NewBool(ctx, 1);                                                                                      \
+        }                                                                                                                   \
+        return JS_NewBool(ctx, 0);                                                                                          \    
+    }                                                                                                                       \
+                                                                                                                            \
+
                                                                                                     

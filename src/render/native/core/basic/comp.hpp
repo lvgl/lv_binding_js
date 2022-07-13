@@ -20,14 +20,19 @@ class BasicComponent {
     std::string uid;
     lv_style_t style;
 
-    std::map<std::string, bool> registeEvents;
+    bool listening = false;
 
-    void addEventListener(std::string eventType);
-    void removeEventListener(std::string eventType);
-    bool isEventRegist(std::string eventType);
+    std::map<int, bool> registeEvents;
+
+    void addEventListener(int eventType);
+    void removeEventListener(int eventType);
+    bool isEventRegist(int eventType);
+    void eventCallback (lv_obj_t * obj, lv_event_t event);
+    static void EventCallback (lv_event_t * event);
 
     void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys);
     void appendChild(void* child);
     void removeChild(void* child);
     void insertChildBefore(void *child);
+
 };
