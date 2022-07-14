@@ -7,6 +7,19 @@ void BasicComponent::addEventListener (int eventType) {
 };
 
 void BasicComponent::EventCallback (lv_event_t * event) {
+    BasicComponent* instance = static_cast<BasicComponent*>(event->user_data);
+    std::string uid = instance->uid;
+    lv_event_code_t code = event->code;
+
+    switch (code)
+    {
+    case LV_EVENT_PRESSED:
+        FireEventToJS(event, uid, "click");
+        break;
+    
+    default:
+        break;
+    }
     
 };
 

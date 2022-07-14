@@ -9,6 +9,9 @@ set(LVJL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
 set(QUICKJS_PATH /home/sxs/quickjs-master/quickjs-master)
 
 add_library(render SHARED
+    ./native/core/event/click/click.cpp
+    ./native/core/event/event.cpp
+
     ./native/core/basic/comp.cpp
     ./native/core/style/style.cpp
     ./native/components/view/view.cpp
@@ -24,6 +27,8 @@ include_directories(
     ${RUNTIME_PATH}
     ${ENGINE_PATH}
     ${LVJL_PATH}
+    ../../src
+    ../../src/deps
     ../render
     ./native
     ./core
