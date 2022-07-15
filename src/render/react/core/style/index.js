@@ -1,5 +1,5 @@
-class StyleSheet {
+export const DISPLAY_MAP = {
+    'flex': 'flex',
+    'grid': 'grid'
+}
 
-};
-
-export default StyleSheet;

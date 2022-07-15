@@ -11,16 +11,9 @@ void BasicComponent::EventCallback (lv_event_t * event) {
     std::string uid = instance->uid;
     lv_event_code_t code = event->code;
 
-    switch (code)
-    {
-    case LV_EVENT_PRESSED:
-        FireEventToJS(event, uid, "click");
-        break;
-    
-    default:
-        break;
+    if (this->isEventRegist(static_cast<int>(code))) {
+        FireEventToJS(event, uid, code);
     }
-    
 };
 
 void BasicComponent::removeEventListener (int eventType) {

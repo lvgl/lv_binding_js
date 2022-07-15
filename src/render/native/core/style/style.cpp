@@ -43,6 +43,36 @@ static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* c
     lv_style_set_radius(style, x);
 };
 
+static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    size_t len;
+    std::string value = JS_ToCStringLen(ctx, &len, obj);
+    value.resize(len);
+
+    switch (value)
+    {
+        case "flex":
+            lv_obj_set_layout(this->instance, LV_LAYOUT_FLEX);
+            break;
+
+        case "grid":
+            lv_obj_set_layout(this->instance, LV_LAYOUT_GRID);
+            break;
+        
+        default:
+            break;
+    }
+};
+
+static void CompSetAlignItems (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    
+};
+
+static void CompSetJustifyContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    
+
+    
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* position */
     {"width", &CompSetWidth},
@@ -56,4 +86,8 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* border-radius */
     {"border-radius", &CompSetBorderRadius},
 
+    /* layout */
+    {"display", &CompSetDisplay},
+    {"align-items", &CompSetDisplay},
+    {"justify-content", &CompSetDisplay},
 };

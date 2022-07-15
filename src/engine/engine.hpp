@@ -25,7 +25,8 @@ class Engine {
     ~Engine ();
 
     void Start ();
-    SJSRuntime* GetSJSInstance ();
+    static SJSRuntime* GetSJSInstance ();
+    static SJSRuntime* qrt;
 
     void GetEngineDir (char* buf);
     void GetBuiltInLibPath (char* result);

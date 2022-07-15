@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-WRAPPED_EVENT_METHODS
+WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapClickEventID;
 
@@ -32,7 +32,7 @@ JSValue WrapClickEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    WRAPPED_EVENT_METHODS_REGISTER
+    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeClickEventWrapInit (JSContext* ctx) {

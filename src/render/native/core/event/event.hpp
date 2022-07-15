@@ -14,7 +14,7 @@ extern "C" {
     #include "lvgl.h"
 }
 
-void FireEventToJS(lv_event_t* event, std::string uid, std::string eventType);
+void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType);
 
 void NativeEventWrapInit (JSContext* ctx);
 
@@ -22,19 +22,17 @@ void NativeClickEventWrapInit (JSContext* ctx);
 
 JSValue WrapClickEvent (lv_event_t* e, std::string uid);
 
-typedef JSValue (*wrapFunc)(lv_event_t* e, std::string uid);
+typedef JSValue (*EventWrapFunc)(lv_event_t* e, std::string uid);
 
-static std::map<std::string, wrapFunc> WrapEventDict {
-    { "click", &WrapClickEvent },
+static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
+    { LV_EVENT_PRESSED, &WrapClickEvent },
 };
 
-#define WRAPPED_EVENT_METHODS                                                                                                           \
+#define WRAPPED_STOPPROPAGATION                                                                                                           \
     static JSValue NativeEventStopPropagation(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                    \
-        lv_event_t* ref = (lv_event_t*)JS_GetOpaque3(this_val);                                                                           \
+        lv_event_t* ref = (lv_event_t*)JS_GetOpaque3(this_val);                                                                         \
         if (ref) {                                                                                                                      \
+            ref->stop_bubbling = 1;                                                                                                     \
         }                                                                                                                               \
     };                                                                                                                                  \
                                                                                                                                         \
-
-#define WRAPPED_EVENT_METHODS_REGISTER                                                                                                  \
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation),                                                                    

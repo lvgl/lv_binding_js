@@ -1,22 +1,22 @@
 #include "event.hpp"
 
-void FireEventToJS(lv_event_t* event, std::string uid, std::string eventType) {
+void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType) {
     SJSRuntime* qrt;
     JSValue argv[3];
     JSContext* ctx;
     int argc = 3;
 
-    qrt = GetSJSInstance();
+    qrt = Engine::GetSJSInstance();
     ctx = qrt->ctx;
-    std::map<std::string, wrapFunc>::iterator iter = WrapEventDict.find(eventType);
+    std::map<lv_event_code_t, EventWrapFunc>::iterator iter = WrapEventDict.find(eventType);
 
     if (iter != WrapEventDict.end()) {
         wrapFunc func = iter->second;
 
         argv[0] = JS_NewString(ctx, uid.c_str());
-        argv[1] = JS_NewString(ctx, eventType.c_str());
+        argv[1] = JS_NewInt32(ctx, eventType);
         if (func != nullptr) {
-            argv[2] = func(event, eventTarget);
+            argv[2] = func(event, uid);
         } else {
             argc -= 1;
         }

@@ -11,7 +11,8 @@ static void JSRuntimeFree (int signal) {
 };
 
 Engine::Engine (char* filePath) {
-    qrt = GetSJSInstance();
+    SJSRuntime* qrt = Engine::GetSJSInstance();
+    
     qrt->foreverLoop = 1;
 
     qrt->ui_handler = &lv_timer_handler;
@@ -43,14 +44,14 @@ void Engine::Start () {
     SJSRunLoop(qrt);
 };
 
-SJSRuntime* Engine::GetSJSInstance () {
-    if (qrt == nullptr) {
+static SJSRuntime* Engine::GetSJSInstance () {
+    if (Engine::qrt == nullptr) {
         SJSRunOptions options;
         SJSDefaultOptions(&options);
-        qrt = SJSNewRuntimeOptions(&options);
+        Engine::qrt = SJSNewRuntimeOptions(&options);
     }
     
-    return qrt;
+    return Engine::qrt;
 };
 
 void Engine::GetEngineDir (char* buf) {
