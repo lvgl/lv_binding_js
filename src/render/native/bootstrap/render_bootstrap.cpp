@@ -11,5 +11,7 @@ void NativeRenderInit (JSContext* ctx) {
     
     NativeComponentInit(ctx, obj);
 
+    NativeEventWrapInit(ctx);
+
     lv_init();
 };

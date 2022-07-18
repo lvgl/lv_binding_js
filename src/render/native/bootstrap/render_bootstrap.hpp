@@ -7,3 +7,5 @@ extern "C" {
 #include "native/components/component.hpp"
 
 void NativeRenderInit (JSContext* ctx);
+
+void NativeEventWrapInit (JSContext* ctx);

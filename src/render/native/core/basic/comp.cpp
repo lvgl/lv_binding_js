@@ -11,7 +11,7 @@ void BasicComponent::EventCallback (lv_event_t * event) {
     std::string uid = instance->uid;
     lv_event_code_t code = event->code;
 
-    if (this->isEventRegist(static_cast<int>(code))) {
+    if (instance->isEventRegist(static_cast<int>(code))) {
         FireEventToJS(event, uid, code);
     }
 };
@@ -38,13 +38,27 @@ void BasicComponent::appendChild (void* child) {
     lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
 };
 
+void BasicComponent::initStyle () {
+    lv_style_init(&this->style);
+    lv_style_reset(&this->style);
+
+    lv_style_set_pad_left(&this->style, 0);
+    lv_style_set_pad_right(&this->style, 0);
+    lv_style_set_pad_bottom(&this->style, 0);
+    lv_style_set_pad_top(&this->style, 0);
+    lv_style_set_radius(&this->style, 0);
+    lv_style_set_outline_width(&this->style, 0);
+    lv_style_set_border_width(&this->style, 0);
+    lv_style_set_border_side(&this->style, LV_BORDER_SIDE_FULL);
+    lv_obj_invalidate(this->instance);
+};
+
 BasicComponent::BasicComponent () {
     
 };
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys) {
-    lv_style_init(&this->style);
-    lv_style_reset(&this->style);
+    this->initStyle();
 
     for(int i=0; i < keys.size(); i++) {
         std::string key = keys[i];

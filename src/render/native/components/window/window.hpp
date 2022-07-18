@@ -7,5 +7,4 @@
 class Window : public BasicComponent {
  public:
   Window(std::string uid);
-  ~Window();
 };

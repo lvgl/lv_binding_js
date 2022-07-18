@@ -19,7 +19,6 @@ extern "C" {
 class Engine {
   public:  
     std::string JSEntryPath;
-    uv_loop_t *loop;
 
     Engine (char* filePath);
     ~Engine ();

@@ -2,8 +2,8 @@
 
 static JSClassID ViewClassID;
 
-WRAPPED_JS_SETSTYLE(View, "view")
-WRAPPED_JS_AddEventListener(View, "view")
+WRAPPED_JS_SETSTYLE(View, "View")
+WRAPPED_JS_AddEventListener(View, "View")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -88,6 +88,7 @@ static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ViewClassID);
     LV_LOG_USER("View %s release", th->uid);
     if (th) {
+        delete static_cast<View*>(th->comp);
         free(th);
     }
 };

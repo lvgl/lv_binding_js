@@ -7,5 +7,4 @@
 class View : public BasicComponent {
  public:
   View(std::string uid, lv_obj_t* parent = nullptr);
-  ~View();
 };

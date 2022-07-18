@@ -28,11 +28,12 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
     { LV_EVENT_PRESSED, &WrapClickEvent },
 };
 
-#define WRAPPED_STOPPROPAGATION                                                                                                           \
-    static JSValue NativeEventStopPropagation(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                    \
-        lv_event_t* ref = (lv_event_t*)JS_GetOpaque3(this_val);                                                                         \
-        if (ref) {                                                                                                                      \
-            ref->stop_bubbling = 1;                                                                                                     \
-        }                                                                                                                               \
-    };                                                                                                                                  \
-                                                                                                                                        \
+#define WRAPPED_STOPPROPAGATION                                                                                                       \
+    static JSValue NativeEventStopPropagation(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                  \
+        lv_event_t* ref = static_cast<lv_event_t*>(JS_GetOpaque3(this_val));                                                          \
+        if (ref) {                                                                                                                    \
+            ref->stop_bubbling = 1;                                                                                                   \
+        }                                                                                                                             \
+    };                                                                                                                                \
+                                                                                                                                      \
+

@@ -5,7 +5,7 @@ require('esbuild').build({
     entryPoints: [path.resolve(__dirname, '../1/index.jsx')],
     bundle: true,
     platform: 'neutral',
-    external: ['path'],
+    external: ['path', 'fs'],
     outfile: path.resolve(__dirname, '../test-1.js'),
     plugins: [
       alias({

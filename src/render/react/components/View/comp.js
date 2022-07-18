@@ -36,7 +36,6 @@ export class ViewComp extends NativeView {
     }
     removeChild(child) {
         super.removeChild(child);
-        child.close();
     }
     unMount () {
         unRegistEvent(this.uid)

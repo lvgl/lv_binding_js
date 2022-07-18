@@ -1,0 +1,54 @@
+
+#include "image.hpp"
+
+static bool ispng (uint16_t* buf) {
+    uint16_t GIF[3] = {0x5089, 0x474E, 0x0A0D};
+    if (buf[0] == GIF[0] && buf[1] == GIF[1] && buf[2] == GIF[2]) {
+        return true;
+    }
+    return false;
+};
+
+Image::Image(std::string uid, lv_obj_t* parent): BasicComponent() {
+    this->uid = uid;
+    this->instance = lv_img_create(parent != nullptr ? parent : lv_scr_act());
+    
+    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE);
+    
+    this->initStyle();
+};
+
+void Image::setImageBinary(uint8_t* buf, size_t len) {
+    if (!ispng((uint16_t*)(buf))) return;
+
+    if (this->image_buf != nullptr) {
+        free(this->image_buf);
+        this->image_buf = nullptr;
+    }
+
+    this->image_buf = (uint8_t*)malloc(len);
+    strcpy((char*)(this->image_buf), (char*)(buf));
+
+    uint8_t* header = this->image_buf;
+    header += 16;
+
+    uint32_t width = header[3] << 12 | header[2] << 8 | header[1] << 4 | header[0];
+    header += 8;
+    uint32_t height = header[3] << 12 | header[2] << 8 | header[1] << 4 | header[0];
+
+    this->image_desc.header.always_zero = 0;
+    this->image_desc.header.w = width;
+    this->image_desc.header.h = height;
+    this->image_desc.data_size = len;
+    this->image_desc.header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
+    this->image_desc.data = this->image_buf;
+
+    lv_img_set_src(this->instance, &this->image_desc);
+};
+
+Image::~Image () {
+    if (this->image_buf != nullptr) {
+        free(this->image_buf);
+        this->image_buf = nullptr;
+    }
+}

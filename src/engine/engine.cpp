@@ -1,12 +1,12 @@
-#include "engine/engine.hpp"
+#include "engine.hpp"
 
-Engine* LVEngine;
+static Engine* LVEngine;
 
-static SJSRuntime* qrt = nullptr;
+SJSRuntime* Engine::qrt = nullptr;
 
 static void JSRuntimeFree (int signal) {
-    if (qrt != nullptr) {
-        SJSDisableForeverLoop(qrt);
+    if (Engine::qrt != nullptr) {
+        SJSDisableForeverLoop(Engine::qrt);
     }
 };
 
@@ -35,16 +35,16 @@ Engine::Engine (char* filePath) {
 };
 
 Engine::~Engine () {
-    SJSFreeRuntime(qrt);
+    SJSFreeRuntime(Engine::qrt);
     SJSClearJSApi();
 };
 
 void Engine::Start () {
-    SJSRunMain(qrt);
-    SJSRunLoop(qrt);
+    SJSRunMain(Engine::qrt);
+    SJSRunLoop(Engine::qrt);
 };
 
-static SJSRuntime* Engine::GetSJSInstance () {
+SJSRuntime* Engine::GetSJSInstance () {
     if (Engine::qrt == nullptr) {
         SJSRunOptions options;
         SJSDefaultOptions(&options);

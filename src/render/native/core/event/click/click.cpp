@@ -1,7 +1,5 @@
 #include "Click.hpp"
 
-#include <stdlib.h>
-
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapClickEventID;
@@ -10,7 +8,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static JSClassDef ClickEventWrapClass = {
-    "event",
+    "click",
     .finalizer = EventFinalizer,
 };
 
@@ -20,7 +18,7 @@ JSValue WrapClickEvent (lv_event_t* e, std::string uid) {
     JSValue proto;
     JSValue obj;
 
-    qrt = GetSJSInstance();
+    qrt = Engine::GetSJSInstance();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapClickEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapClickEventID);

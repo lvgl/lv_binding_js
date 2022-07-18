@@ -1,2 +1,2 @@
-var Buffer = require('buffer/').Buffer
+var Buffer = require('buffer').Buffer
 globalThis.Buffer = Buffer

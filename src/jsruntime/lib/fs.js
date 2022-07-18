@@ -106,9 +106,14 @@ function readFileSync (path) {
     return content
 }
 
+async function readFile (path) {
+    return nativefs.readFile(path)
+}
+
 module.exports = {
     statSync,
     stat: statAsync,
     realPathSync,
-    readFileSync
+    readFileSync,
+    readFile,
 }

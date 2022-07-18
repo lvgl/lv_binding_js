@@ -35,6 +35,6 @@ export class Window extends NativeComp {
         super.appendChild(child);
     }
     removeChild(child) {
-
+        super.removeChild(child);
     }
 }

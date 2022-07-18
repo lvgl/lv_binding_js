@@ -6,9 +6,6 @@ extern "C" {
     #include "sjs.h"
 };
 
-#include "native/components/view/view.hpp"
-#include "native/components/window/window.hpp"
-
 #include <vector>
 #include <string>
 
@@ -22,6 +19,10 @@ void NativeComponentViewInit (JSContext* ctx, JSValue ns);
 void NativeComponentInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentWindowInit (JSContext* ctx, JSValue ns);
+
+void NativeComponentTextInit (JSContext* ctx, JSValue ns);
+
+void NativeComponentImageInit (JSContext* ctx, JSValue ns);
 
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \

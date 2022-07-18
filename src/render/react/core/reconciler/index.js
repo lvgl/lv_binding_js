@@ -16,8 +16,8 @@ const HostConfig = {
   getChildHostContext: () => {
     return {};
   },
-  shouldSetTextContent: function(type, nextProps) {
-    return false
+  shouldSetTextContent: function(type, props) {
+    return typeof props.children === 'string' || typeof props.children === 'number';
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
@@ -29,8 +29,16 @@ const HostConfig = {
     );
   },
   createTextInstance: (text) => {
-    const { createInstance } = getComponentByTagName('text');
-    return createInstance(text)
+    console.log(22222222222222)
+    const { createInstance } = getComponentByTagName('Text');
+    return createInstance(
+      {
+        text
+      },
+      rootContainerInstance,
+      _currentHostContext,
+      workInProgress
+    );
   },
   appendInitialChild: (parent, child) => {
     parent.appendChild(child);
@@ -77,7 +85,9 @@ const HostConfig = {
       finishedWork
     );
   },
-  commitTextUpdate(textInstance, oldText, newText) {},
+  commitTextUpdate(textInstance, oldText, newText) {
+    textInstance.setText(newText)
+  },
   removeChild(parent, child) {
     parent?.removeChild(child);
   },

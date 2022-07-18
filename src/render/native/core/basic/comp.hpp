@@ -9,6 +9,7 @@ extern "C" {
     #include "quickjs.h"
 };
 
+#include "native/core/event/event.hpp"
 #include "native/core/style/style.hpp"
 
 class BasicComponent {
@@ -30,6 +31,7 @@ class BasicComponent {
     void eventCallback (lv_obj_t * obj, lv_event_t event);
     static void EventCallback (lv_event_t * event);
 
+    void initStyle ();
     void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys);
     void appendChild(void* child);
     void removeChild(void* child);

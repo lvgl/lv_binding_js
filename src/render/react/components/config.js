@@ -1,5 +1,6 @@
 
 import { registEvent, unRegistEvent, EVENTTYPE_MAP } from '../core/event'
+import StyleSheet from '../core/style'
 
 const components = new Map;
 
@@ -39,8 +40,13 @@ export function registerComponents(
 }
 
 export function setStyle (comp, obj) {
-    obj = Array.isArray(obj) ? Object.assign(...obj) : obj
+    obj = Array.isArray(obj) ? obj : [obj]
+
+    obj = obj.map(item => StyleSheet.transform(item))
+    obj = Object.assign(...obj)
+
     const keys = Object.keys(obj)
+    
     comp.setStyle(obj, keys, keys.length)
 }
 

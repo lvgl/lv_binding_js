@@ -69,7 +69,7 @@ static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int ar
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
     s->uid = uid;
-    s->comp = new View(uid, NULL);
+    s->comp = new Window(uid);
 
     JS_FreeCString(ctx, uid);
 
@@ -77,7 +77,7 @@ static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int ar
         goto fail;
 
     JS_SetOpaque(obj, s);
-    LV_LOG_USER("window %s created", uid);
+    LV_LOG_USER("Window %s created", uid);
     return obj;
  fail:
     JS_FreeValue(ctx, obj);
@@ -86,8 +86,9 @@ static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int ar
 
 static void WindowFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, WindowClassID);
-    LV_LOG_USER("window %s release", th->uid);
+    LV_LOG_USER("Window %s release", th->uid);
     if (th) {
+        delete static_cast<Window*>(th->comp);
         free(th);
     }
 };

@@ -11,7 +11,7 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
     std::map<lv_event_code_t, EventWrapFunc>::iterator iter = WrapEventDict.find(eventType);
 
     if (iter != WrapEventDict.end()) {
-        wrapFunc func = iter->second;
+        EventWrapFunc func = iter->second;
 
         argv[0] = JS_NewString(ctx, uid.c_str());
         argv[1] = JS_NewInt32(ctx, eventType);
@@ -35,6 +35,4 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
 
 void NativeEventWrapInit (JSContext* ctx) {
     NativeClickEventWrapInit(ctx);
-    NativeTextChangeEventWrapInit(ctx);
-    NativeFocusEventWrapInit(ctx);
 };
