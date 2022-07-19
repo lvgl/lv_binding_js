@@ -18701,7 +18701,6 @@ function setImageProps(comp, newProps, oldProps) {
     set src(url) {
       if (url && url !== oldProps.url) {
         if (!isValidUrl(url)) {
-          console.log(url);
           fs.readFile(url).then((data) => {
             console.log(data);
             comp.setImageBinary(data.buffer);
@@ -18896,7 +18895,9 @@ var style = {
     width: "480px",
     height: "320px",
     "border-width": 3,
-    "border-color": "#4169E1"
+    "border-color": "#4169E1",
+    "display": "flex",
+    "flex-direction": "column"
   },
   view1: {
     width: "80%",

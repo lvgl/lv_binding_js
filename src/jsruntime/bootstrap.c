@@ -39,7 +39,6 @@ static const JSCFunctionListEntry SJSNativeFunction[] = {
 BOOL SJSBootStrapCore (SJSRuntime* qrt) {
     if (!COREJSAPI_INITED) {
         JSValue global_obj = JS_GetGlobalObject(qrt->ctx);
-        qrt->builtins.u8array_ctor = JS_GetPropertyStr(qrt->ctx, global_obj, "Uint8Array");
         SJSPrintInit(qrt, global_obj);
         SJSNetworkInit(qrt, global_obj);
         SJSTimersInit(qrt, global_obj);

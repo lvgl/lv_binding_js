@@ -58,6 +58,10 @@ SJSRuntime* SJSNewRuntimeInternal(BOOL is_worker, SJSRunOptions *options) {
     JS_AddIntrinsicBigFloat(qrt->ctx);
     JS_AddIntrinsicBigDecimal(qrt->ctx);
 
+    JSValue global_obj = JS_GetGlobalObject(qrt->ctx);
+    qrt->builtins.u8array_ctor = JS_GetPropertyStr(qrt->ctx, global_obj, "Uint8Array");
+    JS_FreeValue(qrt->ctx, global_obj);
+
     qrt->is_worker = is_worker;
 
     uv_loop_init(&qrt->loop);
@@ -95,6 +99,8 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
     }
 
     uv_idle_stop((uv_handle_t *) &qrt->jobs.idle);
+
+    JS_FreeValue(qrt->ctx, qrt->builtins.u8array_ctor);
     
     JS_FreeContext(qrt->ctx);
     JS_FreeRuntime(qrt->rt);
@@ -131,7 +137,7 @@ static void SJSUVIdleCallback(uv_idle_t *handle) {
             gettimeofday(&tcur, NULL);
             timersub(&tcur, &tstart, &tsub);
             if ((tsub.tv_sec * 1000 + (1.0 * tsub.tv_usec) / 1000) > UI_TIME) {
-                return;
+                break;
             }
         }
     }

@@ -2,8 +2,8 @@
 #include "image.hpp"
 
 static bool ispng (uint16_t* buf) {
-    uint16_t GIF[3] = {0x5089, 0x474E, 0x0A0D};
-    if (buf[0] == GIF[0] && buf[1] == GIF[1] && buf[2] == GIF[2]) {
+    uint16_t GIF[4] = {0x5089, 0x474E, 0x0A0D, 0x0A1A};
+    if (buf[0] == GIF[0] && buf[1] == GIF[1] && buf[2] == GIF[2] && buf[3] == GIF[3]) {
         return true;
     }
     return false;
@@ -27,21 +27,21 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
     }
 
     this->image_buf = (uint8_t*)malloc(len);
-    strcpy((char*)(this->image_buf), (char*)(buf));
+    memcpy((void*)(this->image_buf), (void*)(buf), len);
 
     uint8_t* header = this->image_buf;
     header += 16;
 
-    uint32_t width = header[3] << 12 | header[2] << 8 | header[1] << 4 | header[0];
-    header += 8;
-    uint32_t height = header[3] << 12 | header[2] << 8 | header[1] << 4 | header[0];
-
+    uint32_t width = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
+    header += 4;
+    uint32_t height = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
+    printf("width is %d, height is %d", width, height);
     this->image_desc.header.always_zero = 0;
     this->image_desc.header.w = width;
     this->image_desc.header.h = height;
+    this->image_desc.header.cf = LV_IMG_CF_RAW;
     this->image_desc.data_size = len;
-    this->image_desc.header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
-    this->image_desc.data = this->image_buf;
+    this->image_desc.data = this->image_buf + 24;
 
     lv_img_set_src(this->instance, &this->image_desc);
 };

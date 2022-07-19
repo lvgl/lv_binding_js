@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 ADD_DEFINITIONS(-DDEBUG)
-set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
+set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++11")
 
 set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)

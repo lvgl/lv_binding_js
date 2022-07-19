@@ -31,6 +31,8 @@ const style = {
         height: '320px',
         'border-width': 3,
         'border-color': '#4169E1',
+        'display': 'flex',
+        'flex-direction': 'column'
     },
     view1: {
         width: '80%',
