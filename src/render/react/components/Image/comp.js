@@ -24,12 +24,12 @@ function setImageProps(comp, newProps, oldProps) {
         set src(url) {
             if (url && url !== oldProps.url) {
                 if (!isValidUrl(url)) {
-                    fs.readFile(url)
-                        .then(data => {
-                            console.log(data)
-                            comp.setImageBinary(data.buffer)
-                        })
-                        .catch(e => console.log(e))
+                    try {
+                        const data = fs.readFileSync(url, 'binary')
+                        comp.setImageBinary(data.buffer)
+                    } catch (e) {
+                        console.log('setImage error', e)
+                    }
                     // comp.setImageBinary(content)
                 } else {
                     getImageBinary(url)

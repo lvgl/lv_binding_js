@@ -41,7 +41,7 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
     this->image_desc.header.h = height;
     this->image_desc.header.cf = LV_IMG_CF_RAW_ALPHA;
     this->image_desc.data_size = len;
-    this->image_desc.data = this->image_buf + 24;
+    this->image_desc.data = this->image_buf;
 
     lv_img_set_src(this->instance, &this->image_desc);
 };

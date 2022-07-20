@@ -101,9 +101,9 @@ function realPathSync (path) {
     return filename
 }
 
-function readFileSync (path, encoding = null) {
-    const data = nativefs.readFileSync(path)
-
+function readFileSync (path, encoding = 'utf-8') {
+    const data = nativefs.readFileSync(path, encoding)
+    
     if (encoding !== 'utf-8') {
         return Buffer.from(data)
     }
@@ -111,8 +111,8 @@ function readFileSync (path, encoding = null) {
     return data
 }
 
-async function readFile (path) {
-    const data = await nativefs.readFile(path)
+async function readFile (path, encoding = 'utf-8') {
+    const data = await nativefs.readFile(path, encoding)
 
     if (encoding !== 'utf-8') {
         return Buffer.from(data)

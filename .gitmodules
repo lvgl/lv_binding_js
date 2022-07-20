@@ -2,5 +2,5 @@
 	path = src/deps/lvgl
 	url = https://github.com/lvgl/lvgl.git
 [submodule "src/render/deps/lv_png"]
-	path = src/render/deps/lv_png
+	path = src/deps/lv_png
 	url = https://github.com/lvgl/lv_lib_png.git

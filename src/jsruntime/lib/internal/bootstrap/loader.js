@@ -125,7 +125,6 @@ class NativeModule {
                 [filename, err] = fs.realPathSync(`${basePath}.js`);
             }
             const content = fs.readFileSync(filename)
-
             const requireFn = nativeModuleRequire;
 
             safeWrapAndExec (this, requireFn, "", id, content)

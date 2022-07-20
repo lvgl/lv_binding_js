@@ -18701,10 +18701,12 @@ function setImageProps(comp, newProps, oldProps) {
     set src(url) {
       if (url && url !== oldProps.url) {
         if (!isValidUrl(url)) {
-          fs.readFile(url).then((data) => {
-            console.log(data);
+          try {
+            const data = fs.readFileSync(url, "binary");
             comp.setImageBinary(data.buffer);
-          }).catch((e) => console.log(e));
+          } catch (e) {
+            console.log("setImage error", e);
+          }
         } else {
           getImageBinary(url).then((buffer) => comp.setImageBinary(buffer)).catch(console.warn);
         }
