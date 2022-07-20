@@ -101,13 +101,24 @@ function realPathSync (path) {
     return filename
 }
 
-function readFileSync (path) {
-    const content = nativefs.readFileSync(path)
-    return content
+function readFileSync (path, encoding = null) {
+    const data = nativefs.readFileSync(path)
+
+    if (encoding !== 'utf-8') {
+        return Buffer.from(data)
+    }
+
+    return data
 }
 
 async function readFile (path) {
-    return nativefs.readFile(path)
+    const data = await nativefs.readFile(path)
+
+    if (encoding !== 'utf-8') {
+        return Buffer.from(data)
+    }
+
+    return data
 }
 
 module.exports = {
