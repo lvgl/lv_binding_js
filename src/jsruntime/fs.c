@@ -115,6 +115,8 @@ typedef struct {
     struct {
         JSValue tarray;
     } rw;
+    int is_sync;
+    JSValue sync_result;
 } SJSFsReq;
 
 typedef struct {
@@ -124,10 +126,21 @@ typedef struct {
     int r;
     char* filename;
     SJSPromise result;
-    int isSync;
+    int is_sync;
     JSValue sync_result;
     int isBinary;
 } SJSReadFileReq;
+
+typedef struct {
+    uv_work_t req;
+    JSContext *ctx;
+    int r;
+    char* filename;
+    char* buf;
+    SJSPromise result;
+    int is_sync;
+    JSValue sync_result;
+} SJSWriteFileReq;
 
 static JSValue SJSNewFile(JSContext *ctx, uv_file fd, const char *path) {
     SJSFile *f;
@@ -365,13 +378,20 @@ static void UVFSReqCb(uv_fs_t *req) {
     }
 
 skip:
-    SJSSettlePromise(ctx, &fr->result, is_reject, 1, (JSValueConst *) &arg);
+    if (fr->is_sync) {
+        fr->sync_result = arg;
+    } else {
+        SJSSettlePromise(ctx, &fr->result, is_reject, 1, (JSValueConst *) &arg);
+    }
 
     JS_FreeValue(ctx, fr->obj);
     JS_FreeValue(ctx, fr->rw.tarray);
 
     uv_fs_req_cleanup(&fr->req);
-    js_free(ctx, fr);
+    
+    if (!fr->is_sync) {
+        js_free(ctx, fr);
+    }
 }
 
 /* File functions */
@@ -739,7 +759,7 @@ static int JSUVOpenFlags(const char *strflags, size_t len) {
     return flags;
 }
 
-static JSValue SJSFSOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+static JSValue SJSFSOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path;
     const char *strflags;
     size_t len;
@@ -770,14 +790,21 @@ static JSValue SJSFSOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValu
         return JS_EXCEPTION;
     }
 
-    int r = uv_fs_open(SJSGetLoop(ctx), &fr->req, path, flags, mode, UVFSReqCb);
+    int r = uv_fs_open(SJSGetLoop(ctx), &fr->req, path, flags, mode, is_sync ? NULL : UVFSReqCb);
     JS_FreeCString(ctx, path);
     if (r != 0) {
         js_free(ctx, fr);
         return SJSThrowErrno(ctx, r);
     }
 
-    return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    if (is_sync) {
+        UVFSReqCb(&fr->req);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr);
+        return result;
+    } else {
+        return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    }
 }
 
 static JSValue SJSFSNewStdioFile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -995,7 +1022,7 @@ static JSValue SJSFSCopyfile(JSContext *ctx, JSValueConst this_val, int argc, JS
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSReaddir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSReaddir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -1006,20 +1033,33 @@ static JSValue SJSFSReaddir(JSContext *ctx, JSValueConst this_val, int argc, JSV
         return JS_EXCEPTION;
     }
 
-    int r = uv_fs_opendir(SJSGetLoop(ctx), &fr->req, path, UVFSReqCb);
+    int r = uv_fs_opendir(SJSGetLoop(ctx), &fr->req, path, is_sync ? NULL : UVFSReqCb);
     JS_FreeCString(ctx, path);
     if (r != 0) {
         js_free(ctx, fr);
         return SJSThrowErrno(ctx, r);
     }
 
-    return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    if (is_sync) {
+        UVFSReqCb(&fr->req);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr);
+        return result;
+    } else {
+        return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    }
 }
 
 static void SJSReadfileWork(uv_work_t *req) {
     SJSReadFileReq *fr = req->data;
 
     fr->r = SJSLoadFile(fr->ctx, &fr->dbuf, fr->filename);
+}
+
+static void SJSWritefileWork(uv_work_t *req) {
+    SJSWriteFileReq *fr = req->data;
+
+    fr->r = SJSWriteFile(fr->ctx, &fr->buf, fr->filename);
 }
 
 static void SJSReadfileAfterWork(uv_work_t *req, int status) {
@@ -1047,12 +1087,79 @@ static void SJSReadfileAfterWork(uv_work_t *req, int status) {
             dbuf_free(&fr->dbuf);
     }
 
-    if (!fr->isSync) {
+    if (!fr->is_sync) {
         SJSSettlePromise(ctx, &fr->result, is_reject, 1, (JSValueConst *) &arg);
         js_free(ctx, fr->filename);
         js_free(ctx, fr);
     } else {
         fr->sync_result = arg;
+    }
+};
+
+static void SJSWritefileAfterWork(uv_work_t *req, int status) {
+    SJSReadFileReq *fr = req->data;
+
+    JSContext *ctx = fr->ctx;
+    JSValue arg;
+    BOOL is_reject = FALSE;
+
+    if (status != 0) {
+        arg = SJSNewError(ctx, status);
+        is_reject = TRUE;
+    } else if (fr->r < 0) {
+        arg = SJSNewError(ctx, fr->r);
+        is_reject = TRUE;
+    } else {
+        arg = JS_Undefined;
+    }
+
+    if (!fr->is_sync) {
+        SJSSettlePromise(ctx, &fr->result, is_reject, 1, (JSValueConst *) &arg);
+        js_free(ctx, fr->filename);
+        js_free(ctx, fr);
+    } else {
+        fr->sync_result = arg;
+    }
+};
+
+static JSValue SJSFSWriteFile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+    const char* path = JS_ToCString(ctx, argv[0]);
+    size_t size;
+    char* buf = (char*)JS_GetArrayBuffer(ctx, &size, argv[1]);
+    if (!path)
+        return JS_EXCEPTION;
+
+    SJSWriteFileReq *fr = js_malloc(ctx, sizeof(*fr));
+    if (!fr) {
+        JS_FreeCString(ctx, path);
+        return JS_EXCEPTION;
+    }
+
+    fr->ctx = ctx;
+    fr->r = -1;
+    fr->filename = js_strdup(ctx, path);
+    fr->req.data = fr;
+    fr->is_sync = magic;
+    fr->buf = buf;
+    fr->isBinary = strcmp(encoding, "binary") == 0;
+    JS_FreeCString(ctx, path);
+    JS_FreeCString(ctx, encoding);
+
+    if (magic) {
+        SJSReadfileWork(&fr->req);
+        SJSReadfileAfterWork(&fr->req, 0);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr->filename);
+        js_free(ctx, fr);
+        return result;
+    } else {
+        int r = uv_queue_work(SJSGetLoop(ctx), &fr->req, SJSWritefileWork, SJSWritefileAfterWork);
+        if (r != 0) {
+            js_free(ctx, fr->filename);
+            js_free(ctx, fr);
+            return SJSThrowErrno(ctx, r);
+        }
+        return SJSInitPromise(ctx, &fr->result);
     }
 };
  
@@ -1073,7 +1180,7 @@ static JSValue SJSFSReadFile(JSContext *ctx, JSValueConst this_val, int argc, JS
     fr->r = -1;
     fr->filename = js_strdup(ctx, path);
     fr->req.data = fr;
-    fr->isSync = magic;
+    fr->is_sync = magic;
     fr->isBinary = strcmp(encoding, "binary") == 0;
     JS_FreeCString(ctx, path);
     JS_FreeCString(ctx, encoding);
@@ -1309,10 +1416,13 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_DEF("mkstemp", 1, SJSFSMkstemp),
     SJS_CFUNC_DEF("rmdir", 1, SJSFSRmdir),
     SJS_CFUNC_DEF("copyfile", 3, SJSFSCopyfile),
-    SJS_CFUNC_DEF("readdir", 1, SJSFSReaddir),
+    SJS_CFUNC_MAGIC_DEF("readdir", 1, SJSFSReaddir, 0),
+    SJS_CFUNC_MAGIC_DEF("readdirSync", 1, SJSFSReaddir, 1),
     SJS_CFUNC_MAGIC_DEF("readFile", 2, SJSFSReadFile, 0),
-    SJS_CFUNC_DEF("statSync", 1, SJSFSStatsSync),
     SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSFSReadFile, 1),
+    SJS_CFUNC_MAGIC_DEF("writeFile", 2, SJSFSWriteFile, 0),
+    SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 0),
+    SJS_CFUNC_DEF("statSync", 1, SJSFSStatsSync),
     SJS_CFUNC_DEF("realPathSync", 1, SJSRealPathSync),
 };
 

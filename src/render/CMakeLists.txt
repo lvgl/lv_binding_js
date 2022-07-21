@@ -14,6 +14,7 @@ add_library(render STATIC
     ./native/core/event/click/click.cpp
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
+    ./native/components/image/lodepng.cpp
     ./native/components/image/image.cpp
     ./native/components/image/image_wrap.cpp
     ./native/components/text/text.cpp

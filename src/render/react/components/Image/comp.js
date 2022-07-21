@@ -25,7 +25,7 @@ function setImageProps(comp, newProps, oldProps) {
             if (url && url !== oldProps.url) {
                 if (!isValidUrl(url)) {
                     try {
-                        const data = fs.readFileSync(url, 'binary')
+                        const data = fs.readFileSync(url, { encoding: 'binary' })
                         comp.setImageBinary(data.buffer)
                     } catch (e) {
                         console.log('setImage error', e)

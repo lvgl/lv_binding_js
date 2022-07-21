@@ -1,4 +1,5 @@
 const nativefs = globalThis.SJSJSBridge.fs
+globalThis.SJSJSBridge.fs = null;
 
 class Stat {
     constructor (stat) {
@@ -101,7 +102,7 @@ function realPathSync (path) {
     return filename
 }
 
-function readFileSync (path, encoding = 'utf-8') {
+function readFileSync (path, { encoding = 'utf-8' } = {}) {
     const data = nativefs.readFileSync(path, encoding)
     
     if (encoding !== 'utf-8') {
@@ -111,7 +112,7 @@ function readFileSync (path, encoding = 'utf-8') {
     return data
 }
 
-async function readFile (path, encoding = 'utf-8') {
+async function readFile (path, { encoding = 'utf-8' } = {}) {
     const data = await nativefs.readFile(path, encoding)
 
     if (encoding !== 'utf-8') {
@@ -121,10 +122,22 @@ async function readFile (path, encoding = 'utf-8') {
     return data
 }
 
+async function writeFile (path, data) {
+    data = Buffer.from(data)
+    return await nativefs.writeFile(path, data.buffer)
+}
+
+async function writeFileSync (path, data) {
+    data = Buffer.from(data)
+    return nativefs.writeFileSync(path, data.buffer)
+}
+
 module.exports = {
     statSync,
     stat: statAsync,
     realPathSync,
     readFileSync,
     readFile,
+    writeFile,
+    writeFileSync
 }

@@ -6,8 +6,8 @@ set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "
 
 set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
 
-project(lv_png)
-add_subdirectory(./src/deps/lv_png)
+# project(lv_png)
+# add_subdirectory(./src/deps/lv_png)
 add_subdirectory(./src/jsruntime)
 add_subdirectory(./src/render)
 add_subdirectory(./src/deps/lvgl)
@@ -39,4 +39,4 @@ include_directories(
 find_package(SDL2 REQUIRED SDL2)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 
-target_link_libraries(Main jsruntime render dl pthread lvgl lvgl::drivers lv_png ${SDL2_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_drivers/build/lib/liblv_drivers.a)
+target_link_libraries(Main jsruntime render dl pthread lvgl lvgl::drivers ${SDL2_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_drivers/build/lib/liblv_drivers.a)

@@ -119,6 +119,34 @@ void SJSDumpError1(JSContext *ctx, JSValueConst exception_val) {
     }
 };
 
+int SJSWriteFile(JSContext *ctx, char* buf, size_t len, const char *filename) {
+    uv_fs_t req;
+    uv_file fd;
+    int r;
+
+    r = uv_fs_open(NULL, &req, filename, O_RDONLY, 0, NULL);
+    uv_fs_req_cleanup(&req);
+    if (r < 0)
+        return r;
+
+    fd = r;
+    uv_buf_t b = uv_buf_init(buf, len);
+    size_t offset = 0;
+
+    do {
+        r = uv_fs_write(NULL, &req, fd, &b, 1, offset, NULL);
+        uv_fs_req_cleanup(&req);
+        if (r <= 0)
+            break;
+        offset += r;
+    } while (1);
+
+    uv_fs_close(NULL, &req, fd, NULL);
+    uv_fs_req_cleanup(&req);
+
+    return r;
+};
+
 int SJSLoadFile(JSContext *ctx, DynBuf *dbuf, const char *filename) {
     uv_fs_t req;
     uv_file fd;

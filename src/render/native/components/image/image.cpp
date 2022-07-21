@@ -22,33 +22,49 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
     if (!ispng((uint16_t*)(buf))) return;
 
     if (this->image_buf != nullptr) {
-        free(this->image_buf);
+        lodepng_free(this->image_buf);
         this->image_buf = nullptr;
     }
 
-    this->image_buf = (uint8_t*)malloc(len);
-    memcpy((void*)(this->image_buf), (void*)(buf), len);
+    // this->image_buf = (uint8_t*)malloc(len);
+    // memcpy((void*)(this->image_buf), (void*)(buf), len);
 
-    uint8_t* header = this->image_buf;
-    header += 16;
+    uint8_t* img_data = NULL;
+    uint32_t width;
+    uint32_t height;
 
-    uint32_t width = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
-    header += 4;
-    uint32_t height = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
+    // uint8_t* header = this->image_buf;
+    // header += 16;
+
+    // uint32_t width = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
+    // header += 4;
+    // uint32_t height = header[0] << 12 | header[1] << 8 | header[2] << 4 | header[3];
+
+    uint32_t error = lodepng_decode32(&img_data, &width, &height, (unsigned char*)buf, len);
+    if(error) {
+        if(img_data != NULL) {
+            lodepng_free(img_data);
+        }
+        printf("error %u: %s\n", error, lodepng_error_text(error));
+        return;
+    }
+    convert_color_depth(img_data, width * height);
+    this->image_buf = img_data;
+
     printf("width is %d, height is %d", width, height);
     this->image_desc.header.always_zero = 0;
     this->image_desc.header.w = width;
     this->image_desc.header.h = height;
     this->image_desc.header.cf = LV_IMG_CF_RAW_ALPHA;
     this->image_desc.data_size = len;
-    this->image_desc.data = this->image_buf;
+    this->image_desc.data = img_data;
 
     lv_img_set_src(this->instance, &this->image_desc);
 };
 
 Image::~Image () {
     if (this->image_buf != nullptr) {
-        free(this->image_buf);
+        lodepng_free(this->image_buf);
         this->image_buf = nullptr;
     }
 }

@@ -38,6 +38,8 @@ void SJSDumpError1(JSContext *ctx, JSValueConst exception_val);
 
 int SJSLoadFile(JSContext *ctx, DynBuf *dbuf, const char *filename);
 
+int SJSWriteFile(JSContext *ctx, char* buf, size_t len, const char *filename);
+
 JSValue SJSNewResolvedPromise(JSContext *ctx, int argc, JSValueConst *argv);
 
 JSValue SJSNewRejectedPromise(JSContext *ctx, int argc, JSValueConst *argv);
