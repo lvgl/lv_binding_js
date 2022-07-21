@@ -139,6 +139,7 @@ typedef struct {
     char* buf;
     SJSPromise result;
     int is_sync;
+    size_t len;
     JSValue sync_result;
 } SJSWriteFileReq;
 
@@ -1059,7 +1060,7 @@ static void SJSReadfileWork(uv_work_t *req) {
 static void SJSWritefileWork(uv_work_t *req) {
     SJSWriteFileReq *fr = req->data;
 
-    fr->r = SJSWriteFile(fr->ctx, &fr->buf, fr->filename);
+    fr->r = SJSWriteFile(fr->ctx, &fr->buf, fr->len, fr->filename);
 }
 
 static void SJSReadfileAfterWork(uv_work_t *req, int status) {
@@ -1110,7 +1111,7 @@ static void SJSWritefileAfterWork(uv_work_t *req, int status) {
         arg = SJSNewError(ctx, fr->r);
         is_reject = TRUE;
     } else {
-        arg = JS_Undefined;
+        arg = JS_UNDEFINED;;
     }
 
     if (!fr->is_sync) {
@@ -1141,9 +1142,8 @@ static JSValue SJSFSWriteFile(JSContext *ctx, JSValueConst this_val, int argc, J
     fr->req.data = fr;
     fr->is_sync = magic;
     fr->buf = buf;
-    fr->isBinary = strcmp(encoding, "binary") == 0;
+    fr->len = size;
     JS_FreeCString(ctx, path);
-    JS_FreeCString(ctx, encoding);
 
     if (magic) {
         SJSReadfileWork(&fr->req);

@@ -3,7 +3,10 @@
 
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
-#include "lodepng.h"
+
+#include "./lodepng.h"
+
+void lodepng_free(void* ptr);
 
 class Image : public BasicComponent {
  public:

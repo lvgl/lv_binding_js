@@ -18702,7 +18702,7 @@ function setImageProps(comp, newProps, oldProps) {
       if (url && url !== oldProps.url) {
         if (!isValidUrl(url)) {
           try {
-            const data = fs.readFileSync(url, "binary");
+            const data = fs.readFileSync(url, { encoding: "binary" });
             comp.setImageBinary(data.buffer);
           } catch (e) {
             console.log("setImage error", e);
@@ -18889,6 +18889,7 @@ function App() {
       e.stopPropagation();
     }
   })), /* @__PURE__ */ import_react.default.createElement(Image, {
+    style: style.image,
     src: imageUrl
   }));
 }
@@ -18897,9 +18898,7 @@ var style = {
     width: "480px",
     height: "320px",
     "border-width": 3,
-    "border-color": "#4169E1",
-    "display": "flex",
-    "flex-direction": "column"
+    "border-color": "#4169E1"
   },
   view1: {
     width: "80%",
@@ -18930,7 +18929,14 @@ var style = {
     width: 50,
     height: 50
   },
-  image: {}
+  image: {
+    "top": 100,
+    "left": 0,
+    "border-width": 3,
+    "border-color": "#4169E1",
+    "width": "175px",
+    "height": "120px"
+  }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
 /*

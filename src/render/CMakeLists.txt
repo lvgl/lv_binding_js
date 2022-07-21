@@ -32,7 +32,6 @@ include_directories(
     ${RUNTIME_PATH}
     ${ENGINE_PATH}
     ${LVJL_PATH}
-    ../deps/lv_png
     ../../src
     ../../src/deps
     ../render

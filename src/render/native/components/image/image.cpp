@@ -48,7 +48,6 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
         printf("error %u: %s\n", error, lodepng_error_text(error));
         return;
     }
-    convert_color_depth(img_data, width * height);
     this->image_buf = img_data;
 
     printf("width is %d, height is %d", width, height);

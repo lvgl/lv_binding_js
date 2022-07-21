@@ -2,7 +2,6 @@
 
 extern "C" {
     #include "jsapi.h"
-    #include "lv_png/lv_png.h"
 };
 
 #include "native/components/component.hpp"

@@ -13,9 +13,9 @@ add_subdirectory(./src/render)
 add_subdirectory(./src/deps/lvgl)
 add_subdirectory(./src/deps/lv_drivers)
 
-target_include_directories(lv_png PUBLIC
-    ./src/deps
-)
+# target_include_directories(lv_png PUBLIC
+#     ./src/deps
+# )
 
 add_executable(Main
     ./src/utils/utils.c

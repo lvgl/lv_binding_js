@@ -19,6 +19,7 @@ function App () {
                 <View style={style.view3} onClick={(e) => {console.log(4444444); e.stopPropagation()}}></View>
             </View>
             <Image
+                style={style.image}
                 src={imageUrl}
             />
         </Window>
@@ -31,8 +32,6 @@ const style = {
         height: '320px',
         'border-width': 3,
         'border-color': '#4169E1',
-        'display': 'flex',
-        'flex-direction': 'column'
     },
     view1: {
         width: '80%',
@@ -64,7 +63,12 @@ const style = {
         height: 50
     },
     image: {
-
+        'top': 100,
+        'left': 0,
+        'border-width': 3,
+        'border-color': '#4169E1',
+        'width': '175px',
+        'height': '120px'
     }
 }
 

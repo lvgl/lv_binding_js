@@ -30,7 +30,6 @@ function setImageProps(comp, newProps, oldProps) {
                     } catch (e) {
                         console.log('setImage error', e)
                     }
-                    // comp.setImageBinary(content)
                 } else {
                     getImageBinary(url)
                         .then((buffer) => comp.setImageBinary(buffer))
