@@ -1,5 +1,6 @@
 import { colorTransform } from './color'
 import { FontStyle } from './font'
+import { ScrollStyle } from './scroll'
 
 function NormalizePx (key, value, result) {
     if (!isNaN(value)) {
@@ -217,7 +218,8 @@ StyleSheet.pipeline([
     NormalStyle,
     AbbreviationStyle,
     FlexStyle,
-    FontStyle
+    FontStyle,
+    ScrollStyle
 ])
 
 export default StyleSheet

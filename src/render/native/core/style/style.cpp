@@ -194,6 +194,28 @@ static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* c
     lv_label_set_long_mode(comp, x);
 };
 
+static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    if (x) {
+        lv_obj_add_flag(comp, LV_OBJ_FLAG_SCROLL_MOMENTUM);
+    } else {
+        lv_obj_clear_flag(comp, LV_OBJ_FLAG_SCROLL_MOMENTUM);
+    }
+};
+
+static void CompSetOverflow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    if (x) {
+        lv_obj_clear_flag(comp, LV_OBJ_FLAG_SCROLLABLE);
+    } else {
+        lv_obj_add_flag(comp, LV_OBJ_FLAG_SCROLLABLE);
+    }
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
@@ -237,4 +259,8 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* font */
     {"font-size", &CompSetFontSize},
     {"text-overflow", &CompSetTextOverFLow}
+
+    /* scroll */
+    {"overflow-scrolling", &CompSetOverFlowScrolling},
+    {"overflow", &CompSetOverflow}
 };

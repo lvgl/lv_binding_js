@@ -1,5 +1,30 @@
+const builtinColor = {
+    'red': 0xf44336,
+    'pink': 0xe91e63,
+    'purple': 0x9c27b0,
+    'deep-purple': 0x673ab7,
+    'indigo': 0x3f51b5,
+    'blue': 0x2196f3,
+    'light-blue': 0x03a9f4,
+    'cyan': 0x00bcd4,
+    'teal': 0x009688,
+    'green': 0x4caf50,
+    'light-green': 0x8bc34a,
+    'lime': 0xcddc39,
+    'yellow': 0xffeb3b,
+    'amber': 0xffc107,
+    'orange': 0xff9800,
+    'deep-orange': 0xff5722,
+    'brown': 0x795548,
+    'blue-grey': 0x607d8b,
+    'grey': 0x9e9e9e,
+}
 
 export const colorTransform = (data) => {
+    if (builtinColor[data]) {
+        return builtinColor[data]
+    }
+
     const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
     if (/^(rgb|RGB)/.test(data)) {
         const aColor = data.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
