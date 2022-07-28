@@ -124,7 +124,7 @@ int SJSWriteFile(JSContext *ctx, char* buf, size_t len, const char *filename) {
     uv_file fd;
     int r;
 
-    r = uv_fs_open(NULL, &req, filename, O_RDONLY, 0, NULL);
+    r = uv_fs_open(NULL, &req, filename, O_WRONLY | UV_FS_O_CREAT, 0, NULL);
     uv_fs_req_cleanup(&req);
     if (r < 0)
         return r;
@@ -132,11 +132,13 @@ int SJSWriteFile(JSContext *ctx, char* buf, size_t len, const char *filename) {
     fd = r;
     uv_buf_t b = uv_buf_init(buf, len);
     size_t offset = 0;
+    size_t write = 0;
 
     do {
         r = uv_fs_write(NULL, &req, fd, &b, 1, offset, NULL);
+        write += r;
         uv_fs_req_cleanup(&req);
-        if (r <= 0)
+        if (write >= len)
             break;
         offset += r;
     } while (1);

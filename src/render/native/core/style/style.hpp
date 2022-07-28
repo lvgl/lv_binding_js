@@ -17,3 +17,12 @@ class StyleManager {
   public:
     static std::unordered_map<std::string, CompSetStyle*> styles;
 };
+
+void CompSetTransition (
+  lv_style_t* style, 
+  lv_style_transition_dsc_t* trans, 
+  lv_style_prop_t props[],
+  std::string func_str,
+  int32_t time, 
+  int32_t delay
+);

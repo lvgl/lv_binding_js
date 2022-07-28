@@ -531,11 +531,11 @@ var require_react_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState(initialState) {
+        function useState2(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1683,7 +1683,7 @@ var require_react_development = __commonJS({
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
         exports.useRef = useRef;
-        exports.useState = useState;
+        exports.useState = useState2;
         exports.version = ReactVersion;
       })();
     }
@@ -7432,11 +7432,11 @@ var require_react_reconciler_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -17863,34 +17863,34 @@ For more info, visit https://fb.me/react-mock-scheduler`);
         var scheduleUpdate = null;
         var setSuspenseHandler = null;
         {
-          var copyWithSetImpl = function(obj, path2, idx, value) {
-            if (idx >= path2.length) {
+          var copyWithSetImpl = function(obj, path3, idx, value) {
+            if (idx >= path3.length) {
               return value;
             }
-            var key = path2[idx];
+            var key = path3[idx];
             var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
-            updated[key] = copyWithSetImpl(obj[key], path2, idx + 1, value);
+            updated[key] = copyWithSetImpl(obj[key], path3, idx + 1, value);
             return updated;
           };
-          var copyWithSet = function(obj, path2, value) {
-            return copyWithSetImpl(obj, path2, 0, value);
+          var copyWithSet = function(obj, path3, value) {
+            return copyWithSetImpl(obj, path3, 0, value);
           };
-          overrideHookState = function(fiber, id2, path2, value) {
+          overrideHookState = function(fiber, id2, path3, value) {
             var currentHook2 = fiber.memoizedState;
             while (currentHook2 !== null && id2 > 0) {
               currentHook2 = currentHook2.next;
               id2--;
             }
             if (currentHook2 !== null) {
-              var newState = copyWithSet(currentHook2.memoizedState, path2, value);
+              var newState = copyWithSet(currentHook2.memoizedState, path3, value);
               currentHook2.memoizedState = newState;
               currentHook2.baseState = newState;
               fiber.memoizedProps = _assign({}, fiber.memoizedProps);
               scheduleWork(fiber, Sync);
             }
           };
-          overrideProps = function(fiber, path2, value) {
-            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path2, value);
+          overrideProps = function(fiber, path3, value) {
+            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path3, value);
             if (fiber.alternate) {
               fiber.alternate.pendingProps = fiber.pendingProps;
             }
@@ -18176,7 +18176,32 @@ function fireEvent(uid, eventType, e) {
 globalThis.FIRE_QEVENT_CALLBACK = fireEvent;
 
 // src/render/react/core/style/color.js
+var builtinColor = {
+  "red": 16007990,
+  "pink": 15277667,
+  "purple": 10233776,
+  "deep-purple": 6765239,
+  "indigo": 4149685,
+  "blue": 2201331,
+  "light-blue": 240116,
+  "cyan": 48340,
+  "teal": 38536,
+  "green": 5025616,
+  "light-green": 9159498,
+  "lime": 13491257,
+  "yellow": 16771899,
+  "amber": 16761095,
+  "orange": 16750592,
+  "deep-orange": 16733986,
+  "brown": 7951688,
+  "blue-grey": 6323595,
+  "grey": 10395294
+};
 var colorTransform = (data) => {
+  if (builtinColor[data]) {
+    return builtinColor[data];
+  }
+  data = data.replace(/(^\s*)|(\s*$)/g, "");
   const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
   if (/^(rgb|RGB)/.test(data)) {
     const aColor = data.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
@@ -18207,44 +18232,12 @@ var colorTransform = (data) => {
   return "";
 };
 
-// src/render/react/core/style/font.js
-var builtInFontList = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48];
-var TextOverFlowObj = {
-  "ellipsis": 1,
-  "clip": 4,
-  "auto": 0,
-  "scroll": 2,
-  "circular": 3
-};
-function FontStyle(style2, result) {
-  if (style2["font-size"]) {
-    let size = style2["font-size"];
-    if (typeof size == "string") {
-      const reg = /(\d+\.?\d*)(px)?$/;
-      size = size.match(reg)?.[1];
-    }
-    if (isNaN(size))
-      return result;
-    if (size % 2 == 1) {
-      size += 1;
-    }
-    size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size));
-    result["font-size"] = builtInFontList.indexOf(size);
-  }
-  if (style2["text-overflow"]) {
-    const value = style2["text-overflow"];
-    if (TextOverFlowObj[value]) {
-      result["text-overflow"] = TextOverFlowObj[value];
-    }
-  }
-  return result;
-}
-
-// src/render/react/core/style/index.js
+// src/render/react/core/style/util.js
 function NormalizePx(key, value, result) {
   if (!isNaN(value)) {
     return result[key] = value;
   }
+  value = value.replace(/(^\s*)|(\s*$)/g, "");
   const reg = /(\d+\.?\d*)(px)?$/;
   value = value.match(reg)?.[1];
   if (!isNaN(value)) {
@@ -18255,6 +18248,7 @@ function NormalizePxOrPercent(key, value, result) {
   if (!isNaN(value)) {
     return result[key] = value;
   }
+  value = value.replace(/(^\s*)|(\s*$)/g, "");
   const reg1 = /(\d+\.?\d*)(%)?$/;
   const reg2 = /(\d+\.?\d*)(px)?$/;
   const value2 = value.match(reg2)?.[1];
@@ -18279,6 +18273,243 @@ function NormalizeColor(key, value, result) {
     result[key] = value;
   }
 }
+function NormalizeTime(value) {
+  if (!value)
+    return null;
+  const reg = /(.+)([s|ms])/;
+  const [_, time, unit] = value.match(reg);
+  if (!isNaN(time)) {
+    if (unit == "s") {
+      return time * 1e3;
+    } else if (unit == "ms") {
+      return time;
+    }
+  }
+  return null;
+}
+
+// src/render/react/core/style/font.js
+var builtInFontList = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48];
+var TextOverFlowObj = {
+  "ellipsis": 1,
+  "clip": 4,
+  "auto": 0,
+  "scroll": 2,
+  "circular": 3
+};
+function FontStyle(style2, result) {
+  if (style2["font-size"]) {
+    let size = style2["font-size"];
+    if (typeof size == "string") {
+      const reg = /(\d+\.?\d*)(px)?$/;
+      size = size.replace(/(^\s*)|(\s*$)/g, "").match(reg)?.[1];
+    }
+    if (isNaN(size))
+      return result;
+    if (size % 2 == 1) {
+      size += 1;
+    }
+    size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size));
+    result["font-size"] = builtInFontList.indexOf(size);
+  }
+  if (style2["text-overflow"]) {
+    const value = style2["text-overflow"];
+    if (TextOverFlowObj[value]) {
+      result["text-overflow"] = TextOverFlowObj[value];
+    }
+  }
+  return result;
+}
+
+// src/render/react/core/style/scroll.js
+function ScrollStyle(style2, result) {
+  if (style2["overflow-scrolling"]) {
+    const obj = {
+      "auto": 0,
+      "touch": 1
+    };
+    const value = style2["overflow-scrolling"];
+    if (obj[value] != void 0) {
+      result["overflow-scrolling"] = obj[value];
+    }
+  } else if (style2["overflow"]) {
+    const obj = {
+      "hidden": 1,
+      "scroll": 0,
+      "auto": 0
+    };
+    const value = style2["overflow"];
+    if (obj[value] != void 0) {
+      result["overflow"] = obj[value];
+    }
+  }
+  return result;
+}
+
+// src/render/react/core/style/opacity.js
+function NormalizeOpacity(value) {
+  if (isNaN(value) || value > 1)
+    return 255;
+  if (value < 0)
+    return 0;
+  return Math.floor(value * 255);
+}
+function OpacityStyle(style2, result, compName) {
+  if (style2["opacity"]) {
+    if (compName === "Image") {
+      result["img-opacity"] = NormalizeOpacity(style2["opacity"]);
+    } else {
+      result["opacity"] = NormalizeOpacity(style2["opacity"]);
+    }
+  } else if (style2["border-opacity"]) {
+    result["opacity"] = NormalizeOpacity(style2["opacity"]);
+  } else if (style2["outline-opacity"]) {
+    result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
+  }
+  return result;
+}
+
+// src/render/react/core/style/misc.js
+function MiscStyle(style2, result, compName) {
+  return result;
+}
+
+// src/render/react/core/style/trans.js
+var LV_STYLE_PROP_LAYOUT_REFR = 1 << 12;
+var LV_STYLE_PROP_EXT_DRAW = 1 << 11;
+var LV_STYLE_PROP_PARENT_LAYOUT_REFR = 1 << 13;
+var LV_STYLE_PROP_FILTER = 1 << 14;
+var LV_STYLE_PROP_INHERIT = 1 << 10;
+var transitionProperty = {
+  "width": 1 | LV_STYLE_PROP_LAYOUT_REFR,
+  "min-width": 2 | LV_STYLE_PROP_LAYOUT_REFR,
+  "max-width": 3 | LV_STYLE_PROP_LAYOUT_REFR,
+  "height": 4 | LV_STYLE_PROP_LAYOUT_REFR,
+  "min-height": 5 | LV_STYLE_PROP_LAYOUT_REFR,
+  "max-height": 6 | LV_STYLE_PROP_LAYOUT_REFR,
+  "left": 7 | LV_STYLE_PROP_LAYOUT_REFR,
+  "top": 8 | LV_STYLE_PROP_LAYOUT_REFR,
+  "align": 9 | LV_STYLE_PROP_LAYOUT_REFR,
+  "transform-width": 10 | LV_STYLE_PROP_EXT_DRAW,
+  "transform-height": 11 | LV_STYLE_PROP_EXT_DRAW,
+  "translateX": 12 | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
+  "translateY": 13 | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
+  "scale": 14 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
+  "rotate": 15 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
+  "padding-top": 16 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "padding-bottom": 17 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "padding-left": 18 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "padding-right": 19 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "padding-row": 20 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "padding-column": 21 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "background-color": 32,
+  "background-color-filter": 32 | LV_STYLE_PROP_FILTER,
+  "backgroun-opacity": 33,
+  "background-grad-color": 34,
+  "background-grad-color-filter": 34 | LV_STYLE_PROP_FILTER,
+  "background-grad-dir": 35,
+  "background-main-stop": 36,
+  "background-grad-stop": 37,
+  "background-grad": 38,
+  "background-dither-mode": 39,
+  "background-image": 40 | LV_STYLE_PROP_EXT_DRAW,
+  "background-image-opacity": 41,
+  "background-image-recolor": 42,
+  "background-image-recolor-filter": 42 | LV_STYLE_PROP_FILTER,
+  "background-image-recolor-opacity": 43,
+  "background-image-tiled": 44,
+  "border-color": 48,
+  "border-color-filter": 48 | LV_STYLE_PROP_FILTER,
+  "border-opacity": 49,
+  "border-width": 50 | LV_STYLE_PROP_LAYOUT_REFR,
+  "border-side": 51,
+  "boder-post": 52,
+  "outline-width": 58 | LV_STYLE_PROP_EXT_DRAW,
+  "outline-color": 59,
+  "outline-color-filter": 59 | LV_STYLE_PROP_FILTER,
+  "outline-opacity": 60 | LV_STYLE_PROP_EXT_DRAW,
+  "outline-padding": 61 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-width": 64 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-ofs-x": 65 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-ofs-y": 66 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-spread": 67 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-color": 68,
+  "shadow-color-filtered": 68 | LV_STYLE_PROP_FILTER,
+  "shadow-opacity": 69 | LV_STYLE_PROP_EXT_DRAW,
+  "img-opacity": 70,
+  "img-recolor": 71,
+  "img-recolor-filtered": 71 | LV_STYLE_PROP_FILTER,
+  "img-recolor-filtered-opacity": 72,
+  "line-width": 73 | LV_STYLE_PROP_EXT_DRAW,
+  "line-dash-width": 74,
+  "line-dash-gap": 75,
+  "line-rounded": 76,
+  "line-color": 77,
+  "line-color-filtered": 77 | LV_STYLE_PROP_FILTER,
+  "line-opacity": 78,
+  "arc-width": 80 | LV_STYLE_PROP_EXT_DRAW,
+  "arc-rounded": 81,
+  "arc-color": 82,
+  "arc-color-filtered": 82 | LV_STYLE_PROP_FILTER,
+  "arc-opacity": 83,
+  "arc-image": 84,
+  "text-color": 87 | LV_STYLE_PROP_INHERIT,
+  "text-color-filtered": 87 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_FILTER,
+  "text-opacity": 88 | LV_STYLE_PROP_INHERIT,
+  "font-size": 89 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
+  "letter-spacing": 90 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
+  "line-height": 91 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
+  "text-decor": 92 | LV_STYLE_PROP_INHERIT,
+  "text-align": 93 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
+  "border-radius": 96,
+  "clip-corner": 97,
+  "opacity": 98 | LV_STYLE_PROP_INHERIT,
+  "color-filter-dsc": 99,
+  "color-filter-opacity": 100,
+  "animate-time": 101,
+  "animate-speed": 102
+};
+var transformSupportKeys = ["translate", "translateX", "translateY", "scale", "rotate"];
+function TransStyle(style2, result, compName) {
+  if (style2["transition"]) {
+    let value = style2["transition"];
+    const transProps = [];
+    value = value.split(",").filter((item) => !!item).map((item) => item.split(/\s/)).map((item) => item.filter((a) => !!a));
+    value.forEach((item) => {
+      let [property2, duration2, func2 = "linear", delay2 = 0] = item;
+      if (property2 && NormalizeTime(duration2) != null && transitionProperty[property2]) {
+        transProps.push(transitionProperty[property2]);
+      }
+    });
+    let [property, duration, func = "linear", delay = 0] = value[0];
+    const trans = [transProps.length, transProps, NormalizeTime(duration) || 1e3, func, delay];
+    console.log(trans);
+    result["transition"] = trans;
+  }
+  if (style2["transform"]) {
+    let value = style2["transform"];
+    value = value.match(/[a-zA-Z]+\([^\(]+\)/g);
+    const reg = /^([a-zA-Z]+)\((.+)\)$/;
+    value.forEach((item) => {
+      let [_, prop, val] = item.match(reg);
+      if (transformSupportKeys.includes(prop) && val) {
+        if (prop == "translate") {
+          val = val.split(",");
+          NormalizePxOrPercent("translateX", val[0], result);
+          NormalizePxOrPercent("translateY", val[1], result);
+        } else {
+          if (compName === "Image") {
+            prop = `img-${prop}`;
+          }
+          NormalizePxOrPercent(prop, val, result);
+        }
+      }
+    });
+  }
+  return result;
+}
+
+// src/render/react/core/style/index.js
 function NormalStyle(style2, result) {
   const keys = Object.keys(style2);
   const obj = {
@@ -18287,13 +18518,18 @@ function NormalStyle(style2, result) {
     "left": NormalizePxOrPercent,
     "top": NormalizePxOrPercent,
     "background-color": NormalizeColor,
+    "background-grad-color": NormalizeColor,
+    "background-grad-color-dir": NormalizeEnum({
+      "none": 0,
+      "vertical": 1,
+      "horizontal": 2
+    }),
     "padding-left": NormalizePx,
     "padding-right": NormalizePx,
     "padding-top": NormalizePx,
     "padding-bottom": NormalizePx,
     "border-radius": NormalizePx,
     "border-width": NormalizePx,
-    "border-opacity": NormalizePx,
     "border-color": NormalizeColor,
     "border-side": NormalizeEnum({
       left: 4,
@@ -18303,10 +18539,9 @@ function NormalStyle(style2, result) {
       bottom: 1
     }),
     "outline-width": NormalizePx,
-    "outline-opacity": NormalizePx,
     "outline-color": NormalizeColor,
     "font-size": NormalizePx,
-    "color": NormalizeColor
+    "text-color": NormalizeColor
   };
   keys.forEach((key) => {
     if (obj[key]) {
@@ -18378,7 +18613,7 @@ function FlexStyle(style2, result) {
   let trackCrossPlace = 0;
   const justifyContent = style2["justify-content"] || "flex-start";
   const alignItems = style2["align-items"] || "flex-start";
-  const alignContent = style2["align-content"] || "flex-start";
+  const alignContent = style2["align-content"];
   const flexAlignObj = {
     "flex-start": 0,
     "flex-end": 1,
@@ -18393,9 +18628,7 @@ function FlexStyle(style2, result) {
   if (flexAlignObj[alignItems]) {
     crossPlace = flexAlignObj[alignItems];
   }
-  if (flexAlignObj[alignContent]) {
-    trackCrossPlace = flexAlignObj[alignContent];
-  }
+  trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace;
   result["flex-align"] = [mainPlace, crossPlace, trackCrossPlace];
   if (!isNaN(style2["flex-grow"])) {
     result["flex-grow"] = style2["flex-grow"];
@@ -18404,16 +18637,26 @@ function FlexStyle(style2, result) {
 }
 var _StyleSheet = class {
   static pipeline(args) {
-    _StyleSheet.transformStyle = (style2) => {
-      const result = args.reduce((prev, func) => func(style2, prev), {});
+    _StyleSheet.transformStyle = (style2, compName) => {
+      const result = args.reduce((prev, func) => func(style2, prev, compName), {});
       return result;
     };
   }
-  static transform(style2) {
-    const result = _StyleSheet.transformStyle(style2);
+  static transform(style2, compName) {
+    const result = _StyleSheet.transformStyle(style2, compName);
     return result;
   }
   static create() {
+    return new Proxy({ __dirty: true }, {
+      set(obj, prop, value) {
+        if (prop !== "__dirty") {
+          obj[prop] = value;
+          obj.__dirty = true;
+        } else {
+          obj.__dirty = value;
+        }
+      }
+    });
   }
 };
 var StyleSheet = _StyleSheet;
@@ -18422,7 +18665,11 @@ StyleSheet.pipeline([
   NormalStyle,
   AbbreviationStyle,
   FlexStyle,
-  FontStyle
+  FontStyle,
+  ScrollStyle,
+  OpacityStyle,
+  MiscStyle,
+  TransStyle
 ]);
 var style_default = StyleSheet;
 
@@ -18446,9 +18693,9 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle(comp, obj) {
+function setStyle(comp, obj, compName) {
   obj = Array.isArray(obj) ? obj : [obj];
-  obj = obj.map((item) => style_default.transform(item));
+  obj = obj.map((item) => style_default.transform(item, compName));
   obj = Object.assign(...obj);
   const keys = Object.keys(obj);
   comp.setStyle(obj, keys, keys.length);
@@ -18682,6 +18929,7 @@ function isValidUrl(str) {
 
 // src/render/react/components/Image/comp.js
 var fs = __require("fs");
+var path = __require("path");
 var bridge4 = globalThis.SJSJSBridge;
 var NativeImage = bridge4.NativeRender.NativeComponents.Image;
 async function getImageBinary(url) {
@@ -18696,19 +18944,21 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet);
+      setStyle(comp, styleSheet, "Image");
+    },
+    set onClick(fn) {
+      handleOnClick(comp, fn);
     },
     set src(url) {
       if (url && url !== oldProps.url) {
         if (!isValidUrl(url)) {
-          try {
-            const data = fs.readFileSync(url, { encoding: "binary" });
+          fs.readFile(url, { encoding: "binary" }).then((data) => {
             comp.setImageBinary(data.buffer);
-          } catch (e) {
+          }).catch((e) => {
             console.log("setImage error", e);
-          }
+          });
         } else {
-          getImageBinary(url).then((buffer) => comp.setImageBinary(buffer)).catch(console.warn);
+          getImageBinary(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
         }
       }
     }
@@ -18863,34 +19113,40 @@ var Render = Renderer;
 
 // test/1/index.jsx
 var import_react = __toESM(require_react());
-var path = __require("path");
-var rootDir = path.resolve(__dirname, "./");
-var assetUrl = path.resolve(rootDir, "assets/icons");
+var path2 = __require("path");
+var rootDir = path2.resolve(__dirname, "./");
+var assetUrl = path2.resolve(rootDir, "assets/icons");
+var iconId1 = "01d";
+var iconId2 = "02n";
+var imageUrl1 = `${path2.resolve(assetUrl, `${iconId1}.png`)}`;
+var imageUrl2 = `${path2.resolve(assetUrl, `${iconId2}.png`)}`;
 function App() {
-  const iconId = "01d";
-  const imageUrl = `${path.resolve(assetUrl, `${iconId}.png`)}`;
+  const [imageUrl, setImageUrl] = (0, import_react.useState)(imageUrl1);
+  const [imageShow, setImageShow] = (0, import_react.useState)(true);
+  const [text1height, setText1Height] = (0, import_react.useState)(70);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.view1,
-    onClick: () => console.log(22222)
+    onClick: () => setText1Height(100)
   }, /* @__PURE__ */ import_react.default.createElement(View, {
-    style: style.view2,
+    style: [style.view2, { height: text1height }],
     onClick: (e) => {
-      console.log(3333333);
+      setImageShow(false);
       e.stopPropagation();
     }
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.text1
+    style: [style.text1]
   }, "22222")), /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.view3,
     onClick: (e) => {
-      console.log(4444444);
+      setImageUrl(imageUrl2);
       e.stopPropagation();
     }
-  })), /* @__PURE__ */ import_react.default.createElement(Image, {
+  })), imageShow && /* @__PURE__ */ import_react.default.createElement(Image, {
     style: style.image,
-    src: imageUrl
+    src: imageUrl,
+    onClick: () => console.log(666666)
   }));
 }
 var style = {
@@ -18905,18 +19161,17 @@ var style = {
     height: "100px",
     left: 0,
     top: 0,
-    "background-color": "#ff0000",
+    "background-grad-color": "#ff0000",
+    "background-grad-color-dir": "horizontal",
     "display": "flex",
     "justify-content": "center",
-    "align-content": "center"
+    "align-items": "center"
   },
   view2: {
     width: 50,
-    height: 50,
+    height: 70,
     "background-color": "#00FA9A",
-    "display": "flex",
-    "justify-content": "center",
-    "align-content": "center"
+    "transition": "height 2s linear 0"
   },
   view3: {
     width: 50,
@@ -18927,15 +19182,16 @@ var style = {
     "font-size": "24px",
     "text-overflow": "ellipsis",
     width: 50,
-    height: 50
+    height: 50,
+    "text-color": "red"
   },
   image: {
     "top": 100,
     "left": 0,
     "border-width": 3,
     "border-color": "#4169E1",
-    "width": "175px",
-    "height": "120px"
+    "opacity": 0.4,
+    "transform": "rotate(500)"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

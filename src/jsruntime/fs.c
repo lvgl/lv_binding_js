@@ -1060,7 +1060,7 @@ static void SJSReadfileWork(uv_work_t *req) {
 static void SJSWritefileWork(uv_work_t *req) {
     SJSWriteFileReq *fr = req->data;
 
-    fr->r = SJSWriteFile(fr->ctx, &fr->buf, fr->len, fr->filename);
+    fr->r = SJSWriteFile(fr->ctx, fr->buf, fr->len, fr->filename);
 }
 
 static void SJSReadfileAfterWork(uv_work_t *req, int status) {
@@ -1098,7 +1098,7 @@ static void SJSReadfileAfterWork(uv_work_t *req, int status) {
 };
 
 static void SJSWritefileAfterWork(uv_work_t *req, int status) {
-    SJSReadFileReq *fr = req->data;
+    SJSWriteFileReq *fr = req->data;
 
     JSContext *ctx = fr->ctx;
     JSValue arg;
@@ -1123,7 +1123,7 @@ static void SJSWritefileAfterWork(uv_work_t *req, int status) {
     }
 };
 
-static JSValue SJSFSWriteFile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+static JSValue SJSFSWriteFile(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv, int magic) {
     const char* path = JS_ToCString(ctx, argv[0]);
     size_t size;
     char* buf = (char*)JS_GetArrayBuffer(ctx, &size, argv[1]);
@@ -1146,8 +1146,8 @@ static JSValue SJSFSWriteFile(JSContext *ctx, JSValueConst this_val, int argc, J
     JS_FreeCString(ctx, path);
 
     if (magic) {
-        SJSReadfileWork(&fr->req);
-        SJSReadfileAfterWork(&fr->req, 0);
+        SJSWritefileWork(&fr->req);
+        SJSWritefileAfterWork(&fr->req, 0);
         JSValue result = fr->sync_result;
         js_free(ctx, fr->filename);
         js_free(ctx, fr);
@@ -1163,7 +1163,7 @@ static JSValue SJSFSWriteFile(JSContext *ctx, JSValueConst this_val, int argc, J
     }
 };
  
-static JSValue SJSFSReadFile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+static JSValue SJSFSReadFile(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv, int magic) {
     const char* path = JS_ToCString(ctx, argv[0]);
     const char* encoding = JS_ToCString(ctx, argv[1]);
     if (!path)
@@ -1421,7 +1421,7 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("readFile", 2, SJSFSReadFile, 0),
     SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSFSReadFile, 1),
     SJS_CFUNC_MAGIC_DEF("writeFile", 2, SJSFSWriteFile, 0),
-    SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 0),
+    SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 1),
     SJS_CFUNC_DEF("statSync", 1, SJSFSStatsSync),
     SJS_CFUNC_DEF("realPathSync", 1, SJSRealPathSync),
 };

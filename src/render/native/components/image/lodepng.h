@@ -138,6 +138,8 @@ colortype: the desired color type for the raw output image. See explanation on P
 bitdepth: the desired bit depth for the raw output image. See explanation on PNG color types.
 Return value: LodePNG error code (0 means no error).
 */
+void lodepng_free(void* ptr);
+
 unsigned lodepng_decode_memory(unsigned char** out, unsigned* w, unsigned* h,
                                const unsigned char* in, size_t insize,
                                LodePNGColorType colortype, unsigned bitdepth);

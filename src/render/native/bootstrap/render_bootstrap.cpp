@@ -14,4 +14,5 @@ void NativeRenderInit (JSContext* ctx) {
     NativeEventWrapInit(ctx);
 
     lv_init();
+    lv_png_init();
 };

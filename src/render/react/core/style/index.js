@@ -1,53 +1,9 @@
-import { colorTransform } from './color'
+import { NormalizePx, NormalizePxOrPercent, NormalizeEnum, NormalizeColor } from './util'
 import { FontStyle } from './font'
 import { ScrollStyle } from './scroll'
-
-function NormalizePx (key, value, result) {
-    if (!isNaN(value)) {
-        return result[key] = value
-    }
-
-    const reg = /(\d+\.?\d*)(px)?$/
-    value = value.match(reg)?.[1]
-
-    if (!isNaN(value)) {
-        result[key] = value
-    }
-}
-
-function NormalizePxOrPercent (key, value, result) {
-    if (!isNaN(value)) {
-        return result[key] = value
-    }
-
-    const reg1 = /(\d+\.?\d*)(%)?$/
-    const reg2 = /(\d+\.?\d*)(px)?$/
-
-    const value2 = value.match(reg2)?.[1]
-    if (!isNaN(value2)) {
-        return result[key] = value2
-    }
-
-    const value1 = value.match(reg1)?.[1]
-    if (!isNaN(value1)) {
-        return result[`${key}_pct`] = value1
-    }
-}
-
-function NormalizeEnum (obj) {
-    return (key, value, result) => {
-        if (obj[value]) {
-            result[key] = obj[value]
-        }
-    }
-}
-
-function NormalizeColor (key, value, result) {
-    value = colorTransform(value)
-    if (!isNaN(value)) {
-        result[key] = value
-    }
-}
+import { OpacityStyle } from './opacity'
+import { MiscStyle } from './misc'
+import { TransStyle } from './trans'
 
 // normal
 function NormalStyle (style, result) {
@@ -59,13 +15,18 @@ function NormalStyle (style, result) {
         'left': NormalizePxOrPercent,
         'top': NormalizePxOrPercent,
         'background-color': NormalizeColor,
+        'background-grad-color': NormalizeColor,
+        'background-grad-color-dir': NormalizeEnum({
+            'none': 0,
+            'vertical': 1,
+            'horizontal': 2,
+        }),
         'padding-left': NormalizePx,
         'padding-right': NormalizePx,
         'padding-top': NormalizePx,
         'padding-bottom': NormalizePx,
         'border-radius': NormalizePx,
         'border-width': NormalizePx,
-        'border-opacity': NormalizePx,
         'border-color': NormalizeColor,
         'border-side': NormalizeEnum({
             left: 0x04,
@@ -75,10 +36,9 @@ function NormalStyle (style, result) {
             bottom: 0x01,
         }),
         'outline-width': NormalizePx,
-        'outline-opacity': NormalizePx,
         'outline-color': NormalizeColor,
         'font-size': NormalizePx,
-        'color': NormalizeColor,
+        'text-color': NormalizeColor,
     }
 
     keys.forEach(key => {
@@ -160,7 +120,7 @@ function FlexStyle (style, result) {
     let trackCrossPlace = 0
     const justifyContent = style['justify-content'] || 'flex-start'
     const alignItems = style['align-items'] || 'flex-start'
-    const alignContent = style['align-content'] || 'flex-start'
+    const alignContent = style['align-content']
     const flexAlignObj = {
         'flex-start': 0,
         'flex-end': 1,
@@ -175,11 +135,8 @@ function FlexStyle (style, result) {
     if (flexAlignObj[alignItems]) {
         crossPlace = flexAlignObj[alignItems]
     }
-    if (flexAlignObj[alignContent]) {
-        trackCrossPlace = flexAlignObj[alignContent]
-    }
+    trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace
     result['flex-align'] = [mainPlace, crossPlace, trackCrossPlace]
-
     if (!isNaN(style['flex-grow'])) {
         result['flex-grow'] = style['flex-grow']
     }
@@ -194,23 +151,32 @@ class StyleSheet {
     static transformStyle;
 
     static pipeline (args) {
-        StyleSheet.transformStyle = (style) => {
+        StyleSheet.transformStyle = (style, compName) => {
             const result = args.reduce(
-                (prev, func) => func(style, prev),
+                (prev, func) => func(style, prev, compName),
                 {}
             )
             return result
         } 
     }
 
-    static transform(style) {
-        const result = StyleSheet.transformStyle(style)
+    static transform(style, compName) {
+        const result = StyleSheet.transformStyle(style, compName)
 
         return result
     }
 
     static create () {
-        
+        return new Proxy({ __dirty: true }, {
+            set (obj, prop, value) {
+                if (prop !== '__dirty') {
+                    obj[prop] = value;
+                    obj.__dirty = true
+                } else {
+                    obj.__dirty = value
+                }
+            }
+        })
     }
 }
 
@@ -219,7 +185,10 @@ StyleSheet.pipeline([
     AbbreviationStyle,
     FlexStyle,
     FontStyle,
-    ScrollStyle
+    ScrollStyle,
+    OpacityStyle,
+    MiscStyle,
+    TransStyle
 ])
 
 export default StyleSheet

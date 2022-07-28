@@ -4,6 +4,9 @@ extern "C" {
     #include "jsapi.h"
 };
 
+#include "render/native/core/img/png/png.hpp"
+#include "deps/lvgl/lvgl.h"
+
 #include "native/components/component.hpp"
 
 void NativeRenderInit (JSContext* ctx);

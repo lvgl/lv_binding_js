@@ -55,6 +55,20 @@ static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_style_set_bg_color(style, lv_color_hex(y));
 };
 
+static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_style_set_bg_grad_color(style, lv_color_hex(y));
+};
+
+static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_style_set_bg_grad_dir(style, y);
+};
+
 static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -216,6 +230,86 @@ static void CompSetOverflow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     }
 };
 
+static void CompSetOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_opa(style, x);
+};
+
+static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_img_opa(style, x);
+};
+
+static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_translate_x(style, x);
+};
+
+static void CompSetTranslateY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_translate_y(style, x);
+};
+
+static void CompSetScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_transform_zoom(style, x);
+};
+
+static void CompSetRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_transform_angle(style, x);
+};
+
+static void CompSetImgScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_img_set_zoom(comp, x);
+};
+
+static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_img_set_angle(comp, x);
+};
+
+void CompSetTransition (
+    lv_style_t* style,
+    lv_style_transition_dsc_t* trans, 
+    lv_style_prop_t props[],
+    std::string func_str,
+    int32_t time,
+    int32_t delay
+) {
+    static const lv_style_prop_t props1[] = {
+            LV_STYLE_HEIGHT, LV_STYLE_PROP_INV
+    };
+    static lv_style_transition_dsc_t transition_dsc_def1;
+
+    lv_style_transition_dsc_init(&transition_dsc_def1, props1, lv_anim_path_ease_out, 1000, 0, NULL);
+    lv_style_set_transition(style, &transition_dsc_def1);
+};
+
+static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_obj_set_style_text_color(comp, lv_color_hex(y), 0);
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
@@ -229,6 +323,8 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* background */
     {"background-color", &CompSetBackgroundColor},
+    {"background-grad-color", &CompSetBackgroundGradColor},
+    {"background-grad-color-dir", &CompSetBackgroundGradColorDir},
 
     /* border-radius */
     {"border-radius", &CompSetBorderRadius},
@@ -258,9 +354,34 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* font */
     {"font-size", &CompSetFontSize},
-    {"text-overflow", &CompSetTextOverFLow}
+    {"text-overflow", &CompSetTextOverFLow},
 
     /* scroll */
     {"overflow-scrolling", &CompSetOverFlowScrolling},
-    {"overflow", &CompSetOverflow}
+    {"overflow", &CompSetOverflow},
+
+    /* opacity */
+    {"opacity", &CompSetOpacity},
+    {"img-opacity", &CompSetImgOpacity},
+
+    /* transform */
+    {"translateX", &CompSetTranslateX},
+    {"translateY", &CompSetTranslateY},
+    {"scale", &CompSetScale},
+    {"rotate", &CompSetRotate},
+    {"img-scale", &CompSetImgScale},
+    {"img-rotate", &CompSetImgRotate},
+
+    /* color */
+    {"text-color", &CompSetTextColor}
+};
+
+std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
+    { "linear", &lv_anim_path_linear },
+    { "ease-in", &lv_anim_path_ease_in },
+    { "ease-out", &lv_anim_path_ease_out },
+    { "ease-in-out", &lv_anim_path_ease_in_out },
+    { "overshoot", &lv_anim_path_overshoot },
+    { "bounce", &lv_anim_path_bounce },
+    { "step", &lv_anim_path_step },
 };

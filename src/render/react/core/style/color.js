@@ -24,7 +24,7 @@ export const colorTransform = (data) => {
     if (builtinColor[data]) {
         return builtinColor[data]
     }
-
+    data = data.replace(/(^\s*)|(\s*$)/g, "")
     const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
     if (/^(rgb|RGB)/.test(data)) {
         const aColor = data.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");

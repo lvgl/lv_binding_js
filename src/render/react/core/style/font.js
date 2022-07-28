@@ -14,7 +14,7 @@ export function FontStyle (style, result) {
 
         if (typeof size == 'string') {
             const reg = /(\d+\.?\d*)(px)?$/
-            size = size.match(reg)?.[1]
+            size = size.replace(/(^\s*)|(\s*$)/g, "").match(reg)?.[1]
         }
 
         if (isNaN(size)) return result

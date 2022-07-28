@@ -9,9 +9,9 @@ set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
 # project(lv_png)
 # add_subdirectory(./src/deps/lv_png)
 add_subdirectory(./src/jsruntime)
-add_subdirectory(./src/render)
 add_subdirectory(./src/deps/lvgl)
 add_subdirectory(./src/deps/lv_drivers)
+add_subdirectory(./src/render)
 
 # target_include_directories(lv_png PUBLIC
 #     ./src/deps
@@ -39,4 +39,13 @@ include_directories(
 find_package(SDL2 REQUIRED SDL2)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 
-target_link_libraries(Main jsruntime render dl pthread lvgl lvgl::drivers ${SDL2_LIBRARIES} ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_drivers/build/lib/liblv_drivers.a)
+target_link_libraries(Main
+    jsruntime
+    dl
+    pthread
+    render
+    lvgl
+    lvgl::drivers
+    ${SDL2_LIBRARIES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_drivers/build/lib/liblv_drivers.a
+)

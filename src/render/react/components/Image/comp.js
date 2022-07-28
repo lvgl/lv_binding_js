@@ -1,7 +1,8 @@
-import { getUid, setStyle } from '../config'
+import { getUid, setStyle, handleOnClick } from '../config'
 import { isValidUrl } from '../../utils/helpers'
 
 const fs = require('fs')
+const path = require('path')
 
 const bridge = globalThis.SJSJSBridge
 const NativeImage = bridge.NativeRender.NativeComponents.Image
@@ -19,20 +20,24 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet);
+            setStyle(comp, styleSheet, 'Image');
+        },
+        set onClick (fn) {
+            handleOnClick(comp, fn);
         },
         set src(url) {
             if (url && url !== oldProps.url) {
                 if (!isValidUrl(url)) {
-                    try {
-                        const data = fs.readFileSync(url, { encoding: 'binary' })
-                        comp.setImageBinary(data.buffer)
-                    } catch (e) {
-                        console.log('setImage error', e)
-                    }
+                    fs.readFile(url, { encoding: 'binary' })
+                        .then(data => {
+                            comp.setImageBinary(data.buffer)
+                        })
+                        .catch (e => {
+                            console.log('setImage error', e)
+                        })
                 } else {
                     getImageBinary(url)
-                        .then((buffer) => comp.setImageBinary(buffer))
+                        .then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer))
                         .catch(console.warn);
                 }
             }

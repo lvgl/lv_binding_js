@@ -25,4 +25,6 @@ export function ScrollStyle (style, result) {
             result['overflow'] = obj[value]
         }
     }
+
+    return result
 }
