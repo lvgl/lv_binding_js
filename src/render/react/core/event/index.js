@@ -1,3 +1,5 @@
+import { getInstance } from '../reconciler'
+
 const eventMap = {}
 
 export const EVENTTYPE_MAP = {
@@ -76,14 +78,28 @@ export function unRegistEvent (uid, eventType) {
     }
 }
 
-export function fireEvent (uid, eventType, e) {
-    const obj = eventMap[uid]
+export function fireEvent (targetUid, currentTargetUid, eventType, e) {
+    const obj = eventMap[currentTargetUid]
+    const target = getInstance(targetUid)
+    const currentTarget = getInstance(currentTargetUid)
     if (obj) {
+        e.target = target
+        e.currentTarget = currentTarget
         try {
             obj[eventType].call(null, e);
         } catch (err) {
             console.log(err)
         }
+    }
+}
+
+export function handleEvent (comp, fn, type) {
+    if (fn) {
+        registEvent(comp.uid, type, fn)
+        comp.addEventListener(type)
+    } else {
+        unRegistEvent(comp.uid, type)
+        comp.removeEventListener(type)
     }
 }
 

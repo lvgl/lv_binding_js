@@ -1,5 +1,15 @@
 #include "style.hpp"
 
+static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
+    { "linear", &lv_anim_path_linear },
+    { "ease-in", &lv_anim_path_ease_in },
+    { "ease-out", &lv_anim_path_ease_out },
+    { "ease-in-out", &lv_anim_path_ease_in_out },
+    { "overshoot", &lv_anim_path_overshoot },
+    { "bounce", &lv_anim_path_bounce },
+    { "step", &lv_anim_path_step },
+};
+
 static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int width;
     JS_ToInt32(ctx, &width, obj);
@@ -85,8 +95,12 @@ static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, J
 
     if (value == "flex") {
         lv_obj_set_layout(comp, LV_LAYOUT_FLEX);
+        lv_obj_clear_flag(comp, LV_OBJ_FLAG_HIDDEN);
     } else if (value == "grid") {
         lv_obj_set_layout(comp, LV_LAYOUT_GRID);
+        lv_obj_clear_flag(comp, LV_OBJ_FLAG_HIDDEN);
+    } else if (value == "none") {
+        lv_obj_add_flag(comp, LV_OBJ_FLAG_HIDDEN);
     }
 };
 
@@ -201,11 +215,25 @@ static void CompSetOutlineColor (lv_obj_t* comp, lv_style_t* style, JSContext* c
     lv_style_set_outline_color(style, lv_color_hex(x));
 };
 
+static void CompSetOutlinePadding (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_outline_pad(style, x);
+};
+
 static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_label_set_long_mode(comp, x);
+};
+
+static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_text_letter_space(style, x);
 };
 
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -286,6 +314,20 @@ static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     lv_img_set_angle(comp, x);
 };
 
+static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_transform_width(style, x);
+};
+
+static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_transform_height(style, x);
+};
+
 void CompSetTransition (
     lv_style_t* style,
     lv_style_transition_dsc_t* trans, 
@@ -294,13 +336,12 @@ void CompSetTransition (
     int32_t time,
     int32_t delay
 ) {
-    static const lv_style_prop_t props1[] = {
-            LV_STYLE_HEIGHT, LV_STYLE_PROP_INV
-    };
-    static lv_style_transition_dsc_t transition_dsc_def1;
-
-    lv_style_transition_dsc_init(&transition_dsc_def1, props1, lv_anim_path_ease_out, 1000, 0, NULL);
-    lv_style_set_transition(style, &transition_dsc_def1);
+    lv_anim_path_cb_t func = &lv_anim_path_linear;
+    if (transition_funcs.find(func_str) != transition_funcs.end()) {
+        func = transition_funcs.at(func_str);
+    }
+    lv_style_transition_dsc_init(trans, props, func, time, 0, NULL);
+    lv_style_set_transition(style, trans);
 };
 
 static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -348,13 +389,15 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"border-side", &CompSetBorderSide},
 
     /* outline */
-    {"outline-width", &CompSetBorderWidth},
-    {"outline-opacity", &CompSetBorderOpacity},
-    {"outline-color", &CompSetBorderColor},
+    {"outline-width", &CompSetOutlineWidth},
+    {"outline-opacity", &CompSetOutlineOpacity},
+    {"outline-color", &CompSetOutlineColor},
+    {"outline-padding", &CompSetOutlinePadding},
 
     /* font */
     {"font-size", &CompSetFontSize},
     {"text-overflow", &CompSetTextOverFLow},
+    {"letter-spacing", &CompSetLetterSpacing},
 
     /* scroll */
     {"overflow-scrolling", &CompSetOverFlowScrolling},
@@ -371,17 +414,10 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"rotate", &CompSetRotate},
     {"img-scale", &CompSetImgScale},
     {"img-rotate", &CompSetImgRotate},
+    {"transform-width", &CompSetTransformWidth},
+    {"transform-height", &CompSetTransformHeight},
 
     /* color */
-    {"text-color", &CompSetTextColor}
-};
-
-std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
-    { "linear", &lv_anim_path_linear },
-    { "ease-in", &lv_anim_path_ease_in },
-    { "ease-out", &lv_anim_path_ease_out },
-    { "ease-in-out", &lv_anim_path_ease_in_out },
-    { "overshoot", &lv_anim_path_overshoot },
-    { "bounce", &lv_anim_path_bounce },
-    { "step", &lv_anim_path_step },
+    {"text-color", &CompSetTextColor},
+    
 };

@@ -9,9 +9,10 @@ export default class ViewConfig {
         newProps,
         rootInstance,
         context,
-        workInProgress
+        workInProgress,
+        uid
     ) {
-        const instance = new ViewComp();
+        const instance = new ViewComp({ uid });
         instance.setProps(newProps, {});
         return instance;
     }

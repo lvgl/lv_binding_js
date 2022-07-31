@@ -1,4 +1,4 @@
-import { NormalizePx, NormalizePxOrPercent, NormalizeEnum, NormalizeColor } from './util'
+import { ProcessPx, ProcessPxOrPercent, ProcessEnum, ProcessColor } from './util'
 import { FontStyle } from './font'
 import { ScrollStyle } from './scroll'
 import { OpacityStyle } from './opacity'
@@ -10,35 +10,37 @@ function NormalStyle (style, result) {
     const keys = Object.keys(style)
 
     const obj = {
-        'height': NormalizePxOrPercent,
-        'width': NormalizePxOrPercent,
-        'left': NormalizePxOrPercent,
-        'top': NormalizePxOrPercent,
-        'background-color': NormalizeColor,
-        'background-grad-color': NormalizeColor,
-        'background-grad-color-dir': NormalizeEnum({
+        'height': ProcessPxOrPercent,
+        'width': ProcessPxOrPercent,
+        'left': ProcessPxOrPercent,
+        'top': ProcessPxOrPercent,
+        'background-color': ProcessColor,
+        'background-grad-color': ProcessColor,
+        'background-grad-color-dir': ProcessEnum({
             'none': 0,
             'vertical': 1,
             'horizontal': 2,
         }),
-        'padding-left': NormalizePx,
-        'padding-right': NormalizePx,
-        'padding-top': NormalizePx,
-        'padding-bottom': NormalizePx,
-        'border-radius': NormalizePx,
-        'border-width': NormalizePx,
-        'border-color': NormalizeColor,
-        'border-side': NormalizeEnum({
+        'padding-left': ProcessPx,
+        'padding-right': ProcessPx,
+        'padding-top': ProcessPx,
+        'padding-bottom': ProcessPx,
+        'border-radius': ProcessPx,
+        'border-width': ProcessPx,
+        'border-color': ProcessColor,
+        'border-side': ProcessEnum({
             left: 0x04,
             right: 0x08,
             full: 0x0F,
             top: 0x02,
             bottom: 0x01,
         }),
-        'outline-width': NormalizePx,
-        'outline-color': NormalizeColor,
-        'font-size': NormalizePx,
-        'text-color': NormalizeColor,
+        'outline-width': ProcessPx,
+        'outline-color': ProcessColor,
+        'outline-padding': ProcessPxOrPercent,
+        'font-size': ProcessPx,
+        'text-color': ProcessColor,
+        'letter-spacing': ProcessPx
     }
 
     keys.forEach(key => {
@@ -69,26 +71,30 @@ function AbbreviationStyle (style, result) {
                 const values = value.split(/\s/)
                 const len = values.length
                 switch (len) {
+                    case 1:
+                        ProcessPx(styleKeys[0], values[0], result)
+                        ProcessPx(styleKeys[2], values[0], result)
+                        ProcessPx(styleKeys[1], values[0], result)
+                        ProcessPx(styleKeys[3], values[0], result)
                     case 2:
-                        NormalizePx(styleKeys[0], values[1], result)
-                        NormalizePx(styleKeys[2], values[1], result)
-                        NormalizePx(styleKeys[1], values[0], result)
-                        NormalizePx(styleKeys[3], values[0], result)
+                        ProcessPx(styleKeys[0], values[1], result)
+                        ProcessPx(styleKeys[2], values[1], result)
+                        ProcessPx(styleKeys[1], values[0], result)
+                        ProcessPx(styleKeys[3], values[0], result)
                     case 4:
-                        NormalizePx(styleKeys[0], values[0], result)
-                        NormalizePx(styleKeys[1], values[1], result)
-                        NormalizePx(styleKeys[2], values[2], result)
-                        NormalizePx(styleKeys[3], values[3], result)
+                        ProcessPx(styleKeys[0], values[0], result)
+                        ProcessPx(styleKeys[1], values[1], result)
+                        ProcessPx(styleKeys[2], values[2], result)
+                        ProcessPx(styleKeys[3], values[3], result)
                     case 3:
-                        NormalizePx(styleKeys[1], values[0], result)
-                        NormalizePx(styleKeys[0], values[1], result)
-                        NormalizePx(styleKeys[2], values[1], result)
-                        NormalizePx(styleKeys[3], values[2], result)
+                        ProcessPx(styleKeys[1], values[0], result)
+                        ProcessPx(styleKeys[0], values[1], result)
+                        ProcessPx(styleKeys[2], values[1], result)
+                        ProcessPx(styleKeys[3], values[2], result)
                 }
             }
         }
     })
-
     return result
 }
 

@@ -1,6 +1,7 @@
 import { colorTransform } from './color'
 
-export function NormalizePx (key, value, result) {
+export function ProcessPx (key, value, result) {
+    if (!value) return null
     if (!isNaN(value)) {
         return result[key] = value
     }
@@ -13,7 +14,7 @@ export function NormalizePx (key, value, result) {
     }
 }
 
-export function NormalizePxOrPercent (key, value, result) {
+export function ProcessPxOrPercent (key, value, result) {
     if (!isNaN(value)) {
         return result[key] = value
     }
@@ -32,7 +33,7 @@ export function NormalizePxOrPercent (key, value, result) {
     }
 }
 
-export function NormalizeEnum (obj) {
+export function ProcessEnum (obj) {
     return (key, value, result) => {
         if (obj[value]) {
             result[key] = obj[value]
@@ -40,7 +41,7 @@ export function NormalizeEnum (obj) {
     }
 }
 
-export function NormalizeColor (key, value, result) {
+export function ProcessColor (key, value, result) {
     value = colorTransform(value)
     if (!isNaN(value)) {
         result[key] = value
@@ -49,7 +50,8 @@ export function NormalizeColor (key, value, result) {
 
 export function NormalizeTime (value) {
     if (!value) return null
-    const reg = /(.+)([s|ms])/
+    if (!isNaN(value)) return value
+    const reg = /([^ms]+)(ms|s)/
     const [_, time, unit] = value.match(reg)
     if (!isNaN(time)) {
         if (unit == 's') {
@@ -59,4 +61,9 @@ export function NormalizeTime (value) {
         }
     }
     return null
+}
+
+export function ProcessScale (key, value, result) {
+    if (!value && isNaN(value)) return null
+    result[key] = Math.floor(value * 256)
 }

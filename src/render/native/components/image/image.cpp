@@ -44,11 +44,13 @@ static void convert_color_depth(uint8_t * img, uint32_t px_cnt)
 }
 
 Image::Image(std::string uid, lv_obj_t* parent): BasicComponent() {
+    this->type = COMP_TYPE_IMAGE;
+
     this->uid = uid;
     this->instance = lv_img_create(parent != nullptr ? parent : lv_scr_act());
     
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICKABLE);
-    
+    lv_obj_set_user_data(this->instance, this);
     this->initStyle();
 };
 

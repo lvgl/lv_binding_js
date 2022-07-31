@@ -1,14 +1,10 @@
 
-import { registEvent, unRegistEvent, EVENTTYPE_MAP } from '../core/event'
 import StyleSheet from '../core/style'
 
+export { handleEvent } from '../core/event'
+export { unRegistEvent, EVENTTYPE_MAP } from '../core/event'
+
 const components = new Map;
-
-let id = 1;
-
-export const getUid = () => {
-    return String(id++);
-}
 
 export const getComponentByTagName = (tagName) => {
     const config = components.get(tagName);
@@ -39,8 +35,12 @@ export function registerComponents(
     })
 }
 
-export function setStyle (comp, obj, compName, type) {
+export function setStyle (comp, obj, compName, type, oldObj) {
+    if (!obj) return
     obj = Array.isArray(obj) ? obj : [obj]
+    oldObj = Array.isArray(oldObj) ? oldObj : [oldObj]
+    const maybeChange = obj.every((item, i) => item != oldObj[i])
+    if (!maybeChange) return
 
     obj = obj.map(item => StyleSheet.transform(item, compName))
     obj = Object.assign(...obj)
@@ -48,14 +48,4 @@ export function setStyle (comp, obj, compName, type) {
     const keys = Object.keys(obj)
     
     comp.setStyle(obj, keys, keys.length, type)
-}
-
-export function handleOnClick (comp, fn) {
-    if (fn) {
-        registEvent(comp.uid, EVENTTYPE_MAP.EVENT_PRESSED, fn)
-        comp.addEventListener(EVENTTYPE_MAP.EVENT_PRESSED)
-    } else {
-        unRegistEvent(comp.uid, EVENTTYPE_MAP.EVENT_PRESSED)
-        comp.removeEventListener(EVENTTYPE_MAP.EVENT_PRESSED)
-    }
 }

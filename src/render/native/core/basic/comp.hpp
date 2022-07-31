@@ -9,6 +9,15 @@ extern "C" {
     #include "quickjs.h"
 };
 
+enum ECOMP_TYPE {
+  COMP_TYPE_VIEW,
+  COMP_TYPE_BUTTON,
+  COMP_TYPE_IMAGE,
+  COMP_TYPE_SLIDER,
+  COMP_TYPE_TEXT,
+  COMP_TYPE_WINDOW,
+};
+
 #include "native/core/event/event.hpp"
 #include "native/core/style/style.hpp"
 
@@ -28,11 +37,19 @@ class BasicComponent {
     lv_style_t hoverd_style;
     lv_style_t scrolled_style;
     lv_style_t disabled_style;
+    lv_style_t scrollbar_style;
+    lv_style_t indicator_style;
+    lv_style_t knob_style;
+    lv_style_t selected_style;
+    lv_style_t cursor_style;
 
-    lv_style_transition_dsc_t* trans = nullptr;
+    std::unordered_map<std::string, CompSetStyle*> style_map;
+
+    lv_style_transition_dsc_t trans;
     lv_style_prop_t* transProps = nullptr;
 
     bool listening = false;
+    ECOMP_TYPE type;
 
     std::map<int, bool> registeEvents;
 

@@ -18233,7 +18233,7 @@ var colorTransform = (data) => {
 };
 
 // src/render/react/core/style/util.js
-function NormalizePx(key, value, result) {
+function ProcessPx(key, value, result) {
   if (!isNaN(value)) {
     return result[key] = value;
   }
@@ -18244,7 +18244,7 @@ function NormalizePx(key, value, result) {
     result[key] = value;
   }
 }
-function NormalizePxOrPercent(key, value, result) {
+function ProcessPxOrPercent(key, value, result) {
   if (!isNaN(value)) {
     return result[key] = value;
   }
@@ -18260,14 +18260,14 @@ function NormalizePxOrPercent(key, value, result) {
     return result[`${key}_pct`] = value1;
   }
 }
-function NormalizeEnum(obj) {
+function ProcessEnum(obj) {
   return (key, value, result) => {
     if (obj[value]) {
       result[key] = obj[value];
     }
   };
 }
-function NormalizeColor(key, value, result) {
+function ProcessColor(key, value, result) {
   value = colorTransform(value);
   if (!isNaN(value)) {
     result[key] = value;
@@ -18286,6 +18286,11 @@ function NormalizeTime(value) {
     }
   }
   return null;
+}
+function ProcessScale(key, value, result) {
+  if (!value && isNaN(value))
+    return null;
+  result[key] = Math.floor(value * 256);
 }
 
 // src/render/react/core/style/font.js
@@ -18381,95 +18386,92 @@ var LV_STYLE_PROP_PARENT_LAYOUT_REFR = 1 << 13;
 var LV_STYLE_PROP_FILTER = 1 << 14;
 var LV_STYLE_PROP_INHERIT = 1 << 10;
 var transitionProperty = {
-  "width": 1 | LV_STYLE_PROP_LAYOUT_REFR,
-  "min-width": 2 | LV_STYLE_PROP_LAYOUT_REFR,
-  "max-width": 3 | LV_STYLE_PROP_LAYOUT_REFR,
-  "height": 4 | LV_STYLE_PROP_LAYOUT_REFR,
-  "min-height": 5 | LV_STYLE_PROP_LAYOUT_REFR,
-  "max-height": 6 | LV_STYLE_PROP_LAYOUT_REFR,
-  "left": 7 | LV_STYLE_PROP_LAYOUT_REFR,
-  "top": 8 | LV_STYLE_PROP_LAYOUT_REFR,
-  "align": 9 | LV_STYLE_PROP_LAYOUT_REFR,
-  "transform-width": 10 | LV_STYLE_PROP_EXT_DRAW,
-  "transform-height": 11 | LV_STYLE_PROP_EXT_DRAW,
-  "translateX": 12 | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
-  "translateY": 13 | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
-  "scale": 14 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
-  "rotate": 15 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR | LV_STYLE_PROP_PARENT_LAYOUT_REFR,
-  "padding-top": 16 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
-  "padding-bottom": 17 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
-  "padding-left": 18 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
-  "padding-right": 19 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
-  "padding-row": 20 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
-  "padding-column": 21 | LV_STYLE_PROP_EXT_DRAW | LV_STYLE_PROP_LAYOUT_REFR,
+  "width": 1,
+  "min-width": 2,
+  "max-width": 3,
+  "height": 4,
+  "min-height": 5,
+  "max-height": 6,
+  "left": 7,
+  "top": 8,
+  "align": 9,
+  "display": 10,
+  "radius": 11,
+  "padding-top": 16,
+  "padding-bottom": 17,
+  "padding-left": 18,
+  "padding-right": 19,
+  "padding-row": 20,
+  "padding-column": 21,
+  "base-dir": 22,
+  "clip-corner": 23,
   "background-color": 32,
-  "background-color-filter": 32 | LV_STYLE_PROP_FILTER,
   "backgroun-opacity": 33,
   "background-grad-color": 34,
-  "background-grad-color-filter": 34 | LV_STYLE_PROP_FILTER,
   "background-grad-dir": 35,
   "background-main-stop": 36,
   "background-grad-stop": 37,
   "background-grad": 38,
   "background-dither-mode": 39,
-  "background-image": 40 | LV_STYLE_PROP_EXT_DRAW,
+  "background-image": 40,
   "background-image-opacity": 41,
   "background-image-recolor": 42,
-  "background-image-recolor-filter": 42 | LV_STYLE_PROP_FILTER,
   "background-image-recolor-opacity": 43,
   "background-image-tiled": 44,
   "border-color": 48,
-  "border-color-filter": 48 | LV_STYLE_PROP_FILTER,
   "border-opacity": 49,
-  "border-width": 50 | LV_STYLE_PROP_LAYOUT_REFR,
+  "border-width": 50,
   "border-side": 51,
   "boder-post": 52,
-  "outline-width": 58 | LV_STYLE_PROP_EXT_DRAW,
-  "outline-color": 59,
-  "outline-color-filter": 59 | LV_STYLE_PROP_FILTER,
-  "outline-opacity": 60 | LV_STYLE_PROP_EXT_DRAW,
-  "outline-padding": 61 | LV_STYLE_PROP_EXT_DRAW,
-  "shadow-width": 64 | LV_STYLE_PROP_EXT_DRAW,
-  "shadow-ofs-x": 65 | LV_STYLE_PROP_EXT_DRAW,
-  "shadow-ofs-y": 66 | LV_STYLE_PROP_EXT_DRAW,
-  "shadow-spread": 67 | LV_STYLE_PROP_EXT_DRAW,
+  "outline-width": 53,
+  "outline-color": 54,
+  "outline-opacity": 55,
+  "outline-padding": 56,
+  "shadow-width": 64,
+  "shadow-ofs-x": 65,
+  "shadow-ofs-y": 66,
+  "shadow-spread": 67,
   "shadow-color": 68,
-  "shadow-color-filtered": 68 | LV_STYLE_PROP_FILTER,
-  "shadow-opacity": 69 | LV_STYLE_PROP_EXT_DRAW,
+  "shadow-opacity": 69,
   "img-opacity": 70,
   "img-recolor": 71,
-  "img-recolor-filtered": 71 | LV_STYLE_PROP_FILTER,
-  "img-recolor-filtered-opacity": 72,
-  "line-width": 73 | LV_STYLE_PROP_EXT_DRAW,
+  "img-recolor-opacity": 72,
+  "line-width": 73,
   "line-dash-width": 74,
   "line-dash-gap": 75,
   "line-rounded": 76,
   "line-color": 77,
-  "line-color-filtered": 77 | LV_STYLE_PROP_FILTER,
   "line-opacity": 78,
-  "arc-width": 80 | LV_STYLE_PROP_EXT_DRAW,
+  "arc-width": 80,
   "arc-rounded": 81,
   "arc-color": 82,
-  "arc-color-filtered": 82 | LV_STYLE_PROP_FILTER,
   "arc-opacity": 83,
   "arc-image": 84,
-  "text-color": 87 | LV_STYLE_PROP_INHERIT,
-  "text-color-filtered": 87 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_FILTER,
-  "text-opacity": 88 | LV_STYLE_PROP_INHERIT,
-  "font-size": 89 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
-  "letter-spacing": 90 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
-  "line-height": 91 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
-  "text-decor": 92 | LV_STYLE_PROP_INHERIT,
-  "text-align": 93 | LV_STYLE_PROP_INHERIT | LV_STYLE_PROP_LAYOUT_REFR,
-  "border-radius": 96,
-  "clip-corner": 97,
-  "opacity": 98 | LV_STYLE_PROP_INHERIT,
-  "color-filter-dsc": 99,
-  "color-filter-opacity": 100,
-  "animate-time": 101,
-  "animate-speed": 102
+  "text-color": 85,
+  "text-opacity": 86,
+  "font-size": 87,
+  "letter-spacing": 88,
+  "line-height": 89,
+  "text-decor": 90,
+  "text-align": 91,
+  "opacity": 96,
+  "color-filter-dsc": 97,
+  "color-filter-opacity": 98,
+  "animate": 99,
+  "animate-time": 100,
+  "animate-speed": 101,
+  "transition": 102,
+  "blend-mode": 103,
+  "transform-width": 104,
+  "transform-height": 105,
+  "translate-x": 106,
+  "translate-y": 107,
+  "transform-scale": 108,
+  "transform-rotate": 109,
+  "transform-pivot-x": 110,
+  "transform-pivot-y": 111
 };
-var transformSupportKeys = ["translate", "translateX", "translateY", "scale", "rotate"];
+var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "rotate", "width", "height"];
 function TransStyle(style2, result, compName) {
   if (style2["transition"]) {
     let value = style2["transition"];
@@ -18483,7 +18485,6 @@ function TransStyle(style2, result, compName) {
     });
     let [property, duration, func = "linear", delay = 0] = value[0];
     const trans = [transProps.length, transProps, NormalizeTime(duration) || 1e3, func, delay];
-    console.log(trans);
     result["transition"] = trans;
   }
   if (style2["transform"]) {
@@ -18495,13 +18496,15 @@ function TransStyle(style2, result, compName) {
       if (transformSupportKeys.includes(prop) && val) {
         if (prop == "translate") {
           val = val.split(",");
-          NormalizePxOrPercent("translateX", val[0], result);
-          NormalizePxOrPercent("translateY", val[1], result);
+          ProcessPxOrPercent("translateX", val[0], result);
+          ProcessPxOrPercent("translateY", val[1], result);
+        } else if (prop == "scale") {
+          ProcessScale("scale", val, result);
         } else {
           if (compName === "Image") {
             prop = `img-${prop}`;
           }
-          NormalizePxOrPercent(prop, val, result);
+          ProcessPxOrPercent(prop, val, result);
         }
       }
     });
@@ -18513,35 +18516,35 @@ function TransStyle(style2, result, compName) {
 function NormalStyle(style2, result) {
   const keys = Object.keys(style2);
   const obj = {
-    "height": NormalizePxOrPercent,
-    "width": NormalizePxOrPercent,
-    "left": NormalizePxOrPercent,
-    "top": NormalizePxOrPercent,
-    "background-color": NormalizeColor,
-    "background-grad-color": NormalizeColor,
-    "background-grad-color-dir": NormalizeEnum({
+    "height": ProcessPxOrPercent,
+    "width": ProcessPxOrPercent,
+    "left": ProcessPxOrPercent,
+    "top": ProcessPxOrPercent,
+    "background-color": ProcessColor,
+    "background-grad-color": ProcessColor,
+    "background-grad-color-dir": ProcessEnum({
       "none": 0,
       "vertical": 1,
       "horizontal": 2
     }),
-    "padding-left": NormalizePx,
-    "padding-right": NormalizePx,
-    "padding-top": NormalizePx,
-    "padding-bottom": NormalizePx,
-    "border-radius": NormalizePx,
-    "border-width": NormalizePx,
-    "border-color": NormalizeColor,
-    "border-side": NormalizeEnum({
+    "padding-left": ProcessPx,
+    "padding-right": ProcessPx,
+    "padding-top": ProcessPx,
+    "padding-bottom": ProcessPx,
+    "border-radius": ProcessPx,
+    "border-width": ProcessPx,
+    "border-color": ProcessColor,
+    "border-side": ProcessEnum({
       left: 4,
       right: 8,
       full: 15,
       top: 2,
       bottom: 1
     }),
-    "outline-width": NormalizePx,
-    "outline-color": NormalizeColor,
-    "font-size": NormalizePx,
-    "text-color": NormalizeColor
+    "outline-width": ProcessPx,
+    "outline-color": ProcessColor,
+    "font-size": ProcessPx,
+    "text-color": ProcessColor
   };
   keys.forEach((key) => {
     if (obj[key]) {
@@ -18568,20 +18571,20 @@ function AbbreviationStyle(style2, result) {
         const len = values.length;
         switch (len) {
           case 2:
-            NormalizePx(styleKeys[0], values[1], result);
-            NormalizePx(styleKeys[2], values[1], result);
-            NormalizePx(styleKeys[1], values[0], result);
-            NormalizePx(styleKeys[3], values[0], result);
+            ProcessPx(styleKeys[0], values[1], result);
+            ProcessPx(styleKeys[2], values[1], result);
+            ProcessPx(styleKeys[1], values[0], result);
+            ProcessPx(styleKeys[3], values[0], result);
           case 4:
-            NormalizePx(styleKeys[0], values[0], result);
-            NormalizePx(styleKeys[1], values[1], result);
-            NormalizePx(styleKeys[2], values[2], result);
-            NormalizePx(styleKeys[3], values[3], result);
+            ProcessPx(styleKeys[0], values[0], result);
+            ProcessPx(styleKeys[1], values[1], result);
+            ProcessPx(styleKeys[2], values[2], result);
+            ProcessPx(styleKeys[3], values[3], result);
           case 3:
-            NormalizePx(styleKeys[1], values[0], result);
-            NormalizePx(styleKeys[0], values[1], result);
-            NormalizePx(styleKeys[2], values[1], result);
-            NormalizePx(styleKeys[3], values[2], result);
+            ProcessPx(styleKeys[1], values[0], result);
+            ProcessPx(styleKeys[0], values[1], result);
+            ProcessPx(styleKeys[2], values[1], result);
+            ProcessPx(styleKeys[3], values[2], result);
         }
       }
     }
@@ -18693,12 +18696,12 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle(comp, obj, compName) {
+function setStyle(comp, obj, compName, type) {
   obj = Array.isArray(obj) ? obj : [obj];
   obj = obj.map((item) => style_default.transform(item, compName));
   obj = Object.assign(...obj);
   const keys = Object.keys(obj);
-  comp.setStyle(obj, keys, keys.length);
+  comp.setStyle(obj, keys, keys.length, type);
 }
 function handleOnClick(comp, fn) {
   if (fn) {
@@ -18716,10 +18719,13 @@ var NativeView = bridge.NativeRender.NativeComponents.View;
 function setViewProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet);
+      setStyle(comp, styleSheet, "View", 0);
     },
     set onClick(fn) {
       handleOnClick(comp, fn);
+    },
+    set onPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "View", 32);
     }
   };
   Object.assign(setter, newProps);
@@ -18786,7 +18792,10 @@ var NativeComp = bridge2.NativeRender.NativeComponents.Window;
 function setWindowProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet);
+      setStyle(comp, styleSheet, "Window", 0);
+    },
+    set onPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Window", 32);
     },
     set title(title) {
       if (oldProps.title != title) {
@@ -18851,16 +18860,19 @@ var bridge3 = globalThis.SJSJSBridge;
 var NativeText = bridge3.NativeRender.NativeComponents.Text;
 function setTextProps(comp, newProps, oldProps) {
   const setter = {
-    set style(styleSheet) {
-      setStyle(comp, styleSheet);
-    },
     set children(str) {
       if (typeof str == "string" && oldProps.children !== str) {
         comp.setText(str);
       }
     },
+    set style(styleSheet) {
+      setStyle(comp, styleSheet, "Text", 0);
+    },
     set onClick(fn) {
       handleOnClick(comp, fn);
+    },
+    set onPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Text", 32);
     }
   };
   Object.assign(setter, newProps);
@@ -18944,7 +18956,10 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Image");
+      setStyle(comp, styleSheet, "Image", 0);
+    },
+    set onPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Image", 32);
     },
     set onClick(fn) {
       handleOnClick(comp, fn);
@@ -18994,6 +19009,72 @@ var ImageConfig = class {
   }
   createInstance(newProps, rootInstance, context, workInProgress2) {
     const instance = new ImageComp();
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Button/comp.js
+var bridge5 = globalThis.SJSJSBridge;
+var NativeButton = bridge5.NativeRender.NativeComponents.Button;
+function setButtonProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      setStyle(comp, styleSheet, "Button", 0);
+    },
+    set onPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Button", 32);
+    },
+    set onClick(fn) {
+      handleOnClick(comp, fn);
+    }
+  };
+  Object.assign(setter, newProps);
+}
+var ButtonComp = class extends NativeButton {
+  constructor(props) {
+    const uid = getUid();
+    super({ uid });
+    this.uid = uid;
+  }
+  setProps(newProps, oldProps) {
+    setButtonProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+__publicField(ButtonComp, "tagName", "Button");
+
+// src/render/react/components/Button/config.js
+var ButtonConfig = class {
+  tagName = "Button";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress2) {
+    const instance = new ButtonComp();
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19109,6 +19190,7 @@ var View = registerComponent(new ViewConfig());
 var Window2 = registerComponent(new WindowConfig());
 var Text = registerComponent(new TextConfig());
 var Image = registerComponent(new ImageConfig());
+var Button = registerComponent(new ButtonConfig());
 var Render = Renderer;
 
 // test/1/index.jsx
@@ -19132,7 +19214,7 @@ function App() {
   }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: [style.view2, { height: text1height }],
     onClick: (e) => {
-      setImageShow(false);
+      setImageShow(!imageShow);
       e.stopPropagation();
     }
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
@@ -19171,7 +19253,11 @@ var style = {
     width: 50,
     height: 70,
     "background-color": "#00FA9A",
-    "transition": "height 2s linear 0"
+    "transition": "height 1s"
+  },
+  view2Press: {
+    transform: "width(100)",
+    "transition": "height 1s"
   },
   view3: {
     width: 50,
@@ -19191,7 +19277,7 @@ var style = {
     "border-width": 3,
     "border-color": "#4169E1",
     "opacity": 0.4,
-    "transform": "rotate(500)"
+    "transform": "translate(10, 20)"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

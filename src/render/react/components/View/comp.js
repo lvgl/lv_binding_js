@@ -1,5 +1,4 @@
-import { getUid, setStyle, handleOnClick } from '../config'
-import { unRegistEvent } from '../../core/event'
+import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.View
@@ -7,21 +6,36 @@ const NativeView = bridge.NativeRender.NativeComponents.View
 function setViewProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, 0x0000);
+            setStyle(comp, styleSheet, "View", 0x0000, oldProps.style);
+        },
+        set onPressedStyle (styleSheet) {
+            setStyle(comp, styleSheet, "View", 0x0020, oldProps.onPressedStyle);
         },
         set onClick (fn) {
-            handleOnClick(comp, fn);
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
         },
-        set onPressStyle (styleSheet) {
-            setStyle(comp, styleSheet, 0x0020);
-        }
+        set onPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+        },
+        set onLongPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+        },
+        set onLongPressRepeat (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+        },
     }
     Object.assign(setter, newProps);
+    comp.dataset = {}
+    Object.keys(newProps).forEach(prop => {
+        const index = prop.indexOf('data-')
+        if (index === 0) {
+            comp.dataset[prop.substring(5)] = newProps[prop]
+        }
+    })
 }
   
 export class ViewComp extends NativeView {
-    constructor (props) {
-        const uid = getUid()
+    constructor ({ uid }) {
         super({ uid })
         this.uid = uid
     }
@@ -29,18 +43,17 @@ export class ViewComp extends NativeView {
         setViewProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
-        this.insertChildBefore(child, beforeChild)
+        this.insertChildBefore(child, beforeChild);
     }
     appendInitialChild(child) {
         this.appendChild(child);
     }
     appendChild(child) {
-        super.appendChild(child)
+        super.appendChild(child);
     }
     removeChild(child) {
         super.removeChild(child);
     }
-    unMount () {
-        unRegistEvent(this.uid)
+    close () {
     }
 }

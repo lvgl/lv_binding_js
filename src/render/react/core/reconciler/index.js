@@ -2,6 +2,19 @@ import Reconciler from "react-reconciler";
 import {
   getComponentByTagName,
 } from "../../components/config";
+import { unRegistEvent } from '../event'
+
+let id = 1;
+
+export const getUid = () => {
+    return String(id++);
+}
+
+const instanceMap = new Map;
+
+export const getInstance = (uid) => {
+  return instanceMap[uid]
+} 
 
 const HostConfig = {
   now: Date.now,
@@ -17,28 +30,41 @@ const HostConfig = {
     return {};
   },
   shouldSetTextContent: function(type, props) {
+    return false
     return typeof props.children === 'string' || typeof props.children === 'number';
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
-    return createInstance(
+    const uid = getUid()
+    const instance = createInstance(
       newProps,
       rootContainerInstance,
       _currentHostContext,
-      workInProgress
+      workInProgress,
+      uid
     );
+    instanceMap[uid] = instance
+    return instance
   },
-  createTextInstance: (text) => {
-    console.log(22222222222222)
-    const { createInstance } = getComponentByTagName('Text');
-    return createInstance(
-      {
-        text
-      },
-      rootContainerInstance,
-      _currentHostContext,
-      workInProgress
-    );
+  createTextInstance: (
+    text,
+    rootContainerInstance,
+    context,
+    workInProgress
+  ) => {
+    return null
+    // const { createInstance } = getComponentByTagName('Text');
+    // const uid = getUid()
+
+    // return createInstance(
+    //   {
+    //     text
+    //   },
+    //   rootContainerInstance,
+    //   context,
+    //   workInProgress,
+    //   uid
+    // );
   },
   appendInitialChild: (parent, child) => {
     parent.appendChild(child);
@@ -90,11 +116,14 @@ const HostConfig = {
   },
   removeChild(parent, child) {
     parent?.removeChild(child);
+    child?.close();
+    unRegistEvent(child.uid);
+    delete instanceMap[child.uid]
   },
   commitMount: function(instance, type, newProps, internalInstanceHandle) {
     const { commitMount } = getComponentByTagName(type);
     return commitMount(instance, newProps, internalInstanceHandle);
-  },
+  }
 };
 
 export default Reconciler(HostConfig);

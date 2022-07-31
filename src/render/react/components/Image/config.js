@@ -10,9 +10,10 @@ export default class ImageConfig {
         newProps,
         rootInstance,
         context,
-        workInProgress
+        workInProgress,
+        uid
     ) {
-        const instance = new ImageComp();
+        const instance = new ImageComp({ uid });
         instance.setProps(newProps, {});
         return instance;
     }

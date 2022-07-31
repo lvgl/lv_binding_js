@@ -1,29 +1,52 @@
-import { getUid, setStyle, handleOnClick } from '../config'
-import { unRegistEvent } from '../../core/event'
+import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeText = bridge.NativeRender.NativeComponents.Text
 
 function setTextProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
-            setStyle(comp, styleSheet);
-        },
         set children(str) {
-            if (typeof str == 'string' && oldProps.children !== str) {
-                comp.setText(str);
+            const type = typeof str
+            if ((type == 'string' || type == 'number') && oldProps.children !== str) {
+                comp.setText(String(str));
+            } else if (Array.isArray(str)) {
+                const isStringArr = str.every(item => (typeof item === 'string' || typeof item === 'number'))
+                if (isStringArr) {
+                    comp.setText(str.join(""))
+                }
             }
         },
+        set style(styleSheet) {
+            setStyle(comp, styleSheet, "Text", 0x0000, oldProps.style);
+        },
+        set onPressedStyle (styleSheet) {
+            setStyle(comp, styleSheet, "Text", 0x0020, oldProps.onPressedStyle);
+        },
         set onClick (fn) {
-            handleOnClick(comp, fn);
-        }
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+        },
+        set onPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+        },
+        set onLongPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+        },
+        set onLongPressRepeat (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+        },
     }
     Object.assign(setter, newProps);
+    comp.dataset = {}
+    Object.keys(newProps).forEach(prop => {
+        const index = prop.indexOf('data-')
+        if (index === 0) {
+            comp.dataset[prop.substring(5)] = newProps[prop]
+        }
+    })
 }
   
 export class TextComp extends NativeText {
-    constructor (props) {
-        const uid = getUid()
+    constructor ({ uid }) {
         super({ uid })
         this.uid = uid
     }
@@ -38,7 +61,6 @@ export class TextComp extends NativeText {
     }
     removeChild(child) {
     }
-    unMount () {
-        unRegistEvent(this.uid)
+    close () {
     }
 }

@@ -1,9 +1,28 @@
 #include "./comp.hpp"
 
-void BasicComponent::addEventListener (int eventType) {
-    this->registeEvents.insert({ eventType, true });
+void __InitStyle (lv_style_t* style, lv_obj_t* instance) {
+    lv_style_init(style);
+    lv_style_reset(style);
 
-    lv_obj_add_event_cb(this->instance, &BasicComponent::EventCallback, LV_EVENT_ALL, this);
+    lv_style_set_pad_left(style, 0);
+    lv_style_set_pad_right(style, 0);
+    lv_style_set_pad_bottom(style, 0);
+    lv_style_set_pad_top(style, 0);
+    lv_style_set_radius(style, 0);
+    lv_style_set_outline_width(style, 0);
+    lv_style_set_outline_pad(style, 0);
+    lv_style_set_border_width(style, 0);
+    lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
+};
+
+void BasicComponent::addEventListener (int eventType) {
+    if (!this->registeEvents.count(eventType)) {
+        this->registeEvents.insert({ eventType, true });
+    }
+    if (!this->listening) {
+        this->listening = true;
+        lv_obj_add_event_cb(this->instance, &BasicComponent::EventCallback, LV_EVENT_ALL, this);
+    }
 };
 
 void BasicComponent::EventCallback (lv_event_t * event) {
@@ -37,19 +56,21 @@ void BasicComponent::appendChild (void* child) {
     lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
 };
 
-void BasicComponent::initStyle (lv_style_t* style) {
-    lv_style_init(style);
-    lv_style_reset(style);
-
-    lv_style_set_pad_left(style, 0);
-    lv_style_set_pad_right(style, 0);
-    lv_style_set_pad_bottom(style, 0);
-    lv_style_set_pad_top(style, 0);
-    lv_style_set_radius(style, 0);
-    lv_style_set_outline_width(style, 0);
-    lv_style_set_border_width(style, 0);
-    lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
-    lv_obj_invalidate(this->instance);
+void BasicComponent::initStyle () {
+    __InitStyle(&this->style, this->instance);
+    __InitStyle(&this->press_style, this->instance);
+    __InitStyle(&this->checked_style, this->instance);
+    __InitStyle(&this->focus_style, this->instance);
+    __InitStyle(&this->edited_style, this->instance);
+    __InitStyle(&this->hoverd_style, this->instance);
+    __InitStyle(&this->scrolled_style, this->instance);
+    __InitStyle(&this->disabled_style, this->instance);
+    __InitStyle(&this->scrollbar_style, this->instance);
+    __InitStyle(&this->indicator_style, this->instance);
+    __InitStyle(&this->knob_style, this->instance);
+    __InitStyle(&this->selected_style, this->instance);
+    __InitStyle(&this->cursor_style, this->instance);
+    lv_obj_invalidate(instance);
 };
 
 BasicComponent::BasicComponent () {
@@ -61,10 +82,8 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     JSValue value_len = JS_GetPropertyUint32(ctx, obj, 0);
     JS_ToInt32(ctx, &len, value_len);
 
-    lv_style_transition_dsc_t* old_trans = this->trans;
     lv_style_prop_t* old_transProps = this->transProps;
     
-    this->trans = (lv_style_transition_dsc_t*)malloc(sizeof(lv_style_transition_dsc_t));
     this->transProps = (lv_style_prop_t*)malloc((len + 1) * sizeof(lv_style_prop_t));
     
     JSValue props = JS_GetPropertyUint32(ctx, obj, 1);
@@ -75,7 +94,7 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
         JS_FreeValue(ctx, prop);
         this->transProps[i] = (lv_style_prop_t)prop_key;
     }
-    this->transProps[len] = (lv_style_prop_t)0;
+    this->transProps[len] = LV_STYLE_PROP_INV;
 
     int32_t dura;
     JSValue dura_value = JS_GetPropertyUint32(ctx, obj, 2);
@@ -91,7 +110,7 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     JSValue delay_value = JS_GetPropertyUint32(ctx, obj, 4);
     JS_ToInt32(ctx, &delay, delay_value);
 
-    CompSetTransition(style, this->trans, this->transProps, func_str_1, dura, delay);
+    CompSetTransition(style, &this->trans, this->transProps, func_str_1, dura, delay);
 
     JS_FreeValue(ctx, value_len);
     JS_FreeValue(ctx, props);
@@ -100,67 +119,75 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     JS_FreeValue(ctx, delay_value);
     JS_FreeCString(ctx, func_str);
 
-    if (old_trans != nullptr) {
-        free(old_trans);
-    }
     if (old_transProps != nullptr) {
         free(old_transProps);
     }
 };
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type) {
-    this->initStyle(this->style);
-    this->initStyle(this->press_style);
-    this->initStyle(this->checked_style);
-    this->initStyle(this->focus_style);
-    this->initStyle(this->edited_style);
-    this->initStyle(this->hoverd_style);
-    this->initStyle(this->scrolled_style);
-    this->initStyle(this->disabled_style);
-
     lv_style_t* style;
-
     switch (type)
     {
         case LV_STATE_DEFAULT:
-            style = this->style;
+            style = &this->style;
             break;
         
         case LV_STATE_CHECKED:
-            style = this->checked_style;
+            style = &this->checked_style;
             break;
 
         case LV_STATE_FOCUSED:
-            style = this->focus_style;
+            style = &this->focus_style;
             break;
 
         case LV_STATE_FOCUS_KEY:
-            style = this->focus_key_style;
+            style = &this->focus_key_style;
             break;
 
         case LV_STATE_EDITED:
-            style = this->edited_style;
+            style = &this->edited_style;
             break;
         
         case LV_STATE_HOVERED:
-            style = this->hoverd_style;
+            style = &this->hoverd_style;
             break;
 
         case LV_STATE_PRESSED:
-            style = this->press_style;
+            style = &this->press_style;
             break;
 
         case LV_STATE_SCROLLED:
-            style = this->scrolled_style;
+            style = &this->scrolled_style;
             break;
         
         case LV_STATE_DISABLED:
-            style = this->disabled_style;
+            style = &this->disabled_style;
+            break;
+        
+        case LV_PART_SCROLLBAR:
+            style = &this->scrollbar_style;
+            break;
+
+        case LV_PART_INDICATOR:
+            style = &this->indicator_style;
+            break;
+
+        case LV_PART_KNOB:
+            style = &this->knob_style;
+            break;
+
+        case LV_PART_SELECTED:
+            style = &this->selected_style;
+            break;
+
+        case LV_PART_CURSOR:
+            style = &this->cursor_style;
             break;
         
         default:
-            break;
+            return;
     }
+    __InitStyle(style, this->instance);
 
     for(int i=0; i < keys.size(); i++) {
         std::string key = keys[i];
@@ -188,9 +215,6 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
 };
 
 BasicComponent::~BasicComponent () {
-    if (this->trans != nullptr) {
-        free(this->trans);
-    }
     if (this->transProps != nullptr) {
         free(this->transProps);
     }

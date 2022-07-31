@@ -9,9 +9,10 @@ export default class WindowConfig {
         newProps,
         rootInstance,
         context,
-        workInProgress
+        workInProgress,
+        uid
     ) {
-        const instance = new Window();
+        const instance = new Window({ uid });
         instance.setProps(newProps, {});
         return instance;
     }

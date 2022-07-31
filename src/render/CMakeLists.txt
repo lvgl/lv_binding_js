@@ -11,11 +11,16 @@ set(QUICKJS_PATH /home/sxs/quickjs-master/quickjs-master)
 add_library(render STATIC
     ./native/core/style/style.cpp
     ./native/core/style/font/font.cpp
+    ./native/core/event/value_change/value_change.cpp
     ./native/core/event/click/click.cpp
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
     ./native/core/img/png/png.cpp
+    ./native/components/slider/slider.cpp
+    ./native/components/slider/slider_wrap.cpp
     ./native/components/image/lodepng.cpp
+    ./native/components/button/button.cpp
+    ./native/components/button/button_wrap.cpp
     ./native/components/image/image.cpp
     ./native/components/image/image_wrap.cpp
     ./native/components/text/text.cpp

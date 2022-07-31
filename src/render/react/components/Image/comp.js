@@ -1,4 +1,4 @@
-import { getUid, setStyle, handleOnClick } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
 import { isValidUrl } from '../../utils/helpers'
 
 const fs = require('fs')
@@ -20,14 +20,26 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, 'Image');
+            setStyle(comp, styleSheet, 'Image', 0x0000, oldProps.style);
         },
         set onClick (fn) {
-            handleOnClick(comp, fn);
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+        },
+        set onPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+        },
+        set onLongPressed (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+        },
+        set onLongPressRepeat (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
         set src(url) {
             if (url && url !== oldProps.url) {
                 if (!isValidUrl(url)) {
+                    if (!path.isAbsolute(url)) {
+                        url = path.resolve(__dirname, url)
+                    }
                     fs.readFile(url, { encoding: 'binary' })
                         .then(data => {
                             comp.setImageBinary(data.buffer)
@@ -44,11 +56,17 @@ function setImageProps(comp, newProps, oldProps) {
         },
     }
     Object.assign(setter, newProps);
+    comp.dataset = {}
+    Object.keys(newProps).forEach(prop => {
+        const index = prop.indexOf('data-')
+        if (index === 0) {
+            comp.dataset[prop.substring(5)] = newProps[prop]
+        }
+    })
 }
   
 export class ImageComp extends NativeImage {
-    constructor (props) {
-        const uid = getUid()
+    constructor ({ uid }) {
         super({ uid })
         this.uid = uid
     }
@@ -65,5 +83,7 @@ export class ImageComp extends NativeImage {
     }
     removeChild(child) {
         
+    }
+    close () {
     }
 }

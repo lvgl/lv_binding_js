@@ -27,7 +27,7 @@
 static JSClassID SJSFileClassID;
 
 typedef struct {
-    JSContext *ctx;
+    JSContext* ctx;
     uv_file fd;
     JSValue path;
 } SJSFile;
@@ -53,7 +53,7 @@ static JSClassDef SJSFileClass = {
 static JSClassID SJSDirClassID;
 
 typedef struct {
-    JSContext *ctx;
+    JSContext* ctx;
     uv_dir_t *dir;
     uv_dirent_t dirent; // TODO: Use an array and an index.
     JSValue path;
@@ -109,7 +109,7 @@ static JSClassDef SJSStatClass = { "StatResult", .finalizer = SJSStatFinalizer }
 
 typedef struct {
     uv_fs_t req;
-    JSContext *ctx;
+    JSContext* ctx;
     JSValue obj;
     SJSPromise result;
     struct {
@@ -122,7 +122,7 @@ typedef struct {
 typedef struct {
     uv_work_t req;
     DynBuf dbuf;
-    JSContext *ctx;
+    JSContext* ctx;
     int r;
     char* filename;
     SJSPromise result;
@@ -133,7 +133,7 @@ typedef struct {
 
 typedef struct {
     uv_work_t req;
-    JSContext *ctx;
+    JSContext* ctx;
     int r;
     char* filename;
     char* buf;
@@ -143,7 +143,7 @@ typedef struct {
     JSValue sync_result;
 } SJSWriteFileReq;
 
-static JSValue SJSNewFile(JSContext *ctx, uv_file fd, const char *path) {
+static JSValue SJSNewFile(JSContext* ctx, uv_file fd, const char *path) {
     SJSFile *f;
     JSValue obj;
 
@@ -165,11 +165,11 @@ static JSValue SJSNewFile(JSContext *ctx, uv_file fd, const char *path) {
     return obj;
 }
 
-static SJSFile *SJSFileGet(JSContext *ctx, JSValueConst obj) {
+static SJSFile *SJSFileGet(JSContext* ctx, JSValueConst obj) {
     return JS_GetOpaque2(ctx, obj, SJSFileClassID);
 }
 
-static JSValue SJSNewDir(JSContext *ctx, uv_dir_t *dir, const char *path) {
+static JSValue SJSNewDir(JSContext* ctx, uv_dir_t *dir, const char *path) {
     SJSDir *d;
     JSValue obj;
 
@@ -192,11 +192,11 @@ static JSValue SJSNewDir(JSContext *ctx, uv_dir_t *dir, const char *path) {
     return obj;
 }
 
-static SJSDir *SJSDirGet(JSContext *ctx, JSValueConst obj) {
+static SJSDir *SJSDirGet(JSContext* ctx, JSValueConst obj) {
     return JS_GetOpaque2(ctx, obj, SJSDirClassID);
 }
 
-static JSValue SJSNewDirent(JSContext *ctx, uv_dirent_t *dent) {
+static JSValue SJSNewDirent(JSContext* ctx, uv_dirent_t *dent) {
     JSValue obj = JS_NewObjectClass(ctx, SJSDirentClassID);
     if (JS_IsException(obj))
         return obj;
@@ -214,11 +214,11 @@ static JSValue SJSNewDirent(JSContext *ctx, uv_dirent_t *dent) {
     return obj;
 }
 
-static SJSDirEnt *SJSDirentGet(JSContext *ctx, JSValueConst obj) {
+static SJSDirEnt *SJSDirentGet(JSContext* ctx, JSValueConst obj) {
     return JS_GetOpaque2(ctx, obj, SJSDirentClassID);
 }
 
-static JSValue SJSNewStat(JSContext *ctx, uv_stat_t *st) {
+static JSValue SJSNewStat(JSContext* ctx, uv_stat_t *st) {
     // JSValue obj = JS_NewObjectClass(ctx, SJSStatClassID);
     // if (JS_IsException(obj))
     //     return obj;
@@ -277,11 +277,11 @@ static JSValue SJSNewStat(JSContext *ctx, uv_stat_t *st) {
     return MakeObjError(ctx, obj, err);
 }
 
-static SJSStatResult *SJSStatGet(JSContext *ctx, JSValueConst obj) {
+static SJSStatResult *SJSStatGet(JSContext* ctx, JSValueConst obj) {
     return JS_GetOpaque2(ctx, obj, SJSStatClassID);
 }
 
-static JSValue SJSFSReqInit(JSContext *ctx, SJSFsReq *fr, JSValue obj) {
+static JSValue SJSFSReqInit(JSContext* ctx, SJSFsReq *fr, JSValue obj) {
     fr->ctx = ctx;
     fr->req.data = fr;
     fr->obj = JS_DupValue(ctx, obj);
@@ -295,7 +295,7 @@ static void UVFSReqCb(uv_fs_t *req) {
     if (!fr)
         return;
 
-    JSContext *ctx = fr->ctx;
+    JSContext* ctx = fr->ctx;
     JSValue arg;
     SJSFile *f;
     SJSDir *d;
@@ -397,7 +397,7 @@ skip:
 
 /* File functions */
 
-static JSValue SJSFileRW(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+static JSValue SJSFileRW(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -434,7 +434,7 @@ static JSValue SJSFileRW(JSContext *ctx, JSValueConst this_val, int argc, JSValu
     return fr->result.p;
 }
 
-static JSValue SJSFileClose(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileClose(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -452,7 +452,7 @@ static JSValue SJSFileClose(JSContext *ctx, JSValueConst this_val, int argc, JSV
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSFileStat(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileStat(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -470,7 +470,7 @@ static JSValue SJSFileStat(JSContext *ctx, JSValueConst this_val, int argc, JSVa
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSFileTruncate(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileTruncate(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -492,7 +492,7 @@ static JSValue SJSFileTruncate(JSContext *ctx, JSValueConst this_val, int argc, 
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSFileSync(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileSync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -510,7 +510,7 @@ static JSValue SJSFileSync(JSContext *ctx, JSValueConst this_val, int argc, JSVa
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSFileDatasync(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileDatasync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -528,7 +528,7 @@ static JSValue SJSFileDatasync(JSContext *ctx, JSValueConst this_val, int argc, 
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSFileFileno(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFileFileno(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -536,7 +536,7 @@ static JSValue SJSFileFileno(JSContext *ctx, JSValueConst this_val, int argc, JS
     return JS_NewInt32(ctx, f->fd);
 }
 
-static JSValue SJSFilePathGet(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSFilePathGet(JSContext* ctx, JSValueConst this_val) {
     SJSFile *f = SJSFileGet(ctx, this_val);
     if (!f)
         return JS_EXCEPTION;
@@ -545,7 +545,7 @@ static JSValue SJSFilePathGet(JSContext *ctx, JSValueConst this_val) {
 
 /* Dir functions */
 
-static JSValue SJSDirClose(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSDirClose(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSDir *d = SJSDirGet(ctx, this_val);
     if (!d)
         return JS_EXCEPTION;
@@ -563,14 +563,14 @@ static JSValue SJSDirClose(JSContext *ctx, JSValueConst this_val, int argc, JSVa
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSDirPathGet(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirPathGet(JSContext* ctx, JSValueConst this_val) {
     SJSDir *d = SJSDirGet(ctx, this_val);
     if (!d)
         return JS_EXCEPTION;
     return JS_DupValue(ctx, d->path);
 }
 
-static JSValue SJSDirNext(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSDirNext(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     SJSDir *d = SJSDirGet(ctx, this_val);
     if (!d)
         return JS_EXCEPTION;
@@ -594,20 +594,20 @@ static JSValue SJSDirNext(JSContext *ctx, JSValueConst this_val, int argc, JSVal
     return SJSFSReqInit(ctx, fr, this_val);
 }
 
-static JSValue SJSDirIterator(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSDirIterator(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     return JS_DupValue(ctx, this_val);
 }
 
 /* DirEnt functions */
 
-static JSValue SJSDirentNameGet(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentNameGet(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
     return JS_DupValue(ctx, de->name);
 }
 
-static JSValue SJSDirentISblockdevice(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISblockdevice(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -615,7 +615,7 @@ static JSValue SJSDirentISblockdevice(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, de->type == UV_DIRENT_BLOCK);
 }
 
-static JSValue SJSDirentIScharacterdevice(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentIScharacterdevice(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -623,7 +623,7 @@ static JSValue SJSDirentIScharacterdevice(JSContext *ctx, JSValueConst this_val)
     return JS_NewBool(ctx, de->type == UV_DIRENT_CHAR);
 }
 
-static JSValue SJSDirentISdirectory(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISdirectory(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -631,7 +631,7 @@ static JSValue SJSDirentISdirectory(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, de->type == UV_DIRENT_DIR);
 }
 
-static JSValue SJSDirentISfifo(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISfifo(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -639,7 +639,7 @@ static JSValue SJSDirentISfifo(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, de->type == UV_DIRENT_FIFO);
 }
 
-static JSValue SJSDirentISfile(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISfile(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -647,7 +647,7 @@ static JSValue SJSDirentISfile(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, de->type == UV_DIRENT_FILE);
 }
 
-static JSValue SJSDirentISsocket(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISsocket(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -655,7 +655,7 @@ static JSValue SJSDirentISsocket(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, de->type == UV_DIRENT_SOCKET);
 }
 
-static JSValue SJSDirentISSymlink(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSDirentISSymlink(JSContext* ctx, JSValueConst this_val) {
     SJSDirEnt *de = SJSDirentGet(ctx, this_val);
     if (!de)
         return JS_EXCEPTION;
@@ -665,7 +665,7 @@ static JSValue SJSDirentISSymlink(JSContext *ctx, JSValueConst this_val) {
 
 /* StatResult functions */
 
-static JSValue SJSStatISBlockdevice(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISBlockdevice(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -673,7 +673,7 @@ static JSValue SJSStatISBlockdevice(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, (sr->st_mode & S_IFMT) == S_IFBLK);
 }
 
-static JSValue SJSStatISCharacterdevice(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISCharacterdevice(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -681,7 +681,7 @@ static JSValue SJSStatISCharacterdevice(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, (sr->st_mode & S_IFMT) == S_IFCHR);
 }
 
-static JSValue SJSStatISDirectory(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISDirectory(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -689,7 +689,7 @@ static JSValue SJSStatISDirectory(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, (sr->st_mode & S_IFMT) == S_IFDIR);
 }
 
-static JSValue SJSStatISFifo(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISFifo(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -697,7 +697,7 @@ static JSValue SJSStatISFifo(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, (sr->st_mode & S_IFMT) == S_IFIFO);
 }
 
-static JSValue SJSStatISFile(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISFile(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -705,7 +705,7 @@ static JSValue SJSStatISFile(JSContext *ctx, JSValueConst this_val) {
     return JS_NewBool(ctx, (sr->st_mode & S_IFMT) == S_IFREG);
 }
 
-static JSValue SJSStatISSocket(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISSocket(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -717,7 +717,7 @@ static JSValue SJSStatISSocket(JSContext *ctx, JSValueConst this_val) {
 #endif
 }
 
-static JSValue SJSStatISSymlink(JSContext *ctx, JSValueConst this_val) {
+static JSValue SJSStatISSymlink(JSContext* ctx, JSValueConst this_val) {
     SJSStatResult *sr = SJSStatGet(ctx, this_val);
     if (!sr)
         return JS_EXCEPTION;
@@ -760,7 +760,7 @@ static int JSUVOpenFlags(const char *strflags, size_t len) {
     return flags;
 }
 
-static JSValue SJSFSOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
+static JSValue SJSFSOpen(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path;
     const char *strflags;
     size_t len;
@@ -808,7 +808,7 @@ static JSValue SJSFSOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValu
     }
 }
 
-static JSValue SJSFSNewStdioFile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSNewStdioFile(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path;
     uv_file fd;
 
@@ -828,7 +828,7 @@ static JSValue SJSFSNewStdioFile(JSContext *ctx, JSValueConst this_val, int argc
     return obj;
 }
 
-static JSValue SJSFSStat(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
+static JSValue SJSFSStat(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int magic) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -853,7 +853,7 @@ static JSValue SJSFSStat(JSContext *ctx, JSValueConst this_val, int argc, JSValu
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSRealpath(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSRealpath(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -874,7 +874,7 @@ static JSValue SJSFSRealpath(JSContext *ctx, JSValueConst this_val, int argc, JS
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSUnlink(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSUnlink(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -895,7 +895,7 @@ static JSValue SJSFSUnlink(JSContext *ctx, JSValueConst this_val, int argc, JSVa
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSRename(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -924,7 +924,7 @@ static JSValue SJSFSRename(JSContext *ctx, JSValueConst this_val, int argc, JSVa
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSMkdtemp(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSMkdtemp(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *tpl = JS_ToCString(ctx, argv[0]);
     if (!tpl)
         return JS_EXCEPTION;
@@ -945,7 +945,7 @@ static JSValue SJSFSMkdtemp(JSContext *ctx, JSValueConst this_val, int argc, JSV
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSMkstemp(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSMkstemp(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *tpl = JS_ToCString(ctx, argv[0]);
     if (!tpl)
         return JS_EXCEPTION;
@@ -966,7 +966,7 @@ static JSValue SJSFSMkstemp(JSContext *ctx, JSValueConst this_val, int argc, JSV
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSRmdir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSRmdir(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -987,7 +987,7 @@ static JSValue SJSFSRmdir(JSContext *ctx, JSValueConst this_val, int argc, JSVal
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSCopyfile(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSCopyfile(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -1023,7 +1023,7 @@ static JSValue SJSFSCopyfile(JSContext *ctx, JSValueConst this_val, int argc, JS
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSReaddir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
+static JSValue SJSFSReaddir(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -1066,7 +1066,7 @@ static void SJSWritefileWork(uv_work_t *req) {
 static void SJSReadfileAfterWork(uv_work_t *req, int status) {
     SJSReadFileReq *fr = req->data;
 
-    JSContext *ctx = fr->ctx;
+    JSContext* ctx = fr->ctx;
     JSValue arg;
     BOOL is_reject = FALSE;
 
@@ -1100,7 +1100,7 @@ static void SJSReadfileAfterWork(uv_work_t *req, int status) {
 static void SJSWritefileAfterWork(uv_work_t *req, int status) {
     SJSWriteFileReq *fr = req->data;
 
-    JSContext *ctx = fr->ctx;
+    JSContext* ctx = fr->ctx;
     JSValue arg;
     BOOL is_reject = FALSE;
 
@@ -1210,7 +1210,7 @@ static int64_t TimeSpecToMS(const struct timespec *tv)
 }
 #endif
 
-static JSValue SJSFSStatsSync(JSContext *ctx, JSValueConst this_val,
+static JSValue SJSFSStatsSync(JSContext* ctx, JSValueConst this_val,
                           int argc, JSValueConst *argv, int is_lstat)
 {
     const char *path;
@@ -1302,7 +1302,7 @@ static JSValue SJSFSStatsSync(JSContext *ctx, JSValueConst this_val,
     return MakeObjError(ctx, obj, err);
 };
 
-static JSValue SJSReadFileSync(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+static JSValue SJSReadFileSync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
     uint8_t *buf;
     const char *filename;
@@ -1321,7 +1321,7 @@ static JSValue SJSReadFileSync(JSContext *ctx, JSValueConst this_val, int argc, 
     return ret;
 };
 
-static JSValue SJSRealPathSync(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+static JSValue SJSRealPathSync(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv)
 {
     const char *path;
     char buf[PATH_MAX], *res;

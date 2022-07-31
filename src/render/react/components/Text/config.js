@@ -9,9 +9,10 @@ export default class TextConfig {
         newProps,
         rootInstance,
         context,
-        workInProgress
+        workInProgress,
+        uid
     ) {
-        const instance = new TextComp();
+        const instance = new TextComp({ uid });
         instance.setProps(newProps, {});
         return instance;
     }

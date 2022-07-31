@@ -1,4 +1,4 @@
-import { View, Render, Window, Text, Image } from 'lvgljs-ui';
+import { View, Render, Window, Text, Image, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 const path = require('path')
@@ -18,7 +18,7 @@ function App () {
     return (
         <Window style={style.window}>
             <View style={style.view1} onClick={() => setText1Height(100)}>
-                <View style={[style.view2, { height: text1height }]} onClick={(e) => {setImageShow(false); e.stopPropagation()}}>
+                <View style={[style.view2, { height: text1height }]} onClick={(e) => {setImageShow(!imageShow); e.stopPropagation()}}>
                     <Text style={[style.text1]}>22222</Text>
                 </View>
                 <View style={style.view3} onClick={(e) => {setImageUrl(imageUrl2); e.stopPropagation()}}></View>
@@ -54,6 +54,11 @@ const style = {
         width: 50,
         height: 70,
         "background-color": "#00FA9A",
+        'transition': 'height 1s'
+    },
+    view2Press: {
+        transform: 'width(100)',
+        'transition': 'height 1s'
     },
     view3: {
         width: 50,
@@ -73,7 +78,7 @@ const style = {
         'border-width': 3,
         'border-color': '#4169E1',
         'opacity': 0.4,
-        'transform': 'rotate(500)'
+        'transform': 'translate(10, 20)'
     }
 }
 
