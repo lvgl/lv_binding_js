@@ -14,7 +14,8 @@ function App () {
                 style={style.slider}
                 indicatorStyle={style.indicatorStyle}
                 knobStyle={style.knobStyle}
-                onPressedStyle={style.onPressedStyle}
+                onIndicatorPressedStyle={style.indicatorPressedStyle}
+                onKnobPressedStyle={style.knobPressed0Style}
             />
             <Text>{progress}%</Text>
         </Window>
@@ -47,10 +48,18 @@ const style = {
         'border-radius': 0x7FFF,
         'transition': 'background-color 300ms linear 0'
     },
-    onPressedStyle: {
-        'background-color': '0x00838f',
+    indicatorPressedStyle: {
         'border-radius': 0x7FFF,
+        'background-color': '0x00838F',
         'transition': 'background-color 300ms linear 0'
+    },
+    knobPressed0Style: {
+        'background-color': '0x00838F',
+        'border-radius': 0x7FFF,
+        'transition': 'background-color 300ms linear 0',
+        'border-width': '2px',
+        'border-color': '0x00838F',
+        'padding': '6px',
     }
 };
 

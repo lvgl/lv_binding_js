@@ -1,6 +1,8 @@
 #include "./comp.hpp"
 
-void __InitStyle (lv_style_t* style, lv_obj_t* instance) {
+MemoryPool<sizeof(lv_style_t), 30> style_pool;
+
+void __InitStyle (lv_style_t* style) {
     lv_style_init(style);
     lv_style_reset(style);
 
@@ -57,20 +59,27 @@ void BasicComponent::appendChild (void* child) {
 };
 
 void BasicComponent::initStyle () {
-    __InitStyle(&this->style, this->instance);
-    __InitStyle(&this->press_style, this->instance);
-    __InitStyle(&this->checked_style, this->instance);
-    __InitStyle(&this->focus_style, this->instance);
-    __InitStyle(&this->edited_style, this->instance);
-    __InitStyle(&this->hoverd_style, this->instance);
-    __InitStyle(&this->scrolled_style, this->instance);
-    __InitStyle(&this->disabled_style, this->instance);
-    __InitStyle(&this->scrollbar_style, this->instance);
-    __InitStyle(&this->indicator_style, this->instance);
-    __InitStyle(&this->knob_style, this->instance);
-    __InitStyle(&this->selected_style, this->instance);
-    __InitStyle(&this->cursor_style, this->instance);
-    lv_obj_invalidate(instance);
+    // __InitStyle(&this->style, this->instance);
+    // __InitStyle(&this->press_style, this->instance);
+    // __InitStyle(&this->checked_style, this->instance);
+    // __InitStyle(&this->focus_style, this->instance);
+    // __InitStyle(&this->edited_style, this->instance);
+    // __InitStyle(&this->hoverd_style, this->instance);
+    // __InitStyle(&this->scrolled_style, this->instance);
+    // __InitStyle(&this->disabled_style, this->instance);
+    // __InitStyle(&this->scrollbar_style, this->instance);
+    // __InitStyle(&this->indicator_style, this->instance);
+    // __InitStyle(&this->knob_style, this->instance);
+    // __InitStyle(&this->selected_style, this->instance);
+    // __InitStyle(&this->cursor_style, this->instance);
+    // lv_obj_invalidate(instance);
+
+    lv_style_t* style = static_cast<lv_style_t*>(style_pool.allocate());
+    this->style_map[static_cast<int32_t>(LV_PART_MAIN)] = style;
+
+    __InitStyle(style);
+    lv_obj_add_style(this->instance, style, LV_PART_MAIN);
+    lv_obj_invalidate(this->instance);
 };
 
 BasicComponent::BasicComponent () {
@@ -126,68 +135,76 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type) {
     lv_style_t* style;
-    switch (type)
-    {
-        case LV_STATE_DEFAULT:
-            style = &this->style;
-            break;
-        
-        case LV_STATE_CHECKED:
-            style = &this->checked_style;
-            break;
 
-        case LV_STATE_FOCUSED:
-            style = &this->focus_style;
-            break;
-
-        case LV_STATE_FOCUS_KEY:
-            style = &this->focus_key_style;
-            break;
-
-        case LV_STATE_EDITED:
-            style = &this->edited_style;
-            break;
-        
-        case LV_STATE_HOVERED:
-            style = &this->hoverd_style;
-            break;
-
-        case LV_STATE_PRESSED:
-            style = &this->press_style;
-            break;
-
-        case LV_STATE_SCROLLED:
-            style = &this->scrolled_style;
-            break;
-        
-        case LV_STATE_DISABLED:
-            style = &this->disabled_style;
-            break;
-        
-        case LV_PART_SCROLLBAR:
-            style = &this->scrollbar_style;
-            break;
-
-        case LV_PART_INDICATOR:
-            style = &this->indicator_style;
-            break;
-
-        case LV_PART_KNOB:
-            style = &this->knob_style;
-            break;
-
-        case LV_PART_SELECTED:
-            style = &this->selected_style;
-            break;
-
-        case LV_PART_CURSOR:
-            style = &this->cursor_style;
-            break;
-        
-        default:
-            return;
+    if (this->style_map.find(type) != this->style_map.end()) {
+        style = this->style_map.at(type);
+    } else {
+        style = static_cast<lv_style_t*>(style_pool.allocate());
+        style_map[type] = style;
     }
-    __InitStyle(style, this->instance);
+
+    // switch (type)
+    // {
+    //     case LV_STATE_DEFAULT:
+    //         style = &this->style;
+    //         break;
+        
+    //     case LV_STATE_CHECKED:
+    //         style = &this->checked_style;
+    //         break;
+
+    //     case LV_STATE_FOCUSED:
+    //         style = &this->focus_style;
+    //         break;
+
+    //     case LV_STATE_FOCUS_KEY:
+    //         style = &this->focus_key_style;
+    //         break;
+
+    //     case LV_STATE_EDITED:
+    //         style = &this->edited_style;
+    //         break;
+        
+    //     case LV_STATE_HOVERED:
+    //         style = &this->hoverd_style;
+    //         break;
+
+    //     case LV_STATE_PRESSED:
+    //         style = &this->press_style;
+    //         break;
+
+    //     case LV_STATE_SCROLLED:
+    //         style = &this->scrolled_style;
+    //         break;
+        
+    //     case LV_STATE_DISABLED:
+    //         style = &this->disabled_style;
+    //         break;
+        
+    //     case LV_PART_SCROLLBAR:
+    //         style = &this->scrollbar_style;
+    //         break;
+
+    //     case LV_PART_INDICATOR:
+    //         style = &this->indicator_style;
+    //         break;
+
+    //     case LV_PART_KNOB:
+    //         style = &this->knob_style;
+    //         break;
+
+    //     case LV_PART_SELECTED:
+    //         style = &this->selected_style;
+    //         break;
+
+    //     case LV_PART_CURSOR:
+    //         style = &this->cursor_style;
+    //         break;
+        
+    //     default:
+    //         return;
+    // }
+    __InitStyle(style);
 
     for(int i=0; i < keys.size(); i++) {
         std::string key = keys[i];

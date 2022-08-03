@@ -19298,14 +19298,23 @@ function setSliderProps(comp, newProps, oldProps) {
     set scrollbarStyle(styleSheet) {
       setStyle(comp, styleSheet, "Slider", 65536, oldProps.scrollbarStyle);
     },
+    set onScrollbarPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Slider", 65536 | 32, oldProps.onScrollbarPressedStyle);
+    },
     set indicatorStyle(styleSheet) {
       setStyle(comp, styleSheet, "Slider", 131072, oldProps.indicatorStyle);
+    },
+    set onIndicatorPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Slider", 131072 | 32, oldProps.onIndicatorPressedStyle);
     },
     set onPressedStyle(styleSheet) {
       setStyle(comp, styleSheet, "Slider", 32, oldProps.onPressedStyle);
     },
     set knobStyle(styleSheet) {
       setStyle(comp, styleSheet, "Slider", 196608, oldProps.knobStyle);
+    },
+    set onKnobPressedStyle(styleSheet) {
+      setStyle(comp, styleSheet, "Slider", 196608 | 32, oldProps.onKnobPressedStyle);
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19409,7 +19418,8 @@ function App() {
     style: style.slider,
     indicatorStyle: style.indicatorStyle,
     knobStyle: style.knobStyle,
-    onPressedStyle: style.onPressedStyle
+    onIndicatorPressedStyle: style.indicatorPressedStyle,
+    onKnobPressedStyle: style.knobPressed0Style
   }), /* @__PURE__ */ import_react.default.createElement(Text, null, progress, "%"));
 }
 var style = {
@@ -19438,10 +19448,18 @@ var style = {
     "border-radius": 32767,
     "transition": "background-color 300ms linear 0"
   },
-  onPressedStyle: {
-    "background-color": "red",
+  indicatorPressedStyle: {
     "border-radius": 32767,
+    "background-color": "0x00838F",
     "transition": "background-color 300ms linear 0"
+  },
+  knobPressed0Style: {
+    "background-color": "0x00838F",
+    "border-radius": 32767,
+    "transition": "background-color 300ms linear 0",
+    "border-width": "2px",
+    "border-color": "0x00838F",
+    "padding": "6px"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

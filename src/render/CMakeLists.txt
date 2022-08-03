@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 
 ADD_DEFINITIONS(-DDEBUG)
-set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++11")
+set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++14")
 
 set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)
@@ -16,6 +16,7 @@ add_library(render STATIC
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
     ./native/core/img/png/png.cpp
+    ./native/core/utils/utils.hpp
     ./native/components/slider/slider.cpp
     ./native/components/slider/slider_wrap.cpp
     ./native/components/image/lodepng.cpp

@@ -11,14 +11,23 @@ function setSliderProps(comp, newProps, oldProps) {
         set scrollbarStyle (styleSheet) {
             setStyle(comp, styleSheet, 'Slider', 0x010000, oldProps.scrollbarStyle);
         },
+        set onScrollbarPressedStyle (styleSheet) {
+            setStyle(comp, styleSheet, 'Slider', 0x010000 | 0x0020, oldProps.onScrollbarPressedStyle);
+        },
         set indicatorStyle (styleSheet) {
             setStyle(comp, styleSheet, 'Slider', 0x020000, oldProps.indicatorStyle);
+        },
+        set onIndicatorPressedStyle (styleSheet) {
+            setStyle(comp, styleSheet, 'Slider', 0x020000 | 0x0020, oldProps.onIndicatorPressedStyle);
         },
         set onPressedStyle (styleSheet) {
             setStyle(comp, styleSheet, "Slider", 0x0020, oldProps.onPressedStyle);
         },
         set knobStyle (styleSheet) {
             setStyle(comp, styleSheet, "Slider", 0x030000, oldProps.knobStyle);
+        },
+        set onKnobPressedStyle (styleSheet) {
+            setStyle(comp, styleSheet, "Slider", 0x030000 | 0x0020, oldProps.onKnobPressedStyle);
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
