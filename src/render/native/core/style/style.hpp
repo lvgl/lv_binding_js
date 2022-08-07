@@ -26,3 +26,11 @@ void CompSetTransition (
   int32_t time, 
   int32_t delay
 );
+
+void CompSetAnimation (
+    lv_obj_t* comp,
+    void* opaque,
+    lv_anim_t* animate,
+    JSContext* ctx,
+    JSValue obj
+);

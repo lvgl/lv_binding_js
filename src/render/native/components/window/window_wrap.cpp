@@ -28,7 +28,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("setStyle", 4, NativeCompSetStyle),
+    SJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),

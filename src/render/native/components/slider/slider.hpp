@@ -7,4 +7,8 @@
 class Slider : public BasicComponent {
  public:
   Slider(std::string uid, lv_obj_t* parent = nullptr);
+
+  void setRange (int32_t min, int32_t max);
+
+  void setValue (int32_t value);
 };

@@ -11,3 +11,11 @@ Slider::Slider(std::string uid, lv_obj_t* parent): BasicComponent() {
     lv_obj_set_user_data(this->instance, this);
     this->initStyle();
 };
+
+void Slider::setRange (int32_t min, int32_t max) {
+    lv_slider_set_range(this->instance, min, max);
+};
+
+void Slider::setValue (int32_t value) {
+    lv_slider_set_value(this->instance, value, LV_ANIM_OFF);
+};

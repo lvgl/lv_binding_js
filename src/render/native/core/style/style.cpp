@@ -138,6 +138,27 @@ static void CompSetFlexFlow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     lv_obj_set_flex_flow(comp, static_cast<lv_flex_flow_t>(x));
 };
 
+static void CompSetJustifyContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_flex_main_place(style, static_cast<lv_flex_align_t>(x));
+};
+
+static void CompSetAlignItems (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_flex_cross_place(style, static_cast<lv_flex_align_t>(x));
+};
+
+static void CompSetAlignContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_flex_track_place(style, static_cast<lv_flex_align_t>(x));
+};
+
 static void CompSetPaddingLeft (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -272,6 +293,13 @@ static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
     lv_style_set_img_opa(style, x);
 };
 
+static void CompRecolorOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_obj_set_style_img_recolor_opa(comp, x, 0);
+};
+
 static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -344,11 +372,67 @@ void CompSetTransition (
     lv_style_set_transition(style, trans);
 };
 
+void CompSetAnimation (
+    lv_obj_t* comp,
+    void* opaque,
+    lv_anim_t* animate,
+    JSContext* ctx,
+    JSValue obj
+) {
+    lv_anim_init(animate);
+
+    int32_t duration;
+    JSValue dura_value;
+
+    int32_t start;
+    int32_t end;
+    JSValue start_value;
+    JSValue end_value;
+
+    int32_t delay;
+    JSValue delay_value;
+
+    lv_anim_set_var(animate, opaque);
+
+    dura_value = JS_GetPropertyStr(ctx, obj, "duration");
+    if (JS_IsNumber(dura_value)) {
+        lv_anim_set_time(animate, duration);
+        JS_ToInt32(ctx, &duration, dura_value);
+    }
+    JS_FreeValue(ctx, dura_value);
+
+    start_value = JS_GetPropertyStr(ctx, obj, "startValue");
+    end_value = JS_GetPropertyStr(ctx, obj, "endValue");
+    if (JS_IsNumber(start_value) && JS_IsNumber(end_value)) {
+        JS_ToInt32(ctx, &start, start_value);
+        JS_ToInt32(ctx, &end, end_value);
+        lv_anim_set_values(animate, start, end);
+    }
+    JS_FreeValue(ctx, start_value);
+    JS_FreeValue(ctx, end_value);
+
+    delay_value = JS_GetPropertyStr(ctx, obj, "delay");
+    if (JS_IsNumber(delay_value)) {
+        JS_ToInt32(ctx, &delay, delay_value);
+        lv_anim_set_delay(animate, delay);
+    }
+    JS_FreeValue(ctx, delay_value);
+
+    lv_anim_start(animate);
+};
+
 static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_obj_set_style_text_color(comp, lv_color_hex(y), 0);
+};
+
+static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_obj_set_style_img_recolor(comp, lv_color_hex(y), 0);
 };
 
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
@@ -375,6 +459,9 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"flex-align", &CompSetFlexAlign},
     {"flex-flow", &CompSetFlexFlow},
     {"flex-grow", &CompSetFlexGrow},
+    {"justify-content", &CompSetJustifyContent},
+    {"align-items", &CompSetAlignItems},
+    {"align-content", &CompSetAlignContent},
 
     /* padding */
     {"padding-left", &CompSetPaddingLeft},
@@ -406,6 +493,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* opacity */
     {"opacity", &CompSetOpacity},
     {"img-opacity", &CompSetImgOpacity},
+    {"recolor-opacity", &CompRecolorOpacity},
 
     /* transform */
     {"translateX", &CompSetTranslateX},
@@ -419,5 +507,5 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* color */
     {"text-color", &CompSetTextColor},
-    
+    {"recolor", &CompSetRecolor},
 };

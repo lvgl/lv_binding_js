@@ -4,6 +4,8 @@ static JSClassID SliderClassID;
 
 WRAPPED_JS_SETSTYLE(Slider, "Slider")
 WRAPPED_JS_AddEventListener(Slider, "Slider")
+WRAPPED_JS_Align(Slider, "Slider")
+WRAPPED_JS_Align_To(Slider, "Slider")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -27,11 +29,44 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        int32_t min;
+        int32_t max;
+        JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
+        JSValue max_value = JS_GetPropertyUint32(ctx, argv[0], 1);
+
+        JS_ToInt32(ctx, &min, min_value);
+        JS_ToInt32(ctx, &max, max_value);
+        
+        ((Slider*)(ref->comp))->setRange(min, max);
+        LV_LOG_USER("Slider %s set range", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsNumber(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        int32_t value;
+        JS_ToInt32(ctx, &value, argv[0]);
+        
+        ((Slider*)(ref->comp))->setValue(value);
+        LV_LOG_USER("Slider %s set value", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("setStyle", 0, NativeCompSetStyle),
+    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
+    SJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
+    SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
+    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

@@ -32,6 +32,33 @@ function setSliderProps(comp, newProps, oldProps) {
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
+        set range (arr) {
+            if (!Array.isArray(arr)) return
+            const [min, max] = arr
+            if (min === oldProps.range?.[0] && max === oldProps.range?.[1]) return
+            if (isNaN(min) || isNaN(max)) return
+            comp.setRange([min, max])
+        },
+        set initalValue (val) {
+            if (isNaN(val)) return
+            if (val == oldProps.initalValue) return
+            comp.setValue(val)
+        },
+        set align ({
+            type,
+            pos = [0, 0]
+        }) {
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])) return
+            comp.align(type, pos)
+        },
+        set alignTo ({
+            type,
+            pos = [0, 0],
+            parent
+        }) {
+            if (!type || !parent || !parent.uid) return
+            comp.alignTo(type, pos, parent.__proto__)
+        }
     }
     Object.assign(setter, newProps);
     comp.dataset = {}

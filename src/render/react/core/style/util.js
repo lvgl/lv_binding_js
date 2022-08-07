@@ -15,6 +15,9 @@ export function ProcessPx (key, value, result) {
 }
 
 export function ProcessPxOrPercent (key, value, result) {
+    if (value === 'auto') {
+        return result[key] = 2001 | 1 << 13
+    }
     if (!isNaN(value)) {
         return result[key] = value
     }

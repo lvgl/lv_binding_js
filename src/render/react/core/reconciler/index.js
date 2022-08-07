@@ -18,6 +18,10 @@ export const getInstance = (uid) => {
 
 const HostConfig = {
   now: Date.now,
+  getPublicInstance: instance => {
+    //for supporting refs
+    return instance;
+  },
   getRootHostContext: () => {
     let context = {
       name: "rootnode"

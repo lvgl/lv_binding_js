@@ -102,5 +102,6 @@ int main (int argc, char *argv[]) {
     LVEngine->Start();
     delete LVEngine;
 
+    exit(0);
     printf("program end \n");
 };

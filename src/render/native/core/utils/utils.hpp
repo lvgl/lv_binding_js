@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <mutex>
 
 template<size_t BlockSize, size_t BlockNum = 10>
@@ -18,7 +19,7 @@ class MemoryPool {
 	~MemoryPool()
 	{
 		std::lock_guard<std::mutex> lk(mtx); // avoid race condition
-
+		printf("MemoryPool destructor \n");
 		// destruct automatically
 		MemChunk* p;
 		while (mem_chunk_head)

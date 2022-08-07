@@ -29,20 +29,6 @@ class BasicComponent {
 
     lv_obj_t* instance = nullptr;
     std::string uid;
-    // lv_style_t style;
-    // lv_style_t press_style;
-    // lv_style_t checked_style;
-    // lv_style_t focus_style;
-    // lv_style_t focus_key_style;
-    // lv_style_t edited_style;
-    // lv_style_t hoverd_style;
-    // lv_style_t scrolled_style;
-    // lv_style_t disabled_style;
-    // lv_style_t scrollbar_style;
-    // lv_style_t indicator_style;
-    // lv_style_t knob_style;
-    // lv_style_t selected_style;
-    // lv_style_t cursor_style;
 
     std::unordered_map<int32_t, lv_style_t*> style_map;
 
@@ -62,8 +48,11 @@ class BasicComponent {
     void setTransition (JSContext* ctx, JSValue obj, lv_style_t* style);
 
     void initStyle ();
-    void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type);
+    void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit = true);
     void appendChild(void* child);
     void removeChild(void* child);
     void insertChildBefore(void *child);
+
+    void setAlign (int32_t align_type, int32_t x, int32_t y);
+    void setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent);
 };

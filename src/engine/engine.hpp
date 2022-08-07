@@ -1,3 +1,5 @@
+#pragma once
+
 extern "C" {
     #include "jsruntime/jsapi.h"
     #include "quickjs-libc.h"

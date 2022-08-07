@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState2(initialState) {
+        function useState(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect(create, deps) {
+        function useEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,13 +1677,13 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect;
+        exports.useEffect = useEffect2;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
-        exports.useState = useState2;
+        exports.useRef = useRef2;
+        exports.useState = useState;
         exports.version = ReactVersion;
       })();
     }
@@ -18139,7 +18139,7 @@ var colorTransform = (data) => {
       }
       num += hex;
     }
-    if (num.length !== 7) {
+    if (num.length !== 8) {
       num = "";
     }
     return num;
@@ -18303,14 +18303,19 @@ function OpacityStyle(style2, result, compName) {
     result["opacity"] = NormalizeOpacity(style2["opacity"]);
   } else if (style2["outline-opacity"]) {
     result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
+  } else if (style2["recolor-opacity"] && compName === "Image") {
+    result["recolor-opacity"] = NormalizeOpacity(style2["recolor-opacity"]);
   }
   return result;
 }
 
 // src/render/react/core/style/misc.js
 function MiscStyle(style2, result, compName) {
-  if (style2.display == "none") {
+  if (style2["display"] == "none") {
     result["display"] = "none";
+  }
+  if (style2["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style2["recolor"], result);
   }
   return result;
 }
@@ -18634,11 +18639,14 @@ var getUid = () => {
   return String(id++);
 };
 var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
+var getInstance = (uid2) => {
+  return instanceMap[uid2];
 };
 var HostConfig = {
   now: Date.now,
+  getPublicInstance: (instance) => {
+    return instance;
+  },
   getRootHostContext: () => {
     let context = {
       name: "rootnode"
@@ -18658,9 +18666,9 @@ var HostConfig = {
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
+    const uid2 = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid2);
+    instanceMap[uid2] = instance;
     return instance;
   },
   createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
@@ -18765,15 +18773,15 @@ var EVENTTYPE_MAP = {
   _EVENT_LAST: 44,
   EVENT_PREPROCESS: 128
 };
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function registEvent(uid2, eventType, fn) {
+  eventMap[uid2] = eventMap[uid2] || {};
+  eventMap[uid2][eventType] = fn;
 }
-function unRegistEvent(uid, eventType) {
+function unRegistEvent(uid2, eventType) {
   if (!eventType) {
-    delete eventMap[uid];
+    delete eventMap[uid2];
   } else {
-    const obj = eventMap[uid];
+    const obj = eventMap[uid2];
     obj && delete obj[eventType];
   }
 }
@@ -18818,19 +18826,43 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle(comp, obj, compName, type, oldObj) {
+function setStyle(comp, obj, compName, type, oldObj, isInit = true) {
   if (!obj)
     return;
   obj = Array.isArray(obj) ? obj : [obj];
   oldObj = Array.isArray(oldObj) ? oldObj : [oldObj];
-  const maybeChange = obj.every((item, i) => item != oldObj[i]);
+  const maybeChange = obj.some((item, i) => item !== oldObj[i]);
   if (!maybeChange)
     return;
   obj = obj.map((item) => style_default.transform(item, compName));
   obj = Object.assign(...obj);
   const keys = Object.keys(obj);
-  comp.setStyle(obj, keys, keys.length, type);
+  comp.nativeSetStyle(obj, keys, keys.length, type, isInit);
 }
+var EAlignType = {
+  "ALIGN_DEFAULT": 0,
+  "ALIGN_TOP_LEFT": 1,
+  "ALIGN_TOP_MID": 2,
+  "ALIGN_TOP_RIGHT": 3,
+  "ALIGN_BOTTOM_LEFT": 4,
+  "ALIGN_BOTTOM_MID": 5,
+  "ALIGN_BOTTOM_RIGHT": 6,
+  "ALIGN_LEFT_MID": 7,
+  "ALIGN_RIGHT_MID": 8,
+  "ALIGN_CENTER": 9,
+  "ALIGN_OUT_TOP_LEFT": 10,
+  "ALIGN_OUT_TOP_MID": 11,
+  "ALIGN_OUT_TOP_RIGHT": 12,
+  "ALIGN_OUT_BOTTOM_LEFT": 13,
+  "ALIGN_OUT_BOTTOM_MID": 14,
+  "ALIGN_OUT_BOTTOM_RIGHT": 15,
+  "ALIGN_OUT_LEFT_TOP": 16,
+  "ALIGN_OUT_LEFT_MID": 17,
+  "ALIGN_OUT_LEFT_BOTTOM": 18,
+  "ALIGN_OUT_RIGHT_TOP": 19,
+  "ALIGN_OUT_RIGHT_MID": 20,
+  "ALIGN_OUT_RIGHT_BOTTOM": 21
+};
 
 // src/render/react/components/View/comp.js
 var bridge = globalThis.SJSJSBridge;
@@ -18854,6 +18886,23 @@ function setViewProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -18866,9 +18915,9 @@ function setViewProps(comp, newProps, oldProps) {
   });
 }
 var ViewComp = class extends NativeView {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setViewProps(this, newProps, oldProps);
@@ -18887,6 +18936,9 @@ var ViewComp = class extends NativeView {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "View", type, {}, false);
+  }
 };
 
 // src/render/react/components/View/config.js
@@ -18895,8 +18947,8 @@ var ViewConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ViewComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ViewComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -18952,9 +19004,9 @@ function setWindowProps(comp, newProps, oldProps) {
   });
 }
 var Window = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setWindowProps(this, newProps, oldProps);
@@ -18980,8 +19032,8 @@ var WindowConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new Window({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new Window({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19035,6 +19087,23 @@ function setTextProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19047,9 +19116,9 @@ function setTextProps(comp, newProps, oldProps) {
   });
 }
 var TextComp = class extends NativeText {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setTextProps(this, newProps, oldProps);
@@ -19072,8 +19141,8 @@ var TextConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19138,7 +19207,7 @@ function setImageProps(comp, newProps, oldProps) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
     },
     set src(url) {
-      if (url && url !== oldProps.url) {
+      if (url && url !== oldProps.src) {
         if (!isValidUrl(url)) {
           if (!path.isAbsolute(url)) {
             url = path.resolve(__dirname, url);
@@ -19152,6 +19221,23 @@ function setImageProps(comp, newProps, oldProps) {
           getImageBinary(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
         }
       }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19164,9 +19250,9 @@ function setImageProps(comp, newProps, oldProps) {
   });
 }
 var ImageComp = class extends NativeImage {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setImageProps(this, newProps, oldProps);
@@ -19191,8 +19277,8 @@ var ImageConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ImageComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ImageComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19235,6 +19321,23 @@ function setButtonProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19247,9 +19350,9 @@ function setButtonProps(comp, newProps, oldProps) {
   });
 }
 var ButtonComp = class extends NativeButton {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setButtonProps(this, newProps, oldProps);
@@ -19266,6 +19369,9 @@ var ButtonComp = class extends NativeButton {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "Button", type, null, false);
+  }
 };
 __publicField(ButtonComp, "tagName", "Button");
 
@@ -19276,8 +19382,8 @@ var ButtonConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ButtonComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ButtonComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19334,14 +19440,35 @@ function setSliderProps(comp, newProps, oldProps) {
       if (!Array.isArray(arr))
         return;
       const [min, max] = arr;
+      if (min === oldProps.range?.[0] && max === oldProps.range?.[1])
+        return;
       if (isNaN(min) || isNaN(max))
         return;
       comp.setRange([min, max]);
     },
-    set value(val) {
+    set initalValue(val) {
       if (isNaN(val))
         return;
+      if (val == oldProps.initalValue)
+        return;
       comp.setValue(val);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19354,9 +19481,9 @@ function setSliderProps(comp, newProps, oldProps) {
   });
 }
 var SliderComp = class extends NativeSlider {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
   }
   setProps(newProps, oldProps) {
     setSliderProps(this, newProps, oldProps);
@@ -19383,8 +19510,8 @@ var SliderConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SliderComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SliderComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19419,6 +19546,85 @@ var _Renderer = class {
 var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
+// src/render/react/core/animate/index.js
+var bridge7 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge7.NativeRender.Animate;
+var uid = 0;
+var execCallbackObj = {};
+var animateInsObj = {};
+globalThis.ANIMIATE_EXEC_CALLBACK = function(uid2, value) {
+  if (typeof execCallbackObj[uid2] === "function") {
+    try {
+      execCallbackObj[uid2].call(null, value);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+};
+var AnimateManage = class extends NativeAnimate {
+  constructor({
+    duration,
+    startValue,
+    endValue,
+    delay,
+    easing,
+    execCallback,
+    instanceId,
+    useNative = false
+  }) {
+    super();
+    this.duration = duration;
+    this.startValue = startValue;
+    this.endValue = endValue;
+    this.delay = delay;
+    this.easing = easing;
+    this.execCallback = execCallback;
+    this.uid = ++uid;
+    this.instanceId = instanceId;
+    this.useNative = useNative;
+  }
+  start() {
+    const { duration, startValue, endValue, delay, easing, execCallback, uid: uid2, instanceId, useNative } = this;
+    if (!duration || !startValue || !endValue || !execCallback)
+      return;
+    execCallbackObj[uid2] = execCallback;
+    animateInsObj[uid2] = this;
+    super.start({
+      duration,
+      startValue,
+      endValue,
+      easing,
+      uid: uid2,
+      instanceId,
+      useNative,
+      delay
+    });
+  }
+  release() {
+    delete animateInsObj[this.uid];
+  }
+};
+function createTimingAnimate({
+  duration,
+  startValue,
+  endValue,
+  delay,
+  easing,
+  execCallback
+}) {
+  return new AnimateManage({
+    duration,
+    startValue,
+    endValue,
+    delay,
+    easing,
+    execCallback
+  });
+}
+var Animate = {
+  timing: createTimingAnimate
+};
+
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
 var Window2 = registerComponent(new WindowConfig());
@@ -19428,39 +19634,48 @@ var Button = registerComponent(new ButtonConfig());
 var Slider = registerComponent(new SliderConfig());
 var Render = Renderer;
 
-// test/button/2/index.jsx
+// test/animate/1/index.jsx
 var import_react = __toESM(require_react());
 function App() {
+  const ref = (0, import_react.useRef)();
+  (0, import_react.useEffect)(() => {
+    try {
+      const animate = Animate.timing({
+        duration: 1e3,
+        startValue: 10,
+        endValue: 50,
+        execCallback: (value) => {
+          console.log(value);
+          ref.current.setStyle({
+            left: value
+          });
+        }
+      });
+      animate.start();
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button,
-    onPressedStyle: style.buttonPress
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Gum")));
+  }, /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.ball,
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID
+    },
+    ref
+  }));
 }
 var style = {
   window: {
     "width": "480px",
-    "height": "320px",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "center"
+    "height": "320px"
   },
-  button: {
-    "width": "60px",
-    "height": "50px",
-    "text-color": "white",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "center",
-    "background-color": "blue",
-    "font-size": "16px",
-    "transition": "transform-width 250ms ease-in-out 0ms, transform-height 250ms, letter-spacing 250ms"
-  },
-  buttonPress: {
-    "transform": "transform-width(10), transform-height(-10)",
-    "letter-spacing": 10,
-    "transition": "transform-width 250ms overshoot 0, transform-height 250ms, letter-spacing 250ms"
+  ball: {
+    "background-color": "red",
+    "border-radius": 32767,
+    "width": "20px",
+    "height": "20px"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

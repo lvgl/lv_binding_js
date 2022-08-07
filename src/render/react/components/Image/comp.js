@@ -35,7 +35,7 @@ function setImageProps(comp, newProps, oldProps) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
         set src(url) {
-            if (url && url !== oldProps.url) {
+            if (url && url !== oldProps.src) {
                 if (!isValidUrl(url)) {
                     if (!path.isAbsolute(url)) {
                         url = path.resolve(__dirname, url)
@@ -54,6 +54,21 @@ function setImageProps(comp, newProps, oldProps) {
                 }
             }
         },
+        set align ({
+            type,
+            pos = [0, 0]
+        }) {
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])) return
+            comp.align(type, pos)
+        },
+        set alignTo ({
+            type,
+            pos = [0, 0],
+            parent
+        }) {
+            if (!type || !parent || !parent.uid) return
+            comp.alignTo(type, pos, parent.__proto__)
+        }
     }
     Object.assign(setter, newProps);
     comp.dataset = {}

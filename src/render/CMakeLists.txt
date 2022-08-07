@@ -17,6 +17,7 @@ add_library(render STATIC
     ./native/core/event/event.cpp
     ./native/core/img/png/png.cpp
     ./native/core/utils/utils.hpp
+    ./native/core/animate/animate.cpp
     ./native/components/slider/slider.cpp
     ./native/components/slider/slider_wrap.cpp
     ./native/components/image/lodepng.cpp

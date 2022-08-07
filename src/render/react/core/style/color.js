@@ -37,7 +37,7 @@ export const colorTransform = (data) => {
             }
             num += hex;
         }
-        if (num.length !== 7) {
+        if (num.length !== 8) {
             num = "";    
         }
         return num;

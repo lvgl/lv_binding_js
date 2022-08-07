@@ -23,6 +23,21 @@ function setButtonProps(comp, newProps, oldProps) {
         set onLongPressRepeat (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
+        set align ({
+            type,
+            pos = [0, 0]
+        }) {
+            if (!type) return
+            comp.align(type, pos)
+        },
+        set alignTo ({
+            type,
+            pos = [0, 0],
+            parent
+        }) {
+            if (!type || !parent || !parent.uid) return
+            comp.alignTo(type, pos, parent.__proto__)
+        }
     }
     Object.assign(setter, newProps);
     comp.dataset = {}
@@ -54,5 +69,8 @@ export class ButtonComp extends NativeButton {
         super.removeChild(child);
     }
     close () {
+    }
+    setStyle (style, type = 0x0000) {
+        setStyle(this, style, "Button", type, null, false)
     }
 }

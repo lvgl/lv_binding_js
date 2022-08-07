@@ -8,6 +8,7 @@ extern "C" {
 #include "deps/lvgl/lvgl.h"
 
 #include "native/components/component.hpp"
+#include "native/core/animate/animate.hpp"
 
 void NativeRenderInit (JSContext* ctx);
 

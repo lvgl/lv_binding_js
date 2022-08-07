@@ -16,4 +16,7 @@ export const Image = registerComponent(new ImageConfig());
 export const Button = registerComponent(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
 
+export { EAlignType } from './components/config'
+export { EAnimateEasingFunc, Animate } from './core/animate'
+
 export const Render = Renderer;

@@ -4,6 +4,8 @@ static JSClassID ImageClassID;
 
 WRAPPED_JS_SETSTYLE(Image, "Image")
 WRAPPED_JS_AddEventListener(Image, "Image")
+WRAPPED_JS_Align(Image, "Image")
+WRAPPED_JS_Align_To(Image, "Image")
 
 static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -24,9 +26,11 @@ static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, i
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("setStyle", 0, NativeCompSetStyle),
+    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("setImageBinary", 0, NativeCompSetImageBinary),
+    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

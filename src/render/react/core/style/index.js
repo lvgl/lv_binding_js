@@ -124,9 +124,9 @@ function FlexStyle (style, result) {
     let mainPlace = 0
     let crossPlace = 0
     let trackCrossPlace = 0
-    const justifyContent = style['justify-content'] || 'flex-start'
-    const alignItems = style['align-items'] || 'flex-start'
-    const alignContent = style['align-content']
+    const justifyContent = style['justify-content']
+    const alignItems = style['align-items']
+    const alignContent = style['align-content'] || 'center'
     const flexAlignObj = {
         'flex-start': 0,
         'flex-end': 1,
@@ -142,7 +142,16 @@ function FlexStyle (style, result) {
         crossPlace = flexAlignObj[alignItems]
     }
     trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace
-    result['flex-align'] = [mainPlace, crossPlace, trackCrossPlace]
+    // result['flex-align'] = [mainPlace, crossPlace, trackCrossPlace]
+    if (justifyContent) {
+        result['justify-content'] = mainPlace
+    }
+    if (alignItems) {
+        result['align-items'] = crossPlace
+    }
+    if (alignContent) {
+        result['align-content'] = trackCrossPlace
+    }
     if (!isNaN(style['flex-grow'])) {
         result['flex-grow'] = style['flex-grow']
     }

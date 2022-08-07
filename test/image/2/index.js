@@ -1400,7 +1400,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
@@ -1682,7 +1682,7 @@ var require_react_development = __commonJS({
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
+        exports.useRef = useRef2;
         exports.useState = useState2;
         exports.version = ReactVersion;
       })();
@@ -18139,7 +18139,7 @@ var colorTransform = (data) => {
       }
       num += hex;
     }
-    if (num.length !== 7) {
+    if (num.length !== 8) {
       num = "";
     }
     return num;
@@ -18303,14 +18303,19 @@ function OpacityStyle(style2, result, compName) {
     result["opacity"] = NormalizeOpacity(style2["opacity"]);
   } else if (style2["outline-opacity"]) {
     result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
+  } else if (style2["recolor-opacity"] && compName === "Image") {
+    result["recolor-opacity"] = NormalizeOpacity(style2["recolor-opacity"]);
   }
   return result;
 }
 
 // src/render/react/core/style/misc.js
 function MiscStyle(style2, result, compName) {
-  if (style2.display == "none") {
+  if (style2["display"] == "none") {
     result["display"] = "none";
+  }
+  if (style2["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style2["recolor"], result);
   }
   return result;
 }
@@ -18639,6 +18644,9 @@ var getInstance = (uid) => {
 };
 var HostConfig = {
   now: Date.now,
+  getPublicInstance: (instance) => {
+    return instance;
+  },
   getRootHostContext: () => {
     let context = {
       name: "rootnode"
@@ -18823,7 +18831,7 @@ function setStyle(comp, obj, compName, type, oldObj) {
     return;
   obj = Array.isArray(obj) ? obj : [obj];
   oldObj = Array.isArray(oldObj) ? oldObj : [oldObj];
-  const maybeChange = obj.every((item, i) => item != oldObj[i]);
+  const maybeChange = obj.some((item, i) => item !== oldObj[i]);
   if (!maybeChange)
     return;
   obj = obj.map((item) => style_default.transform(item, compName));
@@ -18854,6 +18862,23 @@ function setViewProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19035,6 +19060,23 @@ function setTextProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19138,7 +19180,7 @@ function setImageProps(comp, newProps, oldProps) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
     },
     set src(url) {
-      if (url && url !== oldProps.url) {
+      if (url && url !== oldProps.src) {
         if (!isValidUrl(url)) {
           if (!path.isAbsolute(url)) {
             url = path.resolve(__dirname, url);
@@ -19152,6 +19194,23 @@ function setImageProps(comp, newProps, oldProps) {
           getImageBinary(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
         }
       }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19235,6 +19294,23 @@ function setButtonProps(comp, newProps, oldProps) {
     },
     set onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type)
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19334,14 +19410,35 @@ function setSliderProps(comp, newProps, oldProps) {
       if (!Array.isArray(arr))
         return;
       const [min, max] = arr;
+      if (min === oldProps.range?.[0] && max === oldProps.range?.[1])
+        return;
       if (isNaN(min) || isNaN(max))
         return;
       comp.setRange([min, max]);
     },
-    set value(val) {
+    set initalValue(val) {
       if (isNaN(val))
         return;
+      if (val == oldProps.initalValue)
+        return;
       comp.setValue(val);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || !parent || !parent.uid)
+        return;
+      comp.alignTo(type, pos, parent.__proto__);
     }
   };
   Object.assign(setter, newProps);
@@ -19426,41 +19523,118 @@ var Text = registerComponent(new TextConfig());
 var Image = registerComponent(new ImageConfig());
 var Button = registerComponent(new ButtonConfig());
 var Slider = registerComponent(new SliderConfig());
+var EAlignType = {
+  "ALIGN_DEFAULT": 0,
+  "ALIGN_TOP_LEFT": 1,
+  "ALIGN_TOP_MID": 2,
+  "ALIGN_TOP_RIGHT": 3,
+  "ALIGN_BOTTOM_LEFT": 4,
+  "ALIGN_BOTTOM_MID": 5,
+  "ALIGN_BOTTOM_RIGHT": 6,
+  "ALIGN_LEFT_MID": 7,
+  "ALIGN_RIGHT_MID": 8,
+  "ALIGN_CENTER": 9,
+  "ALIGN_OUT_TOP_LEFT": 10,
+  "ALIGN_OUT_TOP_MID": 11,
+  "ALIGN_OUT_TOP_RIGHT": 12,
+  "ALIGN_OUT_BOTTOM_LEFT": 13,
+  "ALIGN_OUT_BOTTOM_MID": 14,
+  "ALIGN_OUT_BOTTOM_RIGHT": 15,
+  "ALIGN_OUT_LEFT_TOP": 16,
+  "ALIGN_OUT_LEFT_MID": 17,
+  "ALIGN_OUT_LEFT_BOTTOM": 18,
+  "ALIGN_OUT_RIGHT_TOP": 19,
+  "ALIGN_OUT_RIGHT_MID": 20,
+  "ALIGN_OUT_RIGHT_BOTTOM": 21
+};
 var Render = Renderer;
 
-// test/button/2/index.jsx
+// test/image/2/index.jsx
 var import_react = __toESM(require_react());
 function App() {
+  const [color1, setColor1] = (0, import_react.useState)(51);
+  const [color2, setColor2] = (0, import_react.useState)(229);
+  const [color3, setColor3] = (0, import_react.useState)(153);
+  const [opacity, setOpacity] = (0, import_react.useState)(50);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button,
-    onPressedStyle: style.buttonPress
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Gum")));
+  }, /* @__PURE__ */ import_react.default.createElement(Slider, {
+    range: [0, 255],
+    initalValue: 51,
+    style: style.slider1,
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [25, 0]
+    },
+    onChange: (e) => setColor1(e.value)
+  }), /* @__PURE__ */ import_react.default.createElement(Slider, {
+    range: [0, 255],
+    initalValue: 229,
+    style: style.slider2,
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [50, 0]
+    },
+    onChange: (e) => setColor2(e.value)
+  }), /* @__PURE__ */ import_react.default.createElement(Slider, {
+    range: [0, 255],
+    initalValue: 153,
+    style: style.slider3,
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [75, 0]
+    },
+    onChange: (e) => setColor3(e.value)
+  }), /* @__PURE__ */ import_react.default.createElement(Slider, {
+    range: [0, 100],
+    initalValue: 50,
+    style: style.slider4,
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [100, 0]
+    },
+    onChange: (e) => setOpacity(e.value)
+  }), /* @__PURE__ */ import_react.default.createElement(Image, {
+    src: "./2.png",
+    style: [style.image, { recolor: `rgb(${color1}, ${color2}, ${color3})`, "recolor-opacity": opacity / 100 }],
+    align: {
+      type: EAlignType.ALIGN_RIGHT_MID,
+      pos: [0, 0]
+    }
+  }));
 }
 var style = {
   window: {
     "width": "480px",
-    "height": "320px",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "center"
+    "height": "320px"
   },
-  button: {
-    "width": "60px",
-    "height": "50px",
-    "text-color": "white",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "center",
-    "background-color": "blue",
-    "font-size": "16px",
-    "transition": "transform-width 250ms ease-in-out 0ms, transform-height 250ms, letter-spacing 250ms"
+  slider1: {
+    "left": "25px",
+    "width": "10px",
+    "height": "200px",
+    "background-color": "red"
   },
-  buttonPress: {
-    "transform": "transform-width(10), transform-height(-10)",
-    "letter-spacing": 10,
-    "transition": "transform-width 250ms overshoot 0, transform-height 250ms, letter-spacing 250ms"
+  slider2: {
+    "left": "50px",
+    "width": "10px",
+    "height": "200px",
+    "background-color": "green"
+  },
+  slider3: {
+    "left": "75px",
+    "width": "10px",
+    "height": "200px",
+    "background-color": "blue"
+  },
+  slider4: {
+    "width": "10px",
+    "left": "100px",
+    "height": "200px",
+    "background-color": "gray"
+  },
+  image: {
+    "width": "175px",
+    "height": "120px"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

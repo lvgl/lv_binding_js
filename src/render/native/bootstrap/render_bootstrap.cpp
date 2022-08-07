@@ -13,6 +13,8 @@ void NativeRenderInit (JSContext* ctx) {
 
     NativeEventWrapInit(ctx);
 
+    NativeAnimateInit (ctx, obj);
+
     lv_init();
     lv_png_init();
 };
