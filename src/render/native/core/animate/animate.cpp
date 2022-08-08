@@ -6,6 +6,16 @@ static MemoryPool<sizeof(lv_anim_t), 30> animate_pool;
 
 std::unordered_map<int32_t, lv_anim_t*> animate_map;
 
+static std::unordered_map<std::string, lv_anim_path_cb_t> animate_funcs = {
+    { "linear", &lv_anim_path_linear },
+    { "ease-in", &lv_anim_path_ease_in },
+    { "ease-out", &lv_anim_path_ease_out },
+    { "ease-in-out", &lv_anim_path_ease_in_out },
+    { "overshoot", &lv_anim_path_overshoot },
+    { "bounce", &lv_anim_path_bounce },
+    { "step", &lv_anim_path_step },
+};
+
 static void Animate_JS_Callback (void* opaque, int32_t v) {
     JSValue argv[4];
     int argc = 2;
@@ -70,6 +80,12 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         int32_t delay;
         JSValue delay_value;
 
+        size_t func_len;
+        char* func;
+        JSValue func_value;
+        std::string func_str;
+        lv_anim_path_cb_t path_func = lv_anim_path_linear;
+
         lv_anim_set_var(animate, ref);
 
         dura_value = JS_GetPropertyStr(ctx, argv[0], "duration");
@@ -96,7 +112,16 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         }
         JS_FreeValue(ctx, delay_value);
 
-        lv_anim_set_path_cb(animate, lv_anim_path_ease_in);
+        func_value = JS_GetPropertyStr(ctx, argv[0], "easing");
+        func = JS_ToCStringLen(ctx, &func_len, func_value);
+        std::string func_str = func;
+        func_str.resize(func_len);
+        if (animate_funcs.find(func_str) != animate_funcs.end()) {
+            path_func = animate_funcs.at(func_str);
+        }
+        lv_anim_set_path_cb(animate, path_func);
+        JS_FreeCString(ctx, func);
+        JS_FreeValue(ctx, func_value);
 
         lv_anim_set_exec_cb(animate, Animate_JS_Callback);
         lv_anim_start(animate);
@@ -135,7 +160,7 @@ static JSValue AnimateConstructor(JSContext *ctx, JSValueConst new_target, int a
 };
 
 static void AnimateFinalizer(JSRuntime *rt, JSValue val) {
-    ANIMATE_REF *ref = (ANIMATE_REF *)JS_GetOpaque(val, AnimateClassID);
+    ANIMATE_REF* ref = (ANIMATE_REF*)JS_GetOpaque(val, AnimateClassID);
     LV_LOG_USER("Animate %s release", ref->uid);
     if (ref) {
         if (animate_map.find(ref->uid) != animate_map.end()) {
