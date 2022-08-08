@@ -25,7 +25,7 @@ globalThis.ANIMIATE_EXEC_CALLBACK = function (uid, value) {
     }
 }
 
-class AnimateManage extends NativeAnimate {
+class AnimateBase extends NativeAnimate {
     constructor ({
         duration,
         startValue,
@@ -34,7 +34,11 @@ class AnimateManage extends NativeAnimate {
         easing,
         execCallback,
         instanceId,
-        useNative = false
+        useNative = false,
+        playBackDelay,
+        playBackTime,
+        repeatDelay,
+        repeatCount
     }) {
         super()
         this.duration = duration
@@ -46,11 +50,29 @@ class AnimateManage extends NativeAnimate {
         this.uid = ++uid
         this.instanceId = instanceId
         this.useNative = useNative
+        this.playBackDelay = playBackDelay
+        this.playBackTime = playBackTime
+        this.repeatDelay = repeatDelay
+        this.repeatCount = repeatCount
     }
 
     start () {
-        const { duration, startValue, endValue, delay, easing, execCallback, uid, instanceId, useNative } = this
-        if (!duration || !startValue || !endValue || !execCallback) return
+        const { 
+            duration, 
+            startValue, 
+            endValue, 
+            delay, 
+            easing, 
+            execCallback, 
+            uid, 
+            instanceId, 
+            useNative,
+            playBackDelay,
+            playBackTime,
+            repeatDelay,
+            repeatCount
+        } = this
+        if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback) return
 
         execCallbackObj[uid] = execCallback
         animateInsObj[uid] = this
@@ -62,7 +84,11 @@ class AnimateManage extends NativeAnimate {
             uid,
             instanceId,
             useNative,
-            delay
+            delay,
+            playBackDelay,
+            playBackTime,
+            repeatDelay,
+            repeatCount
         })
     }
 
@@ -71,24 +97,30 @@ class AnimateManage extends NativeAnimate {
     }
 }
 
-function createTimingAnimate ({
-    duration,
-    startValue,
-    endValue,
-    delay,
-    easing,
-    execCallback
-}) {
-    return new AnimateManage({
-        duration,
-        startValue,
-        endValue,
-        delay,
-        easing,
-        execCallback
-    })
+function createTimingAnimate (params) {
+    return new AnimateBase(params)
+}
+
+class ParallelAnimate {
+    constructor (animates) {
+        this.animates = animates
+    }
+
+    start () {
+        this.animates.forEach(animate => {
+            if (animate instanceof AnimateBase) {
+                animate?.start()
+            }
+        })
+    }
+}
+
+function createParallelAnimate() {
+    const animates = Array.from(arguments[0])
+    return new ParallelAnimate(animates)
 }
 
 export const Animate = {
-    timing: createTimingAnimate
+    timing: createTimingAnimate,
+    parallel: createParallelAnimate
 }

@@ -6,17 +6,39 @@ function App () {
 
     useEffect(() => {
         try {
-            const animate = Animate.timing({
-                duration: 1000,
-                startValue: 10,
-                endValue: 50,
-                execCallback: (value) => {
-                    console.log(value)
-                    ref.current.setStyle({
-                        left: value
-                    })
-                }
-            })
+            const animate = Animate.parallel([
+                Animate.timing({
+                    duration: 1000,
+                    startValue: 0,
+                    endValue: 400,
+                    playBackDelay: 100,
+                    playBackTime: 300,
+                    repeatDelay: 500,
+                    repeatCount: Infinity,
+                    execCallback: (value) => {
+                        ref.current.setStyle({
+                            left: value
+                        })
+                    },
+    
+                }),
+                Animate.timing({
+                    duration: 1000,
+                    startValue: 10,
+                    endValue: 50,
+                    playBackDelay: 100,
+                    playBackTime: 300,
+                    repeatDelay: 500,
+                    repeatCount: Infinity,
+                    execCallback: (value) => {
+                        ref.current.setStyle({
+                            width: value,
+                            height: value
+                        })
+                    },
+    
+                }),
+            ])
             animate.start()
         } catch (e) {
             console.log(e)

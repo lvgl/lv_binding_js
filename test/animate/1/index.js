@@ -19561,7 +19561,7 @@ globalThis.ANIMIATE_EXEC_CALLBACK = function(uid2, value) {
     }
   }
 };
-var AnimateManage = class extends NativeAnimate {
+var AnimateBase = class extends NativeAnimate {
   constructor({
     duration,
     startValue,
@@ -19570,7 +19570,11 @@ var AnimateManage = class extends NativeAnimate {
     easing,
     execCallback,
     instanceId,
-    useNative = false
+    useNative = false,
+    playBackDelay,
+    playBackTime,
+    repeatDelay,
+    repeatCount
   }) {
     super();
     this.duration = duration;
@@ -19582,10 +19586,28 @@ var AnimateManage = class extends NativeAnimate {
     this.uid = ++uid;
     this.instanceId = instanceId;
     this.useNative = useNative;
+    this.playBackDelay = playBackDelay;
+    this.playBackTime = playBackTime;
+    this.repeatDelay = repeatDelay;
+    this.repeatCount = repeatCount;
   }
   start() {
-    const { duration, startValue, endValue, delay, easing, execCallback, uid: uid2, instanceId, useNative } = this;
-    if (!duration || !startValue || !endValue || !execCallback)
+    const {
+      duration,
+      startValue,
+      endValue,
+      delay,
+      easing,
+      execCallback,
+      uid: uid2,
+      instanceId,
+      useNative,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount
+    } = this;
+    if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback)
       return;
     execCallbackObj[uid2] = execCallback;
     animateInsObj[uid2] = this;
@@ -19597,32 +19619,39 @@ var AnimateManage = class extends NativeAnimate {
       uid: uid2,
       instanceId,
       useNative,
-      delay
+      delay,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount
     });
   }
   release() {
     delete animateInsObj[this.uid];
   }
 };
-function createTimingAnimate({
-  duration,
-  startValue,
-  endValue,
-  delay,
-  easing,
-  execCallback
-}) {
-  return new AnimateManage({
-    duration,
-    startValue,
-    endValue,
-    delay,
-    easing,
-    execCallback
-  });
+function createTimingAnimate(params) {
+  return new AnimateBase(params);
+}
+var ParallelAnimate = class {
+  constructor(animates) {
+    this.animates = animates;
+  }
+  start() {
+    this.animates.forEach((animate) => {
+      if (animate instanceof AnimateBase) {
+        animate?.start();
+      }
+    });
+  }
+};
+function createParallelAnimate() {
+  const animates = Array.from(arguments[0]);
+  return new ParallelAnimate(animates);
 }
 var Animate = {
-  timing: createTimingAnimate
+  timing: createTimingAnimate,
+  parallel: createParallelAnimate
 };
 
 // src/render/react/index.js
@@ -19640,17 +19669,37 @@ function App() {
   const ref = (0, import_react.useRef)();
   (0, import_react.useEffect)(() => {
     try {
-      const animate = Animate.timing({
-        duration: 1e3,
-        startValue: 10,
-        endValue: 50,
-        execCallback: (value) => {
-          console.log(value);
-          ref.current.setStyle({
-            left: value
-          });
-        }
-      });
+      const animate = Animate.parallel([
+        Animate.timing({
+          duration: 1e3,
+          startValue: 0,
+          endValue: 400,
+          playBackDelay: 100,
+          playBackTime: 300,
+          repeatDelay: 500,
+          repeatCount: Infinity,
+          execCallback: (value) => {
+            ref.current.setStyle({
+              left: value
+            });
+          }
+        }),
+        Animate.timing({
+          duration: 1e3,
+          startValue: 10,
+          endValue: 50,
+          playBackDelay: 100,
+          playBackTime: 300,
+          repeatDelay: 500,
+          repeatCount: Infinity,
+          execCallback: (value) => {
+            ref.current.setStyle({
+              width: value,
+              height: value
+            });
+          }
+        })
+      ]);
       animate.start();
     } catch (e) {
       console.log(e);

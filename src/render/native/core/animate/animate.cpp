@@ -17,7 +17,7 @@ static std::unordered_map<std::string, lv_anim_path_cb_t> animate_funcs = {
 };
 
 static void Animate_JS_Callback (void* opaque, int32_t v) {
-    JSValue argv[4];
+    JSValue argv[2];
     int argc = 2;
     ANIMATE_REF* ref = static_cast<ANIMATE_REF*>(opaque);
 
@@ -80,8 +80,20 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         int32_t delay;
         JSValue delay_value;
 
+        int32_t playback_delay;
+        JSValue playback_delay_value;
+
+        int32_t playback_time;
+        JSValue playback_time_value;
+
+        int32_t repeat_delay;
+        JSValue repeat_delay_value;
+
+        int32_t repeat_count;
+        JSValue repeat_count_value;
+
         size_t func_len;
-        char* func;
+        const char* func;
         JSValue func_value;
         std::string func_str;
         lv_anim_path_cb_t path_func = lv_anim_path_linear;
@@ -90,8 +102,8 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
 
         dura_value = JS_GetPropertyStr(ctx, argv[0], "duration");
         if (JS_IsNumber(dura_value)) {
-            lv_anim_set_time(animate, duration);
             JS_ToInt32(ctx, &duration, dura_value);
+            lv_anim_set_time(animate, duration);
         }
         JS_FreeValue(ctx, dura_value);
 
@@ -112,9 +124,37 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         }
         JS_FreeValue(ctx, delay_value);
 
+        playback_delay_value = JS_GetPropertyStr(ctx, argv[0], "playBackDelay");
+        if (JS_IsNumber(playback_delay_value)) {
+            JS_ToInt32(ctx, &playback_delay, playback_delay_value);
+            lv_anim_set_playback_delay(animate, playback_delay);
+        }
+        JS_FreeValue(ctx, playback_delay_value);
+
+        playback_time_value = JS_GetPropertyStr(ctx, argv[0], "playBackTime");
+        if (JS_IsNumber(playback_time_value)) {
+            JS_ToInt32(ctx, &playback_time, playback_time_value);
+            lv_anim_set_playback_time(animate, playback_time);
+        }
+        JS_FreeValue(ctx, playback_time_value);
+
+        repeat_delay_value = JS_GetPropertyStr(ctx, argv[0], "repeatDelay");
+        if (JS_IsNumber(repeat_delay_value)) {
+            JS_ToInt32(ctx, &repeat_delay, repeat_delay_value);
+            lv_anim_set_repeat_delay(animate, repeat_delay);
+        }
+        JS_FreeValue(ctx, repeat_delay_value);
+
+        repeat_count_value = JS_GetPropertyStr(ctx, argv[0], "repeatCount");
+        if (JS_IsNumber(repeat_count_value)) {
+            JS_ToInt32(ctx, &repeat_count, repeat_count_value);
+            lv_anim_set_repeat_count(animate, repeat_count);
+        }
+        JS_FreeValue(ctx, repeat_count_value);
+
         func_value = JS_GetPropertyStr(ctx, argv[0], "easing");
         func = JS_ToCStringLen(ctx, &func_len, func_value);
-        std::string func_str = func;
+        func_str = func;
         func_str.resize(func_len);
         if (animate_funcs.find(func_str) != animate_funcs.end()) {
             path_func = animate_funcs.at(func_str);
