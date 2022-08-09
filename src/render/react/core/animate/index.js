@@ -12,13 +12,13 @@ export const EAnimateEasingFunc = {
 }
 
 let uid = 0
-const execCallbackObj = {}
+const callbackObj = {}
 const animateInsObj = {}
 
-globalThis.ANIMIATE_EXEC_CALLBACK = function (uid, value) {
-    if (typeof execCallbackObj[uid] === 'function') {
+globalThis.ANIMIATE_CALLBACK = function (uid, ...args) {
+    if (typeof callbackObj[uid] === 'function') {
         try {
-            execCallbackObj[uid].call(null, value)
+         callbackObj[uid].call(null, ...args)
         } catch (e) {
             console.log(e)
         }
@@ -38,7 +38,9 @@ class AnimateBase extends NativeAnimate {
         playBackDelay,
         playBackTime,
         repeatDelay,
-        repeatCount
+        repeatCount,
+        startCallback,
+        readyCallback
     }) {
         super()
         this.duration = duration
@@ -47,13 +49,14 @@ class AnimateBase extends NativeAnimate {
         this.delay = delay
         this.easing = easing
         this.execCallback = execCallback
-        this.uid = ++uid
         this.instanceId = instanceId
         this.useNative = useNative
         this.playBackDelay = playBackDelay
         this.playBackTime = playBackTime
         this.repeatDelay = repeatDelay
         this.repeatCount = repeatCount
+        this.startCallback = startCallback
+        this.readyCallback = readyCallback
     }
 
     start () {
@@ -64,31 +67,46 @@ class AnimateBase extends NativeAnimate {
             delay, 
             easing, 
             execCallback, 
-            uid, 
             instanceId, 
             useNative,
             playBackDelay,
             playBackTime,
             repeatDelay,
-            repeatCount
+            repeatCount,
+            startCallback,
+            readyCallback
         } = this
         if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback) return
-
-        execCallbackObj[uid] = execCallback
-        animateInsObj[uid] = this
+        if (!useNative && typeof execCallback === 'function') {
+            callbackObj[++uid] = execCallback
+            this.execUid = uid
+        }
+        if (typeof startCallback === 'function') {
+            callbackObj[++uid] = startCallback
+            this.startCbUid = uid
+        }
+        if (typeof readyCallback === 'function') {
+            callbackObj[++uid] = readyCallback
+            this.readyCbUid = uid
+        }
+        animateInsObj[++uid] = this
+        this.uid = uid
         super.start({
             duration,
             startValue,
             endValue,
             easing,
-            uid,
             instanceId,
             useNative,
             delay,
             playBackDelay,
             playBackTime,
             repeatDelay,
-            repeatCount
+            repeatCount: !isFinite(repeatCount) ? 0xFFFF : repeatCount,
+            uid: this.uid,
+            execUid: this.execUid,
+            startCbUid: this.startCbUid,
+            readyCbUid: this.readyCbUid
         })
     }
 

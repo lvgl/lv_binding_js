@@ -14,7 +14,13 @@ function App () {
                     playBackDelay: 100,
                     playBackTime: 300,
                     repeatDelay: 500,
-                    repeatCount: Infinity,
+                    repeatCount: 0,
+                    startCallback: () => {
+                        console.log('animate1 start')
+                    },
+                    readyCallback: () => {
+                        console.log('animate1 ready')
+                    },
                     execCallback: (value) => {
                         ref.current.setStyle({
                             left: value
@@ -29,7 +35,7 @@ function App () {
                     playBackDelay: 100,
                     playBackTime: 300,
                     repeatDelay: 500,
-                    repeatCount: Infinity,
+                    repeatCount: 0,
                     execCallback: (value) => {
                         ref.current.setStyle({
                             width: value,

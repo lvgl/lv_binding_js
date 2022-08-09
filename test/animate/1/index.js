@@ -19550,12 +19550,13 @@ __publicField(Renderer, "container");
 var bridge7 = globalThis.SJSJSBridge;
 var NativeAnimate = bridge7.NativeRender.Animate;
 var uid = 0;
-var execCallbackObj = {};
+var callbackObj = {};
 var animateInsObj = {};
-globalThis.ANIMIATE_EXEC_CALLBACK = function(uid2, value) {
-  if (typeof execCallbackObj[uid2] === "function") {
+globalThis.ANIMIATE_CALLBACK = function(uid2, ...args) {
+  console.log(arguments);
+  if (typeof callbackObj[uid2] === "function") {
     try {
-      execCallbackObj[uid2].call(null, value);
+      callbackObj[uid2].call(null, ...args);
     } catch (e) {
       console.log(e);
     }
@@ -19574,7 +19575,9 @@ var AnimateBase = class extends NativeAnimate {
     playBackDelay,
     playBackTime,
     repeatDelay,
-    repeatCount
+    repeatCount,
+    startCallback,
+    readyCallback
   }) {
     super();
     this.duration = duration;
@@ -19583,13 +19586,14 @@ var AnimateBase = class extends NativeAnimate {
     this.delay = delay;
     this.easing = easing;
     this.execCallback = execCallback;
-    this.uid = ++uid;
     this.instanceId = instanceId;
     this.useNative = useNative;
     this.playBackDelay = playBackDelay;
     this.playBackTime = playBackTime;
     this.repeatDelay = repeatDelay;
     this.repeatCount = repeatCount;
+    this.startCallback = startCallback;
+    this.readyCallback = readyCallback;
   }
   start() {
     const {
@@ -19599,31 +19603,49 @@ var AnimateBase = class extends NativeAnimate {
       delay,
       easing,
       execCallback,
-      uid: uid2,
       instanceId,
       useNative,
       playBackDelay,
       playBackTime,
       repeatDelay,
-      repeatCount
+      repeatCount,
+      startCallback,
+      readyCallback
     } = this;
     if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback)
       return;
-    execCallbackObj[uid2] = execCallback;
-    animateInsObj[uid2] = this;
+    if (!useNative && typeof execCallback === "function") {
+      callbackObj[++uid] = execCallback;
+      this.execUid = uid;
+    }
+    if (typeof startCallback === "function") {
+      callbackObj[++uid] = startCallback;
+      this.startCbUid = uid;
+    }
+    if (typeof readyCallback === "function") {
+      callbackObj[++uid] = readyCallback;
+      this.readyCbUid = uid;
+    }
+    animateInsObj[++uid] = this;
+    this.uid = uid;
     super.start({
       duration,
       startValue,
       endValue,
       easing,
-      uid: uid2,
       instanceId,
       useNative,
       delay,
       playBackDelay,
       playBackTime,
       repeatDelay,
-      repeatCount
+      repeatCount: !isFinite(repeatCount) ? 65535 : repeatCount,
+      startCallback,
+      readyCallback,
+      uid: this.uid,
+      execUid: this.execUid,
+      startCbUid: this.startCbUid,
+      readyCbUid: this.readyCbUid
     });
   }
   release() {
@@ -19677,7 +19699,13 @@ function App() {
           playBackDelay: 100,
           playBackTime: 300,
           repeatDelay: 500,
-          repeatCount: Infinity,
+          repeatCount: 0,
+          startCallback: () => {
+            console.log("animate1 start");
+          },
+          readyCallback: () => {
+            console.log("animate1 ready");
+          },
           execCallback: (value) => {
             ref.current.setStyle({
               left: value
@@ -19691,7 +19719,7 @@ function App() {
           playBackDelay: 100,
           playBackTime: 300,
           repeatDelay: 500,
-          repeatCount: Infinity,
+          repeatCount: 0,
           execCallback: (value) => {
             ref.current.setStyle({
               width: value,
