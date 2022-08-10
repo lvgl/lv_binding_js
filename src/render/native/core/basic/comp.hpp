@@ -16,6 +16,7 @@ enum ECOMP_TYPE {
   COMP_TYPE_SLIDER,
   COMP_TYPE_TEXT,
   COMP_TYPE_WINDOW,
+  COMP_TYPE_SWITCH
 };
 
 #include "native/core/event/event.hpp"
