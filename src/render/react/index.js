@@ -5,6 +5,7 @@ import TextConfig from "./components/Text/config";
 import ImageConfig from "./components/Image/config";
 import ButtonConfig from "./components/Button/config";
 import SliderConfig from './components/Slider/config';
+import SwitchConfig from './components/Switch/config';
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -15,6 +16,7 @@ export const Text = registerComponent(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
 export const Button = registerComponent(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
+export const Switch = registerComponent(new SwitchConfig());
 
 export { EAlignType } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'

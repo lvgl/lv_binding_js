@@ -47,7 +47,7 @@ class BasicComponent {
     void eventCallback (lv_obj_t * obj, lv_event_t event);
     static void EventCallback (lv_event_t * event);
     void setTransition (JSContext* ctx, JSValue obj, lv_style_t* style);
-
+  
     void initStyle ();
     void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit = true);
     void appendChild(void* child);

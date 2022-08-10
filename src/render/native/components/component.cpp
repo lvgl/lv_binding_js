@@ -11,5 +11,6 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     NativeComponentImageInit(ctx, component_obj);
     NativeComponentViewInit(ctx, component_obj);
     NativeComponentTextInit(ctx, component_obj);
+    NativeComponentSwitchInit(ctx, component_obj);
     NativeComponentWindowInit (ctx, component_obj);
 };

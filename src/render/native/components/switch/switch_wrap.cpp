@@ -1,4 +1,4 @@
-#include "View.hpp"
+#include "switch.hpp"
 
 static JSClassID ViewClassID;
 
@@ -6,6 +6,7 @@ WRAPPED_JS_SETSTYLE(Switch, "Switch")
 WRAPPED_JS_AddEventListener(Switch, "Switch")
 WRAPPED_JS_Align(Switch, "Switch")
 WRAPPED_JS_Align_To(Switch, "Switch")
+STYLE_INFO(Switch, "Switch")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -34,12 +35,13 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
-static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
+static JSValue SwitchConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
     JSValue proto;
     JSValue obj;
     JSValue arg;
@@ -100,14 +102,14 @@ static JSClassDef ViewClass = {
     .finalizer = ViewFinalizer,
 };
 
-void NativeComponentViewInit (JSContext* ctx, JSValue ns) {
+void NativeComponentSwitchInit (JSContext* ctx, JSValue ns) {
     JS_NewClassID(&ViewClassID);
     JS_NewClass(JS_GetRuntime(ctx), ViewClassID, &ViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));
     JS_SetClassProto(ctx, ViewClassID, proto);
 
-    JSValue obj = JS_NewCFunction2(ctx, ViewConstructor, "Switch", 1, JS_CFUNC_constructor, 0);
+    JSValue obj = JS_NewCFunction2(ctx, SwitchConstructor, "Switch", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
     JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Switch", obj, JS_PROP_C_W_E);

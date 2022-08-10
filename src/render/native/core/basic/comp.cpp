@@ -2,19 +2,26 @@
 
 static MemoryPool<sizeof(lv_style_t), 30> style_pool;
 
-void __InitStyle (lv_style_t* style) {
+void __InitStyle (lv_style_t* style, ECOMP_TYPE type) {
     lv_style_init(style);
     lv_style_reset(style);
 
-    lv_style_set_pad_left(style, 0);
-    lv_style_set_pad_right(style, 0);
-    lv_style_set_pad_bottom(style, 0);
-    lv_style_set_pad_top(style, 0);
-    lv_style_set_radius(style, 0);
-    lv_style_set_outline_width(style, 0);
-    lv_style_set_outline_pad(style, 0);
-    lv_style_set_border_width(style, 0);
-    lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
+    bool need_init = true;
+    if (type == COMP_TYPE_SWITCH) {
+        need_init = false;
+    }
+
+    if (need_init) {
+        lv_style_set_pad_left(style, 0);
+        lv_style_set_pad_right(style, 0);
+        lv_style_set_pad_bottom(style, 0);
+        lv_style_set_pad_top(style, 0);
+        lv_style_set_radius(style, 0);
+        lv_style_set_outline_width(style, 0);
+        lv_style_set_outline_pad(style, 0);
+        lv_style_set_border_width(style, 0);
+        lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
+    }
 };
 
 void BasicComponent::addEventListener (int eventType) {
@@ -62,7 +69,7 @@ void BasicComponent::initStyle () {
     lv_style_t* style = static_cast<lv_style_t*>(style_pool.allocate());
     this->style_map[static_cast<int32_t>(LV_PART_MAIN)] = style;
 
-    __InitStyle(style);
+    __InitStyle(style, this->type);
     lv_obj_add_style(this->instance, style, LV_PART_MAIN);
     lv_obj_invalidate(this->instance);
 };
@@ -130,7 +137,7 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
     }
 
     if (isinit) {
-        __InitStyle(style);
+        __InitStyle(style, this->type);
     }
 
     for(int i=0; i < keys.size(); i++) {
