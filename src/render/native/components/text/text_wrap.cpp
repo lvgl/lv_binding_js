@@ -6,6 +6,7 @@ WRAPPED_JS_SETSTYLE(Text, "Text")
 WRAPPED_JS_AddEventListener(Text, "Text")
 WRAPPED_JS_Align(Text, "Text")
 WRAPPED_JS_Align_To(Text, "Text")
+STYLE_INFO(Text, "Text")
 
 static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
@@ -26,6 +27,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

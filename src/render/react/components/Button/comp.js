@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, unRegistEvent, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeButton = bridge.NativeRender.NativeComponents.Button
@@ -53,6 +53,16 @@ export class ButtonComp extends NativeButton {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setButtonProps(this, newProps, oldProps);

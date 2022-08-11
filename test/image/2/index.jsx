@@ -11,7 +11,7 @@ function App () {
         <Window style={style.window}>
             <Slider
                 range={[0, 255]}
-                initalValue={51}
+                value={51}
                 style={style.slider1}
                 align={{
                     type: EAlignType.ALIGN_LEFT_MID,
@@ -21,7 +21,7 @@ function App () {
             />
             <Slider
                 range={[0, 255]}
-                initalValue={229}
+                value={229}
                 style={style.slider2}
                 align={{
                     type: EAlignType.ALIGN_LEFT_MID,
@@ -31,7 +31,7 @@ function App () {
             />
             <Slider
                 range={[0, 255]}
-                initalValue={153}
+                value={153}
                 style={style.slider3}
                 align={{
                     type: EAlignType.ALIGN_LEFT_MID,
@@ -41,7 +41,7 @@ function App () {
             />
             <Slider
                 range={[0, 100]}
-                initalValue={50}
+                value={50}
                 style={style.slider4}
                 align={{
                     type: EAlignType.ALIGN_LEFT_MID,

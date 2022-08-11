@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.View
@@ -53,6 +53,16 @@ export class ViewComp extends NativeView {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setViewProps(this, newProps, oldProps);

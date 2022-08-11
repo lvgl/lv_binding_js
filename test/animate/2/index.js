@@ -1412,7 +1412,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback(callback, deps) {
+        function useCallback2(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1674,7 +1674,7 @@ var require_react_development = __commonJS({
         exports.isValidElement = isValidElement;
         exports.lazy = lazy;
         exports.memo = memo;
-        exports.useCallback = useCallback;
+        exports.useCallback = useCallback2;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
         exports.useEffect = useEffect2;
@@ -18639,8 +18639,8 @@ var getUid = () => {
   return String(id++);
 };
 var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
+var getInstance = (uid2) => {
+  return instanceMap[uid2];
 };
 var HostConfig = {
   now: Date.now,
@@ -18666,9 +18666,9 @@ var HostConfig = {
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
+    const uid2 = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid2);
+    instanceMap[uid2] = instance;
     return instance;
   },
   createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
@@ -18773,15 +18773,15 @@ var EVENTTYPE_MAP = {
   _EVENT_LAST: 44,
   EVENT_PREPROCESS: 128
 };
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function registEvent(uid2, eventType, fn) {
+  eventMap[uid2] = eventMap[uid2] || {};
+  eventMap[uid2][eventType] = fn;
 }
-function unRegistEvent(uid, eventType) {
+function unRegistEvent(uid2, eventType) {
   if (!eventType) {
-    delete eventMap[uid];
+    delete eventMap[uid2];
   } else {
-    const obj = eventMap[uid];
+    const obj = eventMap[uid2];
     obj && delete obj[eventType];
   }
 }
@@ -18863,6 +18863,7 @@ var EAlignType = {
   "ALIGN_OUT_RIGHT_MID": 20,
   "ALIGN_OUT_RIGHT_BOTTOM": 21
 };
+var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
 var bridge = globalThis.SJSJSBridge;
@@ -18915,9 +18916,18 @@ function setViewProps(comp, newProps, oldProps) {
   });
 }
 var ViewComp = class extends NativeView {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setViewProps(this, newProps, oldProps);
@@ -18947,8 +18957,8 @@ var ViewConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ViewComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ViewComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19004,9 +19014,18 @@ function setWindowProps(comp, newProps, oldProps) {
   });
 }
 var Window = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setWindowProps(this, newProps, oldProps);
@@ -19024,6 +19043,9 @@ var Window = class extends NativeComp {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "Window", type, {}, false);
+  }
 };
 
 // src/render/react/components/Window/config.js
@@ -19032,8 +19054,8 @@ var WindowConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new Window({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new Window({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19116,9 +19138,18 @@ function setTextProps(comp, newProps, oldProps) {
   });
 }
 var TextComp = class extends NativeText {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setTextProps(this, newProps, oldProps);
@@ -19133,6 +19164,9 @@ var TextComp = class extends NativeText {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "Text", type, {}, false);
+  }
 };
 
 // src/render/react/components/Text/config.js
@@ -19141,8 +19175,8 @@ var TextConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19250,9 +19284,18 @@ function setImageProps(comp, newProps, oldProps) {
   });
 }
 var ImageComp = class extends NativeImage {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setImageProps(this, newProps, oldProps);
@@ -19267,6 +19310,9 @@ var ImageComp = class extends NativeImage {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "Image", type, {}, false);
+  }
 };
 __publicField(ImageComp, "tagName", "Image");
 
@@ -19277,8 +19323,8 @@ var ImageConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ImageComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ImageComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19350,9 +19396,18 @@ function setButtonProps(comp, newProps, oldProps) {
   });
 }
 var ButtonComp = class extends NativeButton {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setButtonProps(this, newProps, oldProps);
@@ -19382,8 +19437,8 @@ var ButtonConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ButtonComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ButtonComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19446,10 +19501,10 @@ function setSliderProps(comp, newProps, oldProps) {
         return;
       comp.setRange([min, max]);
     },
-    set initalValue(val) {
+    set value(val) {
       if (isNaN(val))
         return;
-      if (val == oldProps.initalValue)
+      if (val == oldProps.value)
         return;
       comp.setValue(val);
     },
@@ -19481,9 +19536,18 @@ function setSliderProps(comp, newProps, oldProps) {
   });
 }
 var SliderComp = class extends NativeSlider {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setSliderProps(this, newProps, oldProps);
@@ -19500,6 +19564,9 @@ var SliderComp = class extends NativeSlider {
   }
   close() {
   }
+  setStyle(style2, type = 0) {
+    setStyle(this, style2, "Slider", type, {}, false);
+  }
 };
 __publicField(SliderComp, "tagName", "Slider");
 
@@ -19510,8 +19577,8 @@ var SliderConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SliderComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SliderComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19551,6 +19618,13 @@ function setSwitchProps(comp, newProps, oldProps) {
         return;
       comp.align(type, pos);
     },
+    set checked(val) {
+      if (isNaN(val))
+        return;
+      if (val == oldProps.value)
+        return;
+      comp.setChecked(val);
+    },
     set alignTo({
       type,
       pos = [0, 0],
@@ -19571,9 +19645,18 @@ function setSwitchProps(comp, newProps, oldProps) {
   });
 }
 var SwitchComp = class extends NativeComp2 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
   }
   setProps(newProps, oldProps) {
     setSwitchProps(this, newProps, oldProps);
@@ -19595,9 +19678,6 @@ var SwitchComp = class extends NativeComp2 {
   setStyle(style2, type = 0) {
     setStyle(this, style2, "Switch", type, {}, false);
   }
-  get style() {
-    return super.style;
-  }
 };
 
 // src/render/react/components/Switch/config.js
@@ -19606,8 +19686,8 @@ var SwitchConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SwitchComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SwitchComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19647,15 +19727,128 @@ __publicField(Renderer, "container");
 // src/render/react/core/animate/index.js
 var bridge8 = globalThis.SJSJSBridge;
 var NativeAnimate = bridge8.NativeRender.Animate;
+var uid = 0;
 var callbackObj = {};
-globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
-  if (typeof callbackObj[uid] === "function") {
+var animateInsObj = {};
+globalThis.ANIMIATE_CALLBACK = function(uid2, ...args) {
+  if (typeof callbackObj[uid2] === "function") {
     try {
-      callbackObj[uid].call(null, ...args);
+      callbackObj[uid2].call(null, ...args);
     } catch (e) {
       console.log(e);
     }
   }
+};
+var AnimateBase = class extends NativeAnimate {
+  constructor({
+    duration,
+    startValue,
+    endValue,
+    delay,
+    easing,
+    execCallback,
+    instanceId,
+    useNative = false,
+    playBackDelay,
+    playBackTime,
+    repeatDelay,
+    repeatCount,
+    startCallback,
+    readyCallback
+  }) {
+    super();
+    this.duration = duration;
+    this.startValue = startValue;
+    this.endValue = endValue;
+    this.delay = delay;
+    this.easing = easing;
+    this.execCallback = execCallback;
+    this.instanceId = instanceId;
+    this.useNative = useNative;
+    this.playBackDelay = playBackDelay;
+    this.playBackTime = playBackTime;
+    this.repeatDelay = repeatDelay;
+    this.repeatCount = repeatCount;
+    this.startCallback = startCallback;
+    this.readyCallback = readyCallback;
+  }
+  start() {
+    const {
+      duration,
+      startValue,
+      endValue,
+      delay,
+      easing,
+      execCallback,
+      instanceId,
+      useNative,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount,
+      startCallback,
+      readyCallback
+    } = this;
+    if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback)
+      return;
+    if (!useNative && typeof execCallback === "function") {
+      callbackObj[++uid] = execCallback;
+      this.execUid = uid;
+    }
+    if (typeof startCallback === "function") {
+      callbackObj[++uid] = startCallback;
+      this.startCbUid = uid;
+    }
+    if (typeof readyCallback === "function") {
+      callbackObj[++uid] = readyCallback;
+      this.readyCbUid = uid;
+    }
+    animateInsObj[++uid] = this;
+    this.uid = uid;
+    super.start({
+      duration,
+      startValue,
+      endValue,
+      easing,
+      instanceId,
+      useNative,
+      delay,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount: !isFinite(repeatCount) ? 65535 : repeatCount,
+      uid: this.uid,
+      execUid: this.execUid,
+      startCbUid: this.startCbUid,
+      readyCbUid: this.readyCbUid
+    });
+  }
+  release() {
+    delete animateInsObj[this.uid];
+  }
+};
+function createTimingAnimate(params) {
+  return new AnimateBase(params);
+}
+var ParallelAnimate = class {
+  constructor(animates) {
+    this.animates = animates;
+  }
+  start() {
+    this.animates.forEach((animate) => {
+      if (animate instanceof AnimateBase) {
+        animate?.start();
+      }
+    });
+  }
+};
+function createParallelAnimate() {
+  const animates = Array.from(arguments[0]);
+  return new ParallelAnimate(animates);
+}
+var Animate = {
+  timing: createTimingAnimate,
+  parallel: createParallelAnimate
 };
 
 // src/render/react/index.js
@@ -19672,19 +19865,52 @@ var Render = Renderer;
 var import_react = __toESM(require_react());
 function App() {
   const ref = (0, import_react.useRef)();
-  (0, import_react.useEffect)(() => {
-    console.log(ref.current.style.left);
+  const onChange = (0, import_react.useCallback)((e) => {
+    if (e.checked) {
+      const animate = Animate.timing({
+        duration: 500,
+        startValue: ref.current.style.left,
+        endValue: 180,
+        easing: "overshoot",
+        execCallback: (value) => {
+          ref.current.setStyle({
+            left: value
+          });
+        },
+        readyCallback() {
+          animate.release();
+        }
+      });
+      animate.start();
+    } else {
+      const animate = Animate.timing({
+        duration: 500,
+        startValue: ref.current.style.left,
+        endValue: -ref.current.style.width,
+        easing: "ease-in",
+        execCallback: (value) => {
+          ref.current.setStyle({
+            left: value
+          });
+        },
+        readyCallback() {
+          animate.release();
+        }
+      });
+      animate.start();
+    }
   }, []);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.text
+    style: style.text,
+    ref
   }, "Hello animations!"), /* @__PURE__ */ import_react.default.createElement(Switch, {
     align: {
       type: EAlignType.ALIGN_CENTER
     },
-    onChange: (e) => console.log(e.checked),
-    ref
+    onChange,
+    checked: true
   }));
 }
 var style = {
@@ -19692,7 +19918,10 @@ var style = {
     "width": "480px",
     "height": "320px"
   },
-  text: {}
+  text: {
+    "left": "180px",
+    "top": "10px"
+  }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
 /*

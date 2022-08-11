@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, unRegistEvent, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeComp = bridge.NativeRender.NativeComponents.Window
@@ -37,6 +37,16 @@ export class Window extends NativeComp {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setWindowProps(this, newProps, oldProps);
@@ -53,5 +63,8 @@ export class Window extends NativeComp {
         super.removeChild(child);
     }
     close () {
+    }
+    setStyle (style, type = 0x0000) {
+        setStyle(this, style, "Window", type, {}, false)
     }
 }

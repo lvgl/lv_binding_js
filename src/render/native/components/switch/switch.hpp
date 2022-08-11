@@ -7,4 +7,6 @@
 class Switch : public BasicComponent {
  public:
   Switch(std::string uid, lv_obj_t* parent = nullptr);
+
+  void setValue (bool value);
 };

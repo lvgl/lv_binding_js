@@ -123,28 +123,32 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
     }                                                                                                                       \
 
 #define STYLE_INFO(COMPONENT,COMPONENT_NAME)                                                                                \
-    static JSValue GetStyleLeft (JSContext *ctx, JSValueConst this_val) {                  \
+    static JSValue GetStyleLeft (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                  \
+        lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t left = lv_obj_get_x(instance);                                                                           \
         return JS_NewInt32(ctx, static_cast<int32_t>(left));                                                                \
     };                                                                                                                       \
                                                                                                                             \
-    static JSValue GetStyleTop (JSContext *ctx, JSValueConst this_val) {                   \
+    static JSValue GetStyleTop (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                   \
+        lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t top = lv_obj_get_y(instance);                                                                            \
         return JS_NewInt32(ctx, static_cast<int32_t>(top));                                                                 \
     };                                                                                                                      \
                                                                                                                             \
-    static JSValue GetStyleWidth (JSContext *ctx, JSValueConst this_val) {                 \
+    static JSValue GetStyleWidth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                 \
+        lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t width = lv_obj_get_width(instance);                                                                      \
         return JS_NewInt32(ctx, static_cast<int32_t>(width));                                                               \
     };                                                                                                                       \
                                                                                                                             \
-    static JSValue GetStyleHeight (JSContext *ctx, JSValueConst this_val) {                \
+    static JSValue GetStyleHeight (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                \
+        lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t height = lv_obj_get_height(instance);                                                                    \
@@ -152,9 +156,9 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
     };                                                                                                                       \
                                                                                                                             \
     static const JSCFunctionListEntry style_funcs[] = {                                                                     \
-        SJS_CGETSET_DEF("left", GetStyleLeft, NULL),                                                                        \
-        SJS_CGETSET_DEF("top", GetStyleTop, NULL),                                                                          \
-        SJS_CGETSET_DEF("width", GetStyleTop, NULL),                                                                        \
-        SJS_CGETSET_DEF("height", GetStyleTop, NULL),                                                                       \
+        SJS_CFUNC_DEF("left", 0, GetStyleLeft),                                                                        \
+        SJS_CFUNC_DEF("top", 0, GetStyleTop),                                                                          \
+        SJS_CFUNC_DEF("width", 0, GetStyleWidth),                                                                        \
+        SJS_CFUNC_DEF("height", 0, GetStyleHeight),                                                                       \
     };                                                                                                                      \
                                                                                                                                                                                         \

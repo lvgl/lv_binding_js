@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 import { isValidUrl } from '../../utils/helpers'
 
 const fs = require('fs')
@@ -84,6 +84,16 @@ export class ImageComp extends NativeImage {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setImageProps(this, newProps, oldProps);
@@ -100,5 +110,9 @@ export class ImageComp extends NativeImage {
         
     }
     close () {
+    }
+
+    setStyle (style, type = 0x0000) {
+        setStyle(this, style, "Image", type, {}, false)
     }
 }

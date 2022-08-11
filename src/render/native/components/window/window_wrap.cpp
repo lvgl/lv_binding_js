@@ -4,6 +4,7 @@ static JSClassID WindowClassID;
 
 WRAPPED_JS_SETSTYLE(Window, "Window")
 WRAPPED_JS_AddEventListener(Window, "Window")
+STYLE_INFO(Window, "Window")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -32,6 +33,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
+    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

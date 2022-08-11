@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, unRegistEvent, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeSlider = bridge.NativeRender.NativeComponents.Slider
@@ -39,9 +39,9 @@ function setSliderProps(comp, newProps, oldProps) {
             if (isNaN(min) || isNaN(max)) return
             comp.setRange([min, max])
         },
-        set initalValue (val) {
+        set value (val) {
             if (isNaN(val)) return
-            if (val == oldProps.initalValue) return
+            if (val == oldProps.value) return
             comp.setValue(val)
         },
         set align ({
@@ -74,6 +74,16 @@ export class SliderComp extends NativeSlider {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setSliderProps(this, newProps, oldProps);
@@ -90,5 +100,9 @@ export class SliderComp extends NativeSlider {
         super.removeChild(child);
     }
     close () {
+    }
+
+    setStyle (style, type = 0x0000) {
+        setStyle(this, style, "Slider", type, {}, false)
     }
 }

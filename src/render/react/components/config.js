@@ -75,3 +75,5 @@ export const EAlignType = {
     'ALIGN_OUT_RIGHT_MID': 20,
     'ALIGN_OUT_RIGHT_BOTTOM': 21
 }
+
+export const styleGetterProp = ['height', 'width', 'left', 'top']

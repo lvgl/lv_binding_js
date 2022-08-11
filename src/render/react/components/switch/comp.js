@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, unRegistEvent } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeComp = bridge.NativeRender.NativeComponents.Switch
@@ -17,6 +17,11 @@ function setSwitchProps(comp, newProps, oldProps) {
         }) {
             if (!type) return
             comp.align(type, pos)
+        },
+        set checked (val) {
+            if (isNaN(val)) return
+            if (val == oldProps.value) return
+            comp.setChecked(val)
         },
         set alignTo ({
             type,
@@ -41,6 +46,16 @@ export class SwitchComp extends NativeComp {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
+
+        const style = super.style
+        const that = this
+        this.style = new Proxy(this, {
+            get (obj, prop) {
+                if (styleGetterProp.includes(prop)) {
+                    return style[prop].call(that)
+                }
+            }
+        })
     }
     setProps(newProps, oldProps) {
         setSwitchProps(this, newProps, oldProps);
@@ -61,8 +76,5 @@ export class SwitchComp extends NativeComp {
     }
     setStyle (style, type = 0x0000) {
         setStyle(this, style, "Switch", type, {}, false)
-    }
-    get style () {
-        return super.style
     }
 }
