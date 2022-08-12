@@ -72,7 +72,7 @@ class AnimateBase extends NativeAnimate {
             playBackDelay,
             playBackTime,
             repeatDelay,
-            repeatCount,
+            repeatCount = 0,
             startCallback,
             readyCallback
         } = this

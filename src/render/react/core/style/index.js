@@ -38,7 +38,7 @@ function NormalStyle (style, result) {
         'outline-width': ProcessPx,
         'outline-color': ProcessColor,
         'outline-padding': ProcessPxOrPercent,
-        'font-size': ProcessPx,
+        // 'font-size': ProcessPx,
         'text-color': ProcessColor,
         'letter-spacing': ProcessPx
     }
