@@ -18485,7 +18485,6 @@ function NormalStyle(style2, result) {
     "outline-width": ProcessPx,
     "outline-color": ProcessColor,
     "outline-padding": ProcessPxOrPercent,
-    "font-size": ProcessPx,
     "text-color": ProcessColor,
     "letter-spacing": ProcessPx
   };
@@ -19785,7 +19784,7 @@ var AnimateBase = class extends NativeAnimate {
       playBackDelay,
       playBackTime,
       repeatDelay,
-      repeatCount,
+      repeatCount = 0,
       startCallback,
       readyCallback
     } = this;

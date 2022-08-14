@@ -40,7 +40,9 @@ function NormalStyle (style, result) {
         'outline-padding': ProcessPxOrPercent,
         // 'font-size': ProcessPx,
         'text-color': ProcessColor,
-        'letter-spacing': ProcessPx
+        'letter-spacing': ProcessPx,
+        'row-spacing': ProcessPx,
+        'column-spacing': ProcessPx,
     }
 
     keys.forEach(key => {
@@ -126,7 +128,7 @@ function FlexStyle (style, result) {
     let trackCrossPlace = 0
     const justifyContent = style['justify-content']
     const alignItems = style['align-items']
-    const alignContent = style['align-content'] || 'center'
+    const alignContent = style['align-content'] || (flexWrap === 'nowrap' ? alignItems : 'flex-start')
     const flexAlignObj = {
         'flex-start': 0,
         'flex-end': 1,
@@ -143,6 +145,7 @@ function FlexStyle (style, result) {
     }
     trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace
     // result['flex-align'] = [mainPlace, crossPlace, trackCrossPlace]
+
     if (justifyContent) {
         result['justify-content'] = mainPlace
     }

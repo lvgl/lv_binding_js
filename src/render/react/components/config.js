@@ -42,8 +42,8 @@ export function setStyle (comp, obj, compName, type, oldObj, isInit = true) {
     const maybeChange = obj.some((item, i) => item !== oldObj[i])
 
     if (!maybeChange) return
-    obj = obj.map(item => StyleSheet.transform(item, compName))
-    obj = Object.assign(...obj)
+    obj = Object.assign({}, ...obj)
+    obj = StyleSheet.transform(obj, compName)
 
     const keys = Object.keys(obj)
     

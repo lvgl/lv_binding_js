@@ -34,6 +34,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
+    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

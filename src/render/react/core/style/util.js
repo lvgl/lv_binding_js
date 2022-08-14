@@ -1,15 +1,34 @@
 import { colorTransform } from './color'
 
-export function ProcessPx (key, value, result) {
-    if (!value) return null
+export function NormalizePx (value) {
+    if (value == void 0) return null
     if (!isNaN(value)) {
-        return result[key] = value
+        return value
     }
     value = value.replace(/(^\s*)|(\s*$)/g, "")
     const reg = /(\d+\.?\d*)(px)?$/
     value = value.match(reg)?.[1]
 
     if (!isNaN(value)) {
+        return value
+    }
+    return null
+}
+
+export function ProcessPx (key, value, result) {
+    // if (!value) return null
+    // if (!isNaN(value)) {
+    //     return result[key] = value
+    // }
+    // value = value.replace(/(^\s*)|(\s*$)/g, "")
+    // const reg = /(\d+\.?\d*)(px)?$/
+    // value = value.match(reg)?.[1]
+
+    // if (!isNaN(value)) {
+    //     result[key] = value
+    // }
+    value = NormalizePx(value)
+    if (value !== null) {
         result[key] = value
     }
 }
@@ -69,4 +88,11 @@ export function NormalizeTime (value) {
 export function ProcessScale (key, value, result) {
     if (!value && isNaN(value)) return null
     result[key] = Math.floor(value * 256)
+}
+
+export function ProcessDeg (key, value, result) {
+    const reg = /([^deg]+)(deg)?/
+    const [_, deg] = value.match(reg)
+    if (isNaN(deg)) return
+    result[key] = +deg
 }

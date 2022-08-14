@@ -44,4 +44,5 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
 void NativeEventWrapInit (JSContext* ctx) {
     NativeClickEventWrapInit(ctx);
     NativeValueChangeEventWrapInit(ctx);
+    NativeFocusEventWrapInit(ctx);
 };

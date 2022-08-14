@@ -127,13 +127,14 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit) {
     lv_style_t* style;
+    bool is_new = false;
 
     if (this->style_map.find(type) != this->style_map.end()) {
         style = this->style_map.at(type);
     } else {
+        is_new = true;
         style = static_cast<lv_style_t*>(style_pool.allocate());
         style_map[type] = style;
-        lv_obj_add_style(this->instance, style, type);
     }
 
     if (isinit) {
@@ -159,6 +160,10 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
             JS_FreeValue(ctx, value);
             continue;
         }
+    }
+
+    if (is_new) {
+        lv_obj_add_style(this->instance, style, type);
     }
 
     lv_obj_invalidate(this->instance);

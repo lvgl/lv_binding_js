@@ -1,4 +1,4 @@
-import { ProcessPxOrPercent, ProcessPx, NormalizeTime, ProcessScale } from './util'
+import { ProcessDeg, ProcessPx, NormalizePx, NormalizeTime, ProcessScale } from './util'
 
 const timing_function = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'overshoot', 'bounce', 'step']
 
@@ -217,8 +217,6 @@ const transitionProperty = {
 
 const transformSupportKeys = ['translate', 'translate-x', 'translate-y', 'scale', 'rotate', 'transform-width', 'transform-height']
 
-const transitionSupportKeys = ['']
-
 export function TransStyle (style, result, compName) {
     if (style['transition']) {
         let value = style['transition']
@@ -250,7 +248,15 @@ export function TransStyle (style, result, compName) {
                     ProcessPx('translateX', val[0], result)
                     ProcessPx('translateY', val[1], result)
                 } else if (prop == 'scale') {
-                    ProcessScale('scale', val, result)
+                    if (compName === 'Image') {
+                        prop = `img-${prop}`
+                    }
+                    ProcessScale(prop, val, result)
+                } else if (prop == 'rotate') {
+                    if (compName === 'Image') {
+                        prop = `img-${prop}`
+                    }
+                    ProcessDeg(prop, val, result)
                 } else {
                     if (compName === "Image") {
                         prop = `img-${prop}`
@@ -259,6 +265,11 @@ export function TransStyle (style, result, compName) {
                 }
             }
         })
+    }
+
+    if (style['transform-origin'] && compName === 'Image') {
+        const [x, y] = style['transform-origin'].trim()?.split(' ')
+        result['img-origin'] = [NormalizePx(+x), NormalizePx(+y)]
     }
 
     return result

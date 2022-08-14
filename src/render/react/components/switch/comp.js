@@ -11,17 +11,17 @@ function setSwitchProps(comp, newProps, oldProps) {
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type) return
-            comp.align(type, pos)
-        },
         set checked (val) {
             if (isNaN(val)) return
             if (val == oldProps.value) return
             comp.setChecked(val)
+        },
+        set align ({
+            type,
+            pos = [0, 0]
+        }) {
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])) return
+            comp.align(type, pos)
         },
         set alignTo ({
             type,

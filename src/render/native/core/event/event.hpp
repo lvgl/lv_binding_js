@@ -23,6 +23,10 @@ void NativeClickEventWrapInit (JSContext* ctx);
 
 JSValue WrapClickEvent (lv_event_t* e, std::string uid);
 
+void NativeFocusEventWrapInit (JSContext* ctx);
+
+JSValue WrapFocusEvent (lv_event_t* e, std::string uid);
+
 void NativeValueChangeEventWrapInit (JSContext* ctx);
 
 JSValue WrapValueChangeEvent (lv_event_t* e, std::string uid);
@@ -38,6 +42,7 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
     { LV_EVENT_LONG_PRESSED, &WrapClickEvent },
     { LV_EVENT_LONG_PRESSED_REPEAT, &WrapClickEvent },
     { LV_EVENT_VALUE_CHANGED, &WrapValueChangeEvent },
+    { LV_EVENT_FOCUSED, &WrapFocusEvent },
 };
 
 #define WRAPPED_STOPPROPAGATION                                                                                                       \

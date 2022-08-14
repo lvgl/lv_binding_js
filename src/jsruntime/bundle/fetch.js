@@ -13,7 +13,6 @@
       searchParams: 'URLSearchParams' in global,
       iterable: 'Symbol' in global && 'iterator' in Symbol,
       blob:
-        'FileReader' in global &&
         'Blob' in global &&
         (function() {
           try {
@@ -171,29 +170,12 @@
       body.bodyUsed = true;
     }
   
-    function fileReaderReady(reader) {
-      return new Promise(function(resolve, reject) {
-        reader.onload = function() {
-          resolve(reader.result);
-        };
-        reader.onerror = function() {
-          reject(reader.error);
-        };
-      })
-    }
-  
     function readBlobAsArrayBuffer(blob) {
-      var reader = new FileReader();
-      var promise = fileReaderReady(reader);
-      reader.readAsArrayBuffer(blob);
-      return promise
+      return blob.arrayBuffer()
     }
   
     function readBlobAsText(blob) {
-      var reader = new FileReader();
-      var promise = fileReaderReady(reader);
-      reader.readAsText(blob);
-      return promise
+      return blob.text()
     }
   
     function readArrayBufferAsText(buf) {
@@ -297,7 +279,7 @@
             return Promise.resolve(this._bodyArrayBuffer)
           }
         } else {
-        //   return this.blob().then(readBlobAsArrayBuffer)
+          return this.blob().then(readBlobAsArrayBuffer)
         }
       };
   

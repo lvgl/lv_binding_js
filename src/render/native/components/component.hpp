@@ -30,6 +30,8 @@ void NativeComponentSliderInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
 
+void NativeComponentTextareaInit (JSContext* ctx, JSValue ns);
+
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \
         if (argc >= 2 && JS_IsObject(argv[0]) && JS_IsArray(ctx, argv[1]) && JS_IsNumber(argv[2]) && JS_IsNumber(argv[3]) && JS_IsBool(argv[4])) {       \
@@ -59,6 +61,7 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
             static_cast<COMPONENT*>(ref->comp)->BasicComponent::setStyle(ctx, argv[0], keys, type, isinit);                 \
             LV_LOG_USER("%s %s setStyle", COMPONENT_NAME, ref->uid);                                                        \
         }                                                                                                                   \
+        return JS_UNDEFINED;                                                                                                \
     }                                                                                                                       \
                                                                                                                             \
 
@@ -123,15 +126,15 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
     }                                                                                                                       \
 
 #define STYLE_INFO(COMPONENT,COMPONENT_NAME)                                                                                \
-    static JSValue GetStyleLeft (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                  \
+    static JSValue GetStyleLeft (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                     \
         lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t left = lv_obj_get_x(instance);                                                                           \
         return JS_NewInt32(ctx, static_cast<int32_t>(left));                                                                \
-    };                                                                                                                       \
+    };                                                                                                                      \
                                                                                                                             \
-    static JSValue GetStyleTop (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                   \
+    static JSValue GetStyleTop (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                      \
         lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
@@ -139,26 +142,42 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
         return JS_NewInt32(ctx, static_cast<int32_t>(top));                                                                 \
     };                                                                                                                      \
                                                                                                                             \
-    static JSValue GetStyleWidth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                 \
+    static JSValue GetStyleWidth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                    \
         lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t width = lv_obj_get_width(instance);                                                                      \
         return JS_NewInt32(ctx, static_cast<int32_t>(width));                                                               \
-    };                                                                                                                       \
+    };                                                                                                                      \
                                                                                                                             \
-    static JSValue GetStyleHeight (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                \
+    static JSValue GetStyleHeight (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                   \
         lv_refr_now(NULL);                                                                                                  \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
         lv_coord_t height = lv_obj_get_height(instance);                                                                    \
         return JS_NewInt32(ctx, static_cast<int32_t>(height));                                                              \
-    };                                                                                                                       \
+    };                                                                                                                      \
+                                                                                                                            \
+    static JSValue GetStyleBoundClinetRect (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {          \
+        lv_refr_now(NULL);                                                                                                  \
+        COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
+        lv_obj_t* instance = static_cast<lv_obj_t*>(((COMPONENT*)(s->comp))->instance);                                     \
+        lv_coord_t width = lv_obj_get_width(instance);                                                                      \
+        lv_coord_t height = lv_obj_get_height(instance);                                                                    \
+        lv_coord_t left = lv_obj_get_x(instance);                                                                           \
+        lv_coord_t top = lv_obj_get_y(instance);                                                                            \
+        JSValue obj = JS_NewObject(ctx);                                                                                    \
+        JS_SetPropertyStr(ctx, obj, "width", JS_NewInt32(ctx, static_cast<int32_t>(width)));                                \
+        JS_SetPropertyStr(ctx, obj, "height", JS_NewInt32(ctx, static_cast<int32_t>(height)));                              \
+        JS_SetPropertyStr(ctx, obj, "left", JS_NewInt32(ctx, static_cast<int32_t>(left)));                                  \
+        JS_SetPropertyStr(ctx, obj, "top", JS_NewInt32(ctx, static_cast<int32_t>(top)));                                    \
+        return obj;                                                                                                         \
+    };                                                                                                                      \
                                                                                                                             \
     static const JSCFunctionListEntry style_funcs[] = {                                                                     \
-        SJS_CFUNC_DEF("left", 0, GetStyleLeft),                                                                        \
-        SJS_CFUNC_DEF("top", 0, GetStyleTop),                                                                          \
-        SJS_CFUNC_DEF("width", 0, GetStyleWidth),                                                                        \
-        SJS_CFUNC_DEF("height", 0, GetStyleHeight),                                                                       \
+        SJS_CFUNC_DEF("left", 0, GetStyleLeft),                                                                             \
+        SJS_CFUNC_DEF("top", 0, GetStyleTop),                                                                               \
+        SJS_CFUNC_DEF("width", 0, GetStyleWidth),                                                                           \
+        SJS_CFUNC_DEF("height", 0, GetStyleHeight),                                                                         \
     };                                                                                                                      \
                                                                                                                                                                                         \

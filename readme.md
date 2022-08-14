@@ -111,7 +111,7 @@ props
 
 ### style
 
-#### Position and Size (support absolute value、pixel values、percentage)
+#### Position and Size (support absolute value、pixel values、percentage、auto)
 - left
 - top
 - width
@@ -122,7 +122,8 @@ const style = {
     "width": 50%,
     "height": "100px",
     "left": 20,
-    "top": "50px"
+    "top": "50px",
+    "width": "auto"
 }
 ```
 
@@ -227,3 +228,8 @@ const style = {
     "overflow-scrolling": "auto"
 }
 ```
+
+#### spacing
+set inner object row and column spacing
+- row-spacing
+- column-spacing

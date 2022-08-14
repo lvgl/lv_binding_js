@@ -19,6 +19,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         JS_FreeCString(ctx, ori_str);
         LV_LOG_USER("Text %s setText\n", s->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
@@ -28,6 +29,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
+    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

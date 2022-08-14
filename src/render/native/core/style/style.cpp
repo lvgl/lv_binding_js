@@ -342,6 +342,26 @@ static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     lv_img_set_angle(comp, x);
 };
 
+static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x = 0;
+    int y = 0;
+    JSValue x_value;
+    JSValue y_value;
+    x_value = JS_GetPropertyUint32(ctx, obj, 0);
+    y_value = JS_GetPropertyUint32(ctx, obj, 1);
+
+    if (JS_IsNumber(x_value)) {
+        JS_ToInt32(ctx, &x, x_value);
+    }
+    if (JS_IsNumber(y_value)) {
+        JS_ToInt32(ctx, &y, y_value);
+    }
+    JS_FreeValue(ctx, x_value);
+    JS_FreeValue(ctx, y_value);
+
+    lv_img_set_pivot(comp, x, y);
+};
+
 static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -435,6 +455,20 @@ static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, J
     lv_obj_set_style_img_recolor(comp, lv_color_hex(y), 0);
 };
 
+static void CompSetRowSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_obj_set_style_pad_row(comp, y, 0);
+};
+
+static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_obj_set_style_pad_column(comp, y, 0);
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
@@ -502,10 +536,15 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"rotate", &CompSetRotate},
     {"img-scale", &CompSetImgScale},
     {"img-rotate", &CompSetImgRotate},
+    {"img-origin", &CompSetTransformOrigin},
     {"transform-width", &CompSetTransformWidth},
     {"transform-height", &CompSetTransformHeight},
 
     /* color */
     {"text-color", &CompSetTextColor},
     {"recolor", &CompSetRecolor},
+
+    /* spacing */
+    {"row-spacing", &CompSetRowSpacing},
+    {"column-spacing", &CompSetColumnSpacing},
 };

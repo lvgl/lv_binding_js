@@ -35,15 +35,19 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapValueChangeEventID));
     BasicComponent* ins = static_cast<BasicComponent*>(e->user_data);
     ECOMP_TYPE comp_type = ins->type;
-    int32_t value = 0;
+    int32_t value_num = 0;
+    const char* value_str;
 
     switch (comp_type)
     {
         case COMP_TYPE_SLIDER:
-            value = lv_slider_get_value(ins->instance);
-            return JS_NewInt32(ctx, value);
+            value_num = lv_slider_get_value(ins->instance);
+            return JS_NewInt32(ctx, value_num);
             break;
-        
+
+        case COMP_TYPE_TEXTAREA:
+            value_str = lv_textarea_get_text(ins->instance);
+            return JS_NewString(ctx, value_str);
         default:
             break;
     }

@@ -84,7 +84,6 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
     this->image_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
     this->image_desc->type = image_type;
 
-    printf("width is %d, height is %d", width, height);
     this->image_desc->header.always_zero = 0;
     this->image_desc->header.w = width;
     this->image_desc->header.h = height;

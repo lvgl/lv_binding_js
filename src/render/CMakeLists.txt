@@ -13,11 +13,14 @@ add_library(render STATIC
     ./native/core/style/font/font.cpp
     ./native/core/event/value_change/value_change.cpp
     ./native/core/event/click/click.cpp
+    ./native/core/event/focus/focus.cpp
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
     ./native/core/img/png/png.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/textarea/textarea.cpp
+    ./native/components/textarea/textarea_wrap.cpp
     ./native/components/switch/switch.cpp
     ./native/components/switch/switch_wrap.cpp
     ./native/components/slider/slider.cpp

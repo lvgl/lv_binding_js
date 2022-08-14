@@ -12,7 +12,7 @@ export function OpacityStyle (style, result, compName) {
             result['opacity'] = NormalizeOpacity(style['opacity'])
         }
     } else if (style['border-opacity']) {
-        result['opacity'] = NormalizeOpacity(style['opacity'])
+        result['border-opacity'] = NormalizeOpacity(style['border-opacity'])
     } else if (style['outline-opacity']) {
         result['outline-opacity'] = NormalizeOpacity(style['outline-opacity'])
     } else if (style['recolor-opacity'] && compName === 'Image') {
