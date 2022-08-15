@@ -22,7 +22,7 @@ const defaultFocusStyle = {
 function setInputProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, Array.isArray(styleSheet) ? [defaultStyle, ...styleSheet] : [defaultStyle, styleSheet], "Input", 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -31,7 +31,7 @@ function setInputProps(comp, newProps, oldProps) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
         },
         set focusStyle (styleSheet) {
-            setStyle(comp, Array.isArray(styleSheet) ? [defaultFocusStyle, ...styleSheet] : [defaultFocusStyle, styleSheet], "Input", 0x0002, oldProps.focusStyle);
+            setStyle({ comp, defaultStyle: defaultFocusStyle, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, styleSheet });
         },
         set value (str) {
             comp.setText(str)
@@ -93,6 +93,6 @@ export class InputComp extends NativeView {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Input", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

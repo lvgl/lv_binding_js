@@ -17,10 +17,10 @@ function setTextProps(comp, newProps, oldProps) {
             }
         },
         set style(styleSheet) {
-            setStyle(comp, styleSheet, "Text", 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set onPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, "Text", 0x0020, oldProps.onPressedStyle);
+            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -89,6 +89,6 @@ export class TextComp extends NativeText {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Text", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

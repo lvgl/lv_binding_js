@@ -34,6 +34,21 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompPlaceHolder(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsString(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
+        size_t len;
+        const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
+        std::string s = str;
+        s.resize(len);
+        
+        ((Textarea*)(ref->comp))->setPlaceHolder(s);
+        LV_LOG_USER("Textarea %s setPlaceHolder", ref->uid);
+        JS_FreeCString(ctx, str);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
@@ -43,6 +58,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_CFUNC_DEF("setOneLine", 0, NativeCompSetOneLine),
     SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
+    SJS_CFUNC_DEF("setPlaceHolder", 0, NativeCompPlaceHolder),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

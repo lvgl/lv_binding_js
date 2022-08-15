@@ -1,27 +1,18 @@
-import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 
-const bridge = globalThis.SJSJSBridge
-const NativeButton = bridge.NativeRender.NativeComponents.Button
+const bridge = globalThis.SJSJSBridge;
+const NativeView = bridge.NativeRender.NativeComponents.Keyboard
 
-function setButtonProps(comp, newProps, oldProps) {
+function setKeyboardProps(comp, newProps, oldProps) {
     const setter = {
+        set inputbox (comp) {
+            comp.setTextarea(comp)
+        },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Button', styleType: 0x0000, oldStyleSheet: oldProps.style });
+            setStyle({comp, styleSheet, compName: "Keyboard", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
-        set onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Button", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
-        },
-        set onClick (fn) {
-            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-        },
-        set onPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
-        },
-        set onLongPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
-        },
-        set onLongPressRepeat (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+        set onChange (fn) {
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
         set align ({
             type,
@@ -39,7 +30,7 @@ function setButtonProps(comp, newProps, oldProps) {
             comp.alignTo(type, pos, parent.__proto__)
         }
     }
-    Object.assign(setter, newProps);
+    Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')
@@ -49,7 +40,7 @@ function setButtonProps(comp, newProps, oldProps) {
     })
 }
   
-export class ButtonComp extends NativeButton {
+export class KeyboardComp extends NativeView {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -65,22 +56,19 @@ export class ButtonComp extends NativeButton {
         })
     }
     setProps(newProps, oldProps) {
-        setButtonProps(this, newProps, oldProps);
+        setKeyboardProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
     }
-    static tagName = "Button";
     appendInitialChild(child) {
     }
     appendChild(child) {
-        super.appendChild(child)
     }
     removeChild(child) {
-        super.removeChild(child);
     }
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

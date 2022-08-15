@@ -6,10 +6,10 @@ const NativeComp = bridge.NativeRender.NativeComponents.Window
 function setWindowProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, 'Window', 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: 'Window', styleType: 0x0000, oldStyleSheet: oldProps.style});
         },
         set onPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, "Window", 0x0020, oldProps.onPressedStyle);
+            setStyle({comp, styleSheet, compName: "Window", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle});
         },
         set title (title) {
             if (oldProps.title != title) {
@@ -65,6 +65,6 @@ export class Window extends NativeComp {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Window", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

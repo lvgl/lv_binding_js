@@ -6,7 +6,7 @@ const NativeComp = bridge.NativeRender.NativeComponents.Switch
 function setSwitchProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, "Switch", 0x0000, oldProps.style);
+            setStyle({comp, styleSheet, compName: "Switch", styleType: 0x0000, oldStyleSheet: oldProps.style});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -75,6 +75,6 @@ export class SwitchComp extends NativeComp {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Switch", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

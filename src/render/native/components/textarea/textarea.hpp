@@ -11,4 +11,6 @@ class Textarea : public BasicComponent {
   void setOneLine (bool payload);
 
   void setText (std::string str);
+
+  void setPlaceHolder (std::string str);
 };

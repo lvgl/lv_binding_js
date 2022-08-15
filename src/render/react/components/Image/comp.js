@@ -17,7 +17,7 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, 'Image', 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: 'Image', styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -110,6 +110,6 @@ export class ImageComp extends NativeImage {
     }
 
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Image", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

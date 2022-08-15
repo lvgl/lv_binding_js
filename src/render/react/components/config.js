@@ -35,19 +35,19 @@ export function registerComponents(
     })
 }
 
-export function setStyle (comp, obj, compName, type, oldObj, isInit = true) {
-    if (!obj) return
-    obj = Array.isArray(obj) ? obj : [obj]
-    oldObj = Array.isArray(oldObj) ? oldObj : [oldObj]
-    const maybeChange = obj.some((item, i) => item !== oldObj[i])
+export function setStyle ({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
+    if (!styleSheet) return
+    styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet]
+    oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet]
+    const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i])
 
     if (!maybeChange) return
-    obj = Object.assign({}, ...obj)
-    obj = StyleSheet.transform(obj, compName)
+    styleSheet = Object.assign({}, defaultStyle, ...styleSheet)
+    styleSheet = StyleSheet.transform(styleSheet, compName)
 
-    const keys = Object.keys(obj)
+    const keys = Object.keys(styleSheet)
     
-    comp.nativeSetStyle(obj, keys, keys.length, type, isInit)
+    comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit)
 }
 
 export const EAlignType = {

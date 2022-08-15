@@ -6,10 +6,10 @@ const NativeView = bridge.NativeRender.NativeComponents.View
 function setViewProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, "View", 0x0000, oldProps.style);
+            setStyle({comp, styleSheet, compName: "View", styleType: 0x0000, oldStyleSheet: oldProps.style});
         },
         set onPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, "View", 0x0020, oldProps.onPressedStyle);
+            setStyle({ comp, styleSheet, compName: "View", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle});
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -82,6 +82,6 @@ export class ViewComp extends NativeView {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "View", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

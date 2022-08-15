@@ -6,28 +6,28 @@ const NativeSlider = bridge.NativeRender.NativeComponents.Slider
 function setSliderProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle(comp, styleSheet, 'Slider', 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: 'Slider', styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set scrollbarStyle (styleSheet) {
-            setStyle(comp, styleSheet, 'Slider', 0x010000, oldProps.scrollbarStyle);
+            setStyle({ comp, styleSheet, compName: 'Slider', styleType: 0x010000, oldStyleSheet: oldProps.scrollbarStyle });
         },
         set onScrollbarPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, 'Slider', 0x010000 | 0x0020, oldProps.onScrollbarPressedStyle);
+            setStyle({ comp, styleSheet, compName: 'Slider', styleType: 0x010000 | 0x0020, oldStyleSheet: oldProps.onScrollbarPressedStyle });
         },
         set indicatorStyle (styleSheet) {
-            setStyle(comp, styleSheet, 'Slider', 0x020000, oldProps.indicatorStyle);
+            setStyle({ comp, styleSheet, compName: 'Slider', styleType: 0x020000, oldStyleSheet: oldProps.indicatorStyle});
         },
         set onIndicatorPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, 'Slider', 0x020000 | 0x0020, oldProps.onIndicatorPressedStyle);
+            setStyle({ comp, styleSheet, compName: 'Slider', styleType: 0x020000 | 0x0020, oldStyleSheet: oldProps.onIndicatorPressedStyle });
         },
         set onPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, "Slider", 0x0020, oldProps.onPressedStyle);
+            setStyle({ comp, styleSheet, compName: "Slider", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
         },
         set knobStyle (styleSheet) {
-            setStyle(comp, styleSheet, "Slider", 0x030000, oldProps.knobStyle);
+            setStyle({ comp, styleSheet, compName: "Slider", styleType: 0x030000, oldStyleSheet: oldProps.knobStyle });
         },
         set onKnobPressedStyle (styleSheet) {
-            setStyle(comp, styleSheet, "Slider", 0x030000 | 0x0020, oldProps.onKnobPressedStyle);
+            setStyle({ comp, styleSheet, compName: "Slider", styleType: 0x030000 | 0x0020, oldStyleSheet: oldProps.onKnobPressedStyle});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -103,6 +103,6 @@ export class SliderComp extends NativeSlider {
     }
 
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Slider", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

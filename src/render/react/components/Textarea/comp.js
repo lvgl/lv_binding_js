@@ -21,11 +21,14 @@ const defaultFocusStyle = {
 
 function setTextareaProps(comp, newProps, oldProps) {
     const setter = {
+        set placeholder (str) {
+            comp.setPlaceHolder(str)  
+        },
         set style(styleSheet) {
-            setStyle(comp, Array.isArray(styleSheet) ? [defaultStyle, ...styleSheet] : [defaultStyle, styleSheet], "Input", 0x0000, oldProps.style);
+            setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
         },
         set focusStyle (styleSheet) {
-            setStyle(comp, Array.isArray(styleSheet) ? [defaultFocusStyle, ...styleSheet] : [defaultFocusStyle, styleSheet], "Input", 0x0002, oldProps.focusStyle);
+            setStyle({comp, styleSheet, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -95,6 +98,6 @@ export class TextareaComp extends NativeView {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle(this, style, "Textarea", type, {}, false)
+        setStyle({ comp: this, styleSheet: style, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

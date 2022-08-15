@@ -27,6 +27,11 @@ props
 
 api
 - style
+  - left
+  - top
+  - width
+  - height
+  - getBoundingClientRect
 
 ```jsx
 import { View, EAlignType } from 'lvlgjs-ui'
@@ -77,6 +82,11 @@ props
 
 api
 - style
+  - left
+  - top
+  - width
+  - height
+  - getBoundingClientRect
   
 ```jsx
 import { Image } from 'lvlgjs-ui'
@@ -106,8 +116,31 @@ props
 - align
 - alignTo
 
+api
+- style
+  - left
+  - top
+  - width
+  - height
+  - getBoundingClientRect
 
+```jsx
+import { Button, Text } from 'lvlgjs-ui'
 
+function Component () {
+    const ref = useRef()
+    useEffect(() => {
+        console.log(ref.current.style.left)
+    })
+
+    return (
+        <Button
+        >
+            <Text>test</Text>
+        </Button>
+    )
+}
+```
 
 ### style
 

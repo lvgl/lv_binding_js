@@ -17,3 +17,7 @@ void Textarea::setOneLine (bool payload) {
 void Textarea::setText (std::string str) {
     lv_textarea_set_text(this->instance, str.c_str());
 };
+
+void Textarea::setPlaceHolder (std::string str) {
+    lv_textarea_set_placeholder_text(this->instance, str.c_str());
+};
