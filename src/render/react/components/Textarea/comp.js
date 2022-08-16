@@ -22,13 +22,15 @@ const defaultFocusStyle = {
 function setTextareaProps(comp, newProps, oldProps) {
     const setter = {
         set placeholder (str) {
-            comp.setPlaceHolder(str)  
+            if (str !== oldProps.placeholder) {
+                comp.setPlaceHolder(str)  
+            }
         },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
+            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
         },
         set focusStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle});
+            setStyle({comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -53,8 +55,8 @@ function setTextareaProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || !parent || !parent.uid) return
-            comp.alignTo(type, pos, parent.__proto__)
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)) return
+            comp.alignTo(type, pos, parent)
         }
     }
     Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });

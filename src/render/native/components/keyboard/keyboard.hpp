@@ -7,4 +7,6 @@
 class Keyboard : public BasicComponent {
  public:
   Keyboard(std::string uid, lv_obj_t* parent = nullptr);
+
+  void setTextarea (BasicComponent* child);
 };

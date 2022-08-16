@@ -6,7 +6,7 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JSValue component_obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);
 
-    NativeComponentkeyboardInit(ctx, component_obj);
+    NativeComponentKeyboardInit(ctx, component_obj);
     NativeComponentTextareaInit(ctx, component_obj);
     NativeComponentSliderInit(ctx, component_obj);
     NativeComponentButtonInit(ctx, component_obj);

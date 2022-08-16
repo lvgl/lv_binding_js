@@ -31,6 +31,8 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
         JSValue globalObj = JS_GetGlobalObject(ctx);
         JSValue fire = JS_GetPropertyStr(ctx, globalObj, "FIRE_QEVENT_CALLBACK");
         JSValue ret = JS_Call(ctx, fire, JS_NULL, argc, argv);
+        if (JS_IsException(ret))
+            SJSDumpError(ctx);
         JS_FreeValue(ctx, globalObj);
         JS_FreeValue(ctx, fire);
         JS_FreeValue(ctx, ret);

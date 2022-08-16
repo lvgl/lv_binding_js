@@ -5,8 +5,10 @@ const NativeView = bridge.NativeRender.NativeComponents.Keyboard
 
 function setKeyboardProps(comp, newProps, oldProps) {
     const setter = {
-        set inputbox (comp) {
-            comp.setTextarea(comp)
+        set textarea (comp) {
+            if (comp?.uid) {
+                comp.setTextarea(comp)
+            }
         },
         set style(styleSheet) {
             setStyle({comp, styleSheet, compName: "Keyboard", styleType: 0x0000, oldStyleSheet: oldProps.style });
@@ -26,8 +28,8 @@ function setKeyboardProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || !parent || !parent.uid) return
-            comp.alignTo(type, pos, parent.__proto__)
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)) return
+            comp.alignTo(type, pos, parent)
         }
     }
     Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });

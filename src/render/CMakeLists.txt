@@ -19,6 +19,8 @@ add_library(render STATIC
     ./native/core/img/png/png.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/keyboard/keyboard.cpp
+    ./native/components/keyboard/keyboard_wrap.cpp
     ./native/components/textarea/textarea.cpp
     ./native/components/textarea/textarea_wrap.cpp
     ./native/components/switch/switch.cpp

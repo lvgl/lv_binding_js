@@ -1,35 +1,20 @@
 #include "keyboard.hpp"
 
-static JSClassID keyboardClassID;
+static JSClassID KeyboardClassID;
 
-WRAPPED_JS_SETSTYLE(keyboard, "keyboard")
-WRAPPED_JS_AddEventListener(keyboard, "keyboard")
-WRAPPED_JS_Align(keyboard, "keyboard")
-WRAPPED_JS_Align_To(keyboard, "keyboard")
-STYLE_INFO(keyboard, "keyboard")
+WRAPPED_JS_SETSTYLE(Keyboard, "Keyboard")
+WRAPPED_JS_AddEventListener(Keyboard, "Keyboard")
+WRAPPED_JS_Align(Keyboard, "Keyboard")
+WRAPPED_JS_Align_To(Keyboard, "Keyboard")
+STYLE_INFO(Keyboard, "Keyboard")
 
-static JSValue NativeCompSetOneLine(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, keyboardClassID);
-        bool payload = JS_ToBool(ctx, argv[0]);
+static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsObject(argv[0])) {
+        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
         
-        ((keyboard*)(ref->comp))->setOneLine(payload);
-        LV_LOG_USER("keyboard %s setOneLine %d", ref->uid, payload);
-    }
-    return JS_UNDEFINED;
-};
-
-static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsString(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, keyboardClassID);
-        size_t len;
-        const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
-        std::string s = str;
-        s.resize(len);
-        
-        ((keyboard*)(ref->comp))->setText(s);
-        LV_LOG_USER("keyboard %s setOneLine %d", ref->uid, s.c_str());
-        JS_FreeCString(ctx, str);
+        ((Keyboard*)(parent->comp))->setTextarea(static_cast<BasicComponent*>(child->comp));
+        LV_LOG_USER("Keyboard %s setTextarea %s", parent->uid, child->uid);
     }
     return JS_UNDEFINED;
 };
@@ -41,12 +26,13 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    SJS_CFUNC_DEF("setTextarea", 0, NativeCompSetTextarea),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
-static JSValue keyboardConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
+static JSValue KeyboardConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
     JSValue proto;
     JSValue obj;
     JSValue arg;
@@ -65,20 +51,20 @@ static JSValue keyboardConstructor(JSContext *ctx, JSValueConst new_target, int 
     }
 
     if (JS_IsUndefined(new_target)) {
-        proto = JS_GetClassProto(ctx, keyboardClassID);
+        proto = JS_GetClassProto(ctx, KeyboardClassID);
     } else {
         proto = JS_GetPropertyStr(ctx, new_target, "prototype");
         if (JS_IsException(proto))
             goto fail;
     }
 
-    obj = JS_NewObjectProtoClass(ctx, proto, keyboardClassID);
+    obj = JS_NewObjectProtoClass(ctx, proto, KeyboardClassID);
     JS_FreeValue(ctx, proto);
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
     s->uid = uid;
-    s->comp = new keyboard(uid, NULL);
+    s->comp = new Keyboard(uid, NULL);
 
     JS_FreeCString(ctx, uid);
 
@@ -86,37 +72,37 @@ static JSValue keyboardConstructor(JSContext *ctx, JSValueConst new_target, int 
         goto fail;
 
     JS_SetOpaque(obj, s);
-    LV_LOG_USER("keyboard %s created", uid);
+    LV_LOG_USER("Keyboard %s created", uid);
     return obj;
  fail:
     JS_FreeValue(ctx, obj);
     return JS_EXCEPTION;
 };
 
-static void keyboardFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, keyboardClassID);
-    LV_LOG_USER("keyboard %s release", th->uid);
+static void KeyboardFinalizer(JSRuntime *rt, JSValue val) {
+    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, KeyboardClassID);
+    LV_LOG_USER("Keyboard %s release", th->uid);
     if (th) {
-        delete static_cast<keyboard*>(th->comp);
+        delete static_cast<Keyboard*>(th->comp);
         free(th);
     }
 };
 
-static JSClassDef keyboardClass = {
-    "keyboard",
-    .finalizer = keyboardFinalizer,
+static JSClassDef KeyboardClass = {
+    "Keyboard",
+    .finalizer = KeyboardFinalizer,
 };
 
-void NativeComponentkeyboardInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&keyboardClassID);
-    JS_NewClass(JS_GetRuntime(ctx), keyboardClassID, &keyboardClass);
+void NativeComponentKeyboardInit (JSContext* ctx, JSValue ns) {
+    JS_NewClassID(&KeyboardClassID);
+    JS_NewClass(JS_GetRuntime(ctx), KeyboardClassID, &KeyboardClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));
-    JS_SetClassProto(ctx, keyboardClassID, proto);
+    JS_SetClassProto(ctx, KeyboardClassID, proto);
 
-    JSValue obj = JS_NewCFunction2(ctx, keyboardConstructor, "keyboard", 1, JS_CFUNC_constructor, 0);
+    JSValue obj = JS_NewCFunction2(ctx, KeyboardConstructor, "Keyboard", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
     JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
-    JS_DefinePropertyValueStr(ctx, ns, "keyboard", obj, JS_PROP_C_W_E);
+    JS_DefinePropertyValueStr(ctx, ns, "Keyboard", obj, JS_PROP_C_W_E);
 };
 

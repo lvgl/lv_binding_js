@@ -8,3 +8,7 @@ Keyboard::Keyboard(std::string uid, lv_obj_t* parent): BasicComponent() {
     
     lv_obj_set_user_data(this->instance, this);
 };
+
+void Keyboard::setTextarea (BasicComponent* child) {
+    lv_keyboard_set_textarea(this->instance, child->instance);
+};

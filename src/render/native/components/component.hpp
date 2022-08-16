@@ -32,7 +32,7 @@ void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentTextareaInit (JSContext* ctx, JSValue ns);
 
-void NativeComponentkeyboardInit (JSContext* ctx, JSValue ns);
+void NativeComponentKeyboardInit (JSContext* ctx, JSValue ns);
 
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \
@@ -116,9 +116,9 @@ void NativeComponentkeyboardInit (JSContext* ctx, JSValue ns);
             int align_type;                                                                                                 \
             JS_ToInt32(ctx, &align_type, argv[0]);                                                                          \
                                                                                                                             \
-            s = (COMP_REF*)JS_GetOpaque3(argv[2]);                                                                          \
+            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(argv[2]);                                                                          \
                                                                                                                             \
-            ((COMPONENT*)(s->comp))->BasicComponent::setAlignTo(align_type, x, y, static_cast<BasicComponent*>(s->comp));   \
+            ((COMPONENT*)(s->comp))->BasicComponent::setAlignTo(align_type, x, y, static_cast<BasicComponent*>(parent->comp));   \
             LV_LOG_USER("%s %s setAlignTo", COMPONENT_NAME, s->uid);                                                        \
             JS_FreeValue(ctx, x_value);                                                                                     \
             JS_FreeValue(ctx, y_value);                                                                                     \

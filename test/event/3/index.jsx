@@ -1,4 +1,4 @@
-import { View, Render, Window, Text, Image, Button } from 'lvgljs-ui';
+import { Render, Window, Text, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 function App () {

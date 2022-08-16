@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect(create, deps) {
+        function useEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,12 +1677,12 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect;
+        exports.useEffect = useEffect2;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
+        exports.useRef = useRef2;
         exports.useState = useState2;
         exports.version = ReactVersion;
       })();
@@ -18853,7 +18853,7 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle: defaultStyle3 = {} } = {}) {
+function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle: defaultStyle4 = {} } = {}) {
   if (!styleSheet)
     return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
@@ -18861,11 +18861,35 @@ function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit
   const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
   if (!maybeChange)
     return;
-  styleSheet = Object.assign({}, defaultStyle3, ...styleSheet);
+  styleSheet = Object.assign({}, defaultStyle4, ...styleSheet);
   styleSheet = style_default.transform(styleSheet, compName);
   const keys = Object.keys(styleSheet);
   comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit);
 }
+var EAlignType = {
+  "ALIGN_DEFAULT": 0,
+  "ALIGN_TOP_LEFT": 1,
+  "ALIGN_TOP_MID": 2,
+  "ALIGN_TOP_RIGHT": 3,
+  "ALIGN_BOTTOM_LEFT": 4,
+  "ALIGN_BOTTOM_MID": 5,
+  "ALIGN_BOTTOM_RIGHT": 6,
+  "ALIGN_LEFT_MID": 7,
+  "ALIGN_RIGHT_MID": 8,
+  "ALIGN_CENTER": 9,
+  "ALIGN_OUT_TOP_LEFT": 10,
+  "ALIGN_OUT_TOP_MID": 11,
+  "ALIGN_OUT_TOP_RIGHT": 12,
+  "ALIGN_OUT_BOTTOM_LEFT": 13,
+  "ALIGN_OUT_BOTTOM_MID": 14,
+  "ALIGN_OUT_BOTTOM_RIGHT": 15,
+  "ALIGN_OUT_LEFT_TOP": 16,
+  "ALIGN_OUT_LEFT_MID": 17,
+  "ALIGN_OUT_LEFT_BOTTOM": 18,
+  "ALIGN_OUT_RIGHT_TOP": 19,
+  "ALIGN_OUT_RIGHT_MID": 20,
+  "ALIGN_OUT_RIGHT_BOTTOM": 21
+};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -19082,6 +19106,12 @@ var WindowConfig = class {
 // src/render/react/components/Text/comp.js
 var bridge3 = globalThis.SJSJSBridge;
 var NativeText = bridge3.NativeRender.NativeComponents.Text;
+var defaultStyle = {
+  "color": "black"
+};
+var defaultOnPressedStyle = {
+  "color": "black"
+};
 function setTextProps(comp, newProps, oldProps) {
   const setter = {
     set children(str) {
@@ -19096,10 +19126,10 @@ function setTextProps(comp, newProps, oldProps) {
       }
     },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Text", styleType: 0, oldStyleSheet: oldProps.style });
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle });
     },
     set onPressedStyle(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Text", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 32, oldStyleSheet: oldProps.onPressedStyle, defaultStyle: defaultOnPressedStyle });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -19126,9 +19156,9 @@ function setTextProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19712,7 +19742,7 @@ var SwitchConfig = class {
 // src/render/react/components/Textarea/comp.js
 var bridge8 = globalThis.SJSJSBridge;
 var NativeView2 = bridge8.NativeRender.NativeComponents.Textarea;
-var defaultStyle = {
+var defaultStyle2 = {
   "border-radius": 4,
   "padding": 4,
   "border-width": "2px",
@@ -19729,13 +19759,15 @@ var defaultFocusStyle = {
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
     set placeholder(str) {
-      comp.setPlaceHolder(str);
+      if (str !== oldProps.placeholder) {
+        comp.setPlaceHolder(str);
+      }
     },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle });
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle2 });
     },
     set focusStyle(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle });
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 2, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19761,9 +19793,9 @@ function setTextareaProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
@@ -19841,7 +19873,7 @@ var TextareaConfig = class {
 // src/render/react/components/Input/comp.js
 var bridge9 = globalThis.SJSJSBridge;
 var NativeView3 = bridge9.NativeRender.NativeComponents.Textarea;
-var defaultStyle2 = {
+var defaultStyle3 = {
   "border-radius": 4,
   "padding": 4,
   "border-width": "2px",
@@ -19857,8 +19889,14 @@ var defaultFocusStyle2 = {
 };
 function setInputProps(comp, newProps, oldProps) {
   const setter = {
+    set placeholder(str) {
+      if (str !== oldProps.placeholder) {
+        comp.setPlaceHolder(str);
+      }
+    },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle2 });
+      console.log(222, styleSheet === oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle3 });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19870,7 +19908,9 @@ function setInputProps(comp, newProps, oldProps) {
       setStyle({ comp, defaultStyle: defaultFocusStyle2, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, styleSheet });
     },
     set value(str) {
-      comp.setText(str);
+      if (str !== oldProps.value) {
+        comp.setText(str);
+      }
     },
     set align({
       type,
@@ -19885,12 +19925,12 @@ function setInputProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
-  Object.assign(setter, { style: defaultStyle2, focusStyle: defaultFocusStyle2 }, newProps);
+  Object.assign(setter, { style: defaultStyle3, focusStyle: defaultFocusStyle2 }, newProps);
   comp.dataset = {};
   Object.keys(newProps).forEach((prop) => {
     const index = prop.indexOf("data-");
@@ -19967,8 +20007,10 @@ var bridge10 = globalThis.SJSJSBridge;
 var NativeView4 = bridge10.NativeRender.NativeComponents.Keyboard;
 function setKeyboardProps(comp, newProps, oldProps) {
   const setter = {
-    set inputbox(comp2) {
-      comp2.setTextarea(comp2);
+    set textarea(comp2) {
+      if (comp2?.uid) {
+        comp2.setTextarea(comp2);
+      }
     },
     set style(styleSheet) {
       setStyle({ comp, styleSheet, compName: "Keyboard", styleType: 0, oldStyleSheet: oldProps.style });
@@ -19989,9 +20031,9 @@ function setKeyboardProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
@@ -20106,45 +20148,77 @@ var Input = registerComponent(new InputConfig());
 var Keyboard = registerComponent(new KeyboardConfig());
 var Render = Renderer;
 
-// test/event/3/index.jsx
+// test/textarea/2/index.jsx
 var import_react = __toESM(require_react());
 function App() {
-  const [backgroungColors, setBackgroundColors] = (0, import_react.useState)(Array(30).fill(false));
+  const [value1, setValue1] = (0, import_react.useState)("");
+  const ref1 = (0, import_react.useRef)();
+  const ref2 = (0, import_react.useRef)();
+  const [focus, setFocus] = (0, import_react.useState)();
+  const [didMount, setDidMount] = (0, import_react.useState)(false);
+  (0, import_react.useEffect)(() => {
+    setDidMount(true);
+  }, []);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
-    style: style.window,
-    onClick: (e) => {
-      const { target } = e;
-      const { dataset } = target;
-      if (!dataset)
-        return;
-      const { index } = dataset;
-      if (index == void 0)
-        return;
-      backgroungColors[index] = !backgroungColors[index];
-      setBackgroundColors([...backgroungColors]);
+    style: style.window
+  }, didMount && /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.text1,
+    alignTo: {
+      type: EAlignType.ALIGN_OUT_TOP_LEFT,
+      parent: ref1.current
     }
-  }, Array(30).fill(0).map((item, i) => {
-    return /* @__PURE__ */ import_react.default.createElement(Button, {
-      style: [style.button, backgroungColors[i] ? { "background-color": "red" } : {}],
-      "data-index": i
-    }, /* @__PURE__ */ import_react.default.createElement(Text, null, i + 1));
+  }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
+    mode: "password",
+    onChange: (e) => setValue1(e.value),
+    value: value1,
+    style: style.input1,
+    ref: ref1,
+    onFocus: () => {
+      setFocus(1);
+    },
+    placeholder: "enter plz"
+  }), /* @__PURE__ */ import_react.default.createElement(Input, {
+    mode: "password",
+    onChange: (e) => setValue1(e.value),
+    value: value1,
+    style: style.input2,
+    align: {
+      type: EAlignType.ALIGN_TOP_RIGHT,
+      pos: [-5, 20]
+    },
+    ref: ref2,
+    onFocus: () => {
+      setFocus(2);
+    },
+    placeholder: "enter plz"
+  }), didMount && /* @__PURE__ */ import_react.default.createElement(Text, {
+    alignTo: {
+      type: EAlignType.ALIGN_OUT_TOP_LEFT,
+      parent: ref2.current
+    }
+  }, "Text"), /* @__PURE__ */ import_react.default.createElement(Keyboard, {
+    style: style.keyboard,
+    textarea: focus == 1 ? ref1.current : focus == 2 ? ref2.current : null
   }));
 }
 var style = {
   window: {
-    "width": "290px",
-    "height": "200px",
-    "display": "flex",
-    "flex-direction": "row",
-    "flex-wrap": "wrap",
-    "padding": "8px"
+    "width": "480px",
+    "height": "320px"
   },
-  button: {
-    "width": "80px",
-    "height": "50px",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "center"
+  text1: {},
+  text2: {},
+  input1: {
+    "width": "40%",
+    "left": "5px",
+    "top": "20px"
+  },
+  input2: {
+    "width": "40%"
+  },
+  keyboard: {
+    "width": "100%",
+    "height": "50%"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

@@ -1,37 +1,61 @@
 import { View, Render, Window, Text, EAlignType, Keyboard, Input } from 'lvgljs-ui';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function App () {
     const [value1, setValue1] = useState('')
+    const ref1 = useRef()
+    const ref2 = useRef()
+    const [focus, setFocus] = useState()
+    const [didMount, setDidMount] = useState(false)
+
+    useEffect(() => {
+        setDidMount(true)
+    }, [])
 
     return (
         <Window style={style.window}>
-            <Text style={style.text1}>Password</Text>
+            {didMount && <Text 
+                style={style.text1}
+                alignTo={{
+                    type: EAlignType.ALIGN_OUT_TOP_LEFT,
+                    parent: ref1.current
+                }}
+            >Password</Text>}
             <Input
                 mode="password"
                 onChange={e => setValue1(e.value)}
                 value={value1}
                 style={style.input1}
+                ref={ref1}
+                onFocus={() => {
+                    setFocus(1)
+                }}
+                placeholder={"enter plz"}
             />
             <Input
                 mode="password"
                 onChange={e => setValue1(e.value)}
                 value={value1}
-                style={style.input1}
+                style={style.input2}
                 align={{
                     type: EAlignType.ALIGN_TOP_RIGHT,
                     pos: [-5, 20]
                 }}
-            />
-            <Text 
-                style={style.text1}
-                align={{
-                    type: EAlignType.ALIGN_OUT_TOP_LEFT,
+                ref={ref2}
+                onFocus={() => {
+                    setFocus(2)
                 }}
-            >Text</Text>
+                placeholder={"enter plz"}
+            />
+            {didMount && <Text 
+                alignTo={{
+                    type: EAlignType.ALIGN_OUT_TOP_LEFT,
+                    parent: ref2.current
+                }}
+            >Text</Text>}
             <Keyboard
                 style={style.keyboard}
-                
+                textarea={focus == 1 ? ref1.current : focus == 2 ? ref2.current : null}
             />
         </Window>
     )
@@ -43,8 +67,10 @@ const style = {
         'height': '320px',
     },
     text1: {
-        'left': 0,
-        'top': 0
+        
+    },
+    text2: {
+
     },
     input1: {
         'width': '40%',
@@ -57,8 +83,6 @@ const style = {
     keyboard: {
         'width': '100%',
         'height': '50%',
-        'left': 0,
-        'top': '50%'
     }
 };
 
