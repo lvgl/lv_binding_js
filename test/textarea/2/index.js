@@ -19895,7 +19895,6 @@ function setInputProps(comp, newProps, oldProps) {
       }
     },
     set style(styleSheet) {
-      console.log(222, styleSheet === oldProps.style);
       setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle3 });
     },
     set onChange(fn) {
@@ -19905,6 +19904,7 @@ function setInputProps(comp, newProps, oldProps) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
     },
     set focusStyle(styleSheet) {
+      console.log(22222, styleSheet, oldProps.focusStyle);
       setStyle({ comp, defaultStyle: defaultFocusStyle2, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, styleSheet });
     },
     set value(str) {

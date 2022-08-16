@@ -27,7 +27,6 @@ function setInputProps(comp, newProps, oldProps) {
             }
         },
         set style(styleSheet) {
-            console.log(222, styleSheet === oldProps.style)
             setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
         },
         set onChange (fn) {
