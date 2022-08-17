@@ -51,7 +51,7 @@ Image::Image(std::string uid, lv_obj_t* parent): BasicComponent() {
     
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_user_data(this->instance, this);
-    this->initStyle();
+    this->initStyle(LV_PART_MAIN);
 };
 
 void Image::setImageBinary(uint8_t* buf, size_t len) {

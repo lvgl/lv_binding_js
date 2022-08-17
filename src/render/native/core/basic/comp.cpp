@@ -65,12 +65,31 @@ void BasicComponent::appendChild (void* child) {
     lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
 };
 
-void BasicComponent::initStyle () {
-    lv_style_t* style = static_cast<lv_style_t*>(style_pool.allocate());
-    this->style_map[static_cast<int32_t>(LV_PART_MAIN)] = style;
+virtual void BasicComponent::initCompStyle (int32_t type) {
+    this->ensureStyle(type);
+    lv_style_t* style = this->style_map.at(type);
 
-    __InitStyle(style, this->type);
-    lv_obj_add_style(this->instance, style, LV_PART_MAIN);
+    lv_style_set_pad_left(style, 0);
+    lv_style_set_pad_right(style, 0);
+    lv_style_set_pad_bottom(style, 0);
+    lv_style_set_pad_top(style, 0);
+    lv_style_set_radius(style, 0);
+    lv_style_set_outline_width(style, 0);
+    lv_style_set_outline_pad(style, 0);
+    lv_style_set_border_width(style, 0);
+    lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
+};
+
+void BasicComponent::initStyle (int32_t type) {
+    bool is_new = this->ensureStyle(type);
+    lv_style_t* style = this->style_map.at(type);
+
+    this->initCompStyle(type);
+
+    // __InitStyle(style, this->type);
+    if (is_new) {
+        lv_obj_add_style(this->instance, style, type);
+    }
     lv_obj_invalidate(this->instance);
 };
 
@@ -125,6 +144,19 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     }
 };
 
+bool BasicComponent::ensureStyle (int32_t type) {
+    lv_style_t* style;
+    bool is_new;
+    if (this->style_map.find(type) != this->style_map.end()) {
+        
+    } else {
+        style = static_cast<lv_style_t*>(style_pool.allocate());
+        style_map[type] = style;
+        is_new = true;
+    }
+    return is_new;
+};
+
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit) {
     lv_style_t* style;
     bool is_new = false;
@@ -138,7 +170,7 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
     }
 
     if (isinit) {
-        __InitStyle(style, this->type);
+        this->initStyle(type);
     }
 
     for(int i=0; i < keys.size(); i++) {

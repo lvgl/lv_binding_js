@@ -30,7 +30,7 @@ function setTextareaProps(comp, newProps, oldProps) {
             setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
         },
         set focusStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle});
+            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle });
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -59,7 +59,7 @@ function setTextareaProps(comp, newProps, oldProps) {
             comp.alignTo(type, pos, parent)
         }
     }
-    Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+    Object.assign(setter, { ...newProps });
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')
