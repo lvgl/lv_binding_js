@@ -65,7 +65,7 @@ void BasicComponent::appendChild (void* child) {
     lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
 };
 
-virtual void BasicComponent::initCompStyle (int32_t type) {
+void BasicComponent::initCompStyle (int32_t type) {
     this->ensureStyle(type);
     lv_style_t* style = this->style_map.at(type);
 
@@ -83,6 +83,8 @@ virtual void BasicComponent::initCompStyle (int32_t type) {
 void BasicComponent::initStyle (int32_t type) {
     bool is_new = this->ensureStyle(type);
     lv_style_t* style = this->style_map.at(type);
+    lv_style_init(style);
+    lv_style_reset(style);
 
     this->initCompStyle(type);
 

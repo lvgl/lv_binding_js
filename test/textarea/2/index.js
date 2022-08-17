@@ -18121,7 +18121,8 @@ var builtinColor = {
   "brown": 7951688,
   "blue-grey": 6323595,
   "grey": 10395294,
-  "white": 16777215
+  "white": 16777215,
+  "black": 0
 };
 var colorTransform = (data) => {
   if (builtinColor[data]) {
@@ -18853,7 +18854,7 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle: defaultStyle4 = {} } = {}) {
+function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
   if (!styleSheet)
     return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
@@ -18861,7 +18862,7 @@ function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit
   const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
   if (!maybeChange)
     return;
-  styleSheet = Object.assign({}, defaultStyle4, ...styleSheet);
+  styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
   styleSheet = style_default.transform(styleSheet, compName);
   const keys = Object.keys(styleSheet);
   comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit);
@@ -18928,9 +18929,9 @@ function setViewProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19106,12 +19107,6 @@ var WindowConfig = class {
 // src/render/react/components/Text/comp.js
 var bridge3 = globalThis.SJSJSBridge;
 var NativeText = bridge3.NativeRender.NativeComponents.Text;
-var defaultStyle = {
-  "color": "black"
-};
-var defaultOnPressedStyle = {
-  "color": "black"
-};
 function setTextProps(comp, newProps, oldProps) {
   const setter = {
     set children(str) {
@@ -19126,10 +19121,10 @@ function setTextProps(comp, newProps, oldProps) {
       }
     },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Text", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle });
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onPressedStyle(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Text", styleType: 32, oldStyleSheet: oldProps.onPressedStyle, defaultStyle: defaultOnPressedStyle });
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -19156,7 +19151,7 @@ function setTextProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
       comp.alignTo(type, pos, parent);
     }
@@ -19298,9 +19293,9 @@ function setImageProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19410,9 +19405,9 @@ function setButtonProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19550,9 +19545,9 @@ function setSliderProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19659,9 +19654,9 @@ function setSwitchProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19742,20 +19737,6 @@ var SwitchConfig = class {
 // src/render/react/components/Textarea/comp.js
 var bridge8 = globalThis.SJSJSBridge;
 var NativeView2 = bridge8.NativeRender.NativeComponents.Textarea;
-var defaultStyle2 = {
-  "border-radius": 4,
-  "padding": 4,
-  "border-width": "2px",
-  "border-color": "#37474F",
-  "border-opacity": 0.4
-};
-var defaultFocusStyle = {
-  "border-radius": 4,
-  "padding": 4,
-  "border-width": "2px",
-  "border-color": "blue",
-  "border-opacity": 0.4
-};
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
     set placeholder(str) {
@@ -19763,11 +19744,18 @@ function setTextareaProps(comp, newProps, oldProps) {
         comp.setPlaceHolder(str);
       }
     },
+    set mode(mode) {
+      if (mode === "password") {
+        comp.setPasswordMode(true);
+      } else if (oldProps.mode === "password") {
+        comp.setPasswordMode(false);
+      }
+    },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle2 });
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set focusStyle(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 2, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle });
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 2, oldStyleSheet: oldProps.focusStyle });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19793,12 +19781,12 @@ function setTextareaProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
       comp.alignTo(type, pos, parent);
     }
   };
-  Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+  Object.assign(setter, { ...newProps });
   comp.dataset = {};
   Object.keys(newProps).forEach((prop) => {
     const index = prop.indexOf("data-");
@@ -19873,20 +19861,6 @@ var TextareaConfig = class {
 // src/render/react/components/Input/comp.js
 var bridge9 = globalThis.SJSJSBridge;
 var NativeView3 = bridge9.NativeRender.NativeComponents.Textarea;
-var defaultStyle3 = {
-  "border-radius": 4,
-  "padding": 4,
-  "border-width": "2px",
-  "border-color": "#37474F",
-  "border-opacity": 0.4
-};
-var defaultFocusStyle2 = {
-  "border-radius": 4,
-  "padding": 4,
-  "border-width": "2px",
-  "border-color": "blue",
-  "border-opacity": 0.4
-};
 function setInputProps(comp, newProps, oldProps) {
   const setter = {
     set placeholder(str) {
@@ -19894,8 +19868,15 @@ function setInputProps(comp, newProps, oldProps) {
         comp.setPlaceHolder(str);
       }
     },
+    set mode(mode) {
+      if (mode === "password") {
+        comp.setPasswordMode(true);
+      } else if (oldProps.mode === "password") {
+        comp.setPasswordMode(false);
+      }
+    },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style, defaultStyle: defaultStyle3 });
+      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19904,8 +19885,7 @@ function setInputProps(comp, newProps, oldProps) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
     },
     set focusStyle(styleSheet) {
-      console.log(22222, styleSheet, oldProps.focusStyle);
-      setStyle({ comp, defaultStyle: defaultFocusStyle2, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, styleSheet });
+      setStyle({ comp, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, styleSheet });
     },
     set value(str) {
       if (str !== oldProps.value) {
@@ -19925,12 +19905,12 @@ function setInputProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
       comp.alignTo(type, pos, parent);
     }
   };
-  Object.assign(setter, { style: defaultStyle3, focusStyle: defaultFocusStyle2 }, newProps);
+  Object.assign(setter, newProps);
   comp.dataset = {};
   Object.keys(newProps).forEach((prop) => {
     const index = prop.indexOf("data-");
@@ -20007,9 +19987,9 @@ var bridge10 = globalThis.SJSJSBridge;
 var NativeView4 = bridge10.NativeRender.NativeComponents.Keyboard;
 function setKeyboardProps(comp, newProps, oldProps) {
   const setter = {
-    set textarea(comp2) {
-      if (comp2?.uid) {
-        comp2.setTextarea(comp2);
+    set textarea(textarea) {
+      if (textarea?.uid !== oldProps.textarea?.uid) {
+        comp.setTextarea(textarea);
       }
     },
     set style(styleSheet) {
@@ -20031,7 +20011,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
       comp.alignTo(type, pos, parent);
     }
@@ -20152,9 +20132,10 @@ var Render = Renderer;
 var import_react = __toESM(require_react());
 function App() {
   const [value1, setValue1] = (0, import_react.useState)("");
+  const [value2, setValue2] = (0, import_react.useState)("");
   const ref1 = (0, import_react.useRef)();
   const ref2 = (0, import_react.useRef)();
-  const [focus, setFocus] = (0, import_react.useState)();
+  const [focus, setFocus] = (0, import_react.useState)(1);
   const [didMount, setDidMount] = (0, import_react.useState)(false);
   (0, import_react.useEffect)(() => {
     setDidMount(true);
@@ -20169,18 +20150,24 @@ function App() {
     }
   }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
     mode: "password",
-    onChange: (e) => setValue1(e.value),
+    onChange: (e) => {
+      console.log("input 1 is: ", e.value);
+      setValue1(e.value);
+    },
     value: value1,
     style: style.input1,
     ref: ref1,
     onFocus: () => {
+      console.log("input1 focus");
       setFocus(1);
     },
     placeholder: "enter plz"
   }), /* @__PURE__ */ import_react.default.createElement(Input, {
-    mode: "password",
-    onChange: (e) => setValue1(e.value),
-    value: value1,
+    onChange: (e) => {
+      console.log("input 2 is: ", e.value);
+      setValue2(e.value);
+    },
+    value: value2,
     style: style.input2,
     align: {
       type: EAlignType.ALIGN_TOP_RIGHT,
@@ -20188,6 +20175,7 @@ function App() {
     },
     ref: ref2,
     onFocus: () => {
+      console.log("input2 focus");
       setFocus(2);
     },
     placeholder: "enter plz"
@@ -20196,7 +20184,7 @@ function App() {
       type: EAlignType.ALIGN_OUT_TOP_LEFT,
       parent: ref2.current
     }
-  }, "Text"), /* @__PURE__ */ import_react.default.createElement(Keyboard, {
+  }, "Text"), didMount && /* @__PURE__ */ import_react.default.createElement(Keyboard, {
     style: style.keyboard,
     textarea: focus == 1 ? ref1.current : focus == 2 ? ref2.current : null
   }));

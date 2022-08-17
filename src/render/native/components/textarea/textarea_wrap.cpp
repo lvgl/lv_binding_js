@@ -49,6 +49,29 @@ static JSValue NativeCompPlaceHolder(JSContext *ctx, JSValueConst this_val, int 
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompPasswordMode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsBool(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
+        bool payload = JS_ToBool(ctx, argv[0]);
+
+        ((Textarea*)(ref->comp))->setPasswordMode(payload);
+        LV_LOG_USER("Textarea %s setPasswordMode %d", ref->uid, payload);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetMaxLength(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsNumber(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
+        int32_t len;
+        JS_ToInt32(ctx, &len, argv[0]);
+
+        ((Textarea*)(ref->comp))->setMaxLength(len);
+        LV_LOG_USER("Textarea %s setMaxLength %d", ref->uid, len);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
@@ -59,6 +82,8 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setOneLine", 0, NativeCompSetOneLine),
     SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
     SJS_CFUNC_DEF("setPlaceHolder", 0, NativeCompPlaceHolder),
+    SJS_CFUNC_DEF("setPasswordMode", 0, NativeCompPasswordMode),
+    SJS_CFUNC_DEF("setMaxLength", 0, NativeCompSetMaxLength)
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

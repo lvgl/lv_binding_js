@@ -63,8 +63,8 @@ function setImageProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || !parent || !parent.uid) return
-            comp.alignTo(type, pos, parent.__proto__)
+            if (!type || (type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)) return
+            comp.alignTo(type, pos, parent)
         }
     }
     Object.assign(setter, newProps);

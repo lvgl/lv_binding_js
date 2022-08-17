@@ -3,15 +3,16 @@ import React, { useState, useRef, useEffect } from 'react';
 
 function App () {
     const [value1, setValue1] = useState('')
+    const [value2, setValue2] = useState('')
+
     const ref1 = useRef()
     const ref2 = useRef()
-    const [focus, setFocus] = useState()
+    const [focus, setFocus] = useState(1)
     const [didMount, setDidMount] = useState(false)
 
     useEffect(() => {
         setDidMount(true)
     }, [])
-
     return (
         <Window style={style.window}>
             {didMount && <Text 
@@ -23,19 +24,25 @@ function App () {
             >Password</Text>}
             <Input
                 mode="password"
-                onChange={e => setValue1(e.value)}
+                onChange={e => {
+                    console.log('input 1 is: ', e.value)
+                    setValue1(e.value)
+                }}
                 value={value1}
                 style={style.input1}
                 ref={ref1}
                 onFocus={() => {
+                    console.log('input1 focus')
                     setFocus(1)
                 }}
                 placeholder={"enter plz"}
             />
             <Input
-                mode="password"
-                onChange={e => setValue1(e.value)}
-                value={value1}
+                onChange={e => {
+                    console.log('input 2 is: ', e.value)
+                    setValue2(e.value)
+                }}
+                value={value2}
                 style={style.input2}
                 align={{
                     type: EAlignType.ALIGN_TOP_RIGHT,
@@ -43,6 +50,7 @@ function App () {
                 }}
                 ref={ref2}
                 onFocus={() => {
+                    console.log('input2 focus')
                     setFocus(2)
                 }}
                 placeholder={"enter plz"}
@@ -53,10 +61,10 @@ function App () {
                     parent: ref2.current
                 }}
             >Text</Text>}
-            <Keyboard
+            {didMount && <Keyboard
                 style={style.keyboard}
                 textarea={focus == 1 ? ref1.current : focus == 2 ? ref2.current : null}
-            />
+            />}
         </Window>
     )
 };

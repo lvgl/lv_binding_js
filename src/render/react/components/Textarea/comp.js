@@ -3,22 +3,6 @@ import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.Textarea
 
-const defaultStyle = {
-    'border-radius': 4,
-    'padding': 4,
-    'border-width': '2px',
-    'border-color': '#37474F',
-    'border-opacity': 0.4
-}
-
-const defaultFocusStyle = {
-    'border-radius': 4,
-    'padding': 4,
-    'border-width': '2px',
-    'border-color': 'blue',
-    'border-opacity': 0.4
-}
-
 function setTextareaProps(comp, newProps, oldProps) {
     const setter = {
         set placeholder (str) {
@@ -26,11 +10,18 @@ function setTextareaProps(comp, newProps, oldProps) {
                 comp.setPlaceHolder(str)  
             }
         },
+        set mode (mode) {
+            if (mode === 'password') {
+                comp.setPasswordMode(true)
+            } else if (oldProps.mode === 'password') {
+                comp.setPasswordMode(false)
+            }
+        },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
+            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set focusStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, defaultStyle: defaultFocusStyle });
+            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle });
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -55,7 +46,7 @@ function setTextareaProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)) return
+            if (!type || (type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)) return
             comp.alignTo(type, pos, parent)
         }
     }

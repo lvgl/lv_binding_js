@@ -3,22 +3,6 @@ import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.Textarea
 
-const defaultStyle = {
-    'border-radius': 4,
-    'padding': 4,
-    'border-width': '2px',
-    'border-color': '#37474F',
-    'border-opacity': 0.4
-}
-
-const defaultFocusStyle = {
-    'border-radius': 4,
-    'padding': 4,
-    'border-width': '2px',
-    'border-color': 'blue',
-    'border-opacity': 0.4
-}
-
 function setInputProps(comp, newProps, oldProps) {
     const setter = {
         set placeholder (str) {
@@ -26,8 +10,20 @@ function setInputProps(comp, newProps, oldProps) {
                 comp.setPlaceHolder(str)  
             }
         },
+        set mode (mode) {
+            if (mode == oldProps.mode) return
+            if (mode === 'password') {
+                comp.setPasswordMode(true)
+            } else if (oldProps.mode === 'password') {
+                comp.setPasswordMode(false)
+            }
+        },
+        set maxlength (len) {
+            if (len === oldProps.maxlength) return
+            comp.setMaxLength(len)
+        },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
+            setStyle({ comp, styleSheet, compName: "Input", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -36,7 +32,7 @@ function setInputProps(comp, newProps, oldProps) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
         },
         set focusStyle (styleSheet) {
-            setStyle({ comp, defaultStyle: defaultFocusStyle, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, styleSheet });
+            setStyle({ comp, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, styleSheet });
         },
         set value (str) {
             if (str !== oldProps.value) {
@@ -55,11 +51,11 @@ function setInputProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)) return
+            if (!type || (type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)) return
             comp.alignTo(type, pos, parent)
         }
     }
-    Object.assign(setter, { style: defaultStyle, focusStyle: defaultFocusStyle }, newProps);
+    Object.assign(setter, newProps);
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

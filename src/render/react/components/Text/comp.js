@@ -3,14 +3,6 @@ import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config
 const bridge = globalThis.SJSJSBridge;
 const NativeText = bridge.NativeRender.NativeComponents.Text
 
-const defaultStyle = {
-    'color': 'black',
-}
-
-const defaultOnPressedStyle= {
-    'color': 'black',
-}
-
 function setTextProps(comp, newProps, oldProps) {
     const setter = {
         set children(str) {
@@ -25,10 +17,10 @@ function setTextProps(comp, newProps, oldProps) {
             }
         },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0000, oldStyleSheet: oldProps.style, defaultStyle });
+            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
         set onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle, defaultStyle: defaultOnPressedStyle });
+            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -54,7 +46,7 @@ function setTextProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1] && parent === oldProps.align?.parent)) return
+            if (!type || (type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)) return
             comp.alignTo(type, pos, parent)
         }
     }

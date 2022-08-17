@@ -9,4 +9,6 @@ class Text : public BasicComponent {
   Text(std::string uid, lv_obj_t* parent = nullptr);
   
   void setText(std::string str);
+
+  virtual void initCompStyle (int32_t type);
 };

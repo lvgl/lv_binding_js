@@ -13,4 +13,10 @@ class Textarea : public BasicComponent {
   void setText (std::string str);
 
   void setPlaceHolder (std::string str);
+
+  void setPasswordMode (bool payload);
+
+  void setMaxLength (int32_t len);
+
+  virtual void initCompStyle (int32_t type);
 };

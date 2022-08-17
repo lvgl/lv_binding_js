@@ -18,7 +18,8 @@ const builtinColor = {
     'brown': 0x795548,
     'blue-grey': 0x607d8b,
     'grey': 0x9e9e9e,
-    'white': 0xFFFFFF
+    'white': 0xFFFFFF,
+    'black': 0
 }
 
 export const colorTransform = (data) => {
