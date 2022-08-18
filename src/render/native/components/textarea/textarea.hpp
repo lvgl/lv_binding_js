@@ -18,5 +18,7 @@ class Textarea : public BasicComponent {
 
   void setMaxLength (int32_t len);
 
+  void setMode (int32_t mode);
+
   virtual void initCompStyle (int32_t type);
 };

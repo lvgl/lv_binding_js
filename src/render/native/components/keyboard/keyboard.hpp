@@ -9,4 +9,6 @@ class Keyboard : public BasicComponent {
   Keyboard(std::string uid, lv_obj_t* parent = nullptr);
 
   void setTextarea (BasicComponent* child);
+
+  void setMode (int32_t mode);
 };

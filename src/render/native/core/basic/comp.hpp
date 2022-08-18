@@ -18,6 +18,7 @@ enum ECOMP_TYPE {
   COMP_TYPE_WINDOW,
   COMP_TYPE_SWITCH,
   COMP_TYPE_TEXTAREA,
+  COMP_TYPE_CHECKBOX,
 };
 
 #include "native/core/event/event.hpp"

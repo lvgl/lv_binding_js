@@ -9,6 +9,7 @@ import SwitchConfig from './components/Switch/config';
 import TextareaConfig from './components/Textarea/config';
 import InputConfig from './components/Input/config';
 import KeyboardConfig from './components/Keyboard/config';
+import CheckboxConfig from './components/Checkbox/config';
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -23,6 +24,7 @@ export const Switch = registerComponent(new SwitchConfig());
 export const Textarea = registerComponent(new TextareaConfig());
 export const Input = registerComponent(new InputConfig());
 export const Keyboard = registerComponent(new KeyboardConfig());
+export const Checkbox = registerComponent(new CheckboxConfig());
 
 export { EAlignType } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'

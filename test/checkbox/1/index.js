@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef2(initialValue) {
+        function useRef(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect2(create, deps) {
+        function useEffect(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,12 +1677,12 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect2;
+        exports.useEffect = useEffect;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef2;
+        exports.useRef = useRef;
         exports.useState = useState2;
         exports.version = ReactVersion;
       })();
@@ -18867,30 +18867,6 @@ function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit
   const keys = Object.keys(styleSheet);
   comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit);
 }
-var EAlignType = {
-  "ALIGN_DEFAULT": 0,
-  "ALIGN_TOP_LEFT": 1,
-  "ALIGN_TOP_MID": 2,
-  "ALIGN_TOP_RIGHT": 3,
-  "ALIGN_BOTTOM_LEFT": 4,
-  "ALIGN_BOTTOM_MID": 5,
-  "ALIGN_BOTTOM_RIGHT": 6,
-  "ALIGN_LEFT_MID": 7,
-  "ALIGN_RIGHT_MID": 8,
-  "ALIGN_CENTER": 9,
-  "ALIGN_OUT_TOP_LEFT": 10,
-  "ALIGN_OUT_TOP_MID": 11,
-  "ALIGN_OUT_TOP_RIGHT": 12,
-  "ALIGN_OUT_BOTTOM_LEFT": 13,
-  "ALIGN_OUT_BOTTOM_MID": 14,
-  "ALIGN_OUT_BOTTOM_RIGHT": 15,
-  "ALIGN_OUT_LEFT_TOP": 16,
-  "ALIGN_OUT_LEFT_MID": 17,
-  "ALIGN_OUT_LEFT_BOTTOM": 18,
-  "ALIGN_OUT_RIGHT_TOP": 19,
-  "ALIGN_OUT_RIGHT_MID": 20,
-  "ALIGN_OUT_RIGHT_BOTTOM": 21
-};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -20105,6 +20081,125 @@ var KeyboardConfig = class {
   }
 };
 
+// src/render/react/components/Checkbox/comp.js
+var bridge11 = globalThis.SJSJSBridge;
+var NativeView5 = bridge11.NativeRender.NativeComponents.Checkbox;
+function setCheckboxProps(comp, newProps, oldProps) {
+  const setter = {
+    set checked(val) {
+      if (val !== oldProps.checked) {
+        comp.setChecked(val);
+      }
+    },
+    set disabled(val) {
+      if (val !== oldProps.disabled) {
+        comp.setDisabled(val);
+      }
+    },
+    set text(val) {
+      if (val !== oldProps.text) {
+        comp.setText(val);
+      }
+    },
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var CheckboxComp = class extends NativeView5 {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setCheckboxProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+    this.insertChildBefore(child, beforeChild);
+  }
+  appendInitialChild(child) {
+    this.appendChild(child);
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+};
+
+// src/render/react/components/Checkbox/config.js
+var CheckboxConfig = class {
+  tagName = "Checkbox";
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new CheckboxComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  commitUnmount(instance) {
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -20120,8 +20215,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge11 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge11.NativeRender.Animate;
+var bridge12 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge12.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -20144,88 +20239,39 @@ var Switch = registerComponent(new SwitchConfig());
 var Textarea = registerComponent(new TextareaConfig());
 var Input = registerComponent(new InputConfig());
 var Keyboard = registerComponent(new KeyboardConfig());
+var Checkbox = registerComponent(new CheckboxConfig());
 var Render = Renderer;
 
-// test/textarea/2/index.jsx
+// test/checkbox/1/index.jsx
 var import_react = __toESM(require_react());
 function App() {
-  const [value1, setValue1] = (0, import_react.useState)("");
-  const [value2, setValue2] = (0, import_react.useState)("");
-  const ref1 = (0, import_react.useRef)();
-  const ref2 = (0, import_react.useRef)();
-  const [focus, setFocus] = (0, import_react.useState)(1);
-  const [didMount, setDidMount] = (0, import_react.useState)(false);
-  (0, import_react.useEffect)(() => {
-    setDidMount(true);
-  }, []);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, didMount && /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.text1,
-    alignTo: {
-      type: EAlignType.ALIGN_OUT_TOP_LEFT,
-      parent: ref1.current
-    }
-  }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
-    mode: "password",
-    onChange: (e) => {
-      console.log("input 1 is: ", e.value);
-      setValue1(e.value);
-    },
-    value: value1,
-    style: style.input1,
-    ref: ref1,
-    onFocus: () => {
-      console.log("input1 focus");
-      setFocus(1);
-    },
-    placeholder: "enter plz"
-  }), /* @__PURE__ */ import_react.default.createElement(Input, {
-    onChange: (e) => {
-      console.log("input 2 is: ", e.value);
-      setValue2(e.value);
-    },
-    value: value2,
-    style: style.input2,
-    align: {
-      type: EAlignType.ALIGN_TOP_RIGHT,
-      pos: [-5, 20]
-    },
-    ref: ref2,
-    onFocus: () => {
-      console.log("input2 focus");
-      setFocus(2);
-    },
-    placeholder: "enter plz"
-  }), didMount && /* @__PURE__ */ import_react.default.createElement(Text, {
-    alignTo: {
-      type: EAlignType.ALIGN_OUT_TOP_LEFT,
-      parent: ref2.current
-    }
-  }, "Text"), didMount && /* @__PURE__ */ import_react.default.createElement(Keyboard, {
-    style: style.keyboard,
-    textarea: focus == 1 ? ref1.current : focus == 2 ? ref2.current : null,
-    mode: "number"
+  }, /* @__PURE__ */ import_react.default.createElement(Checkbox, {
+    checked: false,
+    text: "Apple"
+  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
+    checked: false,
+    text: "Banana"
+  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
+    checked: false,
+    disabled: false,
+    text: "Lemon"
+  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
+    checked: false,
+    text: `Melon
+and a new line`
   }));
 }
 var style = {
   window: {
     "width": "480px",
-    "height": "320px"
-  },
-  text1: {},
-  text2: {},
-  input1: {
-    "width": "40%",
-    "left": "5px",
-    "top": "20px"
-  },
-  input2: {
-    "width": "40%"
-  },
-  keyboard: {
-    "width": "100%",
-    "height": "50%"
+    "height": "320px",
+    "display": "flex",
+    "justify-content": "center",
+    "align-items": "flex-start",
+    "flex-direction": "column",
+    "align-content": "center"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

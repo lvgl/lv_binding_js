@@ -64,6 +64,7 @@ function App () {
             {didMount && <Keyboard
                 style={style.keyboard}
                 textarea={focus == 1 ? ref1.current : focus == 2 ? ref2.current : null}
+                mode={"number"}
             />}
         </Window>
     )

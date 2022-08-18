@@ -84,7 +84,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setPlaceHolder", 0, NativeCompPlaceHolder),
     SJS_CFUNC_DEF("setPasswordMode", 0, NativeCompPasswordMode),
     SJS_CFUNC_DEF("setMaxLength", 0, NativeCompSetMaxLength),
-    SJS_CFUNC_DEF("setMaxLength", 0, NativeCompSetMaxLength),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

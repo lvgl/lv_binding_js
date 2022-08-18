@@ -34,6 +34,10 @@ void Textarea::setMaxLength (int32_t len) {
     lv_textarea_set_max_length(this->instance, len);
 };
 
+void Textarea::setMode (int32_t mode) {
+    lv_keyboard_set_mode(this->instance, static_cast<lv_keyboard_mode_t>(mode));
+};
+
 void Textarea::initCompStyle (int32_t type) {
     this->ensureStyle(type);
     lv_style_t* style = this->style_map.at(type);

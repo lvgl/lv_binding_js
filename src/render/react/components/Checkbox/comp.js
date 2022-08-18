@@ -1,29 +1,27 @@
 import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
-const NativeView = bridge.NativeRender.NativeComponents.Keyboard
+const NativeView = bridge.NativeRender.NativeComponents.Checkbox
 
-const modes = {
-    'lower': 0,
-    'upper': 1,
-    'special': 2,
-    'number': 3
-}
-
-function setKeyboardProps(comp, newProps, oldProps) {
+function setCheckboxProps(comp, newProps, oldProps) {
     const setter = {
-        set mode (mode) {
-            if (mode !== oldProps.mode && modes[mode]) {
-                comp.setMode(modes[mode])
+        set checked (val) {
+            if (val !== oldProps.checked) {
+                comp.setChecked(val)
             }
         },
-        set textarea (textarea) {
-            if (textarea?.uid !== oldProps.textarea?.uid) {
-                comp.setTextarea(textarea)
+        set disabled (val) {
+            if (val !== oldProps.disabled) {
+                comp.setDisabled(val)
+            }
+        },
+        set text (val) {
+            if (val !== oldProps.text) {
+                comp.setText(val)
             }
         },
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "Keyboard", styleType: 0x0000, oldStyleSheet: oldProps.style });
+            setStyle({comp, styleSheet, compName: "Checkbox", styleType: 0x0000, oldStyleSheet: oldProps.style});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -44,7 +42,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
             comp.alignTo(type, pos, parent)
         }
     }
-    Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+    Object.assign(setter, newProps);
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')
@@ -54,7 +52,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
     })
 }
   
-export class KeyboardComp extends NativeView {
+export class CheckboxComp extends NativeView {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -70,19 +68,23 @@ export class KeyboardComp extends NativeView {
         })
     }
     setProps(newProps, oldProps) {
-        setKeyboardProps(this, newProps, oldProps);
+        setCheckboxProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
+        this.insertChildBefore(child, beforeChild);
     }
     appendInitialChild(child) {
+        this.appendChild(child);
     }
     appendChild(child) {
+        super.appendChild(child);
     }
     removeChild(child) {
+        super.removeChild(child);
     }
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false })
     }
 }

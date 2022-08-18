@@ -19,6 +19,18 @@ static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int 
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetMode(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsNumber(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
+        int32_t mode;
+        JS_ToInt32(ctx, &mode, argv[0]);
+        
+        ((Keyboard*)(ref->comp))->setMode(mode);
+        LV_LOG_USER("Keyboard %s setMode %d", ref->uid, mode);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
@@ -27,6 +39,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_CFUNC_DEF("setTextarea", 0, NativeCompSetTextarea),
+    SJS_CFUNC_DEF("setMode", 0, NativeCompSetMode),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

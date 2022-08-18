@@ -12,3 +12,7 @@ Keyboard::Keyboard(std::string uid, lv_obj_t* parent): BasicComponent() {
 void Keyboard::setTextarea (BasicComponent* child) {
     lv_keyboard_set_textarea(this->instance, child->instance);
 };
+
+void Keyboard::setMode (int32_t mode) {
+    lv_keyboard_set_mode(this->instance, static_cast<lv_keyboard_mode_t>(mode));
+};
