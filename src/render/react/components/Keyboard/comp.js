@@ -3,8 +3,20 @@ import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.Keyboard
 
+const modes = {
+    'lower': 0,
+    'upper': 1,
+    'special': 2,
+    'number': 3
+}
+
 function setKeyboardProps(comp, newProps, oldProps) {
     const setter = {
+        set mode (mode) {
+            if (mode !== oldProps.mode && modes[mode]) {
+                comp.setMode(mode)
+            }
+        },
         set textarea (textarea) {
             if (textarea?.uid !== oldProps.textarea?.uid) {
                 comp.setTextarea(textarea)
