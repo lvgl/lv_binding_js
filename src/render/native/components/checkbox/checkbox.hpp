@@ -13,4 +13,6 @@ class Checkbox : public BasicComponent {
   void setChecked (bool payload);
 
   void setDisabled (bool payload);
+
+  void virtual initCompStyle (int32_t type);
 };

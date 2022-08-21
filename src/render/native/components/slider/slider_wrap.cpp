@@ -7,6 +7,7 @@ WRAPPED_JS_AddEventListener(Slider, "Slider")
 WRAPPED_JS_Align(Slider, "Slider")
 WRAPPED_JS_Align_To(Slider, "Slider")
 STYLE_INFO(Slider, "Slider")
+WRAPPED_JS_BACKGROUND_IMAGE(Slider,"Slider")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -70,6 +71,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

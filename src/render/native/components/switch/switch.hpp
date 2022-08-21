@@ -9,4 +9,6 @@ class Switch : public BasicComponent {
   Switch(std::string uid, lv_obj_t* parent = nullptr);
 
   void setValue (bool value);
+
+  void virtual initCompStyle (int32_t type);
 };

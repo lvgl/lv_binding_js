@@ -1,6 +1,7 @@
 #pragma once
 
 #include "lvgl/lvgl.h"
+#include "./png/png.hpp"
 
 typedef enum {
   IMAGE_TYPE_PNG,
@@ -13,3 +14,5 @@ typedef struct {
   const uint8_t* data;
   IMAGE_TYPE type; 
 } lv_img_dsc_t_1;
+
+uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc);

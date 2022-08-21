@@ -66,18 +66,7 @@ void BasicComponent::appendChild (void* child) {
 };
 
 void BasicComponent::initCompStyle (int32_t type) {
-    this->ensureStyle(type);
-    lv_style_t* style = this->style_map.at(type);
 
-    lv_style_set_pad_left(style, 0);
-    lv_style_set_pad_right(style, 0);
-    lv_style_set_pad_bottom(style, 0);
-    lv_style_set_pad_top(style, 0);
-    lv_style_set_radius(style, 0);
-    lv_style_set_outline_width(style, 0);
-    lv_style_set_outline_pad(style, 0);
-    lv_style_set_border_width(style, 0);
-    lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
 };
 
 void BasicComponent::initStyle (int32_t type) {
@@ -160,6 +149,7 @@ bool BasicComponent::ensureStyle (int32_t type) {
 };
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit) {
+
     lv_style_t* style;
     bool is_new = false;
 
@@ -203,9 +193,53 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
     lv_obj_invalidate(this->instance);
 };
 
+void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type) {
+    lv_img_dsc_t_1* img_desc;
+    lv_img_dsc_t_1* old_img_desc = nullptr;
+    const uint8_t* prev_buf = nullptr;
+    if (this->image_desc_map.find(style_type) != this->image_desc_map.end()) {
+        old_img_desc = this->image_desc_map.at(style_type);
+    }
+    img_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
+    image_desc_map[style_type] = img_desc;
+    
+    if (old_img_desc != nullptr) {
+        prev_buf = old_img_desc->data;
+    }
+    this->ensureStyle(style_type);
+    lv_style_t* style = this->style_map.at(style_type);
+    if (buf != nullptr) {
+        uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
+        if (img_data != nullptr) {
+            img_desc->data = img_data;
+            lv_style_set_bg_img_src(style, img_desc);
+        }
+    } else {
+        lv_style_set_bg_img_src(style, NULL);
+    }
+
+    this->image_desc_map[style_type] = img_desc;
+    if (prev_buf != nullptr) {
+        free((void*)(prev_buf));
+    }
+    if (old_img_desc != nullptr) {
+        free(old_img_desc);
+    }
+};
+
 BasicComponent::~BasicComponent () {
     if (this->transProps != nullptr) {
         free(this->transProps);
+    }
+
+    for(auto& desc : this->image_desc_map) {
+        if (desc.second != nullptr) {
+            const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;
+            if (buf != nullptr) {
+                free((void*)(buf));
+            }
+            free((void*)(desc.second));
+        }
     }
     // do not del here, remove child will do the action
     // lv_obj_del(this->instance);

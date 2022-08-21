@@ -11,4 +11,6 @@ class Keyboard : public BasicComponent {
   void setTextarea (BasicComponent* child);
 
   void setMode (int32_t mode);
+
+  void virtual initCompStyle (int32_t type);
 };

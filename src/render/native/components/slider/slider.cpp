@@ -19,3 +19,6 @@ void Slider::setRange (int32_t min, int32_t max) {
 void Slider::setValue (int32_t value) {
     lv_slider_set_value(this->instance, value, LV_ANIM_OFF);
 };
+
+void Slider::initCompStyle (int32_t type) {
+};

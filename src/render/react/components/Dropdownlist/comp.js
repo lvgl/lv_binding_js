@@ -1,36 +1,32 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLETYPE } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
 
-const bridge = globalThis.SJSJSBridge;
-const NativeView = bridge.NativeRender.NativeComponents.Checkbox
+const bridge = globalThis.SJSJSBridge
+const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
 
-function setCheckboxProps(comp, newProps, oldProps) {
+function setListProps(comp, newProps, oldProps) {
     const setter = {
-        set checked (val) {
-            if (val !== oldProps.checked) {
-                comp.setChecked(val)
-            }
-        },
-        set disabled (val) {
-            if (val !== oldProps.disabled) {
-                comp.setDisabled(val)
-            }
-        },
-        set text (val) {
-            if (val !== oldProps.text) {
-                comp.setText(val)
-            }
-        },
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style});
+            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
-        set checkedStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle});
+        set items (items) {
+            if (items !== oldProps.items && Array.isArray(items)) {
+                comp.setItems(items, items.length)
+            }
         },
-        set indicatorStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.indicatorStyle});
+        set value (value) {
+            if (value !== oldProps.value) {
+                comp.setValue(value)
+            }
         },
-        set indicatorCheckedStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR | STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.indicatorCheckedStyle});
+        set text (text) {
+            if (text !== oldProps.text) {
+                comp.setText(text)
+            }
+        },
+        set direction (direction) {
+            if (direction !== oldProps.direction) {
+                comp.setDir(direction)
+            }
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -61,7 +57,7 @@ function setCheckboxProps(comp, newProps, oldProps) {
     })
 }
   
-export class CheckboxComp extends NativeView {
+export class DropdownlistComp extends NativeDropdownlist {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -77,16 +73,15 @@ export class CheckboxComp extends NativeView {
         })
     }
     setProps(newProps, oldProps) {
-        setCheckboxProps(this, newProps, oldProps);
+        setListProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
-        this.insertChildBefore(child, beforeChild);
     }
+    static tagName = "Dropdownlist";
     appendInitialChild(child) {
-        this.appendChild(child);
     }
     appendChild(child) {
-        super.appendChild(child);
+        super.appendChild(child)
     }
     removeChild(child) {
         super.removeChild(child);
@@ -94,6 +89,6 @@ export class CheckboxComp extends NativeView {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

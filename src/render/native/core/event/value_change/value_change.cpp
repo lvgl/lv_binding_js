@@ -24,6 +24,11 @@ static JSValue GetChecked (JSContext* ctx, JSValueConst this_val) {
             checked = lv_obj_has_state(ins->instance, LV_STATE_CHECKED);
             return JS_NewBool(ctx, checked);
             break;
+
+        case COMP_TYPE_CHECKBOX:
+            checked = lv_obj_get_state(ins->instance) & LV_STATE_CHECKED;
+            return JS_NewBool(ctx, checked);
+            break;
         default:
             break;
     }
@@ -48,6 +53,11 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
         case COMP_TYPE_TEXTAREA:
             value_str = lv_textarea_get_text(ins->instance);
             return JS_NewString(ctx, value_str);
+
+        case COMP_TYPE_DROPDOWNLIST:
+            char buf[32];
+            lv_dropdown_get_selected_str(ins->instance, buf, sizeof(buf));
+            return JS_NewString(ctx, buf);
         default:
             break;
     }

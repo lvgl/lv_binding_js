@@ -4,6 +4,7 @@ import { ScrollStyle } from './scroll'
 import { OpacityStyle } from './opacity'
 import { MiscStyle } from './misc'
 import { TransStyle } from './trans'
+import { PostProcessStyle } from './post'
 
 // normal
 function NormalStyle (style, result) {
@@ -29,11 +30,17 @@ function NormalStyle (style, result) {
         'border-width': ProcessPx,
         'border-color': ProcessColor,
         'border-side': ProcessEnum({
-            left: 0x04,
-            right: 0x08,
-            full: 0x0F,
-            top: 0x02,
-            bottom: 0x01,
+            'left': 0x04,
+            'right': 0x08,
+            'full': 0x0F,
+            'top': 0x02,
+            'bottom': 0x01,
+            'top-right': 0x02 | 0x08,
+            'top-bottom': 0x02 | 0x01,
+            'top-left': 0x02 | 0x04,
+            'right-bottom': 0x08 | 0x01,
+            'right-left': 0x08 | 0x04,
+            'bottom-left': 0x01 | 0x04
         }),
         'outline-width': ProcessPx,
         'outline-color': ProcessColor,
@@ -209,4 +216,17 @@ StyleSheet.pipeline([
     TransStyle
 ])
 
-export default StyleSheet
+export function setStyle ({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
+    if (!styleSheet) return
+    styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet]
+    oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet]
+    const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i])
+
+    if (!maybeChange) return
+    styleSheet = Object.assign({}, defaultStyle, ...styleSheet)
+    const result = StyleSheet.transform(styleSheet, compName)
+
+    const keys = Object.keys(result)
+    comp.nativeSetStyle(result, keys, keys.length, styleType, isInit)
+    PostProcessStyle({ comp, styleSheet, styleType })
+}

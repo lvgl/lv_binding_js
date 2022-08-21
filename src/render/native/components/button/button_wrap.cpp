@@ -7,6 +7,7 @@ WRAPPED_JS_AddEventListener(Button, "Button")
 WRAPPED_JS_Align(Button, "Button")
 WRAPPED_JS_Align_To(Button, "Button")
 STYLE_INFO(Button, "Button")
+WRAPPED_JS_BACKGROUND_IMAGE(Button,"Button")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -39,6 +40,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
+    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

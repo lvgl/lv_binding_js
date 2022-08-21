@@ -11,4 +11,6 @@ class Slider : public BasicComponent {
   void setRange (int32_t min, int32_t max);
 
   void setValue (int32_t value);
+
+  void virtual initCompStyle (int32_t type);
 };

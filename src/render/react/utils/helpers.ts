@@ -5,6 +5,7 @@ export function throwUnsupported(instance) {
 }
 
 export function isValidUrl(str: string) {
+  if (!str) return false
   try {
     const url = new URL(str);
     return url.protocol === "http:" || url.protocol === "https:";

@@ -7,6 +7,7 @@ WRAPPED_JS_AddEventListener(Checkbox, "Checkbox")
 WRAPPED_JS_Align(Checkbox, "Checkbox")
 WRAPPED_JS_Align_To(Checkbox, "Checkbox")
 STYLE_INFO(Checkbox, "Checkbox")
+WRAPPED_JS_BACKGROUND_IMAGE(Checkbox,"Checkbox")
 
 static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
@@ -29,7 +30,7 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
         bool payload = JS_ToBool(ctx, argv[0]);
         
         ((Checkbox*)(ref->comp))->setChecked(payload);
-        LV_LOG_USER("Checkbox %s setChecked", ref->uid);
+        LV_LOG_USER("Checkbox %s setChecked %d", ref->uid, payload);
     }
     return JS_UNDEFINED;
 };
@@ -55,6 +56,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
     SJS_CFUNC_DEF("setChecked", 0, NativeCompSetChecked),
     SJS_CFUNC_DEF("setDisabled", 0, NativeCompSetDisabled),
+    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

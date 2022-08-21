@@ -531,11 +531,11 @@ var require_react_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -7432,11 +7432,11 @@ var require_react_reconciler_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -17863,34 +17863,34 @@ For more info, visit https://fb.me/react-mock-scheduler`);
         var scheduleUpdate = null;
         var setSuspenseHandler = null;
         {
-          var copyWithSetImpl = function(obj, path2, idx, value) {
-            if (idx >= path2.length) {
+          var copyWithSetImpl = function(obj, path3, idx, value) {
+            if (idx >= path3.length) {
               return value;
             }
-            var key = path2[idx];
+            var key = path3[idx];
             var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
-            updated[key] = copyWithSetImpl(obj[key], path2, idx + 1, value);
+            updated[key] = copyWithSetImpl(obj[key], path3, idx + 1, value);
             return updated;
           };
-          var copyWithSet = function(obj, path2, value) {
-            return copyWithSetImpl(obj, path2, 0, value);
+          var copyWithSet = function(obj, path3, value) {
+            return copyWithSetImpl(obj, path3, 0, value);
           };
-          overrideHookState = function(fiber, id2, path2, value) {
+          overrideHookState = function(fiber, id2, path3, value) {
             var currentHook2 = fiber.memoizedState;
             while (currentHook2 !== null && id2 > 0) {
               currentHook2 = currentHook2.next;
               id2--;
             }
             if (currentHook2 !== null) {
-              var newState = copyWithSet(currentHook2.memoizedState, path2, value);
+              var newState = copyWithSet(currentHook2.memoizedState, path3, value);
               currentHook2.memoizedState = newState;
               currentHook2.baseState = newState;
               fiber.memoizedProps = _assign({}, fiber.memoizedProps);
               scheduleWork(fiber, Sync);
             }
           };
-          overrideProps = function(fiber, path2, value) {
-            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path2, value);
+          overrideProps = function(fiber, path3, value) {
+            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path3, value);
             if (fiber.alternate) {
               fiber.alternate.pendingProps = fiber.pendingProps;
             }
@@ -18099,6 +18099,184 @@ var require_react_reconciler = __commonJS({
 
 // src/render/react/index.js
 var react = __toESM(require_react());
+
+// src/render/react/core/reconciler/index.js
+var import_react_reconciler = __toESM(require_react_reconciler());
+var id = 1;
+var getUid = () => {
+  return String(id++);
+};
+var instanceMap = /* @__PURE__ */ new Map();
+var getInstance = (uid) => {
+  return instanceMap[uid];
+};
+var HostConfig = {
+  now: Date.now,
+  getPublicInstance: (instance) => {
+    return instance;
+  },
+  getRootHostContext: () => {
+    let context = {
+      name: "rootnode"
+    };
+    return context;
+  },
+  prepareForCommit: () => {
+  },
+  resetAfterCommit: () => {
+  },
+  getChildHostContext: () => {
+    return {};
+  },
+  shouldSetTextContent: function(type, props) {
+    return false;
+    return typeof props.children === "string" || typeof props.children === "number";
+  },
+  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
+    const { createInstance } = getComponentByTagName(type);
+    const uid = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
+    instanceMap[uid] = instance;
+    return instance;
+  },
+  createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
+    return null;
+  },
+  appendInitialChild: (parent, child) => {
+    parent.appendChild(child);
+  },
+  appendChild(parent, child) {
+    parent.appendChild(child);
+  },
+  finalizeInitialChildren: (yueElement, type, props) => {
+    return true;
+  },
+  insertBefore: (parent, child, beforeChild) => {
+    parent.insertBefore(child, beforeChild);
+  },
+  supportsMutation: true,
+  appendChildToContainer: function(container, child) {
+    container.add(child);
+  },
+  insertInContainerBefore: (container, child, beforeChild) => {
+    container.add(child);
+  },
+  removeChildFromContainer: (container, child) => {
+    container.delete(child);
+    if (child.close) {
+      child.close();
+    }
+  },
+  prepareUpdate(instance, oldProps, newProps) {
+    return true;
+  },
+  commitUpdate: function(instance, updatePayload, type, oldProps, newProps, finishedWork) {
+    const { commitUpdate } = getComponentByTagName(type);
+    return commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork);
+  },
+  commitTextUpdate(textInstance, oldText, newText) {
+    textInstance.setText(newText);
+  },
+  removeChild(parent, child) {
+    parent?.removeChild(child);
+    child?.close();
+    unRegistEvent(child.uid);
+    delete instanceMap[child.uid];
+  },
+  commitMount: function(instance, type, newProps, internalInstanceHandle) {
+    const { commitMount } = getComponentByTagName(type);
+    return commitMount(instance, newProps, internalInstanceHandle);
+  }
+};
+var reconciler_default = (0, import_react_reconciler.default)(HostConfig);
+
+// src/render/react/core/event/index.js
+var eventMap = {};
+var EVENTTYPE_MAP = {
+  EVENT_ALL: 0,
+  EVENT_PRESSED: 1,
+  EVENT_PRESSING: 2,
+  EVENT_PRESS_LOST: 3,
+  EVENT_SHORT_CLICKED: 4,
+  EVENT_LONG_PRESSED: 5,
+  EVENT_LONG_PRESSED_REPEAT: 6,
+  EVENT_CLICKED: 7,
+  EVENT_RELEASED: 8,
+  EVENT_SCROLL_BEGIN: 9,
+  EVENT_SCROLL_END: 10,
+  EVENT_SCROLL: 11,
+  EVENT_GESTURE: 12,
+  EVENT_KEY: 13,
+  EVENT_FOCUSED: 14,
+  EVENT_DEFOCUSED: 15,
+  EVENT_LEAVE: 16,
+  EVENT_HIT_TEST: 17,
+  EVENT_COVER_CHECK: 18,
+  EVENT_REFR_EXT_DRAW_SIZE: 19,
+  EVENT_DRAW_MAIN_BEGIN: 20,
+  EVENT_DRAW_MAIN: 21,
+  EVENT_DRAW_MAIN_END: 22,
+  EVENT_DRAW_POST_BEGIN: 23,
+  EVENT_DRAW_POST: 24,
+  EVENT_DRAW_POST_END: 25,
+  EVENT_DRAW_PART_BEGIN: 26,
+  EVENT_DRAW_PART_END: 27,
+  EVENT_VALUE_CHANGED: 28,
+  EVENT_INSERT: 29,
+  EVENT_REFRESH: 30,
+  EVENT_READY: 31,
+  EVENT_CANCEL: 32,
+  EVENT_DELETE: 33,
+  EVENT_CHILD_CHANGED: 33,
+  EVENT_CHILD_CREATED: 34,
+  EVENT_CHILD_DELETED: 35,
+  EVENT_SCREEN_UNLOAD_START: 36,
+  EVENT_SCREEN_LOAD_START: 37,
+  EVENT_SCREEN_LOADED: 38,
+  EVENT_SCREEN_UNLOADED: 39,
+  EVENT_SIZE_CHANGED: 40,
+  EVENT_STYLE_CHANGED: 41,
+  EVENT_LAYOUT_CHANGED: 42,
+  EVENT_GET_SELF_SIZE: 43,
+  _EVENT_LAST: 44,
+  EVENT_PREPROCESS: 128
+};
+function registEvent(uid, eventType, fn) {
+  eventMap[uid] = eventMap[uid] || {};
+  eventMap[uid][eventType] = fn;
+}
+function unRegistEvent(uid, eventType) {
+  if (!eventType) {
+    delete eventMap[uid];
+  } else {
+    const obj = eventMap[uid];
+    obj && delete obj[eventType];
+  }
+}
+function fireEvent(targetUid, currentTargetUid, eventType, e) {
+  const obj = eventMap[currentTargetUid];
+  const target = getInstance(targetUid);
+  const currentTarget = getInstance(currentTargetUid);
+  if (obj) {
+    e.target = target;
+    e.currentTarget = currentTarget;
+    try {
+      obj[eventType].call(null, e);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+function handleEvent(comp, fn, type) {
+  if (fn) {
+    registEvent(comp.uid, type, fn);
+    comp.addEventListener(type);
+  } else {
+    unRegistEvent(comp.uid, type);
+    comp.removeEventListener(type);
+  }
+}
+globalThis.FIRE_QEVENT_CALLBACK = fireEvent;
 
 // src/render/react/core/style/color.js
 var builtinColor = {
@@ -18480,6 +18658,46 @@ function TransStyle(style2, result, compName) {
   return result;
 }
 
+// src/render/react/utils/helpers.ts
+function isValidUrl(str) {
+  if (!str)
+    return false;
+  try {
+    const url = new URL(str);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
+
+// src/render/react/core/style/post.js
+var path = __require("path");
+var fs = __require("fs");
+async function getImageBinary(url) {
+  const resp = await fetch(url, {});
+  const imageBuffer = await resp.arrayBuffer();
+  return imageBuffer;
+}
+function PostProcessStyle({ comp, styleSheet, styleType }) {
+  if (styleSheet["background-image"] !== void 0) {
+    let url = styleSheet["background-image"];
+    if (url === null) {
+      comp.setBackgroundImage(null, styleType);
+    } else if (!isValidUrl(url)) {
+      if (!path.isAbsolute(url)) {
+        url = path.resolve(__dirname, url);
+      }
+      fs.readFile(url, { encoding: "binary" }).then((data) => {
+        comp.setBackgroundImage(data.buffer, styleType);
+      }).catch((e) => {
+        console.log("setBackground error", e);
+      });
+    } else {
+      getImageBinary(url).then((buffer) => comp.setBackgroundImage(Buffer.from(buffer).buffer), styleType).catch(console.warn);
+    }
+  }
+}
+
 // src/render/react/core/style/index.js
 function NormalStyle(style2, result) {
   const keys = Object.keys(style2);
@@ -18503,11 +18721,17 @@ function NormalStyle(style2, result) {
     "border-width": ProcessPx,
     "border-color": ProcessColor,
     "border-side": ProcessEnum({
-      left: 4,
-      right: 8,
-      full: 15,
-      top: 2,
-      bottom: 1
+      "left": 4,
+      "right": 8,
+      "full": 15,
+      "top": 2,
+      "bottom": 1,
+      "top-right": 2 | 8,
+      "top-bottom": 2 | 1,
+      "top-left": 2 | 4,
+      "right-bottom": 8 | 1,
+      "right-left": 8 | 4,
+      "bottom-left": 1 | 4
     }),
     "outline-width": ProcessPx,
     "outline-color": ProcessColor,
@@ -18658,185 +18882,20 @@ StyleSheet.pipeline([
   MiscStyle,
   TransStyle
 ]);
-var style_default = StyleSheet;
-
-// src/render/react/core/reconciler/index.js
-var import_react_reconciler = __toESM(require_react_reconciler());
-var id = 1;
-var getUid = () => {
-  return String(id++);
-};
-var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
-};
-var HostConfig = {
-  now: Date.now,
-  getPublicInstance: (instance) => {
-    return instance;
-  },
-  getRootHostContext: () => {
-    let context = {
-      name: "rootnode"
-    };
-    return context;
-  },
-  prepareForCommit: () => {
-  },
-  resetAfterCommit: () => {
-  },
-  getChildHostContext: () => {
-    return {};
-  },
-  shouldSetTextContent: function(type, props) {
-    return false;
-    return typeof props.children === "string" || typeof props.children === "number";
-  },
-  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
-    const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
-    return instance;
-  },
-  createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
-    return null;
-  },
-  appendInitialChild: (parent, child) => {
-    parent.appendChild(child);
-  },
-  appendChild(parent, child) {
-    parent.appendChild(child);
-  },
-  finalizeInitialChildren: (yueElement, type, props) => {
-    return true;
-  },
-  insertBefore: (parent, child, beforeChild) => {
-    parent.insertBefore(child, beforeChild);
-  },
-  supportsMutation: true,
-  appendChildToContainer: function(container, child) {
-    container.add(child);
-  },
-  insertInContainerBefore: (container, child, beforeChild) => {
-    container.add(child);
-  },
-  removeChildFromContainer: (container, child) => {
-    container.delete(child);
-    if (child.close) {
-      child.close();
-    }
-  },
-  prepareUpdate(instance, oldProps, newProps) {
-    return true;
-  },
-  commitUpdate: function(instance, updatePayload, type, oldProps, newProps, finishedWork) {
-    const { commitUpdate } = getComponentByTagName(type);
-    return commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork);
-  },
-  commitTextUpdate(textInstance, oldText, newText) {
-    textInstance.setText(newText);
-  },
-  removeChild(parent, child) {
-    parent?.removeChild(child);
-    child?.close();
-    unRegistEvent(child.uid);
-    delete instanceMap[child.uid];
-  },
-  commitMount: function(instance, type, newProps, internalInstanceHandle) {
-    const { commitMount } = getComponentByTagName(type);
-    return commitMount(instance, newProps, internalInstanceHandle);
-  }
-};
-var reconciler_default = (0, import_react_reconciler.default)(HostConfig);
-
-// src/render/react/core/event/index.js
-var eventMap = {};
-var EVENTTYPE_MAP = {
-  EVENT_ALL: 0,
-  EVENT_PRESSED: 1,
-  EVENT_PRESSING: 2,
-  EVENT_PRESS_LOST: 3,
-  EVENT_SHORT_CLICKED: 4,
-  EVENT_LONG_PRESSED: 5,
-  EVENT_LONG_PRESSED_REPEAT: 6,
-  EVENT_CLICKED: 7,
-  EVENT_RELEASED: 8,
-  EVENT_SCROLL_BEGIN: 9,
-  EVENT_SCROLL_END: 10,
-  EVENT_SCROLL: 11,
-  EVENT_GESTURE: 12,
-  EVENT_KEY: 13,
-  EVENT_FOCUSED: 14,
-  EVENT_DEFOCUSED: 15,
-  EVENT_LEAVE: 16,
-  EVENT_HIT_TEST: 17,
-  EVENT_COVER_CHECK: 18,
-  EVENT_REFR_EXT_DRAW_SIZE: 19,
-  EVENT_DRAW_MAIN_BEGIN: 20,
-  EVENT_DRAW_MAIN: 21,
-  EVENT_DRAW_MAIN_END: 22,
-  EVENT_DRAW_POST_BEGIN: 23,
-  EVENT_DRAW_POST: 24,
-  EVENT_DRAW_POST_END: 25,
-  EVENT_DRAW_PART_BEGIN: 26,
-  EVENT_DRAW_PART_END: 27,
-  EVENT_VALUE_CHANGED: 28,
-  EVENT_INSERT: 29,
-  EVENT_REFRESH: 30,
-  EVENT_READY: 31,
-  EVENT_CANCEL: 32,
-  EVENT_DELETE: 33,
-  EVENT_CHILD_CHANGED: 33,
-  EVENT_CHILD_CREATED: 34,
-  EVENT_CHILD_DELETED: 35,
-  EVENT_SCREEN_UNLOAD_START: 36,
-  EVENT_SCREEN_LOAD_START: 37,
-  EVENT_SCREEN_LOADED: 38,
-  EVENT_SCREEN_UNLOADED: 39,
-  EVENT_SIZE_CHANGED: 40,
-  EVENT_STYLE_CHANGED: 41,
-  EVENT_LAYOUT_CHANGED: 42,
-  EVENT_GET_SELF_SIZE: 43,
-  _EVENT_LAST: 44,
-  EVENT_PREPROCESS: 128
-};
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
+  if (!styleSheet)
+    return;
+  styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
+  oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet];
+  const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
+  if (!maybeChange)
+    return;
+  styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
+  const result = StyleSheet.transform(styleSheet, compName);
+  const keys = Object.keys(result);
+  comp.nativeSetStyle(result, keys, keys.length, styleType, isInit);
+  PostProcessStyle({ comp, styleSheet, styleType });
 }
-function unRegistEvent(uid, eventType) {
-  if (!eventType) {
-    delete eventMap[uid];
-  } else {
-    const obj = eventMap[uid];
-    obj && delete obj[eventType];
-  }
-}
-function fireEvent(targetUid, currentTargetUid, eventType, e) {
-  const obj = eventMap[currentTargetUid];
-  const target = getInstance(targetUid);
-  const currentTarget = getInstance(currentTargetUid);
-  if (obj) {
-    e.target = target;
-    e.currentTarget = currentTarget;
-    try {
-      obj[eventType].call(null, e);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-}
-function handleEvent(comp, fn, type) {
-  if (fn) {
-    registEvent(comp.uid, type, fn);
-    comp.addEventListener(type);
-  } else {
-    unRegistEvent(comp.uid, type);
-    comp.removeEventListener(type);
-  }
-}
-globalThis.FIRE_QEVENT_CALLBACK = fireEvent;
 
 // src/render/react/components/config.js
 var components = /* @__PURE__ */ new Map();
@@ -18854,19 +18913,59 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
-  if (!styleSheet)
-    return;
-  styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
-  oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet];
-  const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
-  if (!maybeChange)
-    return;
-  styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
-  styleSheet = style_default.transform(styleSheet, compName);
-  const keys = Object.keys(styleSheet);
-  comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit);
-}
+var EAlignType = {
+  "ALIGN_DEFAULT": 0,
+  "ALIGN_TOP_LEFT": 1,
+  "ALIGN_TOP_MID": 2,
+  "ALIGN_TOP_RIGHT": 3,
+  "ALIGN_BOTTOM_LEFT": 4,
+  "ALIGN_BOTTOM_MID": 5,
+  "ALIGN_BOTTOM_RIGHT": 6,
+  "ALIGN_LEFT_MID": 7,
+  "ALIGN_RIGHT_MID": 8,
+  "ALIGN_CENTER": 9,
+  "ALIGN_OUT_TOP_LEFT": 10,
+  "ALIGN_OUT_TOP_MID": 11,
+  "ALIGN_OUT_TOP_RIGHT": 12,
+  "ALIGN_OUT_BOTTOM_LEFT": 13,
+  "ALIGN_OUT_BOTTOM_MID": 14,
+  "ALIGN_OUT_BOTTOM_RIGHT": 15,
+  "ALIGN_OUT_LEFT_TOP": 16,
+  "ALIGN_OUT_LEFT_MID": 17,
+  "ALIGN_OUT_LEFT_BOTTOM": 18,
+  "ALIGN_OUT_RIGHT_TOP": 19,
+  "ALIGN_OUT_RIGHT_MID": 20,
+  "ALIGN_OUT_RIGHT_BOTTOM": 21
+};
+var STYLETYPE = {
+  PART_MAIN: 0,
+  PART_SCROLLBAR: 65536,
+  PART_INDICATOR: 131072,
+  PART_KNOB: 196608,
+  PART_SELECTED: 262144,
+  PART_ITEMS: 327680,
+  PART_TICKS: 393216,
+  PART_CURSOR: 458752,
+  STATE_DEFAULT: 0,
+  STATE_CHECKED: 1,
+  STATE_FOCUSED: 2,
+  STATE_FOCUS_KEY: 4,
+  STATE_EDITED: 8,
+  STATE_HOVERED: 16,
+  STATE_PRESSED: 32,
+  STATE_SCROLLED: 64,
+  STATE_DISABLED: 128
+};
+var EDropdownlistDirection = {
+  "none": 0,
+  "left": 1 << 0,
+  "right": 1 << 1,
+  "top": 1 << 2,
+  "bottom": 1 << 3,
+  "horizontal": 1 << 0 | 1 << 1,
+  "vertical": 1 << 2 | 1 << 3,
+  "all": 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
+};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -19203,22 +19302,12 @@ var TextConfig = class {
   }
 };
 
-// src/render/react/utils/helpers.ts
-function isValidUrl(str) {
-  try {
-    const url = new URL(str);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return false;
-  }
-}
-
 // src/render/react/components/Image/comp.js
-var fs = __require("fs");
-var path = __require("path");
+var fs2 = __require("fs");
+var path2 = __require("path");
 var bridge4 = globalThis.SJSJSBridge;
 var NativeImage = bridge4.NativeRender.NativeComponents.Image;
-async function getImageBinary(url) {
+async function getImageBinary2(url) {
   const resp = await fetch(url, {});
   const imageBuffer = await resp.arrayBuffer();
   return imageBuffer;
@@ -19243,16 +19332,16 @@ function setImageProps(comp, newProps, oldProps) {
     set src(url) {
       if (url && url !== oldProps.src) {
         if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(__dirname, url);
+          if (!path2.isAbsolute(url)) {
+            url = path2.resolve(__dirname, url);
           }
-          fs.readFile(url, { encoding: "binary" }).then((data) => {
+          fs2.readFile(url, { encoding: "binary" }).then((data) => {
             comp.setImageBinary(data.buffer);
           }).catch((e) => {
             console.log("setImage error", e);
           });
         } else {
-          getImageBinary(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
+          getImageBinary2(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
         }
       }
     },
@@ -20102,7 +20191,16 @@ function setCheckboxProps(comp, newProps, oldProps) {
       }
     },
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: 0, oldStyleSheet: oldProps.style });
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+    },
+    set checkedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle });
+    },
+    set indicatorStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.indicatorStyle });
+    },
+    set indicatorCheckedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR | STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.indicatorCheckedStyle });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -20200,6 +20298,128 @@ var CheckboxConfig = class {
   }
 };
 
+// src/render/react/components/Dropdownlist/comp.js
+var bridge12 = globalThis.SJSJSBridge;
+var NativeDropdownlist = bridge12.NativeRender.NativeComponents.Dropdownlist;
+function setListProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Dropdownlist", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set items(items) {
+      if (items !== oldProps.items && Array.isArray(items)) {
+        comp.setItems(items, items.length);
+      }
+    },
+    set value(value) {
+      if (value !== oldProps.value) {
+        comp.setValue(value);
+      }
+    },
+    set text(text) {
+      if (text !== oldProps.text) {
+        comp.setText(text);
+      }
+    },
+    set direction(direction) {
+      if (direction !== oldProps.direction) {
+        comp.setDir(direction);
+      }
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var DropdownlistComp = class extends NativeDropdownlist {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setListProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+__publicField(DropdownlistComp, "tagName", "Dropdownlist");
+
+// src/render/react/components/Dropdownlist/config.js
+var DropdownlistConfig = class {
+  tagName = "Dropdownlist";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new DropdownlistComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -20215,8 +20435,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge12 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge12.NativeRender.Animate;
+var bridge13 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge13.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -20240,42 +20460,66 @@ var Textarea = registerComponent(new TextareaConfig());
 var Input = registerComponent(new InputConfig());
 var Keyboard = registerComponent(new KeyboardConfig());
 var Checkbox = registerComponent(new CheckboxConfig());
+var Dropdownlist = registerComponent(new DropdownlistConfig());
 var Render = Renderer;
 
-// test/checkbox/1/index.jsx
+// test/dropdownlist/2/index.jsx
 var import_react = __toESM(require_react());
+var items1 = [
+  "Apple",
+  "Banana",
+  "Orange",
+  "Cherry"
+];
 function App() {
+  const [list, setList] = (0, import_react.useState)(items1);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Checkbox, {
-    checked: false,
-    text: "Apple",
-    onChange: (e) => console.log("checkbox1 checked: ", e.checked)
-  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
-    checked: false,
-    text: "Banana",
-    onChange: (e) => console.log("checkbox2 checked: ", e.checked)
-  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
-    checked: false,
-    disabled: true,
-    text: "Lemon",
-    onChange: (e) => console.log("checkbox3 checked: ", e.checked)
-  }), /* @__PURE__ */ import_react.default.createElement(Checkbox, {
-    checked: false,
-    text: `Melon
-and a new line`,
-    onChange: (e) => console.log("checkbox4 checked: ", e.checked)
+  }, /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+    align: {
+      type: EAlignType.ALIGN_TOP_MID,
+      pos: [0, 10]
+    },
+    items: list,
+    onChange: (e) => {
+      console.log(e.value);
+    }
+  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+    align: {
+      type: EAlignType.ALIGN_BOTTOM_MID,
+      pos: [0, -10]
+    },
+    items: list,
+    onChange: (e) => {
+      console.log(e.value);
+    },
+    direction: EDropdownlistDirection.up
+  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+    align: {
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [10, 0]
+    },
+    items: list,
+    onChange: (e) => {
+      console.log(e.value);
+    },
+    direction: EDropdownlistDirection.right
+  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+    align: {
+      type: EAlignType.ALIGN_RIGHT_MID,
+      pos: [-10, 0]
+    },
+    items: list,
+    onChange: (e) => {
+      console.log(e.value);
+    },
+    direction: EDropdownlistDirection.left
   }));
 }
 var style = {
   window: {
     "width": "480px",
-    "height": "320px",
-    "display": "flex",
-    "justify-content": "center",
-    "align-items": "flex-start",
-    "flex-direction": "column",
-    "align-content": "center"
+    "height": "320px"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

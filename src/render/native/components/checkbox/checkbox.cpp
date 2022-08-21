@@ -6,6 +6,7 @@ Checkbox::Checkbox(std::string uid, lv_obj_t* parent): BasicComponent() {
     this->uid = uid;
     this->instance = lv_checkbox_create(parent != nullptr ? parent : lv_scr_act());
     
+    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 };
@@ -28,4 +29,7 @@ void Checkbox::setDisabled (bool payload) {
     } else {
         lv_obj_clear_state(this->instance, LV_STATE_DISABLED);
     }
+};
+
+void Checkbox::initCompStyle (int32_t type) {
 };

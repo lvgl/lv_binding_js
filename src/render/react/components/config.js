@@ -1,8 +1,8 @@
 
-import StyleSheet from '../core/style'
 
 export { handleEvent } from '../core/event'
 export { unRegistEvent, EVENTTYPE_MAP } from '../core/event'
+export { setStyle } from '../core/style'
 
 const components = new Map;
 
@@ -35,21 +35,6 @@ export function registerComponents(
     })
 }
 
-export function setStyle ({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
-    if (!styleSheet) return
-    styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet]
-    oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet]
-    const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i])
-
-    if (!maybeChange) return
-    styleSheet = Object.assign({}, defaultStyle, ...styleSheet)
-    styleSheet = StyleSheet.transform(styleSheet, compName)
-
-    const keys = Object.keys(styleSheet)
-    
-    comp.nativeSetStyle(styleSheet, keys, keys.length, styleType, isInit)
-}
-
 export const EAlignType = {
     'ALIGN_DEFAULT': 0,
     'ALIGN_TOP_LEFT': 1,
@@ -74,6 +59,38 @@ export const EAlignType = {
     'ALIGN_OUT_RIGHT_TOP': 19,
     'ALIGN_OUT_RIGHT_MID': 20,
     'ALIGN_OUT_RIGHT_BOTTOM': 21
+}
+
+export const STYLETYPE = {
+    PART_MAIN: 0x000000,
+    PART_SCROLLBAR: 0x010000,
+    PART_INDICATOR: 0x020000,
+    PART_KNOB: 0x030000,
+    PART_SELECTED: 0x040000,
+    PART_ITEMS: 0x050000,
+    PART_TICKS: 0x060000,
+    PART_CURSOR: 0x070000,
+
+    STATE_DEFAULT: 0x0000,
+    STATE_CHECKED: 0x0001,
+    STATE_FOCUSED: 0x0002,
+    STATE_FOCUS_KEY: 0x0004,
+    STATE_EDITED: 0x0008,
+    STATE_HOVERED: 0x0010,
+    STATE_PRESSED: 0x0020,
+    STATE_SCROLLED: 0x0040,
+    STATE_DISABLED: 0x0080
+}
+
+export const EDropdownlistDirection = {
+    'none': 0x00,
+    'left': 1 << 0,
+    'right':1 << 1,
+    'top': 1 << 2,
+    'bottom': 1 << 3,
+    'horizontal': 1 << 0 | 1 << 1,
+    'vertical': 1 << 2 | 1 << 3,
+    'all': 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
 }
 
 export const styleGetterProp = ['height', 'width', 'left', 'top']

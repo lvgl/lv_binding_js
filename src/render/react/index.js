@@ -10,6 +10,7 @@ import TextareaConfig from './components/Textarea/config';
 import InputConfig from './components/Input/config';
 import KeyboardConfig from './components/Keyboard/config';
 import CheckboxConfig from './components/Checkbox/config';
+import DropdownlistConfig from './components/Dropdownlist/config';
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -25,8 +26,9 @@ export const Textarea = registerComponent(new TextareaConfig());
 export const Input = registerComponent(new InputConfig());
 export const Keyboard = registerComponent(new KeyboardConfig());
 export const Checkbox = registerComponent(new CheckboxConfig());
+export const Dropdownlist = registerComponent(new DropdownlistConfig());
 
-export { EAlignType } from './components/config'
+export { EAlignType, EDropdownlistDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'
 
 export const Render = Renderer;

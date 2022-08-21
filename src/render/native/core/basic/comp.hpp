@@ -19,11 +19,13 @@ enum ECOMP_TYPE {
   COMP_TYPE_SWITCH,
   COMP_TYPE_TEXTAREA,
   COMP_TYPE_CHECKBOX,
+  COMP_TYPE_DROPDOWNLIST,
 };
 
 #include "native/core/event/event.hpp"
 #include "native/core/style/style.hpp"
 #include "native/core/utils/utils.hpp"
+#include "native/core/img/img.hpp"
 
 class BasicComponent {
   public:
@@ -34,10 +36,12 @@ class BasicComponent {
     std::string uid;
 
     std::unordered_map<int32_t, lv_style_t*> style_map;
+    std::unordered_map<int32_t, lv_img_dsc_t_1*> image_desc_map;
 
     lv_style_transition_dsc_t trans;
     lv_style_prop_t* transProps = nullptr;
 
+    bool has_setstyle;
     bool listening = false;
     ECOMP_TYPE type;
 
@@ -49,6 +53,7 @@ class BasicComponent {
     void eventCallback (lv_obj_t * obj, lv_event_t event);
     static void EventCallback (lv_event_t * event);
     void setTransition (JSContext* ctx, JSValue obj, lv_style_t* style);
+    void setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type);
   
     void initStyle (int32_t type);
     virtual void initCompStyle (int32_t type);

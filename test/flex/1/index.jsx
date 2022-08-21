@@ -57,7 +57,8 @@ const style = {
         'border-radius': 4,
         'padding': '4px',
         'border-width': '2px',
-        'border-color': 'grey'
+        'border-color': 'grey',
+        'border-side': 'bottom-left'
     },
     button1: {
         'width': '100px',

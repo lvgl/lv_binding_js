@@ -531,11 +531,11 @@ var require_react_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -7432,11 +7432,11 @@ var require_react_reconciler_development = __commonJS({
         function describeComponentFrame(name, source, ownerName) {
           var sourceInfo = "";
           if (source) {
-            var path2 = source.fileName;
-            var fileName = path2.replace(BEFORE_SLASH_RE, "");
+            var path3 = source.fileName;
+            var fileName = path3.replace(BEFORE_SLASH_RE, "");
             {
               if (/^index\./.test(fileName)) {
-                var match = path2.match(BEFORE_SLASH_RE);
+                var match = path3.match(BEFORE_SLASH_RE);
                 if (match) {
                   var pathBeforeSlash = match[1];
                   if (pathBeforeSlash) {
@@ -17863,34 +17863,34 @@ For more info, visit https://fb.me/react-mock-scheduler`);
         var scheduleUpdate = null;
         var setSuspenseHandler = null;
         {
-          var copyWithSetImpl = function(obj, path2, idx, value) {
-            if (idx >= path2.length) {
+          var copyWithSetImpl = function(obj, path3, idx, value) {
+            if (idx >= path3.length) {
               return value;
             }
-            var key = path2[idx];
+            var key = path3[idx];
             var updated = Array.isArray(obj) ? obj.slice() : _assign({}, obj);
-            updated[key] = copyWithSetImpl(obj[key], path2, idx + 1, value);
+            updated[key] = copyWithSetImpl(obj[key], path3, idx + 1, value);
             return updated;
           };
-          var copyWithSet = function(obj, path2, value) {
-            return copyWithSetImpl(obj, path2, 0, value);
+          var copyWithSet = function(obj, path3, value) {
+            return copyWithSetImpl(obj, path3, 0, value);
           };
-          overrideHookState = function(fiber, id2, path2, value) {
+          overrideHookState = function(fiber, id2, path3, value) {
             var currentHook2 = fiber.memoizedState;
             while (currentHook2 !== null && id2 > 0) {
               currentHook2 = currentHook2.next;
               id2--;
             }
             if (currentHook2 !== null) {
-              var newState = copyWithSet(currentHook2.memoizedState, path2, value);
+              var newState = copyWithSet(currentHook2.memoizedState, path3, value);
               currentHook2.memoizedState = newState;
               currentHook2.baseState = newState;
               fiber.memoizedProps = _assign({}, fiber.memoizedProps);
               scheduleWork(fiber, Sync);
             }
           };
-          overrideProps = function(fiber, path2, value) {
-            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path2, value);
+          overrideProps = function(fiber, path3, value) {
+            fiber.pendingProps = copyWithSet(fiber.memoizedProps, path3, value);
             if (fiber.alternate) {
               fiber.alternate.pendingProps = fiber.pendingProps;
             }
@@ -18100,6 +18100,184 @@ var require_react_reconciler = __commonJS({
 // src/render/react/index.js
 var react = __toESM(require_react());
 
+// src/render/react/core/reconciler/index.js
+var import_react_reconciler = __toESM(require_react_reconciler());
+var id = 1;
+var getUid = () => {
+  return String(id++);
+};
+var instanceMap = /* @__PURE__ */ new Map();
+var getInstance = (uid) => {
+  return instanceMap[uid];
+};
+var HostConfig = {
+  now: Date.now,
+  getPublicInstance: (instance) => {
+    return instance;
+  },
+  getRootHostContext: () => {
+    let context = {
+      name: "rootnode"
+    };
+    return context;
+  },
+  prepareForCommit: () => {
+  },
+  resetAfterCommit: () => {
+  },
+  getChildHostContext: () => {
+    return {};
+  },
+  shouldSetTextContent: function(type, props) {
+    return false;
+    return typeof props.children === "string" || typeof props.children === "number";
+  },
+  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
+    const { createInstance } = getComponentByTagName(type);
+    const uid = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
+    instanceMap[uid] = instance;
+    return instance;
+  },
+  createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
+    return null;
+  },
+  appendInitialChild: (parent, child) => {
+    parent.appendChild(child);
+  },
+  appendChild(parent, child) {
+    parent.appendChild(child);
+  },
+  finalizeInitialChildren: (yueElement, type, props) => {
+    return true;
+  },
+  insertBefore: (parent, child, beforeChild) => {
+    parent.insertBefore(child, beforeChild);
+  },
+  supportsMutation: true,
+  appendChildToContainer: function(container, child) {
+    container.add(child);
+  },
+  insertInContainerBefore: (container, child, beforeChild) => {
+    container.add(child);
+  },
+  removeChildFromContainer: (container, child) => {
+    container.delete(child);
+    if (child.close) {
+      child.close();
+    }
+  },
+  prepareUpdate(instance, oldProps, newProps) {
+    return true;
+  },
+  commitUpdate: function(instance, updatePayload, type, oldProps, newProps, finishedWork) {
+    const { commitUpdate } = getComponentByTagName(type);
+    return commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork);
+  },
+  commitTextUpdate(textInstance, oldText, newText) {
+    textInstance.setText(newText);
+  },
+  removeChild(parent, child) {
+    parent?.removeChild(child);
+    child?.close();
+    unRegistEvent(child.uid);
+    delete instanceMap[child.uid];
+  },
+  commitMount: function(instance, type, newProps, internalInstanceHandle) {
+    const { commitMount } = getComponentByTagName(type);
+    return commitMount(instance, newProps, internalInstanceHandle);
+  }
+};
+var reconciler_default = (0, import_react_reconciler.default)(HostConfig);
+
+// src/render/react/core/event/index.js
+var eventMap = {};
+var EVENTTYPE_MAP = {
+  EVENT_ALL: 0,
+  EVENT_PRESSED: 1,
+  EVENT_PRESSING: 2,
+  EVENT_PRESS_LOST: 3,
+  EVENT_SHORT_CLICKED: 4,
+  EVENT_LONG_PRESSED: 5,
+  EVENT_LONG_PRESSED_REPEAT: 6,
+  EVENT_CLICKED: 7,
+  EVENT_RELEASED: 8,
+  EVENT_SCROLL_BEGIN: 9,
+  EVENT_SCROLL_END: 10,
+  EVENT_SCROLL: 11,
+  EVENT_GESTURE: 12,
+  EVENT_KEY: 13,
+  EVENT_FOCUSED: 14,
+  EVENT_DEFOCUSED: 15,
+  EVENT_LEAVE: 16,
+  EVENT_HIT_TEST: 17,
+  EVENT_COVER_CHECK: 18,
+  EVENT_REFR_EXT_DRAW_SIZE: 19,
+  EVENT_DRAW_MAIN_BEGIN: 20,
+  EVENT_DRAW_MAIN: 21,
+  EVENT_DRAW_MAIN_END: 22,
+  EVENT_DRAW_POST_BEGIN: 23,
+  EVENT_DRAW_POST: 24,
+  EVENT_DRAW_POST_END: 25,
+  EVENT_DRAW_PART_BEGIN: 26,
+  EVENT_DRAW_PART_END: 27,
+  EVENT_VALUE_CHANGED: 28,
+  EVENT_INSERT: 29,
+  EVENT_REFRESH: 30,
+  EVENT_READY: 31,
+  EVENT_CANCEL: 32,
+  EVENT_DELETE: 33,
+  EVENT_CHILD_CHANGED: 33,
+  EVENT_CHILD_CREATED: 34,
+  EVENT_CHILD_DELETED: 35,
+  EVENT_SCREEN_UNLOAD_START: 36,
+  EVENT_SCREEN_LOAD_START: 37,
+  EVENT_SCREEN_LOADED: 38,
+  EVENT_SCREEN_UNLOADED: 39,
+  EVENT_SIZE_CHANGED: 40,
+  EVENT_STYLE_CHANGED: 41,
+  EVENT_LAYOUT_CHANGED: 42,
+  EVENT_GET_SELF_SIZE: 43,
+  _EVENT_LAST: 44,
+  EVENT_PREPROCESS: 128
+};
+function registEvent(uid, eventType, fn) {
+  eventMap[uid] = eventMap[uid] || {};
+  eventMap[uid][eventType] = fn;
+}
+function unRegistEvent(uid, eventType) {
+  if (!eventType) {
+    delete eventMap[uid];
+  } else {
+    const obj = eventMap[uid];
+    obj && delete obj[eventType];
+  }
+}
+function fireEvent(targetUid, currentTargetUid, eventType, e) {
+  const obj = eventMap[currentTargetUid];
+  const target = getInstance(targetUid);
+  const currentTarget = getInstance(currentTargetUid);
+  if (obj) {
+    e.target = target;
+    e.currentTarget = currentTarget;
+    try {
+      obj[eventType].call(null, e);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+function handleEvent(comp, fn, type) {
+  if (fn) {
+    registEvent(comp.uid, type, fn);
+    comp.addEventListener(type);
+  } else {
+    unRegistEvent(comp.uid, type);
+    comp.removeEventListener(type);
+  }
+}
+globalThis.FIRE_QEVENT_CALLBACK = fireEvent;
+
 // src/render/react/core/style/color.js
 var builtinColor = {
   "red": 16007990,
@@ -18121,7 +18299,8 @@ var builtinColor = {
   "brown": 7951688,
   "blue-grey": 6323595,
   "grey": 10395294,
-  "white": 16777215
+  "white": 16777215,
+  "black": 0
 };
 var colorTransform = (data) => {
   if (builtinColor[data]) {
@@ -18314,7 +18493,7 @@ function OpacityStyle(style2, result, compName) {
       result["opacity"] = NormalizeOpacity(style2["opacity"]);
     }
   } else if (style2["border-opacity"]) {
-    result["opacity"] = NormalizeOpacity(style2["opacity"]);
+    result["border-opacity"] = NormalizeOpacity(style2["border-opacity"]);
   } else if (style2["outline-opacity"]) {
     result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
   } else if (style2["recolor-opacity"] && compName === "Image") {
@@ -18479,6 +18658,46 @@ function TransStyle(style2, result, compName) {
   return result;
 }
 
+// src/render/react/utils/helpers.ts
+function isValidUrl(str) {
+  if (!str)
+    return false;
+  try {
+    const url = new URL(str);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
+
+// src/render/react/core/style/post.js
+var path = __require("path");
+var fs = __require("fs");
+async function getImageBinary(url) {
+  const resp = await fetch(url, {});
+  const imageBuffer = await resp.arrayBuffer();
+  return imageBuffer;
+}
+function PostProcessStyle({ comp, styleSheet, styleType }) {
+  if (styleSheet["background-image"] !== void 0) {
+    let url = styleSheet["background-image"];
+    if (url === null) {
+      comp.setBackgroundImage(null, styleType);
+    } else if (!isValidUrl(url)) {
+      if (!path.isAbsolute(url)) {
+        url = path.resolve(__dirname, url);
+      }
+      fs.readFile(url, { encoding: "binary" }).then((data) => {
+        comp.setBackgroundImage(data.buffer, styleType);
+      }).catch((e) => {
+        console.log("setBackground error", e);
+      });
+    } else {
+      getImageBinary(url).then((buffer) => comp.setBackgroundImage(Buffer.from(buffer).buffer), styleType).catch(console.warn);
+    }
+  }
+}
+
 // src/render/react/core/style/index.js
 function NormalStyle(style2, result) {
   const keys = Object.keys(style2);
@@ -18502,17 +18721,25 @@ function NormalStyle(style2, result) {
     "border-width": ProcessPx,
     "border-color": ProcessColor,
     "border-side": ProcessEnum({
-      left: 4,
-      right: 8,
-      full: 15,
-      top: 2,
-      bottom: 1
+      "left": 4,
+      "right": 8,
+      "full": 15,
+      "top": 2,
+      "bottom": 1,
+      "top-right": 2 | 8,
+      "top-bottom": 2 | 1,
+      "top-left": 2 | 4,
+      "right-bottom": 8 | 1,
+      "right-left": 8 | 4,
+      "bottom-left": 1 | 4
     }),
     "outline-width": ProcessPx,
     "outline-color": ProcessColor,
     "outline-padding": ProcessPxOrPercent,
     "text-color": ProcessColor,
-    "letter-spacing": ProcessPx
+    "letter-spacing": ProcessPx,
+    "row-spacing": ProcessPx,
+    "column-spacing": ProcessPx
   };
   keys.forEach((key) => {
     if (obj[key]) {
@@ -18589,7 +18816,7 @@ function FlexStyle(style2, result) {
   let trackCrossPlace = 0;
   const justifyContent = style2["justify-content"];
   const alignItems = style2["align-items"];
-  const alignContent = style2["align-content"] || "center";
+  const alignContent = style2["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
   const flexAlignObj = {
     "flex-start": 0,
     "flex-end": 1,
@@ -18655,185 +18882,20 @@ StyleSheet.pipeline([
   MiscStyle,
   TransStyle
 ]);
-var style_default = StyleSheet;
-
-// src/render/react/core/reconciler/index.js
-var import_react_reconciler = __toESM(require_react_reconciler());
-var id = 1;
-var getUid = () => {
-  return String(id++);
-};
-var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
-};
-var HostConfig = {
-  now: Date.now,
-  getPublicInstance: (instance) => {
-    return instance;
-  },
-  getRootHostContext: () => {
-    let context = {
-      name: "rootnode"
-    };
-    return context;
-  },
-  prepareForCommit: () => {
-  },
-  resetAfterCommit: () => {
-  },
-  getChildHostContext: () => {
-    return {};
-  },
-  shouldSetTextContent: function(type, props) {
-    return false;
-    return typeof props.children === "string" || typeof props.children === "number";
-  },
-  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
-    const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
-    return instance;
-  },
-  createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
-    return null;
-  },
-  appendInitialChild: (parent, child) => {
-    parent.appendChild(child);
-  },
-  appendChild(parent, child) {
-    parent.appendChild(child);
-  },
-  finalizeInitialChildren: (yueElement, type, props) => {
-    return true;
-  },
-  insertBefore: (parent, child, beforeChild) => {
-    parent.insertBefore(child, beforeChild);
-  },
-  supportsMutation: true,
-  appendChildToContainer: function(container, child) {
-    container.add(child);
-  },
-  insertInContainerBefore: (container, child, beforeChild) => {
-    container.add(child);
-  },
-  removeChildFromContainer: (container, child) => {
-    container.delete(child);
-    if (child.close) {
-      child.close();
-    }
-  },
-  prepareUpdate(instance, oldProps, newProps) {
-    return true;
-  },
-  commitUpdate: function(instance, updatePayload, type, oldProps, newProps, finishedWork) {
-    const { commitUpdate } = getComponentByTagName(type);
-    return commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork);
-  },
-  commitTextUpdate(textInstance, oldText, newText) {
-    textInstance.setText(newText);
-  },
-  removeChild(parent, child) {
-    parent?.removeChild(child);
-    child?.close();
-    unRegistEvent(child.uid);
-    delete instanceMap[child.uid];
-  },
-  commitMount: function(instance, type, newProps, internalInstanceHandle) {
-    const { commitMount } = getComponentByTagName(type);
-    return commitMount(instance, newProps, internalInstanceHandle);
-  }
-};
-var reconciler_default = (0, import_react_reconciler.default)(HostConfig);
-
-// src/render/react/core/event/index.js
-var eventMap = {};
-var EVENTTYPE_MAP = {
-  EVENT_ALL: 0,
-  EVENT_PRESSED: 1,
-  EVENT_PRESSING: 2,
-  EVENT_PRESS_LOST: 3,
-  EVENT_SHORT_CLICKED: 4,
-  EVENT_LONG_PRESSED: 5,
-  EVENT_LONG_PRESSED_REPEAT: 6,
-  EVENT_CLICKED: 7,
-  EVENT_RELEASED: 8,
-  EVENT_SCROLL_BEGIN: 9,
-  EVENT_SCROLL_END: 10,
-  EVENT_SCROLL: 11,
-  EVENT_GESTURE: 12,
-  EVENT_KEY: 13,
-  EVENT_FOCUSED: 14,
-  EVENT_DEFOCUSED: 15,
-  EVENT_LEAVE: 16,
-  EVENT_HIT_TEST: 17,
-  EVENT_COVER_CHECK: 18,
-  EVENT_REFR_EXT_DRAW_SIZE: 19,
-  EVENT_DRAW_MAIN_BEGIN: 20,
-  EVENT_DRAW_MAIN: 21,
-  EVENT_DRAW_MAIN_END: 22,
-  EVENT_DRAW_POST_BEGIN: 23,
-  EVENT_DRAW_POST: 24,
-  EVENT_DRAW_POST_END: 25,
-  EVENT_DRAW_PART_BEGIN: 26,
-  EVENT_DRAW_PART_END: 27,
-  EVENT_VALUE_CHANGED: 28,
-  EVENT_INSERT: 29,
-  EVENT_REFRESH: 30,
-  EVENT_READY: 31,
-  EVENT_CANCEL: 32,
-  EVENT_DELETE: 33,
-  EVENT_CHILD_CHANGED: 33,
-  EVENT_CHILD_CREATED: 34,
-  EVENT_CHILD_DELETED: 35,
-  EVENT_SCREEN_UNLOAD_START: 36,
-  EVENT_SCREEN_LOAD_START: 37,
-  EVENT_SCREEN_LOADED: 38,
-  EVENT_SCREEN_UNLOADED: 39,
-  EVENT_SIZE_CHANGED: 40,
-  EVENT_STYLE_CHANGED: 41,
-  EVENT_LAYOUT_CHANGED: 42,
-  EVENT_GET_SELF_SIZE: 43,
-  _EVENT_LAST: 44,
-  EVENT_PREPROCESS: 128
-};
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
+  if (!styleSheet)
+    return;
+  styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
+  oldStyleSheet = Array.isArray(oldStyleSheet) ? oldStyleSheet : [oldStyleSheet];
+  const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
+  if (!maybeChange)
+    return;
+  styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
+  const result = StyleSheet.transform(styleSheet, compName);
+  const keys = Object.keys(result);
+  comp.nativeSetStyle(result, keys, keys.length, styleType, isInit);
+  PostProcessStyle({ comp, styleSheet, styleType });
 }
-function unRegistEvent(uid, eventType) {
-  if (!eventType) {
-    delete eventMap[uid];
-  } else {
-    const obj = eventMap[uid];
-    obj && delete obj[eventType];
-  }
-}
-function fireEvent(targetUid, currentTargetUid, eventType, e) {
-  const obj = eventMap[currentTargetUid];
-  const target = getInstance(targetUid);
-  const currentTarget = getInstance(currentTargetUid);
-  if (obj) {
-    e.target = target;
-    e.currentTarget = currentTarget;
-    try {
-      obj[eventType].call(null, e);
-    } catch (err) {
-      console.log(err);
-    }
-  }
-}
-function handleEvent(comp, fn, type) {
-  if (fn) {
-    registEvent(comp.uid, type, fn);
-    comp.addEventListener(type);
-  } else {
-    unRegistEvent(comp.uid, type);
-    comp.removeEventListener(type);
-  }
-}
-globalThis.FIRE_QEVENT_CALLBACK = fireEvent;
 
 // src/render/react/components/config.js
 var components = /* @__PURE__ */ new Map();
@@ -18850,19 +18912,6 @@ function registerComponent(config) {
   }
   components.set(config.tagName, config);
   return config.tagName;
-}
-function setStyle(comp, obj, compName, type, oldObj, isInit = true) {
-  if (!obj)
-    return;
-  obj = Array.isArray(obj) ? obj : [obj];
-  oldObj = Array.isArray(oldObj) ? oldObj : [oldObj];
-  const maybeChange = obj.some((item, i) => item !== oldObj[i]);
-  if (!maybeChange)
-    return;
-  obj = obj.map((item) => style_default.transform(item, compName));
-  obj = Object.assign(...obj);
-  const keys = Object.keys(obj);
-  comp.nativeSetStyle(obj, keys, keys.length, type, isInit);
 }
 var EAlignType = {
   "ALIGN_DEFAULT": 0,
@@ -18888,6 +18937,25 @@ var EAlignType = {
   "ALIGN_OUT_RIGHT_MID": 20,
   "ALIGN_OUT_RIGHT_BOTTOM": 21
 };
+var STYLETYPE = {
+  PART_MAIN: 0,
+  PART_SCROLLBAR: 65536,
+  PART_INDICATOR: 131072,
+  PART_KNOB: 196608,
+  PART_SELECTED: 262144,
+  PART_ITEMS: 327680,
+  PART_TICKS: 393216,
+  PART_CURSOR: 458752,
+  STATE_DEFAULT: 0,
+  STATE_CHECKED: 1,
+  STATE_FOCUSED: 2,
+  STATE_FOCUS_KEY: 4,
+  STATE_EDITED: 8,
+  STATE_HOVERED: 16,
+  STATE_PRESSED: 32,
+  STATE_SCROLLED: 64,
+  STATE_DISABLED: 128
+};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -18896,10 +18964,10 @@ var NativeView = bridge.NativeRender.NativeComponents.View;
 function setViewProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "View", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "View", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "View", 32, oldProps.onPressedStyle);
+      setStyle({ comp, styleSheet, compName: "View", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -18917,7 +18985,7 @@ function setViewProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
         return;
       comp.align(type, pos);
     },
@@ -18926,9 +18994,9 @@ function setViewProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -18972,7 +19040,7 @@ var ViewComp = class extends NativeView {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "View", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
   }
 };
 
@@ -19012,10 +19080,10 @@ var NativeComp = bridge2.NativeRender.NativeComponents.Window;
 function setWindowProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Window", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Window", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Window", 32, oldProps.onPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Window", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set title(title) {
       if (oldProps.title != title) {
@@ -19069,7 +19137,7 @@ var Window = class extends NativeComp {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Window", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false });
   }
 };
 
@@ -19118,10 +19186,10 @@ function setTextProps(comp, newProps, oldProps) {
       }
     },
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Text", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Text", 32, oldProps.onPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Text", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -19139,7 +19207,7 @@ function setTextProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
         return;
       comp.align(type, pos);
     },
@@ -19148,9 +19216,9 @@ function setTextProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19190,7 +19258,7 @@ var TextComp = class extends NativeText {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Text", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
   }
 };
 
@@ -19224,22 +19292,12 @@ var TextConfig = class {
   }
 };
 
-// src/render/react/utils/helpers.ts
-function isValidUrl(str) {
-  try {
-    const url = new URL(str);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch (_) {
-    return false;
-  }
-}
-
 // src/render/react/components/Image/comp.js
-var fs = __require("fs");
-var path = __require("path");
+var fs2 = __require("fs");
+var path2 = __require("path");
 var bridge4 = globalThis.SJSJSBridge;
 var NativeImage = bridge4.NativeRender.NativeComponents.Image;
-async function getImageBinary(url) {
+async function getImageBinary2(url) {
   const resp = await fetch(url, {});
   const imageBuffer = await resp.arrayBuffer();
   return imageBuffer;
@@ -19247,7 +19305,7 @@ async function getImageBinary(url) {
 function setImageProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Image", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Image", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -19264,16 +19322,16 @@ function setImageProps(comp, newProps, oldProps) {
     set src(url) {
       if (url && url !== oldProps.src) {
         if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(__dirname, url);
+          if (!path2.isAbsolute(url)) {
+            url = path2.resolve(__dirname, url);
           }
-          fs.readFile(url, { encoding: "binary" }).then((data) => {
+          fs2.readFile(url, { encoding: "binary" }).then((data) => {
             comp.setImageBinary(data.buffer);
           }).catch((e) => {
             console.log("setImage error", e);
           });
         } else {
-          getImageBinary(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
+          getImageBinary2(url).then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer)).catch(console.warn);
         }
       }
     },
@@ -19290,9 +19348,9 @@ function setImageProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19332,7 +19390,7 @@ var ImageComp = class extends NativeImage {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Image", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
   }
 };
 __publicField(ImageComp, "tagName", "Image");
@@ -19372,10 +19430,10 @@ var NativeButton = bridge5.NativeRender.NativeComponents.Button;
 function setButtonProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Button", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Button", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Button", 32, oldProps.onPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Button", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set onClick(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -19393,7 +19451,7 @@ function setButtonProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type)
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
         return;
       comp.align(type, pos);
     },
@@ -19402,9 +19460,9 @@ function setButtonProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19446,7 +19504,7 @@ var ButtonComp = class extends NativeButton {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Button", type, null, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
   }
 };
 __publicField(ButtonComp, "tagName", "Button");
@@ -19486,28 +19544,28 @@ var NativeSlider = bridge6.NativeRender.NativeComponents.Slider;
 function setSliderProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set scrollbarStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 65536, oldProps.scrollbarStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 65536, oldStyleSheet: oldProps.scrollbarStyle });
     },
     set onScrollbarPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 65536 | 32, oldProps.onScrollbarPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 65536 | 32, oldStyleSheet: oldProps.onScrollbarPressedStyle });
     },
     set indicatorStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 131072, oldProps.indicatorStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 131072, oldStyleSheet: oldProps.indicatorStyle });
     },
     set onIndicatorPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 131072 | 32, oldProps.onIndicatorPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 131072 | 32, oldStyleSheet: oldProps.onIndicatorPressedStyle });
     },
     set onPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 32, oldProps.onPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 32, oldStyleSheet: oldProps.onPressedStyle });
     },
     set knobStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 196608, oldProps.knobStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 196608, oldStyleSheet: oldProps.knobStyle });
     },
     set onKnobPressedStyle(styleSheet) {
-      setStyle(comp, styleSheet, "Slider", 196608 | 32, oldProps.onKnobPressedStyle);
+      setStyle({ comp, styleSheet, compName: "Slider", styleType: 196608 | 32, oldStyleSheet: oldProps.onKnobPressedStyle });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
@@ -19542,9 +19600,9 @@ function setSliderProps(comp, newProps, oldProps) {
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19586,7 +19644,7 @@ var SliderComp = class extends NativeSlider {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Slider", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
   }
 };
 __publicField(SliderComp, "tagName", "Slider");
@@ -19626,18 +19684,10 @@ var NativeComp2 = bridge7.NativeRender.NativeComponents.Switch;
 function setSwitchProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle(comp, styleSheet, "Switch", 0, oldProps.style);
+      setStyle({ comp, styleSheet, compName: "Switch", styleType: 0, oldStyleSheet: oldProps.style });
     },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-    set align({
-      type,
-      pos = [0, 0]
-    }) {
-      if (!type)
-        return;
-      comp.align(type, pos);
     },
     set checked(val) {
       if (isNaN(val))
@@ -19646,14 +19696,22 @@ function setSwitchProps(comp, newProps, oldProps) {
         return;
       comp.setChecked(val);
     },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
     set alignTo({
       type,
       pos = [0, 0],
       parent
     }) {
-      if (!type || !parent || !parent.uid)
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
         return;
-      comp.alignTo(type, pos, parent.__proto__);
+      comp.alignTo(type, pos, parent);
     }
   };
   Object.assign(setter, newProps);
@@ -19697,7 +19755,7 @@ var SwitchComp = class extends NativeComp2 {
   close() {
   }
   setStyle(style2, type = 0) {
-    setStyle(this, style2, "Switch", type, {}, false);
+    setStyle({ comp: this, styleSheet: style2, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
   }
 };
 
@@ -19709,6 +19767,505 @@ var SwitchConfig = class {
   }
   createInstance(newProps, rootInstance, context, workInProgress, uid) {
     const instance = new SwitchComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  commitUnmount(instance) {
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Textarea/comp.js
+var bridge8 = globalThis.SJSJSBridge;
+var NativeView2 = bridge8.NativeRender.NativeComponents.Textarea;
+function setTextareaProps(comp, newProps, oldProps) {
+  const setter = {
+    set placeholder(str) {
+      if (str !== oldProps.placeholder) {
+        comp.setPlaceHolder(str);
+      }
+    },
+    set mode(mode) {
+      if (mode === "password") {
+        comp.setPasswordMode(true);
+      } else if (oldProps.mode === "password") {
+        comp.setPasswordMode(false);
+      }
+    },
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set focusStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Textarea", styleType: 2, oldStyleSheet: oldProps.focusStyle });
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set onFocus(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
+    },
+    set value(str) {
+      if (str !== oldProps.value) {
+        comp.setText(str);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, { ...newProps });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var TextareaComp = class extends NativeView2 {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    super.setOneLine(false);
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setTextareaProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+};
+
+// src/render/react/components/Textarea/config.js
+var TextareaConfig = class {
+  tagName = "Textarea";
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new TextareaComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  commitUnmount(instance) {
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Input/comp.js
+var bridge9 = globalThis.SJSJSBridge;
+var NativeView3 = bridge9.NativeRender.NativeComponents.Textarea;
+function setInputProps(comp, newProps, oldProps) {
+  const setter = {
+    set placeholder(str) {
+      if (str !== oldProps.placeholder) {
+        comp.setPlaceHolder(str);
+      }
+    },
+    set mode(mode) {
+      if (mode == oldProps.mode)
+        return;
+      if (mode === "password") {
+        comp.setPasswordMode(true);
+      } else if (oldProps.mode === "password") {
+        comp.setPasswordMode(false);
+      }
+    },
+    set maxlength(len) {
+      if (len === oldProps.maxlength)
+        return;
+      comp.setMaxLength(len);
+    },
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Input", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set onFocus(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
+    },
+    set focusStyle(styleSheet) {
+      setStyle({ comp, compName: "Input", styleType: 2, oldStyleSheet: oldProps.focusStyle, styleSheet });
+    },
+    set value(str) {
+      if (str !== oldProps.value) {
+        comp.setText(str);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var InputComp = class extends NativeView3 {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    super.setOneLine(true);
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setInputProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+
+// src/render/react/components/Input/config.js
+var InputConfig = class {
+  tagName = "Input";
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new InputComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  commitUnmount(instance) {
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Keyboard/comp.js
+var bridge10 = globalThis.SJSJSBridge;
+var NativeView4 = bridge10.NativeRender.NativeComponents.Keyboard;
+var modes = {
+  "lower": 0,
+  "upper": 1,
+  "special": 2,
+  "number": 3
+};
+function setKeyboardProps(comp, newProps, oldProps) {
+  const setter = {
+    set mode(mode) {
+      if (mode !== oldProps.mode && modes[mode]) {
+        comp.setMode(modes[mode]);
+      }
+    },
+    set textarea(textarea) {
+      if (textarea?.uid !== oldProps.textarea?.uid) {
+        comp.setTextarea(textarea);
+      }
+    },
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Keyboard", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var KeyboardComp = class extends NativeView4 {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setKeyboardProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+};
+
+// src/render/react/components/Keyboard/config.js
+var KeyboardConfig = class {
+  tagName = "Keyboard";
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new KeyboardComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  commitUnmount(instance) {
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Checkbox/comp.js
+var bridge11 = globalThis.SJSJSBridge;
+var NativeView5 = bridge11.NativeRender.NativeComponents.Checkbox;
+function setCheckboxProps(comp, newProps, oldProps) {
+  const setter = {
+    set checked(val) {
+      if (val !== oldProps.checked) {
+        comp.setChecked(val);
+      }
+    },
+    set disabled(val) {
+      if (val !== oldProps.disabled) {
+        comp.setDisabled(val);
+      }
+    },
+    set text(val) {
+      if (val !== oldProps.text) {
+        comp.setText(val);
+      }
+    },
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+    },
+    set checkedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle });
+    },
+    set indicatorStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.indicatorStyle });
+    },
+    set indicatorCheckedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR | STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.indicatorCheckedStyle });
+    },
+    set onChange(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var CheckboxComp = class extends NativeView5 {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setCheckboxProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+    this.insertChildBefore(child, beforeChild);
+  }
+  appendInitialChild(child) {
+    this.appendChild(child);
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+};
+
+// src/render/react/components/Checkbox/config.js
+var CheckboxConfig = class {
+  tagName = "Checkbox";
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new CheckboxComp({ uid });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19746,8 +20303,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge8 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge8.NativeRender.Animate;
+var bridge12 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge12.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -19767,6 +20324,10 @@ var Image = registerComponent(new ImageConfig());
 var Button = registerComponent(new ButtonConfig());
 var Slider = registerComponent(new SliderConfig());
 var Switch = registerComponent(new SwitchConfig());
+var Textarea = registerComponent(new TextareaConfig());
+var Input = registerComponent(new InputConfig());
+var Keyboard = registerComponent(new KeyboardConfig());
+var Checkbox = registerComponent(new CheckboxConfig());
 var Render = Renderer;
 
 // test/flex/1/index.jsx
@@ -19807,13 +20368,14 @@ var style = {
     "border-radius": 4,
     "padding": "4px",
     "border-width": "2px",
-    "border-color": "grey"
+    "border-color": "grey",
+    "border-side": "bottom-left"
   },
   button1: {
     "width": "100px",
     "height": "100%",
     "display": "flex",
-    "align-item": "center",
+    "align-items": "center",
     "justify-content": "center"
   },
   view2: {

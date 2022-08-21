@@ -22,4 +22,6 @@ class Image : public BasicComponent {
   uint8_t* image_buf = nullptr;
   
   void setImageBinary(uint8_t* buf, size_t len);
+
+  void virtual initCompStyle (int32_t type);
 };

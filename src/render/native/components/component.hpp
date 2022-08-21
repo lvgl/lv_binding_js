@@ -36,6 +36,8 @@ void NativeComponentKeyboardInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentCheckboxInit (JSContext* ctx, JSValue ns);
 
+void NativeComponentDropdownlistInit (JSContext* ctx, JSValue ns);
+
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \
         if (argc >= 2 && JS_IsObject(argv[0]) && JS_IsArray(ctx, argv[1]) && JS_IsNumber(argv[2]) && JS_IsNumber(argv[3]) && JS_IsBool(argv[4])) {       \
@@ -124,6 +126,28 @@ void NativeComponentCheckboxInit (JSContext* ctx, JSValue ns);
             LV_LOG_USER("%s %s setAlignTo", COMPONENT_NAME, s->uid);                                                        \
             JS_FreeValue(ctx, x_value);                                                                                     \
             JS_FreeValue(ctx, y_value);                                                                                     \
+            return JS_NewBool(ctx, 1);                                                                                      \
+        }                                                                                                                   \
+        return JS_NewBool(ctx, 0);                                                                                          \
+    }                                                                                                                       \
+
+#define WRAPPED_JS_BACKGROUND_IMAGE(COMPONENT,COMPONENT_NAME)                                                               \
+    static JSValue NativeCompSetBackgroundImage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {      \
+        if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {                       \
+            COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                               \
+            size_t size;                                                                                                    \
+            int32_t type;                                                                                                   \
+            int32_t image_bytelength;                                                                                       \
+            uint8_t* buf = nullptr;                                                                                         \
+            if (JS_IsObject(argv[0])) {                                                                                     \
+                buf = JS_GetArrayBuffer(ctx, &size, argv[0]);                                                               \
+                JSValue byteLength = JS_GetPropertyStr(ctx, argv[0], "byteLength");                                         \
+                JS_ToInt32(ctx, &image_bytelength, byteLength);                                                             \
+            }                                                                                                               \
+            JS_ToInt32(ctx, &type, argv[1]);                                                                                \
+                                                                                                                            \
+            ((COMPONENT*)(s->comp))->setBackgroundImage(buf, static_cast<size_t>(image_bytelength), type);                  \
+            LV_LOG_USER("%s %s setBackgroundImage type %d", COMPONENT_NAME, s->uid, type);                                  \
             return JS_NewBool(ctx, 1);                                                                                      \
         }                                                                                                                   \
         return JS_NewBool(ctx, 0);                                                                                          \

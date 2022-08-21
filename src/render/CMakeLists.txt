@@ -16,9 +16,13 @@ add_library(render STATIC
     ./native/core/event/focus/focus.cpp
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
+    ./native/core/img/png/lodepng.cpp
     ./native/core/img/png/png.cpp
+    ./native/core/img/img.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/dropdownlist/dropdownlist.cpp
+    ./native/components/dropdownlist/dropdownlist_wrap.cpp
     ./native/components/checkbox/checkbox.cpp
     ./native/components/checkbox/checkbox_wrap.cpp
     ./native/components/keyboard/keyboard.cpp
@@ -29,7 +33,7 @@ add_library(render STATIC
     ./native/components/switch/switch_wrap.cpp
     ./native/components/slider/slider.cpp
     ./native/components/slider/slider_wrap.cpp
-    ./native/components/image/lodepng.cpp
+    # ./native/components/image/lodepng.cpp
     ./native/components/button/button.cpp
     ./native/components/button/button_wrap.cpp
     ./native/components/image/image.cpp
