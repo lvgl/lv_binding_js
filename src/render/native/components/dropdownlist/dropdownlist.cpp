@@ -31,9 +31,42 @@ void Dropdownlist::setValue (int32_t index) {
 };
 
 void Dropdownlist::setText (std::string text) {
-    lv_dropdown_set_text(this->instance, text.c_str());
+    this->text = text;
+    lv_dropdown_set_text(this->instance, this->text.c_str());
 };
 
 void Dropdownlist::setDir (lv_dir_t dir) {
     lv_dropdown_set_dir(this->instance, dir);
+};
+
+void Dropdownlist::setArrowDir (int32_t dir) {
+    const void* arrow;
+    switch (dir)
+    {
+        case DROPDOWNLIST_UP:
+            arrow = LV_SYMBOL_UP;
+            break;
+        
+        case DROPDOWNLIST_DOWN:
+            arrow = LV_SYMBOL_DOWN;
+            break;
+
+        case DROPDOWNLIST_LEFT:
+            arrow = LV_SYMBOL_LEFT;
+            break;
+
+        case DROPDOWNLIST_RIGHT:
+            arrow = LV_SYMBOL_RIGHT;
+            break;
+        
+        default:
+            break;
+    }
+    if (arrow) {
+        lv_dropdown_set_symbol(this->instance, arrow);
+    }
+};
+
+void Dropdownlist::setHighLightSelect (bool payload) {
+    lv_dropdown_set_selected_highlight(this->instance, payload);
 };

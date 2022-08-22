@@ -11,6 +11,7 @@ import InputConfig from './components/Input/config';
 import KeyboardConfig from './components/Keyboard/config';
 import CheckboxConfig from './components/Checkbox/config';
 import DropdownlistConfig from './components/Dropdownlist/config';
+import ProgressBarConfig from './components/ProgressBar/config';
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -27,8 +28,9 @@ export const Input = registerComponent(new InputConfig());
 export const Keyboard = registerComponent(new KeyboardConfig());
 export const Checkbox = registerComponent(new CheckboxConfig());
 export const Dropdownlist = registerComponent(new DropdownlistConfig());
+export const ProgressBar = registerComponent(new ProgressBarConfig());
 
-export { EAlignType, EDropdownlistDirection } from './components/config'
+export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'
 
 export const Render = Renderer;

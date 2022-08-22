@@ -15,7 +15,7 @@ function setCanvasProps(comp, newProps, oldProps) {
             type,
             pos = [0, 0]
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])) return
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])) return
             comp.align(type, pos)
         },
         set alignTo ({

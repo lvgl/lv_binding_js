@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState2(initialState) {
+        function useState(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect(create, deps) {
+        function useEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,13 +1677,13 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect;
+        exports.useEffect = useEffect2;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
-        exports.useState = useState2;
+        exports.useRef = useRef2;
+        exports.useState = useState;
         exports.version = ReactVersion;
       })();
     }
@@ -18966,12 +18966,6 @@ var EDropdownlistDirection = {
   "vertical": 1 << 2 | 1 << 3,
   "all": 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
 };
-var EDropdownListArrowDirection = {
-  "up": 0,
-  "right": 1,
-  "down": 2,
-  "left": 3
-};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -20337,6 +20331,11 @@ function setListProps(comp, newProps, oldProps) {
         comp.setDir(direction);
       }
     },
+    set highlightSelect(payload) {
+      if (payload != oldProps.highlightSelect) {
+        comp.setHighLightSelect(payload);
+      }
+    },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
     },
@@ -20389,10 +20388,8 @@ var DropdownlistComp = class extends NativeDropdownlist {
   appendInitialChild(child) {
   }
   appendChild(child) {
-    super.appendChild(child);
   }
   removeChild(child) {
-    super.removeChild(child);
   }
   close() {
   }
@@ -20431,6 +20428,113 @@ var DropdownlistConfig = class {
   }
 };
 
+// src/render/react/components/ProgressBar/comp.js
+var bridge13 = globalThis.SJSJSBridge;
+var NativeProgressBar = bridge13.NativeRender.NativeComponents.ProgressBar;
+function setProgressBarProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "ProgressBar", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set value(value) {
+      if (value !== oldProps.value) {
+        comp.setValue(value, !!newProps.useAnimation);
+      }
+    },
+    set range(arr) {
+      if (arr?.[0] !== oldProps.arr?.[0] || arr?.[1] !== oldProps.arr?.[1]) {
+        comp.setRange(arr[0], arr[1]);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var ProgressBarComp = class extends NativeProgressBar {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setProgressBarProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+__publicField(ProgressBarComp, "tagName", "ProgressBar");
+
+// src/render/react/components/ProgressBar/config.js
+var ProgressBarConfig = class {
+  tagName = "ProgressBar";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new ProgressBarComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -20446,8 +20550,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge13 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge13.NativeRender.Animate;
+var bridge14 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge14.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -20472,69 +20576,31 @@ var Input = registerComponent(new InputConfig());
 var Keyboard = registerComponent(new KeyboardConfig());
 var Checkbox = registerComponent(new CheckboxConfig());
 var Dropdownlist = registerComponent(new DropdownlistConfig());
+var ProgressBar = registerComponent(new ProgressBarConfig());
 var Render = Renderer;
 
-// test/dropdownlist/2/index.jsx
+// test/progressbar/1/index.jsx
 var import_react = __toESM(require_react());
-var items1 = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Cherry"
-];
 function App() {
-  const [list, setList] = (0, import_react.useState)(items1);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+  }, /* @__PURE__ */ import_react.default.createElement(ProgressBar, {
+    style: style.bar,
     align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 10]
+      type: EAlignType.ALIGN_CENTER
     },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    arrow: EDropdownListArrowDirection.down
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_BOTTOM_MID,
-      pos: [0, -10]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.up,
-    arrow: EDropdownListArrowDirection.up
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_LEFT_MID,
-      pos: [10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.right,
-    arrow: EDropdownListArrowDirection.right
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_RIGHT_MID,
-      pos: [-10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.left,
-    arrow: EDropdownListArrowDirection.left
+    value: 70,
+    useAnimation: false
   }));
 }
 var style = {
   window: {
     "width": "480px",
     "height": "320px"
+  },
+  bar: {
+    "width": 200,
+    "height": 20
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

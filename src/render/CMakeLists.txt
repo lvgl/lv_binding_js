@@ -21,6 +21,8 @@ add_library(render STATIC
     ./native/core/img/img.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/progressbar/progressbar.cpp
+    ./native/components/progressbar/progressbar_wrap.cpp
     ./native/components/dropdownlist/dropdownlist.cpp
     ./native/components/dropdownlist/dropdownlist_wrap.cpp
     ./native/components/checkbox/checkbox.cpp

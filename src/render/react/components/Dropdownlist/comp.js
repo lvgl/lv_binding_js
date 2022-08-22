@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLETYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
@@ -6,11 +6,16 @@ const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
 function setListProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: 0x0000, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
         set items (items) {
             if (items !== oldProps.items && Array.isArray(items)) {
                 comp.setItems(items, items.length)
+            }
+        },
+        set arrow (arrow) {
+            if (arrow != oldProps.arrow && typeof arrow === 'number') {
+                comp.setArrowDir(arrow)
             }
         },
         set value (value) {
@@ -28,6 +33,11 @@ function setListProps(comp, newProps, oldProps) {
                 comp.setDir(direction)
             }
         },
+        set highlightSelect (payload) {
+            if (payload != oldProps.highlightSelect) {
+                comp.setHighLightSelect(payload)
+            }
+        },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
@@ -35,7 +45,7 @@ function setListProps(comp, newProps, oldProps) {
             type,
             pos = [0, 0]
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])) return
+            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])) return
             comp.align(type, pos)
         },
         set alignTo ({
@@ -81,10 +91,8 @@ export class DropdownlistComp extends NativeDropdownlist {
     appendInitialChild(child) {
     }
     appendChild(child) {
-        super.appendChild(child)
     }
     removeChild(child) {
-        super.removeChild(child);
     }
     close () {
     }

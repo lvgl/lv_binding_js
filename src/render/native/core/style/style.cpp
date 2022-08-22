@@ -376,6 +376,13 @@ static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_style_set_transform_height(style, x);
 };
 
+static void CompSetStyleTransitionTime (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_anim_time(style, x);
+};
+
 void CompSetTransition (
     lv_style_t* style,
     lv_style_transition_dsc_t* trans, 
@@ -539,6 +546,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"img-origin", &CompSetTransformOrigin},
     {"transform-width", &CompSetTransformWidth},
     {"transform-height", &CompSetTransformHeight},
+    {"style-transition-time", &CompSetStyleTransitionTime},
 
     /* color */
     {"text-color", &CompSetTextColor},
@@ -547,4 +555,5 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* spacing */
     {"row-spacing", &CompSetRowSpacing},
     {"column-spacing", &CompSetColumnSpacing},
+    
 };

@@ -1,32 +1,28 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
+import { setStyle, handleEvent, styleGetterProp, STYLETYPE } from '../config'
 
-const bridge = globalThis.SJSJSBridge;
-const NativeView = bridge.NativeRender.NativeComponents.Keyboard
+const bridge = globalThis.SJSJSBridge
+const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar
 
-const modes = {
-    'lower': 0,
-    'upper': 1,
-    'special': 2,
-    'number': 3
-}
-
-function setKeyboardProps(comp, newProps, oldProps) {
+function setProgressBarProps(comp, newProps, oldProps) {
     const setter = {
-        set mode (mode) {
-            if (mode !== oldProps.mode && modes[mode]) {
-                comp.setMode(modes[mode])
-            }
-        },
-        set textarea (textarea) {
-            if (textarea?.uid !== oldProps.textarea?.uid) {
-                comp.setTextarea(textarea)
-            }
-        },
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "Keyboard", styleType: 0x0000, oldStyleSheet: oldProps.style });
+            if (newProps.animationTime) {
+                styleSheet['style-transition-time'] = newProps.animationTime
+            }
+            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
-        set onChange (fn) {
-            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+        set indicatorStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.style });
+        },
+        set value (value) {
+            if (value !== oldProps.value) {
+                comp.setValue(value, !!newProps.useAnimation)
+            }
+        },
+        set range (arr) {
+            if (arr?.[0] !== oldProps?.arr?.[0] || arr?.[1] !== oldProps?.arr?.[1]) {
+                comp.setRange(arr[0], arr[1])
+            }
         },
         set align ({
             type,
@@ -44,7 +40,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
             comp.alignTo(type, pos, parent)
         }
     }
-    Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+    Object.assign(setter, newProps);
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')
@@ -54,7 +50,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
     })
 }
   
-export class KeyboardComp extends NativeView {
+export class ProgressBarComp extends NativeProgressBar {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -70,10 +66,11 @@ export class KeyboardComp extends NativeView {
         })
     }
     setProps(newProps, oldProps) {
-        setKeyboardProps(this, newProps, oldProps);
+        setProgressBarProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
     }
+    static tagName = "ProgressBar";
     appendInitialChild(child) {
     }
     appendChild(child) {
@@ -83,6 +80,6 @@ export class KeyboardComp extends NativeView {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

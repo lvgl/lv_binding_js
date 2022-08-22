@@ -1404,7 +1404,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect(create, deps) {
+        function useEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,7 +1677,7 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect;
+        exports.useEffect = useEffect2;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
@@ -18107,8 +18107,8 @@ var getUid = () => {
   return String(id++);
 };
 var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
+var getInstance = (uid2) => {
+  return instanceMap[uid2];
 };
 var HostConfig = {
   now: Date.now,
@@ -18134,9 +18134,9 @@ var HostConfig = {
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
+    const uid2 = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid2);
+    instanceMap[uid2] = instance;
     return instance;
   },
   createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
@@ -18241,15 +18241,15 @@ var EVENTTYPE_MAP = {
   _EVENT_LAST: 44,
   EVENT_PREPROCESS: 128
 };
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function registEvent(uid2, eventType, fn) {
+  eventMap[uid2] = eventMap[uid2] || {};
+  eventMap[uid2][eventType] = fn;
 }
-function unRegistEvent(uid, eventType) {
+function unRegistEvent(uid2, eventType) {
   if (!eventType) {
-    delete eventMap[uid];
+    delete eventMap[uid2];
   } else {
-    const obj = eventMap[uid];
+    const obj = eventMap[uid2];
     obj && delete obj[eventType];
   }
 }
@@ -18509,6 +18509,12 @@ function MiscStyle(style2, result, compName) {
   }
   if (style2["recolor"] && compName === "Image") {
     ProcessColor("recolor", style2["recolor"], result);
+  }
+  if (style2["style-transition-time"]) {
+    const value = style2["style-transition-time"];
+    if (!isNaN(value)) {
+      result["style-transition-time"] = value;
+    }
   }
   return result;
 }
@@ -18966,12 +18972,6 @@ var EDropdownlistDirection = {
   "vertical": 1 << 2 | 1 << 3,
   "all": 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
 };
-var EDropdownListArrowDirection = {
-  "up": 0,
-  "right": 1,
-  "down": 2,
-  "left": 3
-};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -19001,7 +19001,7 @@ function setViewProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19025,9 +19025,9 @@ function setViewProps(comp, newProps, oldProps) {
   });
 }
 var ViewComp = class extends NativeView {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19066,8 +19066,8 @@ var ViewConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ViewComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ViewComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19123,9 +19123,9 @@ function setWindowProps(comp, newProps, oldProps) {
   });
 }
 var Window = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19163,8 +19163,8 @@ var WindowConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new Window({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new Window({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19223,7 +19223,7 @@ function setTextProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19247,9 +19247,9 @@ function setTextProps(comp, newProps, oldProps) {
   });
 }
 var TextComp = class extends NativeText {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19284,8 +19284,8 @@ var TextConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19355,7 +19355,7 @@ function setImageProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19379,9 +19379,9 @@ function setImageProps(comp, newProps, oldProps) {
   });
 }
 var ImageComp = class extends NativeImage {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19418,8 +19418,8 @@ var ImageConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ImageComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ImageComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19467,7 +19467,7 @@ function setButtonProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19491,9 +19491,9 @@ function setButtonProps(comp, newProps, oldProps) {
   });
 }
 var ButtonComp = class extends NativeButton {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19532,8 +19532,8 @@ var ButtonConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ButtonComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ButtonComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19607,7 +19607,7 @@ function setSliderProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19631,9 +19631,9 @@ function setSliderProps(comp, newProps, oldProps) {
   });
 }
 var SliderComp = class extends NativeSlider {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19672,8 +19672,8 @@ var SliderConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SliderComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SliderComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19716,7 +19716,7 @@ function setSwitchProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19740,9 +19740,9 @@ function setSwitchProps(comp, newProps, oldProps) {
   });
 }
 var SwitchComp = class extends NativeComp2 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19781,8 +19781,8 @@ var SwitchConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SwitchComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SwitchComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19843,7 +19843,7 @@ function setTextareaProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19867,9 +19867,9 @@ function setTextareaProps(comp, newProps, oldProps) {
   });
 }
 var TextareaComp = class extends NativeView2 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     super.setOneLine(false);
     const style2 = super.style;
     const that = this;
@@ -19905,8 +19905,8 @@ var TextareaConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextareaComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextareaComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19974,7 +19974,7 @@ function setInputProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -19998,9 +19998,9 @@ function setInputProps(comp, newProps, oldProps) {
   });
 }
 var InputComp = class extends NativeView3 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     super.setOneLine(true);
     const style2 = super.style;
     const that = this;
@@ -20036,8 +20036,8 @@ var InputConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new InputComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new InputComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20091,7 +20091,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -20115,9 +20115,9 @@ function setKeyboardProps(comp, newProps, oldProps) {
   });
 }
 var KeyboardComp = class extends NativeView4 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20152,8 +20152,8 @@ var KeyboardConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new KeyboardComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new KeyboardComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20215,7 +20215,7 @@ function setCheckboxProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -20239,9 +20239,9 @@ function setCheckboxProps(comp, newProps, oldProps) {
   });
 }
 var CheckboxComp = class extends NativeView5 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20280,8 +20280,8 @@ var CheckboxConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new CheckboxComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new CheckboxComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20310,7 +20310,7 @@ var NativeDropdownlist = bridge12.NativeRender.NativeComponents.Dropdownlist;
 function setListProps(comp, newProps, oldProps) {
   const setter = {
     set style(styleSheet) {
-      setStyle({ comp, styleSheet, compName: "Dropdownlist", styleType: 0, oldStyleSheet: oldProps.style });
+      setStyle({ comp, styleSheet, compName: "Dropdownlist", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
     },
     set items(items) {
       if (items !== oldProps.items && Array.isArray(items)) {
@@ -20337,6 +20337,11 @@ function setListProps(comp, newProps, oldProps) {
         comp.setDir(direction);
       }
     },
+    set highlightSelect(payload) {
+      if (payload != oldProps.highlightSelect) {
+        comp.setHighLightSelect(payload);
+      }
+    },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
     },
@@ -20344,7 +20349,7 @@ function setListProps(comp, newProps, oldProps) {
       type,
       pos = [0, 0]
     }) {
-      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos[0] && pos[1] === oldProps.align?.pos[1])
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
         return;
       comp.align(type, pos);
     },
@@ -20368,9 +20373,9 @@ function setListProps(comp, newProps, oldProps) {
   });
 }
 var DropdownlistComp = class extends NativeDropdownlist {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20389,10 +20394,8 @@ var DropdownlistComp = class extends NativeDropdownlist {
   appendInitialChild(child) {
   }
   appendChild(child) {
-    super.appendChild(child);
   }
   removeChild(child) {
-    super.removeChild(child);
   }
   close() {
   }
@@ -20409,8 +20412,121 @@ var DropdownlistConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new DropdownlistComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new DropdownlistComp({ uid: uid2 });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/ProgressBar/comp.js
+var bridge13 = globalThis.SJSJSBridge;
+var NativeProgressBar = bridge13.NativeRender.NativeComponents.ProgressBar;
+function setProgressBarProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      if (newProps.animationTime) {
+        styleSheet["style-transition-time"] = newProps.animationTime;
+      }
+      setStyle({ comp, styleSheet, compName: "ProgressBar", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+    },
+    set indicatorStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "ProgressBar", styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.style });
+    },
+    set value(value) {
+      if (value !== oldProps.value) {
+        comp.setValue(value, !!newProps.useAnimation);
+      }
+    },
+    set range(arr) {
+      if (arr?.[0] !== oldProps?.arr?.[0] || arr?.[1] !== oldProps?.arr?.[1]) {
+        comp.setRange(arr[0], arr[1]);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var ProgressBarComp = class extends NativeProgressBar {
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setProgressBarProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+__publicField(ProgressBarComp, "tagName", "ProgressBar");
+
+// src/render/react/components/ProgressBar/config.js
+var ProgressBarConfig = class {
+  tagName = "ProgressBar";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ProgressBarComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20446,17 +20562,130 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge13 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge13.NativeRender.Animate;
+var bridge14 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge14.NativeRender.Animate;
+var uid = 0;
 var callbackObj = {};
-globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
-  if (typeof callbackObj[uid] === "function") {
+var animateInsObj = {};
+globalThis.ANIMIATE_CALLBACK = function(uid2, ...args) {
+  if (typeof callbackObj[uid2] === "function") {
     try {
-      callbackObj[uid].call(null, ...args);
+      callbackObj[uid2].call(null, ...args);
     } catch (e) {
       console.log(e);
     }
   }
+};
+var AnimateBase = class extends NativeAnimate {
+  constructor({
+    duration,
+    startValue,
+    endValue,
+    delay,
+    easing,
+    execCallback,
+    instanceId,
+    useNative = false,
+    playBackDelay,
+    playBackTime,
+    repeatDelay,
+    repeatCount,
+    startCallback,
+    readyCallback
+  }) {
+    super();
+    this.duration = duration;
+    this.startValue = startValue;
+    this.endValue = endValue;
+    this.delay = delay;
+    this.easing = easing;
+    this.execCallback = execCallback;
+    this.instanceId = instanceId;
+    this.useNative = useNative;
+    this.playBackDelay = playBackDelay;
+    this.playBackTime = playBackTime;
+    this.repeatDelay = repeatDelay;
+    this.repeatCount = repeatCount;
+    this.startCallback = startCallback;
+    this.readyCallback = readyCallback;
+  }
+  start() {
+    const {
+      duration,
+      startValue,
+      endValue,
+      delay,
+      easing,
+      execCallback,
+      instanceId,
+      useNative,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount = 0,
+      startCallback,
+      readyCallback
+    } = this;
+    if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback)
+      return;
+    if (!useNative && typeof execCallback === "function") {
+      callbackObj[++uid] = execCallback;
+      this.execUid = uid;
+    }
+    if (typeof startCallback === "function") {
+      callbackObj[++uid] = startCallback;
+      this.startCbUid = uid;
+    }
+    if (typeof readyCallback === "function") {
+      callbackObj[++uid] = readyCallback;
+      this.readyCbUid = uid;
+    }
+    animateInsObj[++uid] = this;
+    this.uid = uid;
+    super.start({
+      duration,
+      startValue,
+      endValue,
+      easing,
+      instanceId,
+      useNative,
+      delay,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount: !isFinite(repeatCount) ? 65535 : repeatCount,
+      uid: this.uid,
+      execUid: this.execUid,
+      startCbUid: this.startCbUid,
+      readyCbUid: this.readyCbUid
+    });
+  }
+  release() {
+    delete animateInsObj[this.uid];
+  }
+};
+function createTimingAnimate(params) {
+  return new AnimateBase(params);
+}
+var ParallelAnimate = class {
+  constructor(animates) {
+    this.animates = animates;
+  }
+  start() {
+    this.animates.forEach((animate) => {
+      if (animate instanceof AnimateBase) {
+        animate?.start();
+      }
+    });
+  }
+};
+function createParallelAnimate() {
+  const animates = Array.from(arguments[0]);
+  return new ParallelAnimate(animates);
+}
+var Animate = {
+  timing: createTimingAnimate,
+  parallel: createParallelAnimate
 };
 
 // src/render/react/index.js
@@ -20472,69 +20701,63 @@ var Input = registerComponent(new InputConfig());
 var Keyboard = registerComponent(new KeyboardConfig());
 var Checkbox = registerComponent(new CheckboxConfig());
 var Dropdownlist = registerComponent(new DropdownlistConfig());
+var ProgressBar = registerComponent(new ProgressBarConfig());
 var Render = Renderer;
 
-// test/dropdownlist/2/index.jsx
+// test/progressbar/3/index.jsx
 var import_react = __toESM(require_react());
-var items1 = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Cherry"
-];
 function App() {
-  const [list, setList] = (0, import_react.useState)(items1);
+  const [value, setValue] = (0, import_react.useState)(-20);
+  (0, import_react.useEffect)(() => {
+    try {
+      const animate = Animate.timing({
+        duration: 3e3,
+        startValue: -20,
+        endValue: 40,
+        playBackTime: 3e3,
+        repeatCount: Infinity,
+        startCallback: () => {
+          console.log("animate start");
+        },
+        readyCallback: () => {
+          console.log("animate ready");
+        },
+        execCallback: (value2) => {
+          setValue(value2);
+        }
+      });
+      animate.start();
+    } catch (e) {
+      console.log(e);
+    }
+  }, []);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+  }, /* @__PURE__ */ import_react.default.createElement(ProgressBar, {
+    style: style.bar,
     align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 10]
+      type: EAlignType.ALIGN_CENTER
     },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    arrow: EDropdownListArrowDirection.down
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_BOTTOM_MID,
-      pos: [0, -10]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.up,
-    arrow: EDropdownListArrowDirection.up
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_LEFT_MID,
-      pos: [10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.right,
-    arrow: EDropdownListArrowDirection.right
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_RIGHT_MID,
-      pos: [-10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.left,
-    arrow: EDropdownListArrowDirection.left
+    value,
+    range: [-20, 40],
+    useAnimation: true,
+    animationTime: 1e3,
+    indicatorStyle: style.indicator
   }));
 }
 var style = {
   window: {
     "width": "480px",
     "height": "320px"
+  },
+  indicator: {
+    "background-color": "red",
+    "background-grad-color": "blue",
+    "background-grad-color-dir": "vertical"
+  },
+  bar: {
+    "width": 20,
+    "height": 200
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

@@ -6,6 +6,7 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JSValue component_obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);
 
+    NativeComponentProgressBarInit(ctx, component_obj);
     NativeComponentDropdownlistInit(ctx, component_obj);
     NativeComponentCheckboxInit(ctx, component_obj);
     NativeComponentKeyboardInit(ctx, component_obj);

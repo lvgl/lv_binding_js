@@ -75,6 +75,29 @@ static JSValue NativeCompSetDir(JSContext *ctx, JSValueConst this_val, int argc,
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetArrowDir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsNumber(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        int32_t dir;
+        JS_ToInt32(ctx, &dir, argv[0]);
+
+        ((Dropdownlist*)(ref->comp))->setArrowDir(dir);
+        LV_LOG_USER("Dropdownlist %s setArrowDir", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetHighLightSelect(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsBool(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        bool payload = JS_ToBool(ctx, argv[0]);
+
+        ((Dropdownlist*)(ref->comp))->setHighLightSelect(payload);
+        LV_LOG_USER("Dropdownlist %s setHighLightSelect", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
@@ -86,6 +109,8 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
     SJS_CFUNC_DEF("setText", 0, NativeCompSeText),
     SJS_CFUNC_DEF("setDir", 0, NativeCompSetDir),
+    SJS_CFUNC_DEF("setArrowDir", 0, NativeCompSetArrowDir),
+    SJS_CFUNC_DEF("setHighLightSelect", 0, NativeCompSetHighLightSelect),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

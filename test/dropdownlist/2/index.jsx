@@ -1,4 +1,4 @@
-import { Text, Render, Window, Dropdownlist, EAlignType, EDropdownlistDirection } from 'lvgljs-ui';
+import { Text, Render, Window, Dropdownlist, EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 const items1 = [
@@ -22,6 +22,7 @@ function App () {
                 onChange={(e) => {
                     console.log(e.value)
                 }}
+                arrow={EDropdownListArrowDirection.down}
             />
             <Dropdownlist
                 align={{
@@ -33,6 +34,7 @@ function App () {
                     console.log(e.value)
                 }}
                 direction={EDropdownlistDirection.up}
+                arrow={EDropdownListArrowDirection.up}
             />
             <Dropdownlist
                 align={{
@@ -44,6 +46,7 @@ function App () {
                     console.log(e.value)
                 }}
                 direction={EDropdownlistDirection.right}
+                arrow={EDropdownListArrowDirection.right}
             />
             <Dropdownlist
                 align={{
@@ -55,6 +58,7 @@ function App () {
                     console.log(e.value)
                 }}
                 direction={EDropdownlistDirection.left}
+                arrow={EDropdownListArrowDirection.left}
             />
         </Window>
     )

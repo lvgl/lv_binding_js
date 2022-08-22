@@ -18966,12 +18966,6 @@ var EDropdownlistDirection = {
   "vertical": 1 << 2 | 1 << 3,
   "all": 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
 };
-var EDropdownListArrowDirection = {
-  "up": 0,
-  "right": 1,
-  "down": 2,
-  "left": 3
-};
 var styleGetterProp = ["height", "width", "left", "top"];
 
 // src/render/react/components/View/comp.js
@@ -20337,6 +20331,11 @@ function setListProps(comp, newProps, oldProps) {
         comp.setDir(direction);
       }
     },
+    set highlightSelect(payload) {
+      if (payload != oldProps.highlightSelect) {
+        comp.setHighLightSelect(payload);
+      }
+    },
     set onChange(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
     },
@@ -20474,7 +20473,7 @@ var Checkbox = registerComponent(new CheckboxConfig());
 var Dropdownlist = registerComponent(new DropdownlistConfig());
 var Render = Renderer;
 
-// test/dropdownlist/2/index.jsx
+// test/dropdownlist/3/index.jsx
 var import_react = __toESM(require_react());
 var items1 = [
   "Apple",
@@ -20488,47 +20487,15 @@ function App() {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
     align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 10]
+      type: EAlignType.ALIGN_TOP_LEFT,
+      pos: [10, 10]
     },
     items: list,
     onChange: (e) => {
       console.log(e.value);
     },
-    arrow: EDropdownListArrowDirection.down
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_BOTTOM_MID,
-      pos: [0, -10]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.up,
-    arrow: EDropdownListArrowDirection.up
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_LEFT_MID,
-      pos: [10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.right,
-    arrow: EDropdownListArrowDirection.right
-  }), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    align: {
-      type: EAlignType.ALIGN_RIGHT_MID,
-      pos: [-10, 0]
-    },
-    items: list,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    direction: EDropdownlistDirection.left,
-    arrow: EDropdownListArrowDirection.left
+    text: "Menu",
+    highlightSelect: false
   }));
 }
 var style = {

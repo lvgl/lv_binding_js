@@ -93,4 +93,11 @@ export const EDropdownlistDirection = {
     'all': 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3
 }
 
+export const EDropdownListArrowDirection = {
+    'up': 0,
+    'right': 1,
+    'down': 2,
+    'left': 3,
+}
+
 export const styleGetterProp = ['height', 'width', 'left', 'top']
