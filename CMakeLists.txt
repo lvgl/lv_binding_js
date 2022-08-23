@@ -19,10 +19,15 @@ add_subdirectory(./src/render)
 
 add_executable(Main
     ./src/utils/utils.c
-    ./src/engine/dev/mouse_cursor_icon.c
-    ./src/engine/dev/monitor.cpp
+    ./src/engine/hal/mouse_cursor_icon.c
+    ./src/engine/hal/hal.hpp
+    ./src/engine/hal/hal.cpp
     ./src/engine/engine.cpp
 )
+
+if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
+target_compile_definitions(Main PUBLIC IS_DEV=1)
+endif()
 
 include_directories(
     ./src

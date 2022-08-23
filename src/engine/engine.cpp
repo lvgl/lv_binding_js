@@ -20,9 +20,7 @@ Engine::Engine (char* filePath) {
     NativeRenderInit(qrt->ctx);
 
     lv_init();
-    if (1) {
-        hal_init();
-    }
+    hal_init();
 
     char* path = (char*)malloc(PATH_MAX);
     GetBundlePath(path);
