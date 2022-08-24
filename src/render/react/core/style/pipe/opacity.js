@@ -11,11 +11,14 @@ export function OpacityStyle (style, result, compName) {
         } else {
             result['opacity'] = NormalizeOpacity(style['opacity'])
         }
-    } else if (style['border-opacity']) {
+    }
+    if (style['border-opacity']) {
         result['border-opacity'] = NormalizeOpacity(style['border-opacity'])
-    } else if (style['outline-opacity']) {
+    }
+    if (style['outline-opacity']) {
         result['outline-opacity'] = NormalizeOpacity(style['outline-opacity'])
-    } else if (style['recolor-opacity'] && compName === 'Image') {
+    } 
+    if (style['recolor-opacity'] && compName === 'Image') {
         result['recolor-opacity'] = NormalizeOpacity(style['recolor-opacity'])
     }
 

@@ -1,4 +1,4 @@
-import { ProcessColor } from './util'
+import { ProcessColor } from '../util'
 
 export function MiscStyle (style, result, compName) {
     if (style['display'] == 'none') {

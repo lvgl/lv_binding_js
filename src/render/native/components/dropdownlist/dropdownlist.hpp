@@ -17,7 +17,7 @@ class Dropdownlist : public BasicComponent {
 
   void setItems (std::vector<std::string> items);
 
-  void setValue (int32_t index);
+  void setSelectIndex (int32_t index);
 
   void setText (std::string text);
 

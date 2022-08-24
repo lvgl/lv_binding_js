@@ -1,41 +1,26 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLETYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
-const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
+const NativeRoller = bridge.NativeRender.NativeComponents.Roller
 
-function setListProps(comp, newProps, oldProps) {
+function setRollerProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
-        set items (items) {
-            if (items !== oldProps.items && Array.isArray(items)) {
-                comp.setItems(items, items.length)
-            }
-        },
-        set arrow (arrow) {
-            if (arrow != oldProps.arrow && typeof arrow === 'number') {
-                comp.setArrowDir(arrow)
+        set options (options) {
+            if (options !== oldProps.options && Array.isArray(options)) {
+                comp.setOptions(options, options.length, !!newProps.infinity)
             }
         },
         set selectIndex (selectIndex) {
             if (selectIndex !== oldProps.selectIndex) {
-                comp.setselectIndex(selectIndex)
+                comp.setSelectIndex(selectIndex)
             }
         },
-        set text (text) {
-            if (text !== oldProps.text) {
-                comp.setText(text)
-            }
-        },
-        set direction (direction) {
-            if (direction !== oldProps.direction) {
-                comp.setDir(direction)
-            }
-        },
-        set highlightSelect (payload) {
-            if (payload != oldProps.highlightSelect) {
-                comp.setHighLightSelect(payload)
+        set visibleRowCount (count) {
+            if (count !== oldProps.visibleRowCount) {
+                comp.setVisibleRowCount(count)
             }
         },
         set onChange (fn) {
@@ -67,7 +52,7 @@ function setListProps(comp, newProps, oldProps) {
     })
 }
   
-export class DropdownlistComp extends NativeDropdownlist {
+export class RollerComp extends NativeRoller {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -83,11 +68,11 @@ export class DropdownlistComp extends NativeDropdownlist {
         })
     }
     setProps(newProps, oldProps) {
-        setListProps(this, newProps, oldProps);
+        setRollerProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
     }
-    static tagName = "Dropdownlist";
+    static tagName = "Roller";
     appendInitialChild(child) {
     }
     appendChild(child) {
@@ -97,6 +82,6 @@ export class DropdownlistComp extends NativeDropdownlist {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false })
     }
 }

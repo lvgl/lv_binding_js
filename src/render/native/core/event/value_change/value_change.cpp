@@ -42,6 +42,7 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     ECOMP_TYPE comp_type = ins->type;
     int32_t value_num = 0;
     const char* value_str;
+    char buf[32];
 
     switch (comp_type)
     {
@@ -55,8 +56,11 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             return JS_NewString(ctx, value_str);
 
         case COMP_TYPE_DROPDOWNLIST:
-            char buf[32];
             lv_dropdown_get_selected_str(ins->instance, buf, sizeof(buf));
+            return JS_NewString(ctx, buf);
+
+        case COMP_TYPE_ROLLER:
+            lv_roller_get_selected_str(ins->instance, buf, sizeof(buf));
             return JS_NewString(ctx, buf);
         default:
             break;

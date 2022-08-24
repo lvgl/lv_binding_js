@@ -1,14 +1,27 @@
+import { ProcessColor, ProcessPx, ProcessEnum } from "../util"
+
 const builtInFontList = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40, 42, 44, 46, 48]
 
-const TextOverFlowObj = {
-    'ellipsis': 1,
-    'clip': 4,
-    'auto': 0,
-    'scroll': 2,
-    'circular': 3
+const obj = {
+    'text-color': ProcessColor,
+    'letter-spacing': ProcessPx,
+    'text-overflow': ProcessEnum({
+        'ellipsis': 1,
+        'clip': 4,
+        'auto': 0,
+        'scroll': 2,
+        'circular': 3
+    }),
 }
+const keys = Object.keys(obj)
 
-export function FontStyle (style, result) {
+export function TextStyle (style, result, compName) {
+    keys.forEach(key => {
+        if (style[key]) {
+            obj[key](key, style[key], result)
+        }
+    })
+
     if (style['font-size']) {
         let size = style['font-size']
 
@@ -26,14 +39,4 @@ export function FontStyle (style, result) {
         
         result['font-size'] = builtInFontList.indexOf(size)
     }
-
-    if (style['text-overflow']) {
-        const value = style['text-overflow']
-
-        if (TextOverFlowObj[value]) {
-            result['text-overflow'] = TextOverFlowObj[value]
-        }
-    }
-
-    return result
 }

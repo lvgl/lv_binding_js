@@ -26,7 +26,7 @@ void Dropdownlist::setItems (std::vector<std::string> items) {
     }
 };
 
-void Dropdownlist::setValue (int32_t index) {
+void Dropdownlist::setSelectIndex (int32_t index) {
     lv_dropdown_set_selected(this->instance, index);
 };
 

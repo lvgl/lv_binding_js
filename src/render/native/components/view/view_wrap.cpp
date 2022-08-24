@@ -1,4 +1,4 @@
-#include "View.hpp"
+#include "view.hpp"
 
 static JSClassID ViewClassID;
 

@@ -1,4 +1,4 @@
-import { ProcessDeg, ProcessPx, NormalizePx, NormalizeTime, ProcessScale } from './util'
+import { ProcessDeg, ProcessPx, NormalizePx, NormalizeTime, ProcessScale } from '../util'
 
 const timing_function = ['linear', 'ease-in', 'ease-out', 'ease-in-out', 'overshoot', 'bounce', 'step']
 

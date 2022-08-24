@@ -43,8 +43,8 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
         int32_t index;
         JS_ToInt32(ctx, &index, argv[0]);
 
-        ((Dropdownlist*)(ref->comp))->setValue(index);
-        LV_LOG_USER("Dropdownlist %s setValue", ref->uid);
+        ((Dropdownlist*)(ref->comp))->setSelectIndex(index);
+        LV_LOG_USER("Dropdownlist %s setSelectIndex", ref->uid);
     }
     return JS_UNDEFINED;
 };
@@ -106,7 +106,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("setItems", 0, NativeCompSetItems),
-    SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
+    SJS_CFUNC_DEF("setSelectIndex", 0, NativeCompSetValue),
     SJS_CFUNC_DEF("setText", 0, NativeCompSeText),
     SJS_CFUNC_DEF("setDir", 0, NativeCompSetDir),
     SJS_CFUNC_DEF("setArrowDir", 0, NativeCompSetArrowDir),
