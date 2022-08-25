@@ -6,6 +6,14 @@ set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "
 
 set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
 
+if (${CMAKE_BUILD_PLATFORM} EQUAL "x86")
+    set (CMAKE_C_COMPILER "gcc")
+    set (CMAKE_CXX_COMPILER "g++")
+elseif (${CMAKE_BUILD_PLATFORM} EQUAL "arm")
+    set (CMAKE_C_COMPILER "")
+    set (CMAKE_CXX_COMPILER "")
+endif()
+
 # project(lv_png)
 # add_subdirectory(./src/deps/lv_png)
 add_subdirectory(./src/jsruntime)

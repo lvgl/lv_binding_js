@@ -12,6 +12,12 @@ const obj = {
         'scroll': 2,
         'circular': 3
     }),
+    'text-align': ProcessEnum({
+        'auto': 0,
+        'left': 1,
+        'center': 2,
+        'right': 3
+    })
 }
 const keys = Object.keys(obj)
 

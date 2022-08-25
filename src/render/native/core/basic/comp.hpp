@@ -22,6 +22,7 @@ enum ECOMP_TYPE {
   COMP_TYPE_DROPDOWNLIST,
   COMP_TYPE_PROGRESSBAR,
   COMP_TYPE_ROLLER,
+  COMP_TYPE_LINE,
 };
 
 #include "native/core/event/event.hpp"

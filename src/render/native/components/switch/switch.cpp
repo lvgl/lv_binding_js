@@ -18,5 +18,13 @@ void Switch::setValue (bool value) {
     }
 };
 
+void Switch::setDisabled (bool value) {
+    if (value) {
+        lv_obj_add_state(this->instance, LV_STATE_DISABLED);
+    } else {
+        lv_obj_clear_state(this->instance, LV_STATE_DISABLED);
+    }
+};
+
 void Switch::initCompStyle (int32_t type) {
 };

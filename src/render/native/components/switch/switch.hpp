@@ -10,5 +10,7 @@ class Switch : public BasicComponent {
 
   void setValue (bool value);
 
+  void setDisabled (bool payload);
+
   void virtual initCompStyle (int32_t type);
 };

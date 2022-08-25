@@ -43,12 +43,25 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsBool(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        bool value;
+        value = JS_ToBool(ctx, argv[0]);
+        
+        ((Switch*)(ref->comp))->setDisabled(value);
+        LV_LOG_USER("Switch %s setDisabled", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_CFUNC_DEF("setChecked", 0, NativeCompSetChecked),
+    SJS_CFUNC_DEF("setDisabled", 0, NativeCompSetDisabled),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),

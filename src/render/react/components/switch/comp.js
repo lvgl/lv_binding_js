@@ -16,6 +16,11 @@ function setSwitchProps(comp, newProps, oldProps) {
             if (val == oldProps.value) return
             comp.setChecked(val)
         },
+        set disabled (val) {
+            if (val !== oldProps.disabled) {
+                comp.setDisabled(val)
+            }
+        },
         set align ({
             type,
             pos = [0, 0]

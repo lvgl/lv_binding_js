@@ -257,6 +257,13 @@ static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* 
     lv_style_set_text_letter_space(style, x);
 };
 
+static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_obj_set_style_text_align(comp, x);
+};
+
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -526,6 +533,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"font-size", &CompSetFontSize},
     {"text-overflow", &CompSetTextOverFLow},
     {"letter-spacing", &CompSetLetterSpacing},
+    {"text-align", &CompSetTextAlign},
 
     /* scroll */
     {"overflow-scrolling", &CompSetOverFlowScrolling},

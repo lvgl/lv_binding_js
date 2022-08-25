@@ -8,6 +8,9 @@ function setRollerProps(comp, newProps, oldProps) {
         set style(styleSheet) {
             setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
+        set selectedStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLETYPE.PART_SELECTED, oldStyleSheet: oldProps.selectedStyle });
+        },
         set options (options) {
             if (options !== oldProps.options && Array.isArray(options)) {
                 comp.setOptions(options, options.length, !!newProps.infinity)
