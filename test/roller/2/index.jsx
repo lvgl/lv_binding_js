@@ -46,7 +46,7 @@ function App () {
                     console.log(e.value)
                 }}
                 infinity={false}
-                style={style.roller1}
+                style={style.roller2}
                 selectedStyle={style.selected}
             />
             <Roller
@@ -76,6 +76,9 @@ const style = {
     roller1: {
         'width': '100px',
         'text-align': 'left'
+    },
+    roller2: {
+        'text-align': 'center'
     },
     roller3: {
         'width': '80px',

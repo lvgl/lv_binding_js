@@ -21,6 +21,8 @@ add_library(render STATIC
     ./native/core/img/img.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/line/line.cpp
+    ./native/components/line/line_wrap.cpp
     ./native/components/roller/roller.cpp
     ./native/components/roller/roller_wrap.cpp
     ./native/components/progressbar/progressbar.cpp

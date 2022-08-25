@@ -43,6 +43,10 @@ export function TextStyle (style, result, compName) {
         }
         size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size))
         
-        result['font-size'] = builtInFontList.indexOf(size)
+        if (compName === 'Text') {
+            result['font-size'] = builtInFontList.indexOf(size)
+        } else {
+            result['font-size-1'] = builtInFontList.indexOf(size)
+        }
     }
 }

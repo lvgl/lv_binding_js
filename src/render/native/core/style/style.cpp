@@ -261,7 +261,7 @@ static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_obj_set_style_text_align(comp, x);
+    lv_obj_set_style_text_align(comp, x, 0);
 };
 
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -531,6 +531,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* font */
     {"font-size", &CompSetFontSize},
+    {"font-size-1", &CompSetFontSize1},
     {"text-overflow", &CompSetTextOverFLow},
     {"letter-spacing", &CompSetLetterSpacing},
     {"text-align", &CompSetTextAlign},

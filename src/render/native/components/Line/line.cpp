@@ -1,5 +1,5 @@
 
-#include "button.hpp"
+#include "line.hpp"
 
 Line::Line(std::string uid, lv_obj_t* parent): BasicComponent() {
     this->type = COMP_TYPE_LINE;
@@ -12,7 +12,7 @@ Line::Line(std::string uid, lv_obj_t* parent): BasicComponent() {
 };
 
 void Line::setPoints (std::vector<lv_point_t> points, int32_t nums) {
-    this->points = points;
+    this->points.swap(points);
 
-    lv_line_set_points(this->points.data());
+    lv_line_set_points(this->instance, this->points.data(), nums);
 };

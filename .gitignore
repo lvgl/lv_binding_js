@@ -2,5 +2,4 @@ node_modules
 debug
 .vscode
 src/deps
-src/jsruntime/deps
 src/render/deps

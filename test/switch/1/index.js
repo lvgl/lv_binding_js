@@ -18743,7 +18743,11 @@ function TextStyle(style2, result, compName) {
       size += 1;
     }
     size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size));
-    result["font-size"] = builtInFontList.indexOf(size);
+    if (compName === "Text") {
+      result["font-size"] = builtInFontList.indexOf(size);
+    } else {
+      result["font-size-1"] = builtInFontList.indexOf(size);
+    }
   }
 }
 
@@ -18965,30 +18969,6 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-var EAlignType = {
-  "ALIGN_DEFAULT": 0,
-  "ALIGN_TOP_LEFT": 1,
-  "ALIGN_TOP_MID": 2,
-  "ALIGN_TOP_RIGHT": 3,
-  "ALIGN_BOTTOM_LEFT": 4,
-  "ALIGN_BOTTOM_MID": 5,
-  "ALIGN_BOTTOM_RIGHT": 6,
-  "ALIGN_LEFT_MID": 7,
-  "ALIGN_RIGHT_MID": 8,
-  "ALIGN_CENTER": 9,
-  "ALIGN_OUT_TOP_LEFT": 10,
-  "ALIGN_OUT_TOP_MID": 11,
-  "ALIGN_OUT_TOP_RIGHT": 12,
-  "ALIGN_OUT_BOTTOM_LEFT": 13,
-  "ALIGN_OUT_BOTTOM_MID": 14,
-  "ALIGN_OUT_BOTTOM_RIGHT": 15,
-  "ALIGN_OUT_LEFT_TOP": 16,
-  "ALIGN_OUT_LEFT_MID": 17,
-  "ALIGN_OUT_LEFT_BOTTOM": 18,
-  "ALIGN_OUT_RIGHT_TOP": 19,
-  "ALIGN_OUT_RIGHT_MID": 20,
-  "ALIGN_OUT_RIGHT_BOTTOM": 21
-};
 var STYLETYPE = {
   PART_MAIN: 0,
   PART_SCROLLBAR: 65536,
@@ -20761,67 +20741,41 @@ var ProgressBar = registerComponent(new ProgressBarConfig());
 var Roller = registerComponent(new RollerConfig());
 var Render = Renderer;
 
-// test/roller/1/index.jsx
+// test/switch/1/index.jsx
 var import_react = __toESM(require_react());
-var items1 = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Cherry",
-  "Grape",
-  "Raspberry",
-  "Melon",
-  "Orange",
-  "Lemon",
-  "Nuts"
-];
-var items2 = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9"
-];
 function App() {
-  const [list, setList] = (0, import_react.useState)(items1);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button1,
-    onClick: () => setList(items1)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list1")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button2,
-    onClick: () => setList(items2)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list2")), /* @__PURE__ */ import_react.default.createElement(Roller, {
-    align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 30]
-    },
-    options: list,
-    selectIndex: 2,
-    visibleRowCount: 4,
+  }, /* @__PURE__ */ import_react.default.createElement(Switch, {
     onChange: (e) => {
-      console.log(e.value);
+      console.log("switch1 checked: ", e.checked);
+    }
+  }), /* @__PURE__ */ import_react.default.createElement(Switch, {
+    onChange: (e) => {
+      console.log("switch2 checked: ", e.checked);
     },
-    infinity: true
+    checked: true
+  }), /* @__PURE__ */ import_react.default.createElement(Switch, {
+    onChange: (e) => {
+      console.log("switch3 checked: ", e.checked);
+    },
+    disabled: true
+  }), /* @__PURE__ */ import_react.default.createElement(Switch, {
+    onChange: (e) => {
+      console.log("switch4 checked: ", e.checked);
+    },
+    checked: true,
+    disabled: true
   }));
 }
 var style = {
   window: {
     "width": "480px",
-    "height": "320px"
-  },
-  button1: {
-    left: 5,
-    top: 5
-  },
-  button2: {
-    left: 5,
-    top: 45
+    "height": "320px",
+    "display": "flex",
+    "flex-direction": "column",
+    "justify-content": "center",
+    "align-items": "center"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

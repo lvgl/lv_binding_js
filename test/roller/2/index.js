@@ -18743,7 +18743,11 @@ function TextStyle(style2, result, compName) {
       size += 1;
     }
     size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size));
-    result["font-size"] = builtInFontList.indexOf(size);
+    if (compName === "Text") {
+      result["font-size"] = builtInFontList.indexOf(size);
+    } else {
+      result["font-size-1"] = builtInFontList.indexOf(size);
+    }
   }
 }
 
@@ -20363,9 +20367,9 @@ function setListProps(comp, newProps, oldProps) {
     set style(styleSheet) {
       setStyle({ comp, styleSheet, compName: "Dropdownlist", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
     },
-    set items(items) {
-      if (items !== oldProps.items && Array.isArray(items)) {
-        comp.setItems(items, items.length);
+    set items(items2) {
+      if (items2 !== oldProps.items && Array.isArray(items2)) {
+        comp.setItems(items2, items2.length);
       }
     },
     set arrow(arrow) {
@@ -20761,21 +20765,9 @@ var ProgressBar = registerComponent(new ProgressBarConfig());
 var Roller = registerComponent(new RollerConfig());
 var Render = Renderer;
 
-// test/roller/1/index.jsx
+// test/roller/2/index.jsx
 var import_react = __toESM(require_react());
-var items1 = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Cherry",
-  "Grape",
-  "Raspberry",
-  "Melon",
-  "Orange",
-  "Lemon",
-  "Nuts"
-];
-var items2 = [
+var items = [
   "1",
   "2",
   "3",
@@ -20784,30 +20776,55 @@ var items2 = [
   "6",
   "7",
   "8",
-  "9"
+  "9",
+  "10"
 ];
 function App() {
-  const [list, setList] = (0, import_react.useState)(items1);
+  const [list, setList] = (0, import_react.useState)(items);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button1,
-    onClick: () => setList(items1)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list1")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button2,
-    onClick: () => setList(items2)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list2")), /* @__PURE__ */ import_react.default.createElement(Roller, {
+  }, /* @__PURE__ */ import_react.default.createElement(Roller, {
     align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 30]
+      type: EAlignType.ALIGN_LEFT_MID,
+      pos: [10, 0]
     },
     options: list,
     selectIndex: 2,
+    visibleRowCount: 2,
+    onChange: (e) => {
+      console.log(e.value);
+    },
+    infinity: false,
+    style: style.roller1,
+    selectedStyle: style.selected
+  }), /* @__PURE__ */ import_react.default.createElement(Roller, {
+    align: {
+      type: EAlignType.ALIGN_CENTER,
+      pos: [0, 0]
+    },
+    options: list,
+    selectIndex: 5,
+    visibleRowCount: 3,
+    onChange: (e) => {
+      console.log(e.value);
+    },
+    infinity: false,
+    style: style.roller2,
+    selectedStyle: style.selected
+  }), /* @__PURE__ */ import_react.default.createElement(Roller, {
+    align: {
+      type: EAlignType.ALIGN_RIGHT_MID,
+      pos: [-10, 0]
+    },
+    options: list,
+    selectIndex: 8,
     visibleRowCount: 4,
     onChange: (e) => {
       console.log(e.value);
     },
-    infinity: true
+    infinity: false,
+    style: style.roller3,
+    selectedStyle: style.selected
   }));
 }
 var style = {
@@ -20815,13 +20832,19 @@ var style = {
     "width": "480px",
     "height": "320px"
   },
-  button1: {
-    left: 5,
-    top: 5
+  roller1: {
+    "width": "100px",
+    "text-align": "left"
   },
-  button2: {
-    left: 5,
-    top: 45
+  roller2: {
+    "text-align": "center"
+  },
+  roller3: {
+    "width": "80px",
+    "text-align": "right"
+  },
+  selected: {
+    "font-size": "22px"
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

@@ -18743,7 +18743,11 @@ function TextStyle(style2, result, compName) {
       size += 1;
     }
     size = Math.min(builtInFontList[builtInFontList.length - 1], Math.max(builtInFontList[0], size));
-    result["font-size"] = builtInFontList.indexOf(size);
+    if (compName === "Text") {
+      result["font-size"] = builtInFontList.indexOf(size);
+    } else {
+      result["font-size-1"] = builtInFontList.indexOf(size);
+    }
   }
 }
 
@@ -18965,30 +18969,6 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-var EAlignType = {
-  "ALIGN_DEFAULT": 0,
-  "ALIGN_TOP_LEFT": 1,
-  "ALIGN_TOP_MID": 2,
-  "ALIGN_TOP_RIGHT": 3,
-  "ALIGN_BOTTOM_LEFT": 4,
-  "ALIGN_BOTTOM_MID": 5,
-  "ALIGN_BOTTOM_RIGHT": 6,
-  "ALIGN_LEFT_MID": 7,
-  "ALIGN_RIGHT_MID": 8,
-  "ALIGN_CENTER": 9,
-  "ALIGN_OUT_TOP_LEFT": 10,
-  "ALIGN_OUT_TOP_MID": 11,
-  "ALIGN_OUT_TOP_RIGHT": 12,
-  "ALIGN_OUT_BOTTOM_LEFT": 13,
-  "ALIGN_OUT_BOTTOM_MID": 14,
-  "ALIGN_OUT_BOTTOM_RIGHT": 15,
-  "ALIGN_OUT_LEFT_TOP": 16,
-  "ALIGN_OUT_LEFT_MID": 17,
-  "ALIGN_OUT_LEFT_BOTTOM": 18,
-  "ALIGN_OUT_RIGHT_TOP": 19,
-  "ALIGN_OUT_RIGHT_MID": 20,
-  "ALIGN_OUT_RIGHT_BOTTOM": 21
-};
 var STYLETYPE = {
   PART_MAIN: 0,
   PART_SCROLLBAR: 65536,
@@ -20716,6 +20696,110 @@ var RollerConfig = class {
   }
 };
 
+// src/render/react/components/Line/comp.js
+var bridge15 = globalThis.SJSJSBridge;
+var NativeLine = bridge15.NativeRender.NativeComponents.Line;
+function setLineProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Line", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set points(points2) {
+      if (Array.isArray(points2) && points2 !== oldProps?.points || points2?.length !== oldProps?.points?.length) {
+        comp.setPoints(points2, points2.length);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var LineComp = class extends NativeLine {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj7, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setLineProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+__publicField(LineComp, "tagName", "Line");
+
+// src/render/react/components/Line/config.js
+var LineConfig = class {
+  tagName = "Line";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new LineComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -20731,8 +20815,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge15 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge15.NativeRender.Animate;
+var bridge16 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge16.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -20759,69 +20843,23 @@ var Checkbox = registerComponent(new CheckboxConfig());
 var Dropdownlist = registerComponent(new DropdownlistConfig());
 var ProgressBar = registerComponent(new ProgressBarConfig());
 var Roller = registerComponent(new RollerConfig());
+var Line = registerComponent(new LineConfig());
 var Render = Renderer;
 
-// test/roller/1/index.jsx
+// test/line/1/index.jsx
 var import_react = __toESM(require_react());
-var items1 = [
-  "Apple",
-  "Banana",
-  "Orange",
-  "Cherry",
-  "Grape",
-  "Raspberry",
-  "Melon",
-  "Orange",
-  "Lemon",
-  "Nuts"
-];
-var items2 = [
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9"
-];
+var points = [[5, 5], [70, 70], [120, 10], [180, 60], [240, 10]];
 function App() {
-  const [list, setList] = (0, import_react.useState)(items1);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button1,
-    onClick: () => setList(items1)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list1")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button2,
-    onClick: () => setList(items2)
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "use list2")), /* @__PURE__ */ import_react.default.createElement(Roller, {
-    align: {
-      type: EAlignType.ALIGN_TOP_MID,
-      pos: [0, 30]
-    },
-    options: list,
-    selectIndex: 2,
-    visibleRowCount: 4,
-    onChange: (e) => {
-      console.log(e.value);
-    },
-    infinity: true
+  }, /* @__PURE__ */ import_react.default.createElement(Line, {
+    points
   }));
 }
 var style = {
   window: {
     "width": "480px",
     "height": "320px"
-  },
-  button1: {
-    left: 5,
-    top: 5
-  },
-  button2: {
-    left: 5,
-    top: 45
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

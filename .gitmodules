@@ -4,3 +4,6 @@
 [submodule "src/render/deps/lv_png"]
 	path = src/deps/lv_png
 	url = https://github.com/lvgl/lv_lib_png.git
+[submodule "src/deps/libuv"]
+	path = src/deps/libuv
+	url = https://github.com/libuv/libuv.git

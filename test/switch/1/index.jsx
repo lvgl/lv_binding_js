@@ -37,9 +37,9 @@ const style = {
         'width': '480px',
         'height': '320px',
         'display': 'flex',
+        'flex-direction': 'column',
         'justify-content': 'center',
         'align-items': 'center',
-        'align-content': 'center'
     },
 };
 

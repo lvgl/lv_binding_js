@@ -10,12 +10,13 @@ if (${CMAKE_BUILD_PLATFORM} EQUAL "x86")
     set (CMAKE_C_COMPILER "gcc")
     set (CMAKE_CXX_COMPILER "g++")
 elseif (${CMAKE_BUILD_PLATFORM} EQUAL "arm")
-    set (CMAKE_C_COMPILER "")
-    set (CMAKE_CXX_COMPILER "")
+    set (CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
+    set (CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
 endif()
 
 # project(lv_png)
 # add_subdirectory(./src/deps/lv_png)
+add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
 add_subdirectory(./src/jsruntime)
 add_subdirectory(./src/deps/lvgl)
 add_subdirectory(./src/deps/lv_drivers)
@@ -54,6 +55,7 @@ string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 
 target_link_libraries(Main
     jsruntime
+    uv_a
     dl
     pthread
     render
