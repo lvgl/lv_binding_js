@@ -18,9 +18,12 @@ const style = {
     window: {
         'width': '480px',
         'height': '320px',
-
     },
-    
+    line: {
+        'line-width': 8,
+        'line-color': 'blue',
+        'line-rounded': true
+    }
 };
 
 Render.render(<App />);

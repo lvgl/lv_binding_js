@@ -483,6 +483,27 @@ static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* 
     lv_obj_set_style_pad_column(comp, y, 0);
 };
 
+static void CompSetLineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_style_set_line_width(style, y);
+};
+
+static void CompSetLineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_line_color(style, lv_color_hex(x));
+};
+
+static void CompSetLineRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_line_rounded(style, x);
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
@@ -565,4 +586,8 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"row-spacing", &CompSetRowSpacing},
     {"column-spacing", &CompSetColumnSpacing},
     
+    /* line comp */
+    {"line-width", &CompSetLineWidth},
+    {"line-color", &CompSetLineColor},
+    {"line-rounded", &CompSetLineRounded},
 };

@@ -27,7 +27,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
             item = JS_GetPropertyUint32(ctx, argv[0], i);
             if (JS_IsArray(ctx, item)) {
                 first_value = JS_GetPropertyUint32(ctx, item, 0);
-                second_value = JS_GetPropertyUint32(ctx, item, 0);
+                second_value = JS_GetPropertyUint32(ctx, item, 1);
                 if (JS_IsNumber(first_value) && JS_IsNumber(second_value)) {
                     JS_ToInt32(ctx, &first, first_value);
                     JS_ToInt32(ctx, &second, second_value);
