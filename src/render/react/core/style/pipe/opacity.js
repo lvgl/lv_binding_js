@@ -21,6 +21,9 @@ export function OpacityStyle (style, result, compName) {
     if (style['recolor-opacity'] && compName === 'Image') {
         result['recolor-opacity'] = NormalizeOpacity(style['recolor-opacity'])
     }
+    if (style['shadow-opacity']) {
+        result['shadow-opacity'] = NormalizeOpacity(style['shadow-opacity'])
+    }
 
     return result
 }

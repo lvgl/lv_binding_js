@@ -10,5 +10,5 @@ class Line : public BasicComponent {
 
   std::vector<lv_point_t> points;
 
-  void setPoints (std::vector<lv_point_t> points, int32_t nums);
+  void setPoints (std::vector<lv_point_t>& points, int32_t nums);
 };

@@ -147,14 +147,22 @@ void NativeComponentCalendarInit (JSContext* ctx, JSValue ns);
             int32_t type;                                                                                                   \
             int32_t image_bytelength;                                                                                       \
             uint8_t* buf = nullptr;                                                                                         \
+            std::string image_symbol;                                                                                       \
             if (JS_IsObject(argv[0])) {                                                                                     \
                 buf = JS_GetArrayBuffer(ctx, &size, argv[0]);                                                               \
                 JSValue byteLength = JS_GetPropertyStr(ctx, argv[0], "byteLength");                                         \
                 JS_ToInt32(ctx, &image_bytelength, byteLength);                                                             \
             }                                                                                                               \
+            if (JS_IsString(argv[2])) {                                                                                     \
+                size_t len;                                                                                                 \
+                const char* str = JS_ToCStringLen(ctx, &len, argv[2]);                                                      \
+                image_symbol = str;                                                                                         \        
+                image_symbol.resize(len);                                                                                   \
+                JS_FreeCString(ctx, str);                                                                                   \
+            }                                                                                                               \
             JS_ToInt32(ctx, &type, argv[1]);                                                                                \
                                                                                                                             \
-            ((COMPONENT*)(s->comp))->setBackgroundImage(buf, static_cast<size_t>(image_bytelength), type);                  \
+            ((COMPONENT*)(s->comp))->setBackgroundImage(buf, static_cast<size_t>(image_bytelength), type, image_symbol);    \ 
             LV_LOG_USER("%s %s setBackgroundImage type %d", COMPONENT_NAME, s->uid, type);                                  \
             return JS_NewBool(ctx, 1);                                                                                      \
         }                                                                                                                   \

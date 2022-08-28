@@ -29,6 +29,10 @@ function userInfo () {
     return os.userInfo()
 }
 
+function getenv (str) {
+    return os.getenv(str)
+}
+
 module.exports = {
     type,
     homedir,
@@ -36,5 +40,6 @@ module.exports = {
     cpus,
     loadavg,
     hostname,
-    userInfo
+    userInfo,
+    getenv
 }

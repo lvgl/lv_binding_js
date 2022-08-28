@@ -13,7 +13,7 @@ const keys = Object.keys(obj)
 
 export function BackgroundStyle (style, result, compName) {
     keys.forEach(key => {
-        if (style[key]) {
+        if (style[key] !== void 0) {
             obj[key](key, style[key], result)
         }
     })

@@ -11,7 +11,7 @@ Line::Line(std::string uid, lv_obj_t* parent): BasicComponent() {
     lv_obj_set_user_data(this->instance, this);
 };
 
-void Line::setPoints (std::vector<lv_point_t> points, int32_t nums) {
+void Line::setPoints (std::vector<lv_point_t>& points, int32_t nums) {
     this->points.swap(points);
 
     lv_line_set_points(this->instance, this->points.data(), nums);

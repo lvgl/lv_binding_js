@@ -5,6 +5,7 @@ const builtInFontList = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 
 const obj = {
     'text-color': ProcessColor,
     'letter-spacing': ProcessPx,
+    'line-spacing': ProcessPx,
     'text-overflow': ProcessEnum({
         'ellipsis': 1,
         'clip': 4,
@@ -17,13 +18,18 @@ const obj = {
         'left': 1,
         'center': 2,
         'right': 3
-    })
+    }),
+    'text-decoration': ProcessEnum({
+        'none': 0,
+        'underline': 1,
+        'strikethrough': 2,
+    }),
 }
 const keys = Object.keys(obj)
 
 export function TextStyle (style, result, compName) {
     keys.forEach(key => {
-        if (style[key]) {
+        if (style[key] !== void 0) {
             obj[key](key, style[key], result)
         }
     })

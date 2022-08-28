@@ -8,6 +8,9 @@ function setCalendarProps(comp, newProps, oldProps) {
         set style(styleSheet) {
             setStyle({ comp, styleSheet, compName: 'Calendar', styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
+        set onChange (fn) {
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+        },
         set today (today) {
             if (today && today !== oldProps.today) {
                 const date = new Date(today)
@@ -16,14 +19,14 @@ function setCalendarProps(comp, newProps, oldProps) {
         },
         set shownMonth (month) {
             if (month && month !== oldProps.shownMonth) {
-                const date = new Date(today)
+                const date = new Date(month)
                 comp.setShownMonth(date.getFullYear(), date.getMonth() + 1)
             }
         },
         set highLightDates (dates) {
             if (Array.isArray(dates) && dates !== oldProps.highLightDates) {
                 dates = dates.map(item => {
-                    const date = new Date(today)
+                    const date = new Date(item)
                     return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
                 })
                 comp.setHighlightDates(dates, dates.length)
@@ -33,7 +36,7 @@ function setCalendarProps(comp, newProps, oldProps) {
             type,
             pos = [0, 0]
         }) {
-            if (!type || (type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])) return
+            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
             comp.align(type, pos)
         },
         set alignTo ({
@@ -41,7 +44,7 @@ function setCalendarProps(comp, newProps, oldProps) {
             pos = [0, 0],
             parent
         }) {
-            if (!type || (type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)) return
+            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
             comp.alignTo(type, pos, parent)
         }
     }

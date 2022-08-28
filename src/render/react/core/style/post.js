@@ -1,4 +1,5 @@
 import { isValidUrl } from '../../utils/helpers'
+import { builtInSymbol } from '../style/symbol'
 
 const path = require('path')
 const fs = require('fs')
@@ -11,8 +12,14 @@ async function getImageBinary(url) {
 }
 
 export function PostProcessStyle ({comp, styleSheet, styleType}) {
-    if (styleSheet['background-image'] !== undefined) {
+    if (styleSheet['background-image'] !== void 0) {
         let url = styleSheet['background-image']
+
+        if (builtInSymbol[url]) {
+            comp.setBackgroundImage(null, styleType, builtInSymbol[url]);
+            return
+        }
+
         if (url === null) {
             comp.setBackgroundImage(null, styleType)
         } else if (!isValidUrl(url)) {
@@ -27,7 +34,6 @@ export function PostProcessStyle ({comp, styleSheet, styleType}) {
                     console.log('setBackground error', e)
                 })
         } else {
-            
                 getImageBinary(url)
                     .then((buffer) => comp.setBackgroundImage(Buffer.from(buffer).buffer), styleType)
                     .catch(console.warn);

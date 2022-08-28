@@ -70,5 +70,10 @@ Image::~Image () {
     }
 };
 
+void Image::setSymbol (std::string& str) {
+    this->symbol = str;
+    lv_img_set_src(this->instance, this->symbol.c_str());
+};
+
 void Image::initCompStyle (int32_t type) {
 };

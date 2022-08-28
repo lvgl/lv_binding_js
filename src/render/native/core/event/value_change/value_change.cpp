@@ -67,14 +67,12 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             lv_calendar_date_t date;
             std::string result;
             lv_calendar_get_pressed_date(ins->instance, &date);
-            result.append(date.year);
+            result.append(std::to_string(date.year));
             result.append("-");
-            result.append(date.month);
+            result.append(std::to_string(date.month));
             result.append("-");
-            result.append(date.day);
+            result.append(std::to_string(date.day));
             return JS_NewString(ctx, result.c_str());
-        default:
-            break;
     }
 
     return JS_UNDEFINED;

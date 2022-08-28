@@ -11,6 +11,8 @@ import { FlexStyle } from './pipe/flex'
 import { ScrollStyle } from './pipe/scoll'
 import { OpacityStyle } from './pipe/opacity'
 import { LineStyle } from './pipe/line'
+import { ShadowStyle } from './pipe/shadow'
+import { DisplayStyle } from './pipe/display'
 import { PostProcessStyle } from './post'
 
 // normal
@@ -226,6 +228,8 @@ StyleSheet.pipeline([
     MiscStyle,
     TransStyle,
     LineStyle,
+    ShadowStyle,
+    DisplayStyle
 ])
 
 export function setStyle ({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {

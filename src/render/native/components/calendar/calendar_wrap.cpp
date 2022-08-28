@@ -54,6 +54,8 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
 
 static JSValue NativeCompSetToday (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1]) && JS_IsNumber(argv[2])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+
         int32_t year;
         int32_t month;
         int32_t day;
@@ -68,6 +70,8 @@ static JSValue NativeCompSetToday (JSContext *ctx, JSValueConst this_val, int ar
 
 static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+
         int32_t year;
         int32_t month;
         JS_ToInt32(ctx, &year, argv[0]);

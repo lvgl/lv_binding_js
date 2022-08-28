@@ -54,7 +54,10 @@ bool BasicComponent::isEventRegist(int eventType) {
 };
 
 void BasicComponent::insertChildBefore(void *child) {
-    
+    lv_obj_t* ins = (static_cast<BasicComponent*>(child))->instance;
+    lv_obj_set_parent(ins, this->instance);
+    uint32_t index = lv_obj_get_index(ins);
+    lv_obj_move_to_index(ins, index);
 };
 
 void BasicComponent::removeChild(void* child) {
@@ -193,37 +196,51 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::stri
     lv_obj_invalidate(this->instance);
 };
 
-void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type) {
+void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type, std::string& symbol) {
     lv_img_dsc_t_1* img_desc;
     lv_img_dsc_t_1* old_img_desc = nullptr;
+    std::string old_image_symbol;
+    std::string image_symbol;
     const uint8_t* prev_buf = nullptr;
-    if (this->image_desc_map.find(style_type) != this->image_desc_map.end()) {
-        old_img_desc = this->image_desc_map.at(style_type);
-    }
-    img_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
-    image_desc_map[style_type] = img_desc;
-    
-    if (old_img_desc != nullptr) {
-        prev_buf = old_img_desc->data;
-    }
+
     this->ensureStyle(style_type);
     lv_style_t* style = this->style_map.at(style_type);
+
     if (buf != nullptr) {
-        uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
-        if (img_data != nullptr) {
-            img_desc->data = img_data;
-            lv_style_set_bg_img_src(style, img_desc);
+        if (this->image_desc_map.find(style_type) != this->image_desc_map.end()) {
+            old_img_desc = this->image_desc_map.at(style_type);
+        }
+        if (old_img_desc != nullptr) {
+            prev_buf = old_img_desc->data;
+        }
+        img_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
+        image_desc_map[style_type] = img_desc;
+            
+        if (buf != nullptr) {
+            uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
+            if (img_data != nullptr) {
+                img_desc->data = img_data;
+                lv_style_set_bg_img_src(style, img_desc);
+            }
+        } else {
+            lv_style_set_bg_img_src(style, NULL);
+        }
+
+        this->image_desc_map[style_type] = img_desc;
+
+        if (prev_buf != nullptr) {
+            free((void*)(prev_buf));
+        }
+        if (old_img_desc != nullptr) {
+            free(old_img_desc);
         }
     } else {
-        lv_style_set_bg_img_src(style, NULL);
-    }
+        if (this->symbol_map.find(style_type) != this->symbol_map.end()) {
+            image_symbol = this->symbol_map.at(style_type);
+        }
+        this->symbol_map[style_type] = symbol;
 
-    this->image_desc_map[style_type] = img_desc;
-    if (prev_buf != nullptr) {
-        free((void*)(prev_buf));
-    }
-    if (old_img_desc != nullptr) {
-        free(old_img_desc);
+        lv_style_set_bg_img_src(style, this->symbol_map[style_type].c_str());
     }
 };
 

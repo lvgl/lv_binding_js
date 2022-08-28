@@ -9,6 +9,7 @@ function App () {
         <Window style={style.window}>
             <Line
                 points={points}
+                style={style.line}
             />
         </Window>
     )

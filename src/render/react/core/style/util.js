@@ -57,7 +57,7 @@ export function ProcessPxOrPercent (key, value, result) {
 
 export function ProcessEnum (obj) {
     return (key, value, result) => {
-        if (obj[value]) {
+        if (obj[value] !== void 0) {
             result[key] = obj[value]
         }
     }
@@ -95,4 +95,8 @@ export function ProcessDeg (key, value, result) {
     const [_, deg] = value.match(reg)
     if (isNaN(deg)) return
     result[key] = +deg
+}
+
+export function ProcessBoolean (key, value, result) {
+    result[key] = !!value
 }

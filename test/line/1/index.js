@@ -4,7 +4,7 @@ var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __defNormalProp = (obj7, key, value) => key in obj7 ? __defProp(obj7, key, { enumerable: true, configurable: true, writable: true, value }) : obj7[key] = value;
+var __defNormalProp = (obj8, key, value) => key in obj8 ? __defProp(obj8, key, { enumerable: true, configurable: true, writable: true, value }) : obj8[key] = value;
 var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
   get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
 }) : x)(function(x) {
@@ -24,8 +24,8 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
-var __publicField = (obj7, key, value) => {
-  __defNormalProp(obj7, typeof key !== "symbol" ? key + "" : key, value);
+var __publicField = (obj8, key, value) => {
+  __defNormalProp(obj8, typeof key !== "symbol" ? key + "" : key, value);
   return value;
 };
 
@@ -1549,9 +1549,9 @@ var require_react_development = __commonJS({
         function validateFragmentProps(fragment) {
           {
             setCurrentlyValidatingElement(fragment);
-            var keys8 = Object.keys(fragment.props);
-            for (var i = 0; i < keys8.length; i++) {
-              var key = keys8[i];
+            var keys9 = Object.keys(fragment.props);
+            for (var i = 0; i < keys9.length; i++) {
+              var key = keys9[i];
               if (key !== "children" && key !== "key") {
                 error("Invalid prop `%s` supplied to `React.Fragment`. React.Fragment can only have `key` and `children` props.", key);
                 break;
@@ -17863,17 +17863,17 @@ For more info, visit https://fb.me/react-mock-scheduler`);
         var scheduleUpdate = null;
         var setSuspenseHandler = null;
         {
-          var copyWithSetImpl = function(obj7, path3, idx, value) {
+          var copyWithSetImpl = function(obj8, path3, idx, value) {
             if (idx >= path3.length) {
               return value;
             }
             var key = path3[idx];
-            var updated = Array.isArray(obj7) ? obj7.slice() : _assign({}, obj7);
-            updated[key] = copyWithSetImpl(obj7[key], path3, idx + 1, value);
+            var updated = Array.isArray(obj8) ? obj8.slice() : _assign({}, obj8);
+            updated[key] = copyWithSetImpl(obj8[key], path3, idx + 1, value);
             return updated;
           };
-          var copyWithSet = function(obj7, path3, value) {
-            return copyWithSetImpl(obj7, path3, 0, value);
+          var copyWithSet = function(obj8, path3, value) {
+            return copyWithSetImpl(obj8, path3, 0, value);
           };
           overrideHookState = function(fiber, id2, path3, value) {
             var currentHook2 = fiber.memoizedState;
@@ -18249,19 +18249,19 @@ function unRegistEvent(uid, eventType) {
   if (!eventType) {
     delete eventMap[uid];
   } else {
-    const obj7 = eventMap[uid];
-    obj7 && delete obj7[eventType];
+    const obj8 = eventMap[uid];
+    obj8 && delete obj8[eventType];
   }
 }
 function fireEvent(targetUid, currentTargetUid, eventType, e) {
-  const obj7 = eventMap[currentTargetUid];
+  const obj8 = eventMap[currentTargetUid];
   const target = getInstance(targetUid);
   const currentTarget = getInstance(currentTargetUid);
-  if (obj7) {
+  if (obj8) {
     e.target = target;
     e.currentTarget = currentTarget;
     try {
-      obj7[eventType].call(null, e);
+      obj8[eventType].call(null, e);
     } catch (err) {
       console.log(err);
     }
@@ -18377,10 +18377,10 @@ function ProcessPxOrPercent(key, value, result) {
     return result[`${key}_pct`] = value1;
   }
 }
-function ProcessEnum(obj7) {
+function ProcessEnum(obj8) {
   return (key, value, result) => {
-    if (obj7[value]) {
-      result[key] = obj7[value];
+    if (obj8[value]) {
+      result[key] = obj8[value];
     }
   };
 }
@@ -18857,6 +18857,23 @@ function OpacityStyle(style2, result, compName) {
   return result;
 }
 
+// src/render/react/core/style/pipe/line.js
+var obj7 = {
+  "line-width": ProcessPx,
+  "line-color": ProcessColor
+};
+var keys8 = Object.keys(obj7);
+function LineStyle(style2, result, compName) {
+  keys8.forEach((key) => {
+    if (style2[key]) {
+      obj7[key](key, style2[key], result);
+    }
+  });
+  if (style2["line-rounded"]) {
+    result["line-rounded"] = Boolean(style2["line-rounded"]);
+  }
+}
+
 // src/render/react/utils/helpers.ts
 function isValidUrl(str) {
   if (!str)
@@ -18912,12 +18929,12 @@ var _StyleSheet = class {
   }
   static create() {
     return new Proxy({ __dirty: true }, {
-      set(obj7, prop, value) {
+      set(obj8, prop, value) {
         if (prop !== "__dirty") {
-          obj7[prop] = value;
-          obj7.__dirty = true;
+          obj8[prop] = value;
+          obj8.__dirty = true;
         } else {
-          obj7.__dirty = value;
+          obj8.__dirty = value;
         }
       }
     });
@@ -18936,7 +18953,8 @@ StyleSheet.pipeline([
   ScrollStyle,
   OpacityStyle,
   MiscStyle,
-  TransStyle
+  TransStyle,
+  LineStyle
 ]);
 function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit = true, defaultStyle = {} } = {}) {
   if (!styleSheet)
@@ -18948,8 +18966,8 @@ function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit
     return;
   styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
   const result = StyleSheet.transform(styleSheet, compName);
-  const keys8 = Object.keys(result);
-  comp.nativeSetStyle(result, keys8, keys8.length, styleType, isInit);
+  const keys9 = Object.keys(result);
+  comp.nativeSetStyle(result, keys9, keys9.length, styleType, isInit);
   PostProcessStyle({ comp, styleSheet, styleType });
 }
 
@@ -19057,7 +19075,7 @@ var ViewComp = class extends NativeView {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19155,7 +19173,7 @@ var Window = class extends NativeComp {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19279,7 +19297,7 @@ var TextComp = class extends NativeText {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19411,7 +19429,7 @@ var ImageComp = class extends NativeImage {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19523,7 +19541,7 @@ var ButtonComp = class extends NativeButton {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19663,7 +19681,7 @@ var SliderComp = class extends NativeSlider {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19777,7 +19795,7 @@ var SwitchComp = class extends NativeComp2 {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -19905,7 +19923,7 @@ var TextareaComp = class extends NativeView2 {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20036,7 +20054,7 @@ var InputComp = class extends NativeView3 {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20152,7 +20170,7 @@ var KeyboardComp = class extends NativeView4 {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20276,7 +20294,7 @@ var CheckboxComp = class extends NativeView5 {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20410,7 +20428,7 @@ var DropdownlistComp = class extends NativeDropdownlist {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20523,7 +20541,7 @@ var ProgressBarComp = class extends NativeProgressBar {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20641,7 +20659,7 @@ var RollerComp = class extends NativeRoller {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20743,7 +20761,7 @@ var LineComp = class extends NativeLine {
     const style2 = super.style;
     const that = this;
     this.style = new Proxy(this, {
-      get(obj7, prop) {
+      get(obj8, prop) {
         if (styleGetterProp.includes(prop)) {
           return style2[prop].call(that);
         }
@@ -20800,6 +20818,126 @@ var LineConfig = class {
   }
 };
 
+// src/render/react/components/Calendar/comp.js
+var bridge16 = globalThis.SJSJSBridge;
+var NativeCalendar = bridge16.NativeRender.NativeComponents.Calendar;
+function setCalendarProps(comp, newProps, oldProps) {
+  const setter = {
+    set style(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Calendar", styleType: 0, oldStyleSheet: oldProps.style });
+    },
+    set today(today2) {
+      if (today2 && today2 !== oldProps.today) {
+        const date = new Date(today2);
+        comp.setToday(date.getFullYear(), date.getMonth() + 1, date.getDate());
+      }
+    },
+    set shownMonth(month) {
+      if (month && month !== oldProps.shownMonth) {
+        const date = new Date(today);
+        comp.setShownMonth(date.getFullYear(), date.getMonth() + 1);
+      }
+    },
+    set highLightDates(dates) {
+      if (Array.isArray(dates) && dates !== oldProps.highLightDates) {
+        dates = dates.map((item) => {
+          const date = new Date(today);
+          return [date.getFullYear(), date.getMonth() + 1, date.getDate()];
+        });
+        comp.setHighlightDates(dates, dates.length);
+      }
+    },
+    set align({
+      type,
+      pos = [0, 0]
+    }) {
+      if (!type || type === oldProps.align?.type && pos[0] === oldProps.align?.pos?.[0] && pos[1] === oldProps.align?.pos?.[1])
+        return;
+      comp.align(type, pos);
+    },
+    set alignTo({
+      type,
+      pos = [0, 0],
+      parent
+    }) {
+      if (!type || type === oldProps.alignTo?.type && pos[0] === (oldProps.alignTo?.pos?.[0] || 0) && pos[1] === (oldProps.alignTo?.pos?.[1] || 0) && parent?.uid === oldProps.alignTo?.parent?.uid)
+        return;
+      comp.alignTo(type, pos, parent);
+    }
+  };
+  Object.assign(setter, newProps);
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var CalendarComp = class extends NativeCalendar {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj8, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setCalendarProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+};
+__publicField(CalendarComp, "tagName", "Calendar");
+
+// src/render/react/components/Calendar/config.js
+var CalendarConfig = class {
+  tagName = "Calendar";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new CalendarComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -20815,8 +20953,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge16 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge16.NativeRender.Animate;
+var bridge17 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge17.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -20844,6 +20982,7 @@ var Dropdownlist = registerComponent(new DropdownlistConfig());
 var ProgressBar = registerComponent(new ProgressBarConfig());
 var Roller = registerComponent(new RollerConfig());
 var Line = registerComponent(new LineConfig());
+var Calendar = registerComponent(new CalendarConfig());
 var Render = Renderer;
 
 // test/line/1/index.jsx
@@ -20853,13 +20992,19 @@ function App() {
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(Line, {
-    points
+    points,
+    style: style.line
   }));
 }
 var style = {
   window: {
     "width": "480px",
     "height": "320px"
+  },
+  line: {
+    "line-width": 8,
+    "line-color": "blue",
+    "line-rounded": true
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));

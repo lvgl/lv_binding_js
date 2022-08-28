@@ -27,10 +27,30 @@ static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, i
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsString(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ImageClassID);
+        size_t len;
+        const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
+        std::string s = str;
+        s.resize(len);
+
+        ((Image*)(ref->comp))->setSymbol(s);
+        LV_LOG_USER("Image %s setYmbol", ref->uid);
+        JS_FreeCString(ctx, str);
+
+        return JS_NewBool(ctx, 1);
+    fail:
+        return JS_ThrowInternalError(ctx, "image setSymbol fail");
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("setImageBinary", 0, NativeCompSetImageBinary),
+    SJS_CFUNC_DEF("setSymbol", 0, NativeCompSetSymbol),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),

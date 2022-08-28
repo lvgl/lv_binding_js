@@ -14,13 +14,21 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
     struct _lv_obj_t *current_target = event->current_target;
     BasicComponent* target_instance = static_cast<BasicComponent*>(target->user_data);
     BasicComponent* current_target_instance = static_cast<BasicComponent*>(current_target->user_data);
-    std::string target_uid = target_instance->uid;
-    std::string current_target_uid = current_target_instance->uid;
+    std::string target_uid;
+    std::string current_target_uid;
+    if (target_instance) {
+        target_uid = target_instance->uid;
+    }
+    current_target_uid = current_target_instance->uid;
 
     if (iter != WrapEventDict.end()) {
         EventWrapFunc func = iter->second;
 
-        argv[0] = JS_NewString(ctx, target_uid.c_str());
+        if (target_instance) {
+            argv[0] = JS_NewString(ctx, target_uid.c_str());
+        } else {
+            argv[0] = JS_UNDEFINED;
+        }
         argv[1] = JS_NewString(ctx, current_target_uid.c_str());
         argv[2] = JS_NewInt32(ctx, eventType);
         if (func != nullptr) {

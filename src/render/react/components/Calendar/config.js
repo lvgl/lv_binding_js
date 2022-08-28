@@ -1,7 +1,7 @@
-import { ButtonComp } from './comp'
+import { CalendarComp } from './comp'
 
-export default class ButtonConfig {
-    tagName = 'Button';
+export default class CalendarConfig {
+    tagName = 'Calendar';
     native = null;
     shouldSetTextContent() {
         return false;
@@ -13,7 +13,7 @@ export default class ButtonConfig {
         workInProgress,
         uid
     ) {
-        const instance = new ButtonComp({ uid });
+        const instance = new CalendarComp({ uid });
         instance.setProps(newProps, {});
         return instance;
     }

@@ -12,7 +12,7 @@ class Calendar : public BasicComponent {
 
   std::vector<lv_calendar_date_t> highlighted_days;
 
-  setToday (uint32_t year, uint32_t month, uint32_t day);
-  setShownMonth (uint32_t year, uint32_t month);
-  setHighlightDates (std::vector<lv_calendar_date_t>, int32_t num);
+  void setToday (uint32_t year, uint32_t month, uint32_t day);
+  void setShownMonth (uint32_t year, uint32_t month);
+  void setHighlightDates (std::vector<lv_calendar_date_t>& dates, int32_t num);
 };

@@ -20,8 +20,11 @@ class Image : public BasicComponent {
 
   lv_img_dsc_t_1* image_desc = nullptr;
   uint8_t* image_buf = nullptr;
+  std::string symbol;
   
   void setImageBinary(uint8_t* buf, size_t len);
+  
+  void setSymbol (std::string& str);
 
   void virtual initCompStyle (int32_t type);
 };

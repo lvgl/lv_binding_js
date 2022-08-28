@@ -9,6 +9,17 @@ WRAPPED_JS_Align_To(View, "View")
 STYLE_INFO(View, "View")
 WRAPPED_JS_BACKGROUND_IMAGE(View,"View")
 
+static JSValue NativeCompInsertChildBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsObject(argv[0])) {
+        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ViewClassID);
+        
+        ((View*)(parent->comp))->insertChildBefore((void*)(child->comp));
+        LV_LOG_USER("View %s insertChildBefore %s", parent->uid, child->uid);
+    }
+    return JS_UNDEFINED;
+};
+
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
         COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
@@ -36,6 +47,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
+    SJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
