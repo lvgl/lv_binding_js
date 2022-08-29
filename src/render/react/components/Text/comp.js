@@ -91,4 +91,13 @@ export class TextComp extends NativeText {
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false })
     }
+    moveToFront () {
+        super.moveToFront()
+    }
+    moveToBackground () {
+        super.moveToBackground()
+    }
+    scrollIntoView () {
+        super.scrollIntoView()
+    }
 }

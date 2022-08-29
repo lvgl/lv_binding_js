@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(List, "List")
 WRAPPED_JS_Align(List, "List")
 WRAPPED_JS_Align_To(List, "List")
 STYLE_INFO(List, "List")
+WRAPPED_MOVE_TO_FRONT(List, "List")
+WRAPPED_MOVE_TO_BACKGROUND(List, "List")
+WRAPPED_SCROLL_INTO_VIEW(List, "List")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -39,6 +42,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

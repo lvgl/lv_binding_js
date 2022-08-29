@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Roller, "Roller")
 WRAPPED_JS_Align(Roller, "Roller")
 WRAPPED_JS_Align_To(Roller, "Roller")
 STYLE_INFO(Roller, "Roller")
+WRAPPED_MOVE_TO_FRONT(Roller, "Roller")
+WRAPPED_MOVE_TO_BACKGROUND(Roller, "Roller")
+WRAPPED_SCROLL_INTO_VIEW(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
@@ -73,6 +76,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setOptions", 0, NativeCompSetOptions),
     SJS_CFUNC_DEF("setSelectIndex", 0, NativeCompSetSelectIndex),
     SJS_CFUNC_DEF("setVisibleRowCount", 0, NativeCompSetVisibleRowCount),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Image, "Image")
 WRAPPED_JS_Align(Image, "Image")
 WRAPPED_JS_Align_To(Image, "Image")
 STYLE_INFO(Image, "Image")
+WRAPPED_MOVE_TO_FRONT(Image, "Image")
+WRAPPED_MOVE_TO_BACKGROUND(Image, "Image")
+WRAPPED_SCROLL_INTO_VIEW(Image, "Image")
 
 static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -55,6 +58,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

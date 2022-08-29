@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Calendar, "Calendar")
 WRAPPED_JS_Align(Calendar, "Calendar")
 WRAPPED_JS_Align_To(Calendar, "Calendar")
 STYLE_INFO(Calendar, "Calendar")
+WRAPPED_MOVE_TO_FRONT(Calendar, "Calendar")
+WRAPPED_MOVE_TO_BACKGROUND(Calendar, "Calendar")
+WRAPPED_SCROLL_INTO_VIEW(Calendar, "Calendar")
 
 static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
@@ -92,6 +95,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setHighlightDates", 0, NativeCompSetHightLights),
     SJS_CFUNC_DEF("setToday", 0, NativeCompSetToday),
     SJS_CFUNC_DEF("setShownMonth", 0, NativeCompSetShownMonth),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

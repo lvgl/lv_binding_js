@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef(initialValue) {
+        function useRef2(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect(create, deps) {
+        function useEffect2(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1677,12 +1677,12 @@ var require_react_development = __commonJS({
         exports.useCallback = useCallback;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect;
+        exports.useEffect = useEffect2;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef;
+        exports.useRef = useRef2;
         exports.useState = useState2;
         exports.version = ReactVersion;
       })();
@@ -19257,6 +19257,15 @@ var ViewComp = class extends NativeView {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 
 // src/render/react/components/View/config.js
@@ -19475,6 +19484,15 @@ var TextComp = class extends NativeText {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 
 // src/render/react/components/Text/config.js
@@ -19611,6 +19629,15 @@ var ImageComp = class extends NativeImage {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 __publicField(ImageComp, "tagName", "Image");
 
@@ -19724,6 +19751,15 @@ var ButtonComp = class extends NativeButton {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 __publicField(ButtonComp, "tagName", "Button");
@@ -19865,6 +19901,15 @@ var SliderComp = class extends NativeSlider {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 __publicField(SliderComp, "tagName", "Slider");
 
@@ -19980,6 +20025,15 @@ var SwitchComp = class extends NativeComp2 {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 
@@ -20104,6 +20158,15 @@ var TextareaComp = class extends NativeView2 {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 
@@ -20236,6 +20299,15 @@ var InputComp = class extends NativeView3 {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 
 // src/render/react/components/Input/config.js
@@ -20351,6 +20423,15 @@ var KeyboardComp = class extends NativeView4 {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 
@@ -20479,6 +20560,15 @@ var CheckboxComp = class extends NativeView5 {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 
@@ -20610,6 +20700,15 @@ var DropdownlistComp = class extends NativeDropdownlist {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 __publicField(DropdownlistComp, "tagName", "Dropdownlist");
 
@@ -20722,6 +20821,15 @@ var ProgressBarComp = class extends NativeProgressBar {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 __publicField(ProgressBarComp, "tagName", "ProgressBar");
@@ -20841,6 +20949,15 @@ var RollerComp = class extends NativeRoller {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 __publicField(RollerComp, "tagName", "Roller");
 
@@ -20944,6 +21061,15 @@ var LineComp = class extends NativeLine {
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
   }
 };
 __publicField(LineComp, "tagName", "Line");
@@ -21068,6 +21194,15 @@ var CalendarComp = class extends NativeCalendar {
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
   }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
 };
 __publicField(CalendarComp, "tagName", "Calendar");
 
@@ -21151,6 +21286,11 @@ var Render = Renderer;
 var import_react = __toESM(require_react());
 function App() {
   const [list, setlist] = (0, import_react.useState)(Array(2).fill(1));
+  const button = (0, import_react.useRef)();
+  const lastItem = (0, import_react.useRef)();
+  (0, import_react.useEffect)(() => {
+    lastItem.current?.scrollIntoView();
+  }, [list]);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(View, {
@@ -21160,16 +21300,23 @@ function App() {
     }
   }, list.map((_, i) => /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.view2,
-    key: i
+    key: i,
+    ref: (ins) => {
+      if (i == list.length - 1) {
+        lastItem.current = ins;
+      }
+    }
   }, /* @__PURE__ */ import_react.default.createElement(Image, {
     src: "audio"
   }), /* @__PURE__ */ import_react.default.createElement(Text, null, `Track ${i + 1}`))), /* @__PURE__ */ import_react.default.createElement(Button, {
     style: style.button,
+    ref: button,
     align: {
       type: EAlignType.ALIGN_BOTTOM_RIGHT
     },
     onClick: () => {
       setlist(Array(list.length + 1).fill(1));
+      button.current?.moveToFront();
     }
   })));
 }

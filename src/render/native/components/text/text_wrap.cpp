@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Text, "Text")
 WRAPPED_JS_Align(Text, "Text")
 WRAPPED_JS_Align_To(Text, "Text")
 STYLE_INFO(Text, "Text")
+WRAPPED_MOVE_TO_FRONT(Text, "Text")
+WRAPPED_MOVE_TO_BACKGROUND(Text, "Text")
+WRAPPED_SCROLL_INTO_VIEW(Text, "Text")
 
 static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
@@ -30,6 +33,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

@@ -92,4 +92,13 @@ export class CalendarComp extends NativeCalendar {
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false })
     }
+    moveToFront () {
+        super.moveToFront()
+    }
+    moveToBackground () {
+        super.moveToBackground()
+    }
+    scrollIntoView () {
+        super.scrollIntoView()
+    }
 }

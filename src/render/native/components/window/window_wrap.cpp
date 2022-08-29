@@ -5,33 +5,15 @@ static JSClassID WindowClassID;
 WRAPPED_JS_SETSTYLE(Window, "Window")
 WRAPPED_JS_AddEventListener(Window, "Window")
 STYLE_INFO(Window, "Window")
-
-static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, WindowClassID);
-        
-        ((Window*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("Window %s remove child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
-
-static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, WindowClassID);
-        
-        ((Window*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("Window %s append child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
+WRAPPED_APPEND_CHILD(Window,"Window")
+WRAPPED_REMOVE_CHILD(Window,"Window")
+WRAPPED_INSERT_CHILD(Window,"Window")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    SJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),

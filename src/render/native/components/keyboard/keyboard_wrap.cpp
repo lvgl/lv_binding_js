@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Keyboard, "Keyboard")
 WRAPPED_JS_Align(Keyboard, "Keyboard")
 WRAPPED_JS_Align_To(Keyboard, "Keyboard")
 STYLE_INFO(Keyboard, "Keyboard")
+WRAPPED_MOVE_TO_FRONT(Keyboard, "Keyboard")
+WRAPPED_MOVE_TO_BACKGROUND(Keyboard, "Keyboard")
+WRAPPED_SCROLL_INTO_VIEW(Keyboard, "Keyboard")
 
 static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -40,6 +43,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_CFUNC_DEF("setTextarea", 0, NativeCompSetTextarea),
     SJS_CFUNC_DEF("setMode", 0, NativeCompSetMode),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

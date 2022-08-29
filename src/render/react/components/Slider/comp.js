@@ -101,8 +101,16 @@ export class SliderComp extends NativeSlider {
     }
     close () {
     }
-
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false })
+    }
+    moveToFront () {
+        super.moveToFront()
+    }
+    moveToBackground () {
+        super.moveToBackground()
+    }
+    scrollIntoView () {
+        super.scrollIntoView()
     }
 }

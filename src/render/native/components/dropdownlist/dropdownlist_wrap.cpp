@@ -7,6 +7,9 @@ WRAPPED_JS_AddEventListener(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_Align(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_Align_To(Dropdownlist, "Dropdownlist")
 STYLE_INFO(Dropdownlist, "Dropdownlist")
+WRAPPED_MOVE_TO_FRONT(Dropdownlist, "Dropdownlist")
+WRAPPED_MOVE_TO_BACKGROUND(Dropdownlist, "Dropdownlist")
+WRAPPED_SCROLL_INTO_VIEW(Dropdownlist, "Dropdownlist")
 
 static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
@@ -111,6 +114,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setDir", 0, NativeCompSetDir),
     SJS_CFUNC_DEF("setArrowDir", 0, NativeCompSetArrowDir),
     SJS_CFUNC_DEF("setHighLightSelect", 0, NativeCompSetHighLightSelect),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

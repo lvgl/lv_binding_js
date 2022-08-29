@@ -269,3 +269,15 @@ void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {
 void BasicComponent::setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent) {
     lv_obj_align_to(this->instance, parent->instance, static_cast<lv_align_t>(align_type), x, y);
 };
+
+void BasicComponent::moveToFront () {
+    lv_obj_move_foreground(this->instance);
+};
+
+void BasicComponent::moveToBackground () {
+    lv_obj_move_background(this->instance);
+};
+
+void BasicComponent::scrollIntoView () {
+    lv_obj_scroll_to_view(this->instance, LV_ANIM_ON);
+};

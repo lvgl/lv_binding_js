@@ -78,4 +78,13 @@ export class CanvasComp extends NativeButton {
         }
         return this.ctx
     }
+    moveToFront () {
+        super.moveToFront()
+    }
+    moveToBackground () {
+        super.moveToBackground()
+    }
+    scrollIntoView () {
+        super.scrollIntoView()
+    }
 }

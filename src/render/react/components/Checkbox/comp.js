@@ -96,4 +96,13 @@ export class CheckboxComp extends NativeView {
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false })
     }
+    moveToFront () {
+        super.moveToFront()
+    }
+    moveToBackground () {
+        super.moveToBackground()
+    }
+    scrollIntoView () {
+        super.scrollIntoView()
+    }
 }

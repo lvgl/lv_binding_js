@@ -8,6 +8,9 @@ WRAPPED_JS_Align(ProgressBar, "ProgressBar")
 WRAPPED_JS_Align_To(ProgressBar, "ProgressBar")
 STYLE_INFO(ProgressBar, "ProgressBar")
 WRAPPED_JS_BACKGROUND_IMAGE(ProgressBar,"ProgressBar")
+WRAPPED_MOVE_TO_FRONT(ProgressBar, "ProgressBar")
+WRAPPED_MOVE_TO_BACKGROUND(ProgressBar, "ProgressBar")
+WRAPPED_SCROLL_INTO_VIEW(ProgressBar, "ProgressBar")
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsBool(argv[1])) {
@@ -46,6 +49,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
     SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
     SJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

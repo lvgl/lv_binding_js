@@ -8,6 +8,9 @@ WRAPPED_JS_Align(Checkbox, "Checkbox")
 WRAPPED_JS_Align_To(Checkbox, "Checkbox")
 STYLE_INFO(Checkbox, "Checkbox")
 WRAPPED_JS_BACKGROUND_IMAGE(Checkbox,"Checkbox")
+WRAPPED_MOVE_TO_FRONT(Checkbox, "Checkbox")
+WRAPPED_MOVE_TO_BACKGROUND(Checkbox, "Checkbox")
+WRAPPED_SCROLL_INTO_VIEW(Checkbox, "Checkbox")
 
 static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
@@ -57,6 +60,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setChecked", 0, NativeCompSetChecked),
     SJS_CFUNC_DEF("setDisabled", 0, NativeCompSetDisabled),
     SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

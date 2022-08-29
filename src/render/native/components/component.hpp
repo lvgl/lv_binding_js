@@ -46,6 +46,75 @@ void NativeComponentLineInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentCalendarInit (JSContext* ctx, JSValue ns);
 
+#define WRAPPED_APPEND_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
+    static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \
+        if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \
+            COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);                                                            \
+            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(this_val);                                                          \
+                                                                                                                            \
+            ((COMPONENT*)(parent->comp))->appendChild((void*)(child->comp));                                                \
+            LV_LOG_USER("%s %s append child %s", COMPONENT_NAME, parent->uid, child->uid);                                  \
+        }                                                                                                                   \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
+#define WRAPPED_REMOVE_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
+    static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \
+        if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \
+            COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);                                                            \
+            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(this_val);                                                          \
+                                                                                                                            \
+            ((COMPONENT*)(parent->comp))->removeChild((void*)(child->comp));                                                \
+            LV_LOG_USER("%s %s remove child %s", COMPONENT_NAME, parent->uid, child->uid);                                  \
+        }                                                                                                                   \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
+#define WRAPPED_INSERT_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
+    static JSValue NativeCompInsertChildBefore(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {       \
+        if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \
+            COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);                                                            \
+            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(this_val);                                                          \
+                                                                                                                            \
+            ((COMPONENT*)(parent->comp))->insertChildBefore((void*)(child->comp));                                          \
+            LV_LOG_USER("%s %s insertChildBefore %s", COMPONENT_NAME, parent->uid, child->uid);                             \
+        }                                                                                                                   \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
+#define WRAPPED_MOVE_TO_FRONT(COMPONENT,COMPONENT_NAME)                                                                     \
+    static JSValue NativeCompMoveToFront(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);                                                                 \
+                                                                                                                            \
+        ((COMPONENT*)(ref->comp))->moveToFront();                                                                           \
+        LV_LOG_USER("%s %s moveToFront", COMPONENT_NAME, ref->uid);                                                         \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
+#define WRAPPED_MOVE_TO_BACKGROUND(COMPONENT,COMPONENT_NAME)                                                                \
+    static JSValue NativeCompMoveToBackground(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {        \
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);                                                                 \
+                                                                                                                            \
+        ((COMPONENT*)(ref->comp))->moveToBackground();                                                                      \
+        LV_LOG_USER("%s %s moveToBackground", COMPONENT_NAME, ref->uid);                                                    \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
+#define WRAPPED_SCROLL_INTO_VIEW(COMPONENT,COMPONENT_NAME)                                                                  \
+    static JSValue NativeCompScrollIntoView(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {          \
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);                                                                 \
+                                                                                                                            \
+        ((COMPONENT*)(ref->comp))->scrollIntoView();                                                                        \
+        LV_LOG_USER("%s %s scrollIntoView", COMPONENT_NAME, ref->uid);                                                      \
+        return JS_UNDEFINED;                                                                                                \
+    };                                                                                                                      \
+                                                                                                                            \
+
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \
         if (argc >= 2 && JS_IsObject(argv[0]) && JS_IsArray(ctx, argv[1]) && JS_IsNumber(argv[2]) && JS_IsNumber(argv[3]) && JS_IsBool(argv[4])) {       \

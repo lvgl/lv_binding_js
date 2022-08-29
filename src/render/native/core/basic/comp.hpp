@@ -70,6 +70,10 @@ class BasicComponent {
     void removeChild(void* child);
     void insertChildBefore(void *child);
 
+    void moveToFront ();
+    void moveToBackground ();
+    void scrollIntoView ();
+
     void setAlign (int32_t align_type, int32_t x, int32_t y);
     void setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent);
 };

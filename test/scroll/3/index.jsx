@@ -1,8 +1,14 @@
 import { View, Render, Window, Text, EAlignType, Image, Button } from 'lvgljs-ui';
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 function App () {
     const [list, setlist] = useState(Array(2).fill(1))
+    const button = useRef()
+    const lastItem = useRef()
+
+    useEffect(() => {
+        lastItem.current?.scrollIntoView()
+    }, [list])
 
     return (
         <Window style={style.window}>
@@ -14,7 +20,15 @@ function App () {
             >
                 {
                     list.map((_, i) => (
-                        <View style={style.view2} key={i}>
+                        <View 
+                            style={style.view2} 
+                            key={i} 
+                            ref={(ins) => {
+                                if (i == list.length - 1) {
+                                    lastItem.current = ins
+                                }
+                            }}
+                        >
                             <Image src="audio" />
                             <Text>{`Track ${i + 1}`}</Text>
                         </View>
@@ -22,11 +36,13 @@ function App () {
                 }
                 <Button 
                     style={style.button}
+                    ref={button}
                     align={{
                         type: EAlignType.ALIGN_BOTTOM_RIGHT,
                     }}
                     onClick={() => {
                         setlist(Array(list.length + 1).fill(1))
+                        button.current?.moveToFront()
                     }}
                 >
                 </Button>

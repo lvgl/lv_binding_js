@@ -8,39 +8,27 @@ WRAPPED_JS_Align(Button, "Button")
 WRAPPED_JS_Align_To(Button, "Button")
 STYLE_INFO(Button, "Button")
 WRAPPED_JS_BACKGROUND_IMAGE(Button,"Button")
-
-static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ButtonClassID);
-        
-        ((Button*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("Button %s remove child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
-
-static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ButtonClassID);
-        
-        ((Button*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("Button %s append child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
+WRAPPED_APPEND_CHILD(Button,"Button")
+WRAPPED_REMOVE_CHILD(Button,"Button")
+WRAPPED_INSERT_CHILD(Button,"Button")
+WRAPPED_MOVE_TO_FRONT(Button, "Button")
+WRAPPED_MOVE_TO_BACKGROUND(Button, "Button")
+WRAPPED_SCROLL_INTO_VIEW(Button, "Button")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
+    SJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

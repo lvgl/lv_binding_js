@@ -8,28 +8,9 @@ WRAPPED_JS_Align(Slider, "Slider")
 WRAPPED_JS_Align_To(Slider, "Slider")
 STYLE_INFO(Slider, "Slider")
 WRAPPED_JS_BACKGROUND_IMAGE(Slider,"Slider")
-
-static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SliderClassID);
-        
-        ((Slider*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("Slider %s remove child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
-
-static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SliderClassID);
-        
-        ((Slider*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("Slider %s append child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
+WRAPPED_MOVE_TO_FRONT(Slider, "Slider")
+WRAPPED_MOVE_TO_BACKGROUND(Slider, "Slider")
+WRAPPED_SCROLL_INTO_VIEW(Slider, "Slider")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
@@ -63,8 +44,6 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
-    SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     SJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
     SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -72,6 +51,9 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
