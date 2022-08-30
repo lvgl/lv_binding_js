@@ -65,6 +65,13 @@ static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_style_set_bg_color(style, lv_color_hex(y));
 };
 
+static void CompSetBackgroundOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int y;
+    JS_ToInt32(ctx, &y, obj);
+
+    lv_style_set_bg_opa(style, y);
+};
+
 static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
@@ -613,6 +620,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* background */
     {"background-color", &CompSetBackgroundColor},
+    {"background-opacity", &CompSetBackgroundOpacity},
     {"background-grad-color", &CompSetBackgroundGradColor},
     {"background-grad-color-dir", &CompSetBackgroundGradColorDir},
 

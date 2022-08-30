@@ -35,7 +35,7 @@ function setTextProps(comp, newProps, oldProps) {
             setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR, oldStyleSheet: oldProps.scrollbarStyle });
         },
         set scrollbarScrollingStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR || STYLE_TYPE.STATE_SCROLLED, oldStyleSheet: oldProps.scrollbarScrollingStyle });
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR | STYLE_TYPE.STATE_SCROLLED, oldStyleSheet: oldProps.scrollbarScrollingStyle });
         },
         set onPressedStyle (styleSheet) {
             setStyle({ comp, styleSheet, compName: "Text", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });

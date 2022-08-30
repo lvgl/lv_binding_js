@@ -12,6 +12,9 @@ export function OpacityStyle (style, result, compName) {
             result['opacity'] = NormalizeOpacity(style['opacity'])
         }
     }
+    if (style['background-opacity']) {
+        result['background-opacity'] = NormalizeOpacity(style['background-opacity'])
+    }
     if (style['border-opacity']) {
         result['border-opacity'] = NormalizeOpacity(style['border-opacity'])
     }

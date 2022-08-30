@@ -34,7 +34,7 @@ const transitionProperty = {
 
     /*Group 2*/
     'background-color': 32,
-    'backgroun-opacity': 33,
+    'background-opacity': 33,
     'background-grad-color': 34, 
     'background-grad-dir': 35,
     'background-main-stop': 36,
@@ -271,6 +271,5 @@ export function TransStyle (style, result, compName) {
         const [x, y] = style['transform-origin'].trim()?.split(' ')
         result['img-origin'] = [NormalizePx(+x), NormalizePx(+y)]
     }
-
     return result
 }
