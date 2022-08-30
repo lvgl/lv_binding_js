@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLETYPE } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
@@ -6,7 +6,7 @@ const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
 function setListProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
         set items (items) {
             if (items !== oldProps.items && Array.isArray(items)) {

@@ -61,7 +61,7 @@ export const EAlignType = {
     'ALIGN_OUT_RIGHT_BOTTOM': 21
 }
 
-export const STYLETYPE = {
+export const STYLE_TYPE = {
     PART_MAIN: 0x000000,
     PART_SCROLLBAR: 0x010000,
     PART_INDICATOR: 0x020000,

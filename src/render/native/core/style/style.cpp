@@ -557,6 +557,13 @@ static void CompSetShadowColor (lv_obj_t* comp, lv_style_t* style, JSContext* ct
     lv_style_set_shadow_color(style, lv_color_hex(x));
 };
 
+static void CompSetShadowSpread (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_style_set_shadow_spread(style, x);
+};
+
 static void CompSetShadowOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -688,6 +695,7 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* shadow */
     {"shadow-width", &CompSetShadowWidth},
     {"shadow-color", &CompSetShadowColor},
+    {"shadow-spread", &CompSetShadowSpread},
     {"shadow-opacity", &CompSetShadowOpacity},
     {"shadow-offset-x", &CompSetOffsetX},
     {"shadow-offset-y", &CompSetOffsetY},

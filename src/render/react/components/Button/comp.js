@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeButton = bridge.NativeRender.NativeComponents.Button
@@ -6,10 +6,10 @@ const NativeButton = bridge.NativeRender.NativeComponents.Button
 function setButtonProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Button', styleType: 0x0000, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'Button', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
         set onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Button", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
+            setStyle({ comp, styleSheet, compName: "Button", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);

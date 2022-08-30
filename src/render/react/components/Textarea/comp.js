@@ -20,8 +20,8 @@ function setTextareaProps(comp, newProps, oldProps) {
         set style(styleSheet) {
             setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0000, oldStyleSheet: oldProps.style });
         },
-        set focusStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle });
+        set onFocusStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "Textarea", styleType: 0x0002, oldStyleSheet: oldProps.onFocusStyle });
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);

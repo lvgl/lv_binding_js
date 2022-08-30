@@ -23,15 +23,6 @@ function setImageProps(comp, newProps, oldProps) {
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
         },
-        set onPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
-        },
-        set onLongPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
-        },
-        set onLongPressRepeat (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
-        },
         set src(url) {
             if (url && url !== oldProps.src) {
                 if (builtInSymbol[url]) {

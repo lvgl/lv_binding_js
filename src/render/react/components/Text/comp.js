@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeText = bridge.NativeRender.NativeComponents.Text
@@ -16,23 +16,32 @@ function setTextProps(comp, newProps, oldProps) {
                 }
             }
         },
+        set placeholder (str) {
+            if (str !== oldProps.placeholder) {
+                comp.setPlaceHolder(str)  
+            }
+        },
+        // set mode (mode) {
+        //     if (mode === 'password') {
+        //         comp.setPasswordMode(true)
+        //     } else if (oldProps.mode === 'password') {
+        //         comp.setPasswordMode(false)
+        //     }
+        // },
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0000, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: "Text", styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+        },
+        set scrollbarStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR, oldStyleSheet: oldProps.scrollbarStyle });
+        },
+        set scrollbarScrollingStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR || STYLE_TYPE.STATE_SCROLLED, oldStyleSheet: oldProps.scrollbarScrollingStyle });
         },
         set onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle });
+            setStyle({ comp, styleSheet, compName: "Text", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
         set onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-        },
-        set onPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
-        },
-        set onLongPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
-        },
-        set onLongPressRepeat (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
         set align ({
             type,

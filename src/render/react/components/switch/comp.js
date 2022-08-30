@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeComp = bridge.NativeRender.NativeComponents.Switch
@@ -6,7 +6,10 @@ const NativeComp = bridge.NativeRender.NativeComponents.Switch
 function setSwitchProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "Switch", styleType: 0x0000, oldStyleSheet: oldProps.style});
+            setStyle({comp, styleSheet, compName: "Switch", styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style});
+        },
+        set checkedStyle (styleSheet) {
+            setStyle({comp, styleSheet, compName: "Switch", styleType: STYLE_TYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);

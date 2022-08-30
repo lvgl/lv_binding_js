@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, styleGetterProp, STYLETYPE } from '../config'
+import { setStyle, handleEvent, styleGetterProp, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar
@@ -9,10 +9,10 @@ function setProgressBarProps(comp, newProps, oldProps) {
             if (newProps.animationTime) {
                 styleSheet['style-transition-time'] = newProps.animationTime
             }
-            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
         set indicatorStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLE_TYPE.PART_INDICATOR, oldStyleSheet: oldProps.style });
         },
         set value (value) {
             if (value !== oldProps.value) {

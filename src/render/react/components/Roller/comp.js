@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLETYPE } from '../config'
+import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge
 const NativeRoller = bridge.NativeRender.NativeComponents.Roller
@@ -6,10 +6,10 @@ const NativeRoller = bridge.NativeRender.NativeComponents.Roller
 function setRollerProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
         set selectedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLETYPE.PART_SELECTED, oldStyleSheet: oldProps.selectedStyle });
+            setStyle({ comp, styleSheet, compName: 'Roller', styleType: STYLE_TYPE.PART_SELECTED, oldStyleSheet: oldProps.selectedStyle });
         },
         set options (options) {
             if (options !== oldProps.options && Array.isArray(options)) {

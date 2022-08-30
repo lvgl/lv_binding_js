@@ -24,6 +24,7 @@ const obj = {
         'underline': 1,
         'strikethrough': 2,
     }),
+    'font-size': ProcessPx,
 }
 const keys = Object.keys(obj)
 

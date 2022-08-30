@@ -4,7 +4,8 @@ const obj = {
     'shadow-width': ProcessPx,
     'shadow-color': ProcessColor,
     'shadow-offset-x': ProcessPx,
-    'shadow-offset-y': ProcessPx
+    'shadow-offset-y': ProcessPx,
+    'shadow-spread': ProcessPx
 }
 const keys = Object.keys(obj)
 

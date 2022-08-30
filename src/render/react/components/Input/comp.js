@@ -31,8 +31,8 @@ function setInputProps(comp, newProps, oldProps) {
         set onFocus (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
         },
-        set focusStyle (styleSheet) {
-            setStyle({ comp, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.focusStyle, styleSheet });
+        set onFocusStyle (styleSheet) {
+            setStyle({ comp, compName: "Input", styleType: 0x0002, oldStyleSheet: oldProps.onFocusStyle, styleSheet });
         },
         set value (str) {
             if (str !== oldProps.value) {

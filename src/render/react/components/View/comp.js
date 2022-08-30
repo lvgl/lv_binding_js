@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, STYLE_TYPE, STYLE_TYPE, styleGetterProp } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.View
@@ -6,7 +6,13 @@ const NativeView = bridge.NativeRender.NativeComponents.View
 function setViewProps(comp, newProps, oldProps) {
     const setter = {
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "View", styleType: 0x0000, oldStyleSheet: oldProps.style});
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
+        },
+        set scrollbarStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR, oldStyleSheet: oldProps.scrollbarStyle });
+        },
+        set scrollbarScrollingStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR || STYLE_TYPE.STATE_SCROLLED, oldStyleSheet: oldProps.scrollbarScrollingStyle });
         },
         set onPressedStyle (styleSheet) {
             setStyle({ comp, styleSheet, compName: "View", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle});

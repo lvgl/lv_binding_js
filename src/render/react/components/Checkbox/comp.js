@@ -1,4 +1,4 @@
-import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLETYPE } from '../config'
+import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLE_TYPE } from '../config'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeView = bridge.NativeRender.NativeComponents.Checkbox
@@ -21,16 +21,16 @@ function setCheckboxProps(comp, newProps, oldProps) {
             }
         },
         set style(styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_MAIN, oldStyleSheet: oldProps.style});
+            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style});
         },
         set checkedStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle});
+            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLE_TYPE.STATE_CHECKED, oldStyleSheet: oldProps.checkedStyle});
         },
         set indicatorStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR, oldStyleSheet: oldProps.indicatorStyle});
+            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLE_TYPE.PART_INDICATOR, oldStyleSheet: oldProps.indicatorStyle});
         },
         set indicatorCheckedStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLETYPE.PART_INDICATOR | STYLETYPE.STATE_CHECKED, oldStyleSheet: oldProps.indicatorCheckedStyle});
+            setStyle({comp, styleSheet, compName: "Checkbox", styleType: STYLE_TYPE.PART_INDICATOR | STYLE_TYPE.STATE_CHECKED, oldStyleSheet: oldProps.indicatorCheckedStyle});
         },
         set onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);

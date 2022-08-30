@@ -44,7 +44,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
             comp.alignTo(type, pos, parent)
         }
     }
-    Object.assign(setter, { style: {}, focusStyle: {}, ...newProps });
+    Object.assign(setter, newProps);
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')
