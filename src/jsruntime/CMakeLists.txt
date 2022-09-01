@@ -13,7 +13,7 @@ string(TOLOWER ${CMAKE_SYSTEM_NAME} SJSPLATFORM)
 target_compile_definitions(libsjs PUBLIC SJSPLATFORM="${SJSPLATFORM}")
 
 add_custom_command(OUTPUT libruntime.a
-    COMMAND ar crsT libruntime.a /mnt/hgfs/kaifaban/jsengine/runtime/deps/curl/lib/.libs/libcurl.a $<TARGET_FILE:libsjs>
+    COMMAND ar crsT libruntime.a $<TARGET_FILE:libsjs>
     DEPENDS libsjs qjs)
 
 add_custom_target(_runtime ALL DEPENDS libruntime.a)
@@ -45,5 +45,5 @@ include_directories(
     ./deps/quickjs/include
     ./
     ../utils
-    ${CURL_INCLUDE_DIRS}
+    ../deps/curl/include
 )

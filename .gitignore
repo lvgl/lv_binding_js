@@ -1,5 +1,5 @@
 node_modules
 debug
 .vscode
-src/deps
+src/deps/lv_png
 src/render/deps

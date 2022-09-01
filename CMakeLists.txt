@@ -16,10 +16,11 @@ endif()
 
 # project(lv_png)
 # add_subdirectory(./src/deps/lv_png)
+add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
 add_subdirectory(./src/jsruntime)
-add_subdirectory(./src/deps/lvgl)
-add_subdirectory(./src/deps/lv_drivers)
+add_subdirectory(./src/deps/lvgl EXCLUDE_FROM_ALL)
+add_subdirectory(./src/deps/lv_drivers EXCLUDE_FROM_ALL)
 add_subdirectory(./src/render)
 
 # target_include_directories(lv_png PUBLIC
@@ -54,13 +55,13 @@ find_package(SDL2 REQUIRED SDL2)
 string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
 
 target_link_libraries(Main
+    libcurl
     jsruntime
     uv_a
     dl
     pthread
     render
     lvgl
-    lvgl::drivers
+    lv_drivers
     ${SDL2_LIBRARIES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_drivers/build/lib/liblv_drivers.a
 )
