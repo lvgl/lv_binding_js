@@ -6,7 +6,6 @@ set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++14")
 set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)
 set(LVJL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
-set(QUICKJS_PATH /home/sxs/quickjs-master/quickjs-master)
 
 add_library(render STATIC
     ./native/core/style/style.cpp
@@ -57,7 +56,8 @@ add_library(render STATIC
 )
 
 include_directories(
-    ${QUICKJS_PATH}
+    ../jsruntime/deps/quickjs/include
+    ../deps/libuv/include
     ${RUNTIME_PATH}
     ${ENGINE_PATH}
     ${LVJL_PATH}

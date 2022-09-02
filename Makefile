@@ -3,7 +3,7 @@ BUILDTYPE?=Debug
 
 build-x86:
 	@mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR); cmake ../ -DCMAKE_BUILD_TYPE=$(BUILDTYPE) -DCMAKE_BUILD_PLATFORM=x86
+	cd $(BUILD_DIR); cmake ../ -DCMAKE_BUILD_TYPE=$(BUILDTYPE) -DCMAKE_BUILD_PLATFORM=x86 -DOPENSSL_ROOT_DIR=/usr/local/Cellar/openssl@3/3.0.5 -DOPENSSL_LIBRARIES=/usr/local/Cellar/openssl@3/3.0.5/lib
 	cmake --build $(BUILD_DIR)
 
 build-arm:

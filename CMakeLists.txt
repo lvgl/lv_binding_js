@@ -40,6 +40,7 @@ target_compile_definitions(Main PUBLIC IS_DEV=1)
 endif()
 
 include_directories(
+    ${SDL2_INCLUDE_DIRS}
     ./src
     ./src/deps
     ./src/deps/lvgl

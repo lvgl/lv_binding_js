@@ -26,7 +26,6 @@ function App () {
                             left: value
                         })
                     },
-    
                 }),
                 Animate.timing({
                     duration: 1000,
@@ -42,7 +41,6 @@ function App () {
                             height: value
                         })
                     },
-    
                 }),
             ])
             animate.start()

@@ -354,11 +354,546 @@ const style = {
 }
 ```
 
+#### Slider
+props
+- style
+- scrollbarStyle
+- onScrollbarPressedStyle
+- indicatorStyle
+- onIndicatorPressedStyle
+- onPressedStyle
+- knobStyle
+- onKnobPressedStyle
+- align
+- alignTo
+- onChange
+- range
+- value
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```jsx
+import { Slider, Window } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+function Component () {
+    const [value, setValue] = useState()
+    return (
+        <Window>
+            {/* controlled */}
+            <Slider
+              style={style.slider}
+              onChange={(e) => setValue(e.value)}
+              value={value}
+              range={[0, 50]}
+            />
+            {/* not controlled */}
+            <Slider
+              style={style.slider}
+              onChange={(e) => console.log(e)}
+              range={[0, 100]}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    slider: {},
+}
+```
+
+#### Checkbox
+props
+- style
+- checkedStyle
+- indicatorStyle
+- indicatorCheckedStyle
+- align
+- alignTo
+- onChange
+- disabled
+- checked
+- text
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+
+```jsx
+import { Checkbox, Window } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+function Component () {
+    const [value, setValue] = useState(false)
+    return (
+        <Window>
+            {/* controlled */}
+            <Checkbox
+              style={style.checkbox}
+              onChange={(e) => setValue(e.checked)}
+              checked={value}
+              text={"商品A"}
+            />
+            {/* not controlled */}
+            <Checkbox
+              style={style.checkbox}
+              onChange={(e) => console.log(e.checked)}
+              text={"商品B"}
+              disabled={true}
+              checked={true}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    checkbox: {},
+}
+```
+
+#### Dropdownlist
+props
+- style
+- align
+- alignTo
+- items
+- arrow
+- selectIndex
+- text
+- direction
+- highlightSelect
+- onChange
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+import { Dropdownlist, Window, EDropdownListArrowDirection } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+const items1 = [
+    "Apple",
+    "Banana",
+    "Orange",
+    "Cherry",
+    "Grape",
+    "Raspberry",
+    "Melon",
+    "Orange",
+    "Lemon",
+    "Nuts",
+]
+
+function Component () {
+    const [value, setValue] = useState(false)
+    return (
+        <Window>
+            <Dropdownlist
+              style={style.dropdownlist}
+              onChange={(e) => setValue(e.value)}
+              items={items1}
+              selectIndex={2}
+              direction={}
+              text={"Menu"}
+              highlightSelect={false}
+              arrow={EDropdownListArrowDirection.down}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    dropdownlist: {},
+}
+```
+
+
+#### ProgressBar
+props
+- style
+- indicatorStyle
+- align
+- alignTo
+- value
+- range
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+
+import { ProgressBar, Window } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+function Component () {
+    const [value, setValue] = useState(false)
+    return (
+        <Window>
+            <ProgressBar
+              style={style.progressBar}
+              range={[0, 50]}
+              value={30}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    progressBar: {},
+}
+```
+
+#### Line
+props
+- style
+- points
+- align
+- alignTo
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+import { Line, Window } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+const points = [[5, 5], [70, 70], [120, 10], [180, 60], [240, 10]]
+
+function Component () {
+    const [value, setValue] = useState(false)
+    return (
+        <Window>
+            <Line
+              style={style.line}
+              points={points}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    Lilinene: {},
+}
+```
+
+#### Roller
+props
+- style
+- selectedStyle
+- options
+- selectIndex
+- visibleRowCount
+- onChange
+- align
+- alignTo
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+import { Roller, Window } from 'lvlgjs-ui'
+import { useState } from 'react'
+
+const items = [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+]
+function Component () {
+    const [value, setValue] = useState(false)
+    return (
+        <Window>
+            <Roller
+              style={style.roller}
+              options={items}
+              selectIndex={2}
+              visibleRowCount={4}
+              onChange={(e) => {
+                  console.log(e.value)
+              }}
+              infinity={true}
+            />
+        </Window>
+    )
+}
+
+const style = {
+    roller: {},
+}
+```
+
+####
+Keyboard
+props
+- style
+- mode ("lower" | "upper" | "special" | "number") 
+- textarea
+- onChange
+- align
+- alignTo
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+import { Keyboard, Window, Input } from 'lvlgjs-ui'
+import { useState, useRef } from 'react'
+
+function Component () {
+    const [didMount, setDidMount] = useState(false)
+    const ref = useRef()
+
+    useEffect(() => {
+        setDidMount(true)
+    }, [])
+
+    return (
+        <Window>
+            <Input
+                ref={ref}  
+            />
+            {didMount && <Keyboard
+                style={style.keyboard}
+                textarea={ref.current}
+                mode={"number"}
+            />}
+        </Window>
+    )
+}
+
+const style = {
+    keyboard: {},
+}
+```
+
+####
+Calendar
+props
+- style
+- onChange
+- today
+- shownMonth
+- highLightDates
+- align
+- alignTo
+
+api
+- style
+  - left
+  - top
+  - width
+  - height
+- setStyle
+- moveToFront
+- moveToBackground
+- scrollIntoView
+
+```js
+import { Calendar, Render, Window, EAlignType } from 'lvgljs-ui';
+import React, { useState } from 'react';
+
+function App () {
+
+    return (
+        <Window style={style.window}>
+            <Calendar
+                today={"2022-10-1"}
+                shownMonth={"2022-10"}
+                highLightDates={[
+                    "2022-10-10",
+                    "2022-10-11",
+                ]}
+                align={{
+                    type: EAlignType.ALIGN_CENTER,
+                    pos: [0, 27]
+                }}
+                onChange={(e) => { console.log(e.value) }}
+            />
+        </Window>
+    )
+};
+
+const style = {
+    window: {
+        'width': '480px',
+        'height': '320px',
+    },
+    calendar: {
+        'width': 185,
+        'height': 185,
+    }
+};
+
+Render.render(<App />);
+```
+
 ### BuiltIn Symbol
 all symbol as follows:
 
 audio、video、list、ok、close、power、settings、home、download、drive、refresh、mute、volume_mid、volume_max、image、tint、prev、play、pause、stop、next、eject、left、right、plus、minus、eye_open、eye_close、warning、shuffle、up、down、loop、directory、upload、call、cut、copy、save、bars、envelope、charge、paste、bell、keyboard、gps、file、wifi、battery_full、battery_3、battery_2、battery_1、battery_empty、usb、bluetooth、trash、edit、backspace、sd_card、newline、dummy
 
+
+### Animation
+Animated focuses on control time-based animation execution
+
+properties
+- duration, required
+- startValue, required
+- endValue, required
+- playBackDelay
+- playBackTime
+- repeatDelay
+- repeatCount
+- execCallback, required
+- startCallback
+- readyCallback
+- delay
+- easing ("linear" | "ease-in" | "ease-out" | "ease-in-out" | "overshoot" | "bounce" | "step")
+
+```js
+import { View, Render, Window, Text, Image, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
+import React, { useRef, useEffect } from 'react';
+
+function App () {
+    const ref = useRef()
+
+    useEffect(() => {
+        try {
+            const animate = Animate.parallel([
+                Animate.timing({
+                    duration: 1000,
+                    startValue: 0,
+                    endValue: 400,
+                    playBackDelay: 100,
+                    playBackTime: 300,
+                    repeatDelay: 500,
+                    repeatCount: 0,
+                    easing: 'linear'
+                    startCallback: () => {
+                        console.log('animate1 start')
+                    },
+                    readyCallback: () => {
+                        console.log('animate1 ready')
+                    },
+                    execCallback: (value) => {
+                        ref.current.setStyle({
+                            left: value
+                        })
+                    },
+                }),
+                Animate.timing({
+                    duration: 1000,
+                    startValue: 10,
+                    endValue: 50,
+                    playBackDelay: 100,
+                    playBackTime: 300,
+                    repeatDelay: 500,
+                    repeatCount: 0,
+                    execCallback: (value) => {
+                        ref.current.setStyle({
+                            width: value,
+                            height: value
+                        })
+                    },
+                }),
+            ])
+            animate.start()
+        } catch (e) {
+            console.log(e)
+        }
+    }, [])
+
+    return (
+        <Window style={style.window}>
+            <View
+                style={style.ball}
+                align={{
+                    type: EAlignType.ALIGN_LEFT_MID
+                }}
+                ref={ref}
+            />
+        </Window>
+    )
+};
+
+const style = {
+    window: {
+        'width': '480px',
+        'height': '320px',
+    },
+    ball: {
+        'background-color': 'red',
+        'border-radius': 0x7FFF,
+        'width': '20px',
+        'height': '20px'
+    }
+};
+
+Render.render(<App />);
+```
 
 ### Style
 

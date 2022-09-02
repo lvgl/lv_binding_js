@@ -1,7 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(LIBUV_PATH /home/sxs/libuv)
-
 find_package(CURL REQUIRED)
 
 add_subdirectory(./deps/quickjs EXCLUDE_FROM_ALL)
