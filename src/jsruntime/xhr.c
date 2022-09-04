@@ -61,6 +61,7 @@ typedef struct {
 static JSClassID SJSXhrClassID;
 
 static void SJSXhrFinalizer(JSRuntime *rt, JSValue val) {
+    int i;
     SJSXhr *x = JS_GetOpaque(val, SJSXhrClassID);
     if (x) {
         if (x->curl_h) {
@@ -72,7 +73,7 @@ static void SJSXhrFinalizer(JSRuntime *rt, JSValue val) {
             curl_slist_free_all(x->slist);
         if (x->status.raw)
             js_free_rt(rt, x->status.raw);
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
+        for (i = 0; i < XHR_EVENT_MAX; i++)
             JS_FreeValueRT(rt, x->events[i]);
         JS_FreeValueRT(rt, x->status.status);
         JS_FreeValueRT(rt, x->status.status_text);
@@ -87,9 +88,10 @@ static void SJSXhrFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static void SJSXhrMark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func) {
+    int i;
     SJSXhr *x = JS_GetOpaque(val, SJSXhrClassID);
     if (x) {
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
+        for (i = 0; i < XHR_EVENT_MAX; i++)
             JS_MarkValue(rt, x->events[i], mark_func);
         JS_MarkValue(rt, x->status.status, mark_func);
         JS_MarkValue(rt, x->status.status_text, mark_func);
@@ -259,6 +261,7 @@ static int CurlProgressCb(void *clientp,
 };
 
 static JSValue sjsXhrConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
+    int i;
     JSValue obj = JS_NewObjectClass(ctx, SJSXhrClassID);
     if (JS_IsException(obj))
         return obj;
@@ -284,7 +287,7 @@ static JSValue sjsXhrConstructor(JSContext *ctx, JSValueConst new_target, int ar
     x->sent = FALSE;
     x->async = TRUE;
 
-    for (int i = 0; i < XHR_EVENT_MAX; i++) {
+    for (i = 0; i < XHR_EVENT_MAX; i++) {
         x->events[i] = JS_UNDEFINED;
     }
 
@@ -574,6 +577,7 @@ static JSValue SJSXhrGetresponseheader(JSContext *ctx, JSValueConst this_val, in
 
 static JSValue SJSXhrOpen(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     static const char head_method[] = "HEAD";
+    int i;
 
     SJSXhr *x = SJSXhrGet(ctx, this_val);
     if (!x)
@@ -586,7 +590,7 @@ static JSValue SJSXhrOpen(JSContext *ctx, JSValueConst this_val, int argc, JSVal
             curl_slist_free_all(x->slist);
         if (x->status.raw)
             js_free(ctx, x->status.raw);
-        for (int i = 0; i < XHR_EVENT_MAX; i++)
+        for (i = 0; i < XHR_EVENT_MAX; i++)
             JS_FreeValue(ctx, x->events[i]);
         JS_FreeValue(ctx, x->status.status);
         JS_FreeValue(ctx, x->status.status_text);
@@ -611,7 +615,7 @@ static JSValue SJSXhrOpen(JSContext *ctx, JSValueConst this_val, int argc, JSVal
         x->sent = FALSE;
         x->async = TRUE;
 
-        for (int i = 0; i < XHR_EVENT_MAX; i++) {
+        for (i = 0; i < XHR_EVENT_MAX; i++) {
             x->events[i] = JS_UNDEFINED;
         }
     }

@@ -110,8 +110,8 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
         uv_close((uv_handle_t *) &qrt->curl_ctx.timer, NULL);
     }
 
-    int closed = 0;
-    for (int i = 0; i < 5; i++) {
+    int closed = 0, i;
+    for (i = 0; i < 5; i++) {
         if (uv_loop_close(&qrt->loop) == 0) {
             closed = 1;
             break;

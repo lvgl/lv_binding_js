@@ -9,8 +9,9 @@ void SJSSetupArgs (int a, char **b) {
 };
 
 JSValue SJSGetArgs(JSContext *ctx) {
+    int i;
     JSValue args = JS_NewArray(ctx);
-    for (int i = 0; i < SJSArgc; i++) {
+    for (i = 0; i < SJSArgc; i++) {
         JS_SetPropertyUint32(ctx, args, i, JS_NewString(ctx, SJSArgv[i]));
     }
     return args;
@@ -26,7 +27,7 @@ static JSValue SJSGetPwd(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
 static JSValue SJSGetEnv(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     uv_env_item_t *env;
-    int envcount, r;
+    int envcount, r, i;
 
     r = uv_os_environ(&env, &envcount);
     if (r != 0)
@@ -34,7 +35,7 @@ static JSValue SJSGetEnv(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
     JSValue obj = JS_NewObjectProto(ctx, JS_NULL);
 
-    for (int i = 0; i < envcount; i++) {
+    for (i = 0; i < envcount; i++) {
         JS_DefinePropertyValueStr(ctx, obj, env[i].name, JS_NewString(ctx, env[i].value), JS_PROP_C_W_E);
     }
 

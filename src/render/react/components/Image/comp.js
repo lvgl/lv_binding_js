@@ -10,6 +10,9 @@ const NativeImage = bridge.NativeRender.NativeComponents.Image
 
 async function getImageBinary(url) {
     const resp = await fetch(url, {
+        headers: {
+            "Content-Type": "application/octet-stream"
+        }
     });
     const imageBuffer = await resp.arrayBuffer();
     return imageBuffer;

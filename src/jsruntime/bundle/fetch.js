@@ -245,22 +245,22 @@
         }
       };
   
-    //   this.blob = function() {
-    //     var rejected = consumed(this);
-    //     if (rejected) {
-    //       return rejected
-    //     }
+      this.blob = function() {
+        var rejected = consumed(this);
+        if (rejected) {
+          return rejected
+        }
 
-    //     if (this._bodyBlob) {
-    //       return Promise.resolve(this._bodyBlob)
-    //     } else if (this._bodyArrayBuffer) {
-    //       return Promise.resolve(new Blob([this._bodyArrayBuffer]))
-    //     } else if (this._bodyFormData) {
-    //       throw new Error('could not read FormData body as blob')
-    //     } else {
-    //       return Promise.resolve(new Blob([this._bodyText]))
-    //     }
-    //   };
+        if (this._bodyBlob) {
+          return Promise.resolve(this._bodyBlob)
+        } else if (this._bodyArrayBuffer) {
+          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+        } else if (this._bodyFormData) {
+          throw new Error('could not read FormData body as blob')
+        } else {
+          return Promise.resolve(new Blob([this._bodyText]))
+        }
+      };
 
       this.arrayBuffer = function() {
         if (this._bodyArrayBuffer) {
@@ -545,9 +545,7 @@
         }
   
         if ('responseType' in xhr) {
-          if (support.blob) {
-            xhr.responseType = 'blob';
-          } else if (
+          if (
             support.arrayBuffer &&
             request.headers.get('Content-Type') &&
             request.headers.get('Content-Type').indexOf('application/octet-stream') !== -1

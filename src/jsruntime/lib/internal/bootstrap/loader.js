@@ -26,7 +26,6 @@ ObjectDefineProperty(process, 'moduleLoadList', {
     enumerable: true,
     writable: false
 });
-
 const loaderId = 'internal/bootstrap/loaders';
 const moduleIds = [
     'os',
@@ -42,6 +41,8 @@ const moduleIds = [
 ];
 
 let idx = 0;
+
+const execPath = process.execPath;
 
 function safeWrapAndExec (moduleObj, requireFunc, dirname, filename, content) {
 	const tempArgs = [moduleObj.exports, requireFunc, moduleObj, filename, dirname]
@@ -112,14 +113,14 @@ class NativeModule {
         if (this.loaded || this.loading) {
             return this.exports;
         }
-
+        
         const id = this.id;
         this.loading = true;
+        let filename;
+        const prefixDir = execPath;
+        const basePath = `${prefixDir}${sep}lib${sep}${id}`
 
         try {
-            let filename;
-            const prefixDir = process.execPath
-            const basePath = `${prefixDir}${sep}lib${sep}${id}`
             let [fstat, err] = fs.statSync(`${basePath}.js`)
             if (fstat?.mode & fs.S_IFREG) {
                 [filename, err] = fs.realPathSync(`${basePath}.js`);
@@ -152,7 +153,6 @@ function nativeModuleRequire(id) {
     if (id === loaderId) {
         return loaderExports;
     }
-
     const mod = NativeModule.map.get(id);
     if (!mod) throw new TypeError(`Missing internal module '${id}'`);
     return mod.compileForInternalLoader();

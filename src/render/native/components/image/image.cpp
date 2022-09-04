@@ -48,8 +48,9 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
     // this->image_desc->header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
     // this->image_desc->data_size = width * height * LV_IMG_PX_SIZE_ALPHA_BYTE;
     // this->image_desc->data = this->image_buf;
-
-    lv_img_set_src(this->instance, this->image_desc);
+    if (img_data != nullptr) {
+        lv_img_set_src(this->instance, this->image_desc);
+    }
 
     if (prev_buf != nullptr) {
         free(prev_buf);

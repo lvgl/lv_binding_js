@@ -16,7 +16,7 @@ extern "C" {
 #include <string>
 
 #include "render/native/bootstrap/render_bootstrap.hpp"
-#include "./dev/monitor.hpp"
+#include "./hal/hal.hpp"
 
 class Engine {
   public:  

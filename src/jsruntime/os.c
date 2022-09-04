@@ -84,7 +84,7 @@ static JSValue SJSGuessHandle(JSContext *ctx, JSValueConst this_val, int argc, J
 
 static JSValue SJSEnviron(JSContext *ctx, JSValueConst this_val) {
     uv_env_item_t *env;
-    int envcount, r;
+    int envcount, r, i;
 
     r = uv_os_environ(&env, &envcount);
     if (r != 0)
@@ -92,7 +92,7 @@ static JSValue SJSEnviron(JSContext *ctx, JSValueConst this_val) {
 
     JSValue obj = JS_NewObjectProto(ctx, JS_NULL);
 
-    for (int i = 0; i < envcount; i++) {
+    for (i = 0; i < envcount; i++) {
         JS_DefinePropertyValueStr(ctx, obj, env[i].name, JS_NewString(ctx, env[i].value), JS_PROP_C_W_E);
     }
 
@@ -263,14 +263,14 @@ static JSValue SJSRandom(JSContext *ctx, JSValueConst this_val, int argc, JSValu
 
 static JSValue SJSCpuInfo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     uv_cpu_info_t *infos;
-    int count;
+    int count, i;
     int r = uv_cpu_info(&infos, &count);
     if (r != 0)
         return SJSThrowErrno(ctx, r);
 
     JSValue val = JS_NewArray(ctx);
 
-    for (int i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         uv_cpu_info_t info = infos[i];
 
         JSValue v = JS_NewObjectProto(ctx, JS_NULL);
@@ -310,14 +310,14 @@ static JSValue SJSLoadavg(JSContext *ctx, JSValueConst this_val, int argc, JSVal
 
 static JSValue SJSNetworkInterfaces(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     uv_interface_address_t *interfaces;
-    int count;
+    int count, i;
     int r = uv_interface_addresses(&interfaces, &count);
     if (r != 0)
         return SJSThrowErrno(ctx, r);
 
     JSValue val = JS_NewArray(ctx);
 
-    for (int i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) {
         uv_interface_address_t iface = interfaces[i];
         char mac[18];
         char buf[INET6_ADDRSTRLEN + 1];

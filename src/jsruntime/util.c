@@ -51,8 +51,9 @@ JSValue SJSInitPromise(JSContext *ctx, SJSPromise *p) {
 };
 
 void SJSSettlePromise(JSContext *ctx, SJSPromise *p, BOOL is_reject, int argc, JSValueConst *argv) {
+    int i;
     JSValue ret = JS_Call(ctx, p->rfuncs[is_reject], JS_UNDEFINED, argc, argv);
-    for (int i = 0; i < argc; i++)
+    for (i = 0; i < argc; i++)
         JS_FreeValue(ctx, argv[i]);
     JS_FreeValue(ctx, ret); /* XXX: what to do if exception ? */
     JS_FreeValue(ctx, p->rfuncs[0]);
@@ -62,6 +63,7 @@ void SJSSettlePromise(JSContext *ctx, SJSPromise *p, BOOL is_reject, int argc, J
 
 static inline JSValue SJSSettledPromise(JSContext *ctx, BOOL is_reject, int argc, JSValueConst *argv) {
     JSValue promise, resolving_funcs[2], ret;
+    int i;
 
     promise = JS_NewPromiseCapability(ctx, resolving_funcs);
     if (JS_IsException(promise))
@@ -69,7 +71,7 @@ static inline JSValue SJSSettledPromise(JSContext *ctx, BOOL is_reject, int argc
 
     ret = JS_Call(ctx, resolving_funcs[is_reject], JS_UNDEFINED, argc, argv);
 
-    for (int i = 0; i < argc; i++)
+    for (i = 0; i < argc; i++)
         JS_FreeValue(ctx, argv[i]);
     JS_FreeValue(ctx, ret);
     JS_FreeValue(ctx, resolving_funcs[0]);

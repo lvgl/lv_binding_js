@@ -12,12 +12,13 @@ typedef struct {
 } SJSTimer;
 
 static void SJSClearTimer(SJSTimer *th) {
+    int i;
     JSContext *ctx = th->ctx;
 
     JS_FreeValue(ctx, th->func);
     th->func = JS_UNDEFINED;
 
-    for (int i = 0; i < th->argc; i++) {
+    for (i = 0; i < th->argc; i++) {
         JS_FreeValue(ctx, th->argv[i]);
         th->argv[i] = JS_UNDEFINED;
     }
@@ -68,10 +69,11 @@ static void SJSTimerFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static void SJSTimerMark(JSRuntime *rt, JSValueConst val, JS_MarkFunc *mark_func) {
+    int i;
     SJSTimer *th = JS_GetOpaque(val, SJSTimerClassID);
     if (th) {
         JS_MarkValue(rt, th->func, mark_func);
-        for (int i = 0; i < th->argc; i++)
+        for (i = 0; i < th->argc; i++)
             JS_MarkValue(rt, th->argv[i], mark_func);
     }
 }
@@ -87,6 +89,7 @@ static JSValue SJSSetTimeout(JSContext *ctx, JSValueConst this_val, int argc, JS
     JSValueConst func;
     SJSTimer *th;
     JSValue obj;
+    int i;
 
     func = argv[0];
     if (!JS_IsFunction(ctx, func))
@@ -120,7 +123,7 @@ static JSValue SJSSetTimeout(JSContext *ctx, JSValueConst this_val, int argc, JS
     th->obj = JS_DupValue(ctx, obj);
     th->func = JS_DupValue(ctx, func);
     th->argc = nargs;
-    for (int i = 0; i < nargs; i++)
+    for (i = 0; i < nargs; i++)
         th->argv[i] = JS_DupValue(ctx, argv[i + 2]);
 
     uv_timer_start(&th->handle, uv__timer_cb, delay, magic ? delay : 0 /* repeat */);

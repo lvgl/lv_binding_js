@@ -1,43 +1,24 @@
 cmake_minimum_required(VERSION 2.8)
 
 set(QUICKJS_PATH ./src/jsruntime/deps/quickjs)
-set(LIBUV_PATH /home/sxs/libuv)
+set(LIBUV_PATH ./src/deps/libuv)
 set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
 
 set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
+set(CMAKE_C_FLAGS "-O0 -Wall -g -ggdb -std=gnu99")
 
-if (${CMAKE_BUILD_PLATFORM} EQUAL "x86")
-    set (CMAKE_C_COMPILER "gcc")
-    set (CMAKE_CXX_COMPILER "g++")
-elseif (${CMAKE_BUILD_PLATFORM} EQUAL "arm")
-    set (CMAKE_C_COMPILER "arm-linux-gnueabihf-gcc")
-    set (CMAKE_CXX_COMPILER "arm-linux-gnueabihf-g++")
+if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
+add_definitions(-DIS_DEV)
+elseif(${CMAKE_BUILD_PLATFORM} MATCHES arm)
+add_definitions(-DIS_RELEASE)
 endif()
 
-# project(lv_png)
-# add_subdirectory(./src/deps/lv_png)
-add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
+# add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
 add_subdirectory(./src/jsruntime)
 add_subdirectory(./src/deps/lvgl EXCLUDE_FROM_ALL)
 add_subdirectory(./src/deps/lv_drivers EXCLUDE_FROM_ALL)
 add_subdirectory(./src/render)
-
-# target_include_directories(lv_png PUBLIC
-#     ./src/deps
-# )
-
-add_executable(Main
-    ./src/utils/utils.c
-    ./src/engine/hal/mouse_cursor_icon.c
-    ./src/engine/hal/hal.hpp
-    ./src/engine/hal/hal.cpp
-    ./src/engine/engine.cpp
-)
-
-if (${CMAKE_BUILD_TYPE} MATCHES "Debug")
-target_compile_definitions(Main PUBLIC IS_DEV=1)
-endif()
 
 include_directories(
     ${SDL2_INCLUDE_DIRS}
@@ -50,19 +31,49 @@ include_directories(
     ./src/engine
     ./src/jsruntime
     ./src/render
+    ${CMAKE_CURL_INCLUDE_DIRS}
 )
 
-find_package(SDL2 REQUIRED SDL2)
-string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
-
-target_link_libraries(Main
-    libcurl
-    jsruntime
-    uv_a
-    dl
-    pthread
-    render
-    lvgl
-    lv_drivers
-    ${SDL2_LIBRARIES}
-)
+if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
+    find_package(SDL2 REQUIRED SDL2)
+    string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+    find_package(CURL REQUIRED)
+    string(STRIP ${CURL_LIBRARIES} CURL_LIBRARIES)
+    add_executable(Main
+        ./src/utils/utils.c
+        ./src/engine/hal/dev/mouse_cursor_icon.c
+        ./src/engine/hal/dev/dev.cpp
+        ./src/engine/engine.cpp
+    )
+    target_link_libraries(Main
+        jsruntime
+        ${CURL_LIBRARIES}
+        crypto 
+        ssl
+        uv_a
+        dl
+        pthread
+        render
+        lvgl
+        lv_drivers
+        ${SDL2_LIBRARIES}
+    )
+elseif (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES arm)
+    add_executable(Main
+        ./src/utils/utils.c
+        ./src/engine/hal/release/release.cpp
+        ./src/engine/engine.cpp
+    )
+    target_link_libraries(Main
+        jsruntime
+        ${CMAKE_CURL_LIB}
+        ${CMAKE_CRYPTO_LIB}
+        ${CMAKE_SSL_LIB}
+        uv_a
+        dl
+        pthread
+        render
+        lvgl
+        lv_drivers
+    )
+endif()

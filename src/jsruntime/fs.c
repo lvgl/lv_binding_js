@@ -728,9 +728,9 @@ static JSValue SJSStatISSymlink(JSContext* ctx, JSValueConst this_val) {
 /* Module functions */
 
 static int JSUVOpenFlags(const char *strflags, size_t len) {
-    int flags = 0, read = 0, write = 0;
+    int flags = 0, read = 0, write = 0, i=0;
 
-    for (int i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) {
         switch (strflags[i]) {
             case 'r':
                 read = 1;

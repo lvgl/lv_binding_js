@@ -7,7 +7,7 @@ set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)
 set(LVJL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
 
-add_library(render STATIC
+add_library(render SHARED
     ./native/core/style/style.cpp
     ./native/core/style/font/font.cpp
     ./native/core/event/value_change/value_change.cpp
@@ -55,21 +55,43 @@ add_library(render STATIC
     ./native/bootstrap/render_bootstrap.cpp
 )
 
-include_directories(
-    ../jsruntime/deps/quickjs/include
-    ../deps/libuv/include
-    ${RUNTIME_PATH}
-    ${ENGINE_PATH}
-    ${LVJL_PATH}
-    ../../src
-    ../../src/deps
-    ../render
-    ./native
-    ./core
-    ./native/components
-    ./native/core
-    ./native/deps
-)
+if (${CMAKE_BUILD_PLATFORM} MATCHES x86)
+    find_package(CURL REQUIRED)
+    string(STRIP ${CURL_INCLUDE_DIRS} CURL_INCLUDE_DIRS)
+    include_directories(
+        ../jsruntime/deps/quickjs/include
+        ../deps/libuv/include
+        ${CURL_INCLUDE_DIRS}
+        ${RUNTIME_PATH}
+        ${ENGINE_PATH}
+        ${LVJL_PATH}
+        ../../src
+        ../../src/deps
+        ../render
+        ./native
+        ./core
+        ./native/components
+        ./native/core
+        ./native/deps
+    )
+elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
+    include_directories(
+        ../jsruntime/deps/quickjs/include
+        ../deps/libuv/include
+        ${CMAKE_CURL_INCLUDE_DIRS}
+        ${RUNTIME_PATH}
+        ${ENGINE_PATH}
+        ${LVJL_PATH}
+        ../../src
+        ../../src/deps
+        ../render
+        ./native
+        ./core
+        ./native/components
+        ./native/core
+        ./native/deps
+    )
+endif()
 
 # target_link_libraries(render
 # lv_png
