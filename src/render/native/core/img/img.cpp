@@ -17,6 +17,9 @@ uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc) {
         }
         convert_color_depth(img_data,  width * height);
         image_type = IMAGE_TYPE_PNG;
+    } else if (isgif((uint16_t*)(buf))) {
+        image_type = IMAGE_TYPE_GIF;
+        GetGIFInfo(buf, &width, &height);
     }
 
     if (image_type == IMAGE_TYPE_UNKNOWN) {
