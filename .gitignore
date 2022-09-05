@@ -3,3 +3,5 @@ debug
 .vscode
 src/deps/lv_png
 src/render/deps
+dev_arm/
+dev_x86/
