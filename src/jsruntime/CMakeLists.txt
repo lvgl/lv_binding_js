@@ -5,7 +5,7 @@ find_package(CURL REQUIRED)
 add_subdirectory(./deps/quickjs EXCLUDE_FROM_ALL)
 
 file(GLOB SRC_LIST ./*.c ./*.cpp)
-add_library(jsruntime SHARED ${SRC_LIST})
+add_library(jsruntime STATIC ${SRC_LIST})
 
 string(TOLOWER ${CMAKE_SYSTEM_NAME} SJSPLATFORM)
 target_compile_definitions(jsruntime PUBLIC SJSPLATFORM="${SJSPLATFORM}")
@@ -15,7 +15,7 @@ add_custom_command(OUTPUT bundle.js
 )
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 
-target_link_libraries(jsruntime INTERFACE
+target_link_libraries(jsruntime PUBLIC
     qjs
     -lrt
 )

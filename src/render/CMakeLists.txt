@@ -7,7 +7,7 @@ set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)
 set(LVJL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
 
-add_library(render SHARED
+add_library(render STATIC
     ./native/core/style/style.cpp
     ./native/core/style/font/font.cpp
     ./native/core/event/value_change/value_change.cpp

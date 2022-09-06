@@ -9,7 +9,7 @@ bool isgif (uint16_t* buf) {
 };
 
 void GetGIFInfo (uint8_t* buf, uint32_t* width, uint32_t* height) {
-    char* data = buf;
+    uint8_t* data = buf;
     data += 6;
 
     *width = data[0] << 8 | data[1]; 
