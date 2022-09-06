@@ -17,6 +17,7 @@ add_library(render SHARED
     ./native/core/event/event.cpp
     ./native/core/img/png/lodepng.cpp
     ./native/core/img/png/png.cpp
+    ./native/core/img/gif/gif.cpp
     ./native/core/img/img.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp

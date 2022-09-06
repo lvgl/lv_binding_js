@@ -13,14 +13,14 @@ GIF::GIF(std::string uid, lv_obj_t* parent): BasicComponent() {
 };
 
 void GIF::setGIFBinary(uint8_t* buf, size_t len) {
-    uint8_t* prev_buf = this->image_buf;
-    lv_img_dsc_t_1* prev_desc = this->image_desc;
-    this->image_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
-    uint8_t* img_data = GetImgDesc(buf, len, image_desc);
-    this->image_buf = img_data;
+    uint8_t* prev_buf = this->gif_buf;
+    lv_img_dsc_t_1* prev_desc = this->gif_desc;
+    this->gif_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
+    uint8_t* img_data = GetImgDesc(buf, len, gif_desc);
+    this->gif_buf = img_data;
 
     if (img_data != nullptr) {
-        lv_img_set_src(this->instance, this->image_desc);
+        lv_gif_set_src(this->instance, this->gif_desc);
     }
 
     if (prev_buf != nullptr) {
@@ -32,13 +32,13 @@ void GIF::setGIFBinary(uint8_t* buf, size_t len) {
 };
 
 GIF::~GIF () {
-    if (this->image_buf != nullptr) {
-        free(this->image_buf);
-        this->image_buf = nullptr;
+    if (this->gif_buf != nullptr) {
+        free(this->gif_buf);
+        this->gif_buf = nullptr;
     }
-    if (this->image_desc != nullptr) {
-        free(this->image_desc);
-        this->image_desc = nullptr;
+    if (this->gif_desc != nullptr) {
+        free(this->gif_desc);
+        this->gif_desc = nullptr;
     }
 };
 

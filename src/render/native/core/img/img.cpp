@@ -20,6 +20,8 @@ uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc) {
     } else if (isgif((uint16_t*)(buf))) {
         image_type = IMAGE_TYPE_GIF;
         GetGIFInfo(buf, &width, &height);
+        img_data = (uint8_t*)malloc(len);
+        memcpy(img_data, buf, len);
     }
 
     if (image_type == IMAGE_TYPE_UNKNOWN) {
