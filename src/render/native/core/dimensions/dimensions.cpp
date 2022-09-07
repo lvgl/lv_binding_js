@@ -1,6 +1,6 @@
 #include "./dimensions.hpp"
 
-static JSValue NativeCompGetDimensions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue NativeCompGetDimensions(JSContext* ctx, JSValueConst this_val) {
     uint32_t width, height;
     lv_disp_t* disp_default = lv_disp_get_default();
 
@@ -19,5 +19,7 @@ static const JSCFunctionListEntry dimensions_funcs[] = {
 };
 
 void NativeDimensionsInit (JSContext* ctx, JSValue& ns) {
-    JS_SetPropertyFunctionList(ctx, ns, dimensions_funcs, countof(dimensions_funcs));
+    JSValue obj = JS_NewObject(ctx);
+    JS_SetPropertyStr(ctx, ns, "dimensions", obj);
+    JS_SetPropertyFunctionList(ctx, obj, dimensions_funcs, countof(dimensions_funcs));
 };

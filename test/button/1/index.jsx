@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, Image, Button } from 'lvgljs-ui';
+import { View, Render, Window, Text, Image, Button, Dimensions } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     return (
@@ -17,8 +19,8 @@ function App () {
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        'width': width,
+        'height': height,
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'center'

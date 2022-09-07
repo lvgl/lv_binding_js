@@ -20220,6 +20220,9 @@ function setInputProps(comp, newProps, oldProps) {
     set onFocus(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
     },
+    set onBlur(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_DEFOCUSED);
+    },
     set onFocusStyle(styleSheet) {
       setStyle({ comp, compName: "Input", styleType: 2, oldStyleSheet: oldProps.onFocusStyle, styleSheet });
     },
@@ -21250,6 +21253,11 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   }
 };
 
+// src/render/react/core/dimensions/index.js
+var bridge18 = globalThis.SJSJSBridge;
+var dimensions = bridge18.NativeRender.dimensions;
+var Dimensions = dimensions;
+
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
 var Window2 = registerComponent(new WindowConfig());
@@ -21271,6 +21279,8 @@ var Render = Renderer;
 
 // test/button/1/index.jsx
 var import_react = __toESM(require_react());
+var { width, height } = Dimensions.window;
+console.log(width, height);
 function App() {
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
@@ -21284,8 +21294,8 @@ function App() {
 }
 var style = {
   window: {
-    "width": "480px",
-    "height": "320px",
+    "width": width,
+    "height": height,
     "display": "flex",
     "justify-content": "center",
     "align-items": "center"

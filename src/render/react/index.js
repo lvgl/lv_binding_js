@@ -38,5 +38,6 @@ export const Calendar = registerComponent(new CalendarConfig());
 
 export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'
+export { Dimensions } from './core/dimensions'
 
 export const Render = Renderer;
