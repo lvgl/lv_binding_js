@@ -10,90 +10,90 @@ static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
     { "step", &lv_anim_path_step },
 };
 
-static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int width;
     JS_ToInt32(ctx, &width, obj);
     lv_style_set_width(style, static_cast<int16_t>(width));
 };
 
-static void CompSetWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int width;
     JS_ToInt32(ctx, &width, obj);
     lv_style_set_width(style, lv_pct(static_cast<int16_t>(width)));
 };
 
-static void CompSetHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int height;
     JS_ToInt32(ctx, &height, obj);
     lv_style_set_height(style, static_cast<int16_t>(height));
 };
 
-static void CompSetHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int height;
     JS_ToInt32(ctx, &height, obj);
     lv_style_set_height(style, lv_pct(static_cast<int16_t>(height)));
 };
 
-static void CompSetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
     lv_style_set_x(style, static_cast<int16_t>(x));
 };
 
-static void CompSetXPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetXPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
     lv_style_set_x(style, lv_pct(static_cast<int16_t>(x)));
 };
 
-static void CompSetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
     lv_style_set_y(style, static_cast<int16_t>(y));
 };
 
-static void CompSetYPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetYPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
     lv_style_set_y(style, lv_pct(static_cast<int16_t>(y)));
 };
 
-static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_bg_color(style, lv_color_hex(y));
 };
 
-static void CompSetBackgroundOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBackgroundOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_bg_opa(style, y);
 };
 
-static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_bg_grad_color(style, lv_color_hex(y));
 };
 
-static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_bg_grad_dir(style, y);
 };
 
-static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_radius(style, x);
 };
 
-static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     size_t len;
     const char* str = JS_ToCStringLen(ctx, &len, obj);
     std::string value = str;
@@ -111,7 +111,7 @@ static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, J
     JS_FreeCString(ctx, str);
 };
 
-static void CompSetFlexAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetFlexAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     JSValue value1 = JS_GetPropertyUint32(ctx, obj, 0);
     JSValue value2 = JS_GetPropertyUint32(ctx, obj, 1);
     JSValue value3  = JS_GetPropertyUint32(ctx, obj, 2);
@@ -131,161 +131,161 @@ static void CompSetFlexAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     );
 };
 
-static void CompSetFlexGrow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetFlexGrow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_flex_grow(style, static_cast<lv_flex_flow_t>(x));
 };
 
-static void CompSetFlexFlow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetFlexFlow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_flex_flow(style, static_cast<lv_flex_flow_t>(x));
 };
 
-static void CompSetJustifyContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetJustifyContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_flex_main_place(style, static_cast<lv_flex_align_t>(x));
 };
 
-static void CompSetAlignItems (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetAlignItems (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_flex_cross_place(style, static_cast<lv_flex_align_t>(x));
 };
 
-static void CompSetAlignContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetAlignContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_flex_track_place(style, static_cast<lv_flex_align_t>(x));
 };
 
-static void CompSetPaddingLeft (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetPaddingLeft (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_pad_left(style, x);
 };
 
-static void CompSetPaddingRight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetPaddingRight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_pad_right(style, x);
 };
 
-static void CompSetPaddingBottom (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetPaddingBottom (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_pad_bottom(style, x);
 };
 
-static void CompSetPaddingTop (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetPaddingTop (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_pad_top(style, x);
 };
 
-static void CompSetBorderWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBorderWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_border_width(style, x);
 };
 
-static void CompSetBorderOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBorderOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_border_opa(style, x);
 };
 
-static void CompSetBorderColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBorderColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_border_color(style, lv_color_hex(x));
 };
 
-static void CompSetBorderSide (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetBorderSide (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_border_side(style, x);
 };
 
-static void CompSetOutlineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOutlineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_outline_width(style, x);
 };
 
-static void CompSetOutlineOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOutlineOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_outline_opa(style, x);
 };
 
-static void CompSetOutlineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOutlineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_outline_color(style, lv_color_hex(x));
 };
 
-static void CompSetOutlinePadding (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOutlinePadding (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_outline_pad(style, x);
 };
 
-static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_label_set_long_mode(comp, x);
 };
 
-static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_text_letter_space(style, x);
 };
 
-static void CompSetLineSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetLineSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_text_line_space(style, x);
 };
 
-static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_text_align(style, x);
 };
 
-static void CompSetDecoration (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetDecoration (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_text_decor(style, x);
 };
 
-static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
@@ -296,7 +296,7 @@ static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSConte
     }
 };
 
-static void CompSetOverflow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOverflow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
@@ -307,21 +307,21 @@ static void CompSetOverflow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     }
 };
 
-static void CompSetScrollSnapX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetScrollSnapX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_obj_set_scroll_snap_x(comp, x);
 };
 
-static void CompSetScrollSnapY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetScrollSnapY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_obj_set_scroll_snap_y(comp, x);
 };
 
-static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
@@ -332,70 +332,70 @@ static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* 
     }
 };
 
-static void CompSetOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_opa(style, x);
 };
 
-static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_img_opa(style, x);
 };
 
-static void CompRecolorOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompRecolorOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_img_recolor_opa(style, x);
 };
 
-static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_translate_x(style, x);
 };
 
-static void CompSetTranslateY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTranslateY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_translate_y(style, x);
 };
 
-static void CompSetScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_transform_zoom(style, x);
 };
 
-static void CompSetRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_transform_angle(style, x);
 };
 
-static void CompSetImgScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetImgScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_img_set_zoom(comp, x);
 };
 
-static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_img_set_angle(comp, x);
 };
 
-static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x = 0;
     int y = 0;
     JSValue x_value;
@@ -415,21 +415,21 @@ static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_img_set_pivot(comp, x, y);
 };
 
-static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_transform_width(style, x);
 };
 
-static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_transform_height(style, x);
 };
 
-static void CompSetStyleTransitionTime (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetStyleTransitionTime (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
@@ -457,7 +457,7 @@ void CompSetAnimation (
     void* opaque,
     lv_anim_t* animate,
     JSContext* ctx,
-    JSValue obj
+    JSValue& obj
 ) {
     lv_anim_init(animate);
 
@@ -501,98 +501,98 @@ void CompSetAnimation (
     lv_anim_start(animate);
 };
 
-static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_text_color(style, lv_color_hex(y));
 };
 
-static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_img_recolor(style, lv_color_hex(y));
 };
 
-static void CompSetRowSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetRowSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_pad_row(style, y);
 };
 
-static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_pad_column(style, y);
 };
 
-static void CompSetLineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetLineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int y;
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_line_width(style, y);
 };
 
-static void CompSetLineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetLineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_line_color(style, lv_color_hex(x));
 };
 
-static void CompSetLineRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetLineRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_line_rounded(style, x);
 };
 
-static void CompSetShadowWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetShadowWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_width(style, x);
 };
 
-static void CompSetShadowColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetShadowColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_color(style, lv_color_hex(x));
 };
 
-static void CompSetShadowSpread (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetShadowSpread (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_spread(style, x);
 };
 
-static void CompSetShadowOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetShadowOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_opa(style, x);
 };
 
-static void CompSetOffsetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOffsetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_ofs_x(style, x);
 };
 
-static void CompSetOffsetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetOffsetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_style_set_shadow_ofs_y(style, x);
 };
 
-static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue& obj) {
     size_t len;
     const char* str = JS_ToCStringLen(ctx, &len, obj);
     std::string value = str;

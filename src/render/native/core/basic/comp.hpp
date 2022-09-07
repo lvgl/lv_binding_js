@@ -64,7 +64,7 @@ class BasicComponent {
   
     void initStyle (int32_t type);
     virtual void initCompStyle (int32_t type);
-    void setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit = true);
+    void setStyle(JSContext* ctx, JSValue& obj, std::vector<std::string>& keys, int32_t type, bool isinit = true);
     bool ensureStyle (int32_t type);
 
     void appendChild(void* child);

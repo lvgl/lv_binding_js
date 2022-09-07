@@ -151,7 +151,7 @@ bool BasicComponent::ensureStyle (int32_t type) {
     return is_new;
 };
 
-void BasicComponent::setStyle(JSContext* ctx, JSValue obj, std::vector<std::string> keys, int32_t type, bool isinit) {
+void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::string>& keys, int32_t type, bool isinit) {
 
     lv_style_t* style;
     bool is_new = false;
