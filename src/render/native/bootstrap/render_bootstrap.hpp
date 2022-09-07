@@ -9,6 +9,7 @@ extern "C" {
 
 #include "native/components/component.hpp"
 #include "native/core/animate/animate.hpp"
+#include "native/core/dimensions/dimensions.hpp"
 
 void NativeRenderInit (JSContext* ctx);
 

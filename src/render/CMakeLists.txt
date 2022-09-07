@@ -13,6 +13,7 @@ add_library(render STATIC
     ./native/core/event/value_change/value_change.cpp
     ./native/core/event/click/click.cpp
     ./native/core/event/focus/focus.cpp
+    ./native/core/dimensions/dimensions.cpp
     ./native/core/basic/comp.cpp
     ./native/core/event/event.cpp
     ./native/core/img/png/lodepng.cpp

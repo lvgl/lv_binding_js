@@ -10,9 +10,6 @@ add_library(jsruntime STATIC ${SRC_LIST})
 string(TOLOWER ${CMAKE_SYSTEM_NAME} SJSPLATFORM)
 target_compile_definitions(jsruntime PUBLIC SJSPLATFORM="${SJSPLATFORM}")
 
-add_custom_command(OUTPUT bundle.js
-    COMMAND npm run bundle -- --outfile=${PROJECT_BINARY_DIR}/bundle.js
-)
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 
 target_link_libraries(jsruntime PUBLIC
@@ -20,7 +17,10 @@ target_link_libraries(jsruntime PUBLIC
     -lrt
 )
 
-execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${CMAKE_BINARY_DIR})
+execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
+add_custom_command(OUTPUT bundle.js
+    COMMAND npm run bundle -- --outfile=${PROJECT_BINARY_DIR}/lib/bundle.js
+)
 
 if (${CMAKE_BUILD_PLATFORM} MATCHES x86)
     find_package(CURL REQUIRED)

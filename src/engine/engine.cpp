@@ -23,7 +23,13 @@ Engine::Engine (char* filePath) {
     hal_init();
 
     char* path = (char*)malloc(PATH_MAX);
+    if (!access(path, 0)) {
+        printf("bundle.js miss, engine will stop \n");
+        JSRuntimeFree(0);
+        exit(0);
+    }
     GetBundlePath(path);
+
     SJSBootStrapGlobals(qrt->ctx, path);
     free(path);
 
@@ -60,20 +66,23 @@ void Engine::GetEngineDir (char* buf) {
 void Engine::GetBuiltInLibPath (char* result) {
     char path[1000];
     GetEngineDir(path);
-    strcat(path, "/");
+    strcat(path, SJSPATHSEP);
     strcat(path, "lib");
     realpath(path, result);
 };
 
 void Engine::GetEngineAssetPath (char* buf, char* relativePath) {
     GetEngineDir(buf);
-    strcat(buf, "/");
+    strcat(buf, SJSPATHSEP);
     strcat(buf, relativePath);
 };
 
 void Engine::GetBundlePath (char* buf) {
     GetEngineDir(buf);
-    strcat(buf, "/bundle.js");
+    strcat(buf, SJSPATHSEP);
+    strcat(buf, "lib");
+    strcat(buf, SJSPATHSEP);
+    strcat(buf, "bundle.js");
 };
 
 std::string Engine::SetJSEntryPath (char* filePath) {
@@ -94,12 +103,12 @@ int main (int argc, char *argv[]) {
     SJSSetupArgs (argc, argv);
     char* filePath = argv[1];
 
-    printf("program start \n");
+    printf("engine start \n");
 
     LVEngine = new Engine(filePath);
     LVEngine->Start();
     delete LVEngine;
 
     exit(0);
-    printf("program end \n");
+    printf("engine end \n");
 };
