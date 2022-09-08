@@ -6,6 +6,7 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JSValue component_obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);
 
+    NativeComponentGIFInit(ctx, component_obj);
     NativeComponentCalendarInit(ctx, component_obj);
     NativeComponentLineInit(ctx, component_obj);
     NativeComponentRollerInit(ctx, component_obj);

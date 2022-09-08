@@ -46,6 +46,8 @@ void NativeComponentLineInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentCalendarInit (JSContext* ctx, JSValue ns);
 
+void NativeComponentGIFInit (JSContext* ctx, JSValue ns);
+
 #define WRAPPED_APPEND_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
     static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \
         if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \

@@ -8,6 +8,7 @@ GIF::GIF(std::string uid, lv_obj_t* parent): BasicComponent() {
     this->instance = lv_gif_create(parent != nullptr ? parent : lv_scr_act());
     
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICKABLE);
+    lv_img_set_size_mode(this->instance, LV_IMG_SIZE_MODE_REAL);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 };
@@ -16,7 +17,7 @@ void GIF::setGIFBinary(uint8_t* buf, size_t len) {
     uint8_t* prev_buf = this->gif_buf;
     lv_img_dsc_t_1* prev_desc = this->gif_desc;
     this->gif_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
-    uint8_t* img_data = GetImgDesc(buf, len, gif_desc);
+    uint8_t* img_data = GetImgDesc(buf, len, this->gif_desc);
     this->gif_buf = img_data;
 
     if (img_data != nullptr) {

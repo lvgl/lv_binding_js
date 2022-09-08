@@ -29,7 +29,7 @@ void hal_init () {
     evdev_init();
 	
     /* Initialize and register a display input driver */
-    lv_indev_drv_t indev_drv;
+    static lv_indev_drv_t indev_drv;
     lv_indev_drv_init(&indev_drv);      /*Basic initialization*/
 
     indev_drv.type = LV_INDEV_TYPE_POINTER;

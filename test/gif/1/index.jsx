@@ -1,5 +1,7 @@
-import { View, Render, Window, GIF, EAlignType, Button } from 'lvgljs-ui';
+import { View, Render, Window, GIF, EAlignType, Dimensions } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     return (
@@ -9,21 +11,21 @@ function App () {
                     type: EAlignType.ALIGN_CENTER,
                 }}
                 style={style.gif}
-                src="https://yiche-static.oss-accelerate.aliyuncs.com/backend/uploads/image/20220814/gif-sun-wind-snow-818737-thumbs.jpg"
+                src="http://p0.itc.cn/q_70/images03/20200807/9405b7432e34421b866f35a087812b6f.gif"
             />
-            
         </Window>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        'width': width,
+        'height': height,
     },
     gif: {
         'width': 'auto',
-        'height': 'auto'
+        'height': 'auto',
+        'transform': 'rotate(60deg)'
     }
 };
 

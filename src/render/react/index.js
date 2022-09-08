@@ -15,6 +15,7 @@ import ProgressBarConfig from './components/ProgressBar/config';
 import RollerConfig from './components/Roller/config';
 import LineConfig from './components/Line/config';
 import CalendarConfig from './components/Calendar/config';
+import GIFConfig from './components/GIF/config'
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -35,6 +36,7 @@ export const ProgressBar = registerComponent(new ProgressBarConfig());
 export const Roller = registerComponent(new RollerConfig());
 export const Line = registerComponent(new LineConfig());
 export const Calendar = registerComponent(new CalendarConfig());
+export const GIF = registerComponent(new GIFConfig());
 
 export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'
