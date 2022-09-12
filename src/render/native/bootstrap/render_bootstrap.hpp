@@ -1,7 +1,7 @@
 #pragma once
 
 extern "C" {
-    #include "jsapi.h"
+    #include "sjs.h"
 };
 
 #include "render/native/core/img/png/png.hpp"

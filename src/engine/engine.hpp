@@ -1,7 +1,6 @@
 #pragma once
 
 extern "C" {
-    #include "jsruntime/jsapi.h"
     #include "quickjs-libc.h"
     #include "jsruntime/sjs.h"
     #include "uv.h"

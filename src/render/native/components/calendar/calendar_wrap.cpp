@@ -39,7 +39,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
                     JS_ToInt32(ctx, &day, day_value);
 
                     num += 1;
-                    dates.push_back({ .year = year, .month = month, .day = day });
+                    dates.push_back({ .year = static_cast<uint16_t>(year), .month = static_cast<int8_t>(month), .day = static_cast<int8_t>(day) });
                 }
 
                 JS_FreeValue(ctx, year_value);                                                                                   

@@ -21,7 +21,6 @@ add_subdirectory(./src/deps/lv_drivers EXCLUDE_FROM_ALL)
 add_subdirectory(./src/render)
 
 include_directories(
-    ${SDL2_INCLUDE_DIRS}
     ./src
     ./src/deps
     ./src/deps/lvgl
@@ -35,7 +34,9 @@ include_directories(
 )
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
-    find_package(SDL2 REQUIRED SDL2)
+    find_package(SDL2 REQUIRED 
+        SDL2
+    )
     string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
     find_package(CURL REQUIRED)
     string(STRIP ${CURL_LIBRARIES} CURL_LIBRARIES)
@@ -45,6 +46,7 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ./src/engine/hal/dev/dev.cpp
         ./src/engine/engine.cpp
     )
+    include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(Main
         jsruntime
         ${CURL_LIBRARIES}

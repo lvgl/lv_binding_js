@@ -1,6 +1,5 @@
 
 #include <util.h>
-#include <malloc.h>
 #include <sjs.h>
 
 Array ArrayCreat(size_t init_size, size_t item_size) {
@@ -58,7 +57,7 @@ void SJSSettlePromise(JSContext *ctx, SJSPromise *p, BOOL is_reject, int argc, J
     JS_FreeValue(ctx, ret); /* XXX: what to do if exception ? */
     JS_FreeValue(ctx, p->rfuncs[0]);
     JS_FreeValue(ctx, p->rfuncs[1]);
-    SJS_FreePromise(ctx, p);
+    SJSFreePromise(ctx, p);
 };
 
 static inline JSValue SJSSettledPromise(JSContext *ctx, BOOL is_reject, int argc, JSValueConst *argv) {
@@ -88,7 +87,7 @@ JSValue SJSNewRejectedPromise(JSContext *ctx, int argc, JSValueConst *argv) {
     return SJSSettledPromise(ctx, TRUE, argc, argv);
 };
 
-void SJS_FreePromise(JSContext *ctx, SJSPromise *p) {
+void SJSFreePromise(JSContext *ctx, SJSPromise *p) {
     JS_FreeValue(ctx, p->rfuncs[0]);
     JS_FreeValue(ctx, p->rfuncs[1]);
     JS_FreeValue(ctx, p->p);

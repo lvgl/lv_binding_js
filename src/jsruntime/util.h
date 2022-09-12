@@ -26,7 +26,7 @@ typedef struct {
 
 JSValue SJSInitPromise(JSContext *ctx, SJSPromise *p);
 
-void SJS_FreePromise(JSContext *ctx, SJSPromise *p);
+void SJSFreePromise(JSContext *ctx, SJSPromise *p);
 
 void SJSSettlePromise(JSContext *ctx, SJSPromise *p, BOOL is_reject, int argc, JSValueConst *argv);
 

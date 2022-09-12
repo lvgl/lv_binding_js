@@ -5,9 +5,7 @@ dev-x86:
 	@mkdir -p $(DEV_X86)
 	cmake -B "$(DEV_X86)" \
 		-DCMAKE_BUILD_TYPE=Debug \
-		-DCMAKE_BUILD_PLATFORM=x86 \
-		-DCMAKE_C_COMPILER=/usr/local/bin/gcc \
-		-DCMAKE_CXX_COMPILER=/usr/local/bin/g++
+		-DCMAKE_BUILD_PLATFORM=x86 
 	cmake --build $(DEV_X86)
 
 dev-arm:

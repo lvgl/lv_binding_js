@@ -1,4 +1,7 @@
+#include <unistd.h>
+
 #include "sjs.h"
+#include "utils.h"
 
 static int SJSArgc = 0;
 static char **SJSArgv = NULL;

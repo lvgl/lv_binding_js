@@ -1,5 +1,4 @@
 #include <sjs.h>
-#include <jsapi.h>
 
 typedef struct {
     JSContext *ctx;

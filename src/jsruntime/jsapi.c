@@ -1,8 +1,6 @@
 #include <quickjs.h>
 
-#include <jsapi.h>
-
-#include <sjs.h>
+#include "sjs.h"
 
 #include <stdlib.h>
 

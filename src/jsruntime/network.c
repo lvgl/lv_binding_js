@@ -1,6 +1,7 @@
-#include <jsapi.h>
 #include <cutils.h>
 #include <stdio.h>
+
+#include "sjs.h"
 
 typedef struct SJSGetAddrInfoReq {
     JSContext *ctx;

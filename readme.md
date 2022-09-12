@@ -4,21 +4,47 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 在这里放一张代码图和效果图
 
+## Table of Contents
+- [Features](#Features)
+- [Screenshot](#Screenshot)
+- [Build](#Build)
+- [Components](#Components)
+
 ## Features
-- Fully support all lvgl components and most of their api
+- Support all lvgl built-in components
 - Fully suport lvgl flex and grid style
 - support most lvgl style，just write like html5 css
 - support dynamic load image
 - Fully support lvgl animation
 
+## Screenshot
+## Build
+### Unix
 
-## Documentation
-### component
-- like css Pseudo classes, lvgljs components support style bind with state like onPressedStyle、onFocusStyle
-- support get component pos and size
-- support lvgl align
-- like css z-index, moveToFront、moveToBackground can controll component layer
-- scrollIntoView, just like html5 scrollIntoView
+#### use sdl simulate
+
+Once you have installed openssl、sdl2、curl，you can run follwing script compile lvgljs with sdl simulator
+
+```shell
+make dev-x86
+./dev_x86/Main ./demo/calculator/index.js
+```
+
+#### real device
+- First you have to download openssl、curl source code and compile with divece arch
+- Fill in CMAKE_BUILD_PLATFORM、CMAKE_C_COMPILER、CMAKE_CXX_COMPILER、CMAKE_CURL_LIB、CMAKE_CURL_INCLUDE_DIRS、CMAKE_SSL_LIB、CMAKE_CRYPTO_LIB in Makefile
+- you can run follwing script compile lvgljs with device arch (default arm)
+- copy executable file ./some_dir/Main and ./some_dir/lib in divece file-system, make sure file Main and dir lib in same dir
+
+```shell
+make dev-x86 or make build-x86
+```
+
+## Components
+- [View](#docs/components/View.md)
+- 
+
+
 #### View
 props
 - style
@@ -677,8 +703,7 @@ const style = {
 }
 ```
 
-####
-Keyboard
+#### Keyboard
 props
 - style
 - mode ("lower" | "upper" | "special" | "number") 
@@ -729,8 +754,7 @@ const style = {
 }
 ```
 
-####
-Calendar
+#### Calendar
 props
 - style
 - onChange

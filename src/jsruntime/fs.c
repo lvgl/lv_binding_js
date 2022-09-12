@@ -266,13 +266,13 @@ static JSValue SJSNewStat(JSContext* ctx, uv_stat_t *st) {
                                 JS_NewInt64(ctx, st->st_blocks),
                                 JS_PROP_C_W_E);
     JS_DefinePropertyValueStr(ctx, obj, "atime",
-                                JS_NewInt64(ctx, (int64_t)st->st_atime * 1000),
+                                JS_NewInt64(ctx, (int64_t)st->st_atim.tv_sec * 1000 + (int64_t)st->st_atim.tv_nsec / 1000000),
                                 JS_PROP_C_W_E);
     JS_DefinePropertyValueStr(ctx, obj, "mtime",
-                                JS_NewInt64(ctx, (int64_t)st->st_mtime * 1000),
+                                JS_NewInt64(ctx, (int64_t)st->st_mtim.tv_sec * 1000 + (int64_t)st->st_mtim.tv_nsec / 1000000),
                                 JS_PROP_C_W_E);
     JS_DefinePropertyValueStr(ctx, obj, "ctime",
-                                JS_NewInt64(ctx, (int64_t)st->st_ctime * 1000),
+                                JS_NewInt64(ctx, (int64_t)st->st_ctim.tv_sec * 1000 + (int64_t)st->st_ctim.tv_nsec / 1000000),
                                 JS_PROP_C_W_E);
     return MakeObjError(ctx, obj, err);
 }

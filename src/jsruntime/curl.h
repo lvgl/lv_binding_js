@@ -13,6 +13,6 @@ typedef struct {
 
 void SJSCurlInit(void);
 int SJSCurlLoadHttp(DynBuf *dbuf, const char *url);
-CURLM *SJSGETCURLM(JSContext *ctx);
+CURLM *SJSGetCurlm(JSContext *ctx);
 
 #endif

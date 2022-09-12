@@ -7,7 +7,6 @@
 #include <uv.h>
 
 #include "util.h"
-
 typedef struct SJSRunOptions {
     size_t mem_limit;
     size_t stack_size;
@@ -89,6 +88,20 @@ void SJSInjectBuiltInLibPath(JSContext *ctx, char* p);
 void SJSSetupArgs (int a, char **b);
 
 BOOL SJSBootStrapCore (SJSRuntime* qrt);
+
+BOOL SJSJSApiInit (SJSRuntime *qrt);
+
+BOOL SJSRegistJSApi (JSCFunctionListEntry *data);
+
+BOOL SJSJSBridgeInit (SJSRuntime *qrt);
+
+BOOL SJSJSApiListInit ();
+
+BOOL SJSClearJSApi ();
+
+JSValue SJSGetJSBridge (JSContext* ctx);
+
+void SJSBootstrap (JSContext* ctx);
 
 #define SJS_UVCONST(x) JS_PROP_INT32_DEF(#x, UV_ ## x, JS_PROP_ENUMERABLE)
 #define SJS_CONST(x) JS_PROP_INT32_DEF(#x, x, JS_PROP_ENUMERABLE)

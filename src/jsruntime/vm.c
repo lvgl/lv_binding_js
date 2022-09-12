@@ -1,5 +1,4 @@
-#include <sjs.h>
-#include <jsapi.h>
+#include "sjs.h"
 
 #include <string.h>
 #include <unistd.h>

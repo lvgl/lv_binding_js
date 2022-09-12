@@ -1,4 +1,4 @@
-#include <jsapi.h>
+#include "sjs.h"
 #include <cutils.h>
 
 static JSValue SJSPrint(JSContext *ctx, JSValueConst this_val,
