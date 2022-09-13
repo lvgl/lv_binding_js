@@ -41,7 +41,7 @@ make dev-x86 or make build-x86
 ```
 
 ## Components
-- [View](#docs/components/View.md)
+- [View](./doc/component/View.md)
 - 
 
 

@@ -2,28 +2,6 @@
 
 static MemoryPool<sizeof(lv_style_t), 30> style_pool;
 
-void __InitStyle (lv_style_t* style, ECOMP_TYPE type) {
-    lv_style_init(style);
-    lv_style_reset(style);
-
-    bool need_init = true;
-    if (type == COMP_TYPE_SWITCH) {
-        need_init = false;
-    }
-
-    if (need_init) {
-        lv_style_set_pad_left(style, 0);
-        lv_style_set_pad_right(style, 0);
-        lv_style_set_pad_bottom(style, 0);
-        lv_style_set_pad_top(style, 0);
-        lv_style_set_radius(style, 0);
-        lv_style_set_outline_width(style, 0);
-        lv_style_set_outline_pad(style, 0);
-        lv_style_set_border_width(style, 0);
-        lv_style_set_border_side(style, LV_BORDER_SIDE_FULL);
-    }
-};
-
 void BasicComponent::addEventListener (int eventType) {
     if (!this->registeEvents.count(eventType)) {
         this->registeEvents.insert({ eventType, true });
@@ -80,7 +58,6 @@ void BasicComponent::initStyle (int32_t type) {
 
     this->initCompStyle(type);
 
-    // __InitStyle(style, this->type);
     if (is_new) {
         lv_obj_add_style(this->instance, style, type);
     }
@@ -162,11 +139,12 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
         is_new = true;
         style = static_cast<lv_style_t*>(style_pool.allocate());
         style_map[type] = style;
-    }
-
-    if (isinit) {
         this->initStyle(type);
     }
+
+    // if (isinit) {
+    //     this->initStyle(type);
+    // }
 
     for(int i=0; i < keys.size(); i++) {
         std::string key = keys[i];

@@ -1,29 +1,23 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeComp = bridge.NativeRender.NativeComponents.Window
 
 function setWindowProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Window', styleType: 0x0000, oldStyleSheet: oldProps.style});
-        },
-        set onPressedStyle (styleSheet) {
-            setStyle({comp, styleSheet, compName: "Window", styleType: 0x0020, oldStyleSheet: oldProps.onPressedStyle});
-        },
-        set title (title) {
+        ...CommonComponentApi({ compName: 'Window', comp, newProps, oldProps }),
+        title (title) {
             if (oldProps.title != title) {
                 comp.setTitle(title);
             }
         },
-        set onClick (fn) {
-            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-        },
-        set onPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
-        },
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

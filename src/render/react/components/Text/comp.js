@@ -1,11 +1,13 @@
 import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp, STYLE_TYPE } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge;
 const NativeText = bridge.NativeRender.NativeComponents.Text
 
 function setTextProps(comp, newProps, oldProps) {
     const setter = {
-        set children(str) {
+        ...CommonComponentApi({ compName: 'Text', comp, newProps, oldProps }),
+        children(str) {
             const type = typeof str
             if ((type == 'string' || type == 'number') && oldProps.children !== str) {
                 comp.setText(String(str));
@@ -16,50 +18,17 @@ function setTextProps(comp, newProps, oldProps) {
                 }
             }
         },
-        set placeholder (str) {
+        placeholder (str) {
             if (str !== oldProps.placeholder) {
                 comp.setPlaceHolder(str)  
             }
         },
-        // set mode (mode) {
-        //     if (mode === 'password') {
-        //         comp.setPasswordMode(true)
-        //     } else if (oldProps.mode === 'password') {
-        //         comp.setPasswordMode(false)
-        //     }
-        // },
-        set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
-        },
-        set scrollbarStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR, oldStyleSheet: oldProps.scrollbarStyle });
-        },
-        set scrollbarScrollingStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "View", styleType: STYLE_TYPE.PART_SCROLLBAR | STYLE_TYPE.STATE_SCROLLED, oldStyleSheet: oldProps.scrollbarScrollingStyle });
-        },
-        set onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Text", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
-        },
-        set onClick (fn) {
-            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-        },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
-            comp.align(type, pos)
-        },
-        set alignTo ({
-            type,
-            pos = [0, 0],
-            parent
-        }) {
-            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
-            comp.alignTo(type, pos, parent)
-        }
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

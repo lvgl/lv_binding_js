@@ -1,45 +1,33 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
 const NativeButton = bridge.NativeRender.NativeComponents.Button
 
 function setButtonProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Button', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
-        },
-        set onPressedStyle (styleSheet) {
+        ...CommonComponentApi({ compName: 'Button', comp, newProps, oldProps }),
+        onPressedStyle (styleSheet) {
             setStyle({ comp, styleSheet, compName: "Button", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
-        set onClick (fn) {
+        onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
         },
-        set onPressed (fn) {
+        onPressed (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
         },
-        set onLongPressed (fn) {
+        onLongPressed (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
         },
-        set onLongPressRepeat (fn) {
+        onLongPressRepeat (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
-            comp.align(type, pos)
-        },
-        set alignTo ({
-            type,
-            pos = [0, 0],
-            parent
-        }) {
-            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
-            comp.alignTo(type, pos, parent)
-        }
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

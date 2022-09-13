@@ -1,63 +1,51 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist
 
 function setListProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Dropdownlist', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
-        },
-        set items (items) {
+        ...CommonComponentApi({ compName: 'Dropdownlist', comp, newProps, oldProps }),
+        items (items) {
             if (items !== oldProps.items && Array.isArray(items)) {
                 comp.setItems(items, items.length)
             }
         },
-        set arrow (arrow) {
+        arrow (arrow) {
             if (arrow != oldProps.arrow && typeof arrow === 'number') {
                 comp.setArrowDir(arrow)
             }
         },
-        set selectIndex (selectIndex) {
+        selectIndex (selectIndex) {
             if (selectIndex !== oldProps.selectIndex) {
                 comp.setselectIndex(selectIndex)
             }
         },
-        set text (text) {
+        text (text) {
             if (text !== oldProps.text) {
                 comp.setText(text)
             }
         },
-        set direction (direction) {
+        direction (direction) {
             if (direction !== oldProps.direction) {
                 comp.setDir(direction)
             }
         },
-        set highlightSelect (payload) {
+        highlightSelect (payload) {
             if (payload != oldProps.highlightSelect) {
                 comp.setHighLightSelect(payload)
             }
         },
-        set onChange (fn) {
+        onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
-            comp.align(type, pos)
-        },
-        set alignTo ({
-            type,
-            pos = [0, 0],
-            parent
-        }) {
-            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
-            comp.alignTo(type, pos, parent)
-        }
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

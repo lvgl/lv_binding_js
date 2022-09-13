@@ -1,29 +1,28 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
 const NativeCalendar = bridge.NativeRender.NativeComponents.Calendar
 
 function setCalendarProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
-            setStyle({ comp, styleSheet, compName: 'Calendar', styleType: 0x0000, oldStyleSheet: oldProps.style });
-        },
-        set onChange (fn) {
+        ...CommonComponentApi({ compName: 'Calendar', comp, newProps, oldProps }),
+        onChange (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
         },
-        set today (today) {
+        today (today) {
             if (today && today !== oldProps.today) {
                 const date = new Date(today)
                 comp.setToday(date.getFullYear(), date.getMonth() + 1, date.getDate())
             }
         },
-        set shownMonth (month) {
+        shownMonth (month) {
             if (month && month !== oldProps.shownMonth) {
                 const date = new Date(month)
                 comp.setShownMonth(date.getFullYear(), date.getMonth() + 1)
             }
         },
-        set highLightDates (dates) {
+        highLightDates (dates) {
             if (Array.isArray(dates) && dates !== oldProps.highLightDates) {
                 dates = dates.map(item => {
                     const date = new Date(item)
@@ -32,23 +31,12 @@ function setCalendarProps(comp, newProps, oldProps) {
                 comp.setHighlightDates(dates, dates.length)
             }
         },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
-            comp.align(type, pos)
-        },
-        set alignTo ({
-            type,
-            pos = [0, 0],
-            parent
-        }) {
-            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
-            comp.alignTo(type, pos, parent)
-        }
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

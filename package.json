@@ -15,7 +15,6 @@
     "buffer": "^6.0.3",
     "core-js": "^3.23.2",
     "esbuild": "^0.14.43",
-    "esbuild-linux-64": "0.14.38",
     "fetch-blob": "^3.2.0",
     "react": "^16.13.1",
     "react-proxy": "^2.0.8",

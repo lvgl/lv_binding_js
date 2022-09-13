@@ -1,46 +1,38 @@
 import { setStyle, handleEvent, styleGetterProp, STYLE_TYPE } from '../config'
+import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar
 
 function setProgressBarProps(comp, newProps, oldProps) {
     const setter = {
-        set style(styleSheet) {
+        ...CommonComponentApi({ compName: 'ProgressBar', comp, newProps, oldProps }),
+        style(styleSheet) {
             if (newProps.animationTime) {
                 styleSheet['style-transition-time'] = newProps.animationTime
             }
             setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLE_TYPE.PART_MAIN, oldStyleSheet: oldProps.style });
         },
-        set indicatorStyle (styleSheet) {
+        indicatorStyle (styleSheet) {
             setStyle({ comp, styleSheet, compName: 'ProgressBar', styleType: STYLE_TYPE.PART_INDICATOR, oldStyleSheet: oldProps.style });
         },
-        set value (value) {
+        value (value) {
             if (value !== oldProps.value) {
                 comp.setValue(value, !!newProps.useAnimation)
             }
         },
-        set range (arr) {
+        range (arr) {
             if (arr?.[0] !== oldProps?.arr?.[0] || arr?.[1] !== oldProps?.arr?.[1]) {
                 comp.setRange(arr[0], arr[1])
             }
         },
-        set align ({
-            type,
-            pos = [0, 0]
-        }) {
-            if (!type || (type === oldProps.align?.type && newProps.align?.pos?.[0] === oldProps.align?.pos?.[0] && newProps.align?.pos?.[1] === oldProps.align?.pos?.[1])) return
-            comp.align(type, pos)
-        },
-        set alignTo ({
-            type,
-            pos = [0, 0],
-            parent
-        }) {
-            if (!type || (type === oldProps.alignTo?.type && newProps.alignTo?.pos?.[0] === oldProps.alignTo?.pos?.[0] && newProps.alignTo?.pos?.[1] === oldProps.alignTo?.pos?.[1] && parent?.uid === oldProps.alignTo?.parent?.uid)) return
-            comp.alignTo(type, pos, parent)
-        }
+        
     }
-    Object.assign(setter, newProps);
+    Object.keys(setter).forEach(key => {
+        if (newProps[key]) {
+            setter[key](newProps[key])
+        }
+    })
     comp.dataset = {}
     Object.keys(newProps).forEach(prop => {
         const index = prop.indexOf('data-')

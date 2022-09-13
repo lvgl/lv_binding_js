@@ -2,6 +2,8 @@
 
 static JSClassID WrapFocusEventID;
 
+WRAPPED_STOPPROPAGATION
+
 static void EventFinalizer(JSRuntime *rt, JSValue val) {
     EVENT_REF *th = (EVENT_REF *)JS_GetOpaque(val, WrapFocusEventID);
     if (th) {
@@ -32,7 +34,7 @@ JSValue WrapFocusEvent (QEvent* e, QObject* eventTarget) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-
+    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeFocusEventWrapInit (JSContext* ctx) {

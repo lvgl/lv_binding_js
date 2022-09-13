@@ -10,7 +10,7 @@ function App () {
                     type: EAlignType.ALIGN_CENTER,
                 }}
                 scrollbarStyle={style.scrollbarStyle}
-                scrollbarScrollingStyle={style.scrollbarScrollingStyle}
+                onScrollbarScrollingStyle={style.onScrollbarScrollingStyle}
             >
                 <Text>
                     {`Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n
@@ -55,7 +55,7 @@ const style = {
         'shadow-color': '#3949AB',
         'transition': 'background-opacity 0.2s linear 0, width 0.2s linear 0'
     },
-    scrollbarScrollingStyle: {
+    onScrollbarScrollingStyle: {
         'width': 8,
         'background-opacity': 1
     }
