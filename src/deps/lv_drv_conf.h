@@ -95,8 +95,8 @@
 #endif
 
 #if USE_SDL || USE_SDL_GPU
-#  define SDL_HOR_RES     480
-#  define SDL_VER_RES     320
+#  define SDL_HOR_RES     1024
+#  define SDL_VER_RES     600
 
 /* Scale window by this factor (useful when simulating small screens) */
 #  define SDL_ZOOM        1
@@ -122,8 +122,8 @@
 #endif
 
 #if USE_MONITOR
-#  define MONITOR_HOR_RES     480
-#  define MONITOR_VER_RES     320
+#  define MONITOR_HOR_RES     1024
+#  define MONITOR_VER_RES     600
 
 /* Scale window by this factor (useful when simulating small screens) */
 #  define MONITOR_ZOOM        1

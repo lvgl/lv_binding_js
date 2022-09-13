@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState2(initialState) {
+        function useState(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1412,7 +1412,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback(callback, deps) {
+        function useCallback2(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1674,7 +1674,7 @@ var require_react_development = __commonJS({
         exports.isValidElement = isValidElement;
         exports.lazy = lazy;
         exports.memo = memo;
-        exports.useCallback = useCallback;
+        exports.useCallback = useCallback2;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
         exports.useEffect = useEffect2;
@@ -1683,7 +1683,7 @@ var require_react_development = __commonJS({
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
         exports.useRef = useRef2;
-        exports.useState = useState2;
+        exports.useState = useState;
         exports.version = ReactVersion;
       })();
     }
@@ -18589,7 +18589,7 @@ function PaddingStyle(style2, result, compName) {
       ProcessPx(key, style2[key], result);
     }
   });
-  if (style2["padding"]) {
+  if (style2["padding"] !== void 0) {
     const value = style2["padding"];
     if (typeof value == "number") {
       keys.forEach((styleKey) => {
@@ -19123,30 +19123,6 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-var EAlignType = {
-  "ALIGN_DEFAULT": 0,
-  "ALIGN_TOP_LEFT": 1,
-  "ALIGN_TOP_MID": 2,
-  "ALIGN_TOP_RIGHT": 3,
-  "ALIGN_BOTTOM_LEFT": 4,
-  "ALIGN_BOTTOM_MID": 5,
-  "ALIGN_BOTTOM_RIGHT": 6,
-  "ALIGN_LEFT_MID": 7,
-  "ALIGN_RIGHT_MID": 8,
-  "ALIGN_CENTER": 9,
-  "ALIGN_OUT_TOP_LEFT": 10,
-  "ALIGN_OUT_TOP_MID": 11,
-  "ALIGN_OUT_TOP_RIGHT": 12,
-  "ALIGN_OUT_BOTTOM_LEFT": 13,
-  "ALIGN_OUT_BOTTOM_MID": 14,
-  "ALIGN_OUT_BOTTOM_RIGHT": 15,
-  "ALIGN_OUT_LEFT_TOP": 16,
-  "ALIGN_OUT_LEFT_MID": 17,
-  "ALIGN_OUT_LEFT_BOTTOM": 18,
-  "ALIGN_OUT_RIGHT_TOP": 19,
-  "ALIGN_OUT_RIGHT_MID": 20,
-  "ALIGN_OUT_RIGHT_BOTTOM": 21
-};
 var STYLE_TYPE = {
   PART_MAIN: 0,
   PART_SCROLLBAR: 65536,
@@ -21187,6 +21163,7 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
 // src/render/react/core/dimensions/index.js
 var bridge19 = globalThis.SJSJSBridge;
 var dimensions = bridge19.NativeRender.dimensions;
+var Dimensions = dimensions;
 
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
@@ -21208,71 +21185,84 @@ var Calendar = registerComponent(new CalendarConfig());
 var GIF = registerComponent(new GIFConfig());
 var Render = Renderer;
 
-// test/scroll/3/index.jsx
+// demo/calculator/index.jsx
 var import_react = __toESM(require_react());
+var { width, height } = Dimensions.window;
+var buttons = [
+  "(",
+  ")",
+  "C",
+  "<-",
+  "7",
+  "8",
+  "9",
+  "/",
+  "4",
+  "5",
+  "6",
+  "*",
+  "1",
+  "2",
+  "3",
+  "-",
+  "0",
+  ".",
+  "=",
+  "+",
+  ""
+];
 function App() {
-  const [list, setlist] = (0, import_react.useState)(Array(2).fill(1));
-  const button = (0, import_react.useRef)();
-  const lastItem = (0, import_react.useRef)();
-  (0, import_react.useEffect)(() => {
-    lastItem.current?.scrollIntoView();
-  }, [list]);
   return /* @__PURE__ */ import_react.default.createElement(Window2, {
     style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(View, {
-    style: style.view1,
-    align: {
-      type: EAlignType.ALIGN_CENTER
-    }
-  }, list.map((_, i) => /* @__PURE__ */ import_react.default.createElement(View, {
-    style: style.view2,
-    key: i,
-    ref: (ins) => {
-      if (i == list.length - 1) {
-        lastItem.current = ins;
-      }
-    }
-  }, /* @__PURE__ */ import_react.default.createElement(Image, {
-    src: "audio"
-  }), /* @__PURE__ */ import_react.default.createElement(Text, null, `Track ${i + 1}`))), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button,
-    ref: button,
-    align: {
-      type: EAlignType.ALIGN_BOTTOM_RIGHT
-    },
-    onClick: () => {
-      setlist(Array(list.length + 1).fill(1));
-      button.current?.moveToFront();
-    }
-  })));
+  }, /* @__PURE__ */ import_react.default.createElement(Textarea, {
+    style: style.textarea
+  }), /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.buttonWrapper
+  }, buttons.map((text, index) => /* @__PURE__ */ import_react.default.createElement(Button, {
+    style: style.button
+  }, /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.buttonText
+  }, text)))));
 }
 var style = {
   window: {
-    "width": "480px",
-    "height": "320px"
-  },
-  view1: {
-    "width": 280,
-    "height": 220,
     "display": "flex",
-    "flex-direction": "column"
+    "flex-direction": "column",
+    "align-items": "center",
+    "justify-content": "space-between",
+    "height": height,
+    "width": width,
+    "padding": 0,
+    "border-radius": 0,
+    "border-width": 0
   },
-  view2: {
+  textarea: {
+    "font-size": "34px",
+    "background-color": "black",
+    "text-color": "green",
+    "border-radius": 0,
+    "height": Math.floor(height / 4),
+    "width": width,
+    "left": 0,
+    "top": 0
+  },
+  buttonWrapper: {
+    "background-color": "white",
+    "padding": "8px",
+    "row-spacing": "8px",
+    "width": width,
+    "height": Math.floor(height * 3 / 4),
     "display": "flex",
     "flex-direction": "row",
-    "width": "100%",
-    "height": "auto"
+    "flex-wrap": "wrap",
+    "border-radius": 0
   },
   button: {
-    "position": "absolute",
-    "border-radius": 9999,
-    "width": 30,
-    "height": 30,
-    "background-image": "plus"
+    "width": Math.floor(width / 4 - 5 * 8 - 2 * 8),
+    "height": Math.floor(height / 5 - 6 * 8 - 2 * 8)
   },
-  image: {
-    "width": "auto",
-    "height": "auto"
+  buttonText: {
+    "font-size": 26
   }
 };
 Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
