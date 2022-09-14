@@ -20,7 +20,7 @@ function App () {
             <View style={style.buttonWrapper}>
             {
                 buttons.map((text, index) => (
-                    <Button style={style.button}>
+                    <Button style={[style.button, { 'grid-column-pos': index % 4, 'grid-row-pos': Math.floor(index / 4) }]}>
                         <Text style={style.buttonText}>{text}</Text>
                     </Button>
                 ))
@@ -50,7 +50,8 @@ const style = {
         'height': Math.floor(height / 4),
         'width': width,
         'left': 0,
-        'top': 0
+        'top': 0,
+        'flex-grow': 0
     },
     buttonWrapper: {
         'background-color': 'white',
@@ -58,14 +59,15 @@ const style = {
         'row-spacing': '8px',
         'width': width,
         'height': Math.floor(height * 3 / 4),
-        'display': 'flex',
-        'flex-direction': 'row',
-        'flex-wrap': 'wrap',
         'border-radius': 0,
+        'display': 'grid',
+        'grid-template-columns': '200px 200px 200px 200px',
+        'grid-template-rows': '60px 60px 60px 60px 60px',
     },
     button: {
-        'width': Math.floor(width / 4 - 5 * 8 - 2 * 8),
-        'height': Math.floor(height / 5 - 6 * 8 - 2 * 8),
+        'width': '200px',
+        'height': '60px',
+        'grid-child': true,
     },
     buttonText: {
         'font-size': 26,

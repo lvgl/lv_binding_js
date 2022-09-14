@@ -163,7 +163,6 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
             JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
             this->setTransition(ctx, value, style);
             JS_FreeValue(ctx, value);
-            continue;
         }
     }
 
@@ -235,6 +234,15 @@ BasicComponent::~BasicComponent () {
             }
             free((void*)(desc.second));
         }
+    }
+
+    const lv_coord_t* ptr1 = lv_obj_get_style_grid_row_dsc_array(this->instance, 0);
+    const lv_coord_t* ptr2 = lv_obj_get_style_grid_column_dsc_array(this->instance, 0);
+    if (ptr1) {
+        free((lv_coord_t*)(ptr1));
+    }
+    if (ptr2) {
+        free((lv_coord_t*)(ptr2));
     }
     // do not del here, remove child will do the action
     // lv_obj_del(this->instance);

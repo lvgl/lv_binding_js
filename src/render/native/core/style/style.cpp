@@ -607,6 +607,103 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     JS_FreeCString(ctx, str);
 };
 
+static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    if (JS_IsArray(ctx, obj)) {
+        const lv_coord_t* old_ptr1 = lv_obj_get_style_grid_row_dsc_array(comp, 0);
+        const lv_coord_t* old_ptr2 = lv_obj_get_style_grid_column_dsc_array(comp, 0);
+
+        JSValue column_value = JS_GetPropertyUint32(ctx, obj, 0);
+        JSValue row_value = JS_GetPropertyUint32(ctx, obj, 1);
+
+        int len;
+        JSValue num_value;
+        int num;
+
+        JSValue column_len_value = JS_GetPropertyStr(ctx, column_value, "length");
+        JS_ToInt32(ctx, &len, column_len_value);
+        lv_coord_t* column_ptr = static_cast<lv_coord_t*>(malloc((len + 1) * sizeof(lv_coord_t)));
+        for(int i=0; i < len; i++) {
+            num_value = JS_GetPropertyUint32(ctx, column_value, i);
+            JS_ToInt32(ctx, &num, num_value);
+            column_ptr[i] = num;
+            JS_FreeValue(ctx, num_value);
+        }
+        column_ptr[len] = LV_GRID_TEMPLATE_LAST;
+        JS_FreeValue(ctx, column_len_value);
+        
+        JSValue row_len_value = JS_GetPropertyStr(ctx, column_value, "length");
+        JS_ToInt32(ctx, &len, row_len_value);
+        lv_coord_t* row_ptr = static_cast<lv_coord_t*>(malloc((len + 1) * sizeof(lv_coord_t)));
+        for(int i=0; i < len; i++) {
+            num_value = JS_GetPropertyUint32(ctx, row_value, i);
+            JS_ToInt32(ctx, &num, num_value);
+            row_ptr[i] = num;
+            JS_FreeValue(ctx, num_value);
+        }
+        row_ptr[len] = LV_GRID_TEMPLATE_LAST;
+        JS_FreeValue(ctx, row_len_value);
+        
+        JS_FreeValue(ctx, column_value);
+        JS_FreeValue(ctx, row_value);
+
+        lv_obj_set_grid_dsc_array(comp, column_ptr, row_ptr);
+        if (old_ptr1) {
+            free((lv_coord_t*)(old_ptr1));
+        }
+        if (old_ptr2) {
+            free((lv_coord_t*)(old_ptr2));
+        }
+    }
+};
+
+static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    if (JS_IsArray(ctx, obj)) {
+        JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
+        JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
+        JSValue JSValue3 = JS_GetPropertyUint32(ctx, obj, 2);
+        JSValue JSValue4 = JS_GetPropertyUint32(ctx, obj, 3);
+        JSValue JSValue5 = JS_GetPropertyUint32(ctx, obj, 4);
+        JSValue JSValue6 = JS_GetPropertyUint32(ctx, obj, 5);
+
+        int num1;
+        int num2;
+        int num3;
+        int num4;
+        int num5;
+        int num6;
+        JS_ToInt32(ctx, &num1, JSValue1);
+        JS_ToInt32(ctx, &num2, JSValue2);
+        JS_ToInt32(ctx, &num3, JSValue3);
+        JS_ToInt32(ctx, &num4, JSValue4);
+        JS_ToInt32(ctx, &num5, JSValue5);
+        JS_ToInt32(ctx, &num6, JSValue6);
+
+        lv_obj_set_grid_cell(comp, static_cast<lv_grid_align_t>(num1), num2, num3, static_cast<lv_grid_align_t>(num4), num5, num6);
+        JS_FreeValue(ctx, JSValue1);
+        JS_FreeValue(ctx, JSValue2);
+        JS_FreeValue(ctx, JSValue3);
+        JS_FreeValue(ctx, JSValue4);
+        JS_FreeValue(ctx, JSValue5);
+        JS_FreeValue(ctx, JSValue6);
+    }
+};
+
+static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    if (JS_IsArray(ctx, obj)) {
+        JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
+        JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
+
+        int num1;
+        int num2;
+        JS_ToInt32(ctx, &num1, JSValue1);
+        JS_ToInt32(ctx, &num2, JSValue2);
+
+        lv_obj_set_grid_align(comp, static_cast<lv_grid_align_t>(num1), static_cast<lv_grid_align_t>(num2));
+        JS_FreeValue(ctx, JSValue1);
+        JS_FreeValue(ctx, JSValue2);
+    }
+};
+
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
@@ -710,4 +807,9 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* position */
     {"position", &CompSetPosition},
+
+    /* grid */
+    {"grid-template", &CompGridColumnRow},
+    {"grid-child", &CompSetGridChild},
+    {"grid-align", &CompsetGridAlign},
 };

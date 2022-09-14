@@ -18596,7 +18596,7 @@ function PaddingStyle(style2, result, compName) {
         result[styleKey] = value;
       });
     } else if (typeof value == "string") {
-      const values = value.split(/\s/);
+      const values = value.split(/\s/).filter(Boolean);
       const len = values.length;
       switch (len) {
         case 1:
@@ -18820,6 +18820,85 @@ function FlexStyle(style2, result) {
     result["flex-grow"] = style2["flex-grow"];
   }
   return result;
+}
+
+// src/render/react/core/style/pipe/grid.js
+var GRID_SIZE_MAX = (1 << 13) - 1 - 101;
+var FR_REG = /([\d]+)fr$/;
+var gridChildJustifySelfObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1
+};
+var gridChildAlignSelfObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1
+};
+var gridJustifyContentObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "space-evenly": 4,
+  "space-around": 5,
+  "space-between": 6,
+  "stretch": 3
+};
+var gridAlignItemsObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "space-evenly": 4,
+  "space-around": 5,
+  "space-between": 6,
+  "stretch": 3
+};
+function GridStyle(style2, result) {
+  if (style2.display == "grid") {
+    let columns = style2["grid-template-columns"]?.split(/\s/).filter(Boolean);
+    let rows = style2["grid-template-rows"]?.split(/\s/).filter(Boolean);
+    columns = columns.map((column) => {
+      if (column === "auto") {
+        return GRID_SIZE_MAX;
+      }
+      const arr = column?.match(FR_REG);
+      if (!isNaN(arr?.[1])) {
+        return (1 << 13) - 1 - 100 + arr[1];
+      }
+      return NormalizePx(column);
+    });
+    rows = rows.map((row) => {
+      if (row === "auto") {
+        return GRID_SIZE_MAX;
+      }
+      const arr = row?.match(FR_REG);
+      if (!isNaN(arr?.[1])) {
+        return (1 << 13) - 1 - 100 + arr[1];
+      }
+      return NormalizePx(row);
+    });
+    columns = columns.filter(Boolean);
+    rows = rows.filter(Boolean);
+    result["display"] = "grid";
+    result["grid-template"] = [columns, rows];
+    const justifyContent = gridJustifyContentObj[style2["justify-content"]] || gridJustifyContentObj.start;
+    const alignContent = gridAlignItemsObj[style2["align-content"]] || gridAlignItemsObj.start;
+    result["grid-align"] = [justifyContent, alignContent];
+  }
+  if (style2["grid-child"]) {
+    const justifySelf = style2["justify-self"];
+    const alignSelf = style2["align-self"];
+    const gridColumnPos = style2["grid-column-pos"];
+    const gridRowPos = style2["grid-row-pos"];
+    const gridColumnSpan = style2["grid-column-span"] || 1;
+    const gridRowSpan = style2["grid-row-span"] || 1;
+    if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan))
+      return;
+    let column_align, row_align;
+    row_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start;
+    column_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start;
+    result["grid-child"] = [column_align, gridColumnPos, gridColumnSpan, row_align, gridRowPos, gridRowSpan];
+  }
 }
 
 // src/render/react/core/style/pipe/scoll.js
@@ -19078,6 +19157,7 @@ var StyleSheet = _StyleSheet;
 __publicField(StyleSheet, "transformStyle");
 StyleSheet.pipeline([
   FlexStyle,
+  GridStyle,
   TextStyle,
   OutlineStyle,
   BorderStyle,
@@ -21219,7 +21299,7 @@ function App() {
   }), /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.buttonWrapper
   }, buttons.map((text, index) => /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: style.button
+    style: [style.button, { "grid-column-pos": index % 4, "grid-row-pos": Math.floor(index / 4) }]
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.buttonText
   }, text)))));
@@ -21244,7 +21324,8 @@ var style = {
     "height": Math.floor(height / 4),
     "width": width,
     "left": 0,
-    "top": 0
+    "top": 0,
+    "flex-grow": 0
   },
   buttonWrapper: {
     "background-color": "white",
@@ -21252,14 +21333,15 @@ var style = {
     "row-spacing": "8px",
     "width": width,
     "height": Math.floor(height * 3 / 4),
-    "display": "flex",
-    "flex-direction": "row",
-    "flex-wrap": "wrap",
-    "border-radius": 0
+    "border-radius": 0,
+    "display": "grid",
+    "grid-template-columns": "200px 200px 200px 200px",
+    "grid-template-rows": "60px 60px 60px 60px 60px"
   },
   button: {
-    "width": Math.floor(width / 4 - 5 * 8 - 2 * 8),
-    "height": Math.floor(height / 5 - 6 * 8 - 2 * 8)
+    "width": "200px",
+    "height": "60px",
+    "grid-child": true
   },
   buttonText: {
     "font-size": 26

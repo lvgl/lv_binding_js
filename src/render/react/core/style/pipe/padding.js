@@ -16,7 +16,7 @@ export function PaddingStyle (style, result, compName) {
                 result[styleKey] = value
             })
         } else if (typeof value == 'string') {
-            const values = value.split(/\s/)
+            const values = value.split(/\s/).filter(Boolean)
             const len = values.length
             switch (len) {
                 case 1:

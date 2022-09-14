@@ -8,6 +8,7 @@ import { BorderStyle } from './pipe/border'
 import { OutlineStyle } from './pipe/outline'
 import { TextStyle } from './pipe/text'
 import { FlexStyle } from './pipe/flex'
+import { GridStyle } from './pipe/grid'
 import { ScrollStyle } from './pipe/scoll'
 import { OpacityStyle } from './pipe/opacity'
 import { LineStyle } from './pipe/line'
@@ -177,10 +178,6 @@ function NormalStyle (style, result) {
 //     return result
 // }
 
-function GridStyle (style, result) {
-
-}
-
 class StyleSheet {
     static transformStyle;
 
@@ -217,6 +214,7 @@ class StyleSheet {
 
 StyleSheet.pipeline([
     FlexStyle,
+    GridStyle,
     TextStyle,
     OutlineStyle,
     BorderStyle,
