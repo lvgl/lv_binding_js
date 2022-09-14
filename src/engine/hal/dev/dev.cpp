@@ -1,12 +1,10 @@
 #include "dev.hpp"
 
-#define DISP_BUF_SIZE (1024 * 600)
-
 void hal_init(void) {
     hor_res = SDL_HOR_RES;
     ver_res = SDL_VER_RES;
 
-    static lv_color_t buf[DISP_BUF_SIZE];
+    static lv_color_t buf[SDL_HOR_RES * 100];
 
     flush_cb = sdl_display_flush;
 
@@ -19,15 +17,15 @@ void hal_init(void) {
 
     /*Create a display buffer*/
     static lv_disp_draw_buf_t disp_buf1;
-    lv_disp_draw_buf_init(&disp_buf1, buf, NULL, DISP_BUF_SIZE);
+    lv_disp_draw_buf_init(&disp_buf1, buf, NULL, SDL_HOR_RES * 100);
 
     /*Create a display*/
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv); /*Basic initialization*/
     disp_drv.draw_buf = &disp_buf1;
     disp_drv.flush_cb = flush_cb;
-    disp_drv.hor_res = 1024;
-    disp_drv.ver_res = 600;
+    disp_drv.hor_res = SDL_HOR_RES;
+    disp_drv.ver_res = SDL_VER_RES;
 
     lv_disp_t * disp = lv_disp_drv_register(&disp_drv);
 

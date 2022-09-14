@@ -9,7 +9,7 @@ export function PaddingStyle (style, result, compName) {
         }
     })
 
-    if (style['padding']) {
+    if (style['padding'] !== void 0) {
         const value = style['padding']
         if (typeof value == 'number') {
             keys.forEach(styleKey => {
