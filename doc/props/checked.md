@@ -1,22 +1,9 @@
-Component Switch mapping [lvgl lv_switch)](https://docs.lvgl.io/master/widgets/switch.html)
+# Component prop checked
 
-## Api
-- [style](../api/style.md)
-- [moveToFront](../api/moveToFront.md)
-- [moveToBackground](../api/moveToBackground.md)
-- [setStyle](../api/setStyle.md)
-- [scrollIntoView](../api/scrollIntoView.md)
-
-## Props
-- [style](../props/style.md)
-- [align](../props/align.md)
-- [alignTo](../props/alignTo.md)
-- [checkedStyle](../props/checkedStyle.md)
-- [disabled](../props/disabled.md)
-- [checked](../props/checked.md)
-- [onChange](../onChange/2.md)
+Prop checked used in component Switch、Checkbox 
 
 ## Usage
+
 ```jsx
 import { Switch, Window } from 'lvlgjs-ui'
 import { useState } from 'react'
@@ -47,6 +34,3 @@ const style = {
     checkedStyle: {}
 }
 ```
-
-## Demo
-test/switch/

@@ -1,20 +1,9 @@
-Component Switch mapping [lvgl lv_switch)](https://docs.lvgl.io/master/widgets/switch.html)
+# Component prop checkedStyle
 
-## Api
-- [style](../api/style.md)
-- [moveToFront](../api/moveToFront.md)
-- [moveToBackground](../api/moveToBackground.md)
-- [setStyle](../api/setStyle.md)
-- [scrollIntoView](../api/scrollIntoView.md)
+Prop checkedStyle mapping lvgl object LV_STATE_CHECKED style
 
-## Props
-- [style](../props/style.md)
-- [align](../props/align.md)
-- [alignTo](../props/alignTo.md)
-- [checkedStyle](../props/checkedStyle.md)
-- [disabled](../props/disabled.md)
-- [checked](../props/checked.md)
-- [onChange](../onChange/2.md)
+## Value
+support JS Object or JS Array
 
 ## Usage
 ```jsx
@@ -47,6 +36,3 @@ const style = {
     checkedStyle: {}
 }
 ```
-
-## Demo
-test/switch/

@@ -18,11 +18,6 @@ function setTextProps(comp, newProps, oldProps) {
                 }
             }
         },
-        placeholder (str) {
-            if (str !== oldProps.placeholder) {
-                comp.setPlaceHolder(str)  
-            }
-        },
     }
     Object.keys(setter).forEach(key => {
         if (newProps[key]) {

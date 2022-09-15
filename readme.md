@@ -42,7 +42,13 @@ make dev-x86 or make build-x86
 
 ## Components
 - [View](./doc/component/View.md)
-- 
+- [Image](./doc/component/Image.md)
+- [Button](./doc/component/Button.md)
+- [Text](./doc/component/Text.md)
+- [Input](./doc/component/Input.md)
+- [Textarea](./doc/component/Textarea.md)
+- [Switch](./doc/component/Switch.md)
+- [Checkbox](./doc/component/Checkbox.md)
 
 
 #### View

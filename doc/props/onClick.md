@@ -3,17 +3,21 @@
 Prop onClick mapping lvgl object event LV_EVENT_CLICKED 
 
 ```ts
-interface IEVENT_TYPE {
+interface PARAM_TYPE {
     target: componentInstance; // original target
     currentTarget: componentInstance; // current target object, not the original object
     stopPropagation: () => {}; // stop event bubble
+}
+
+interface CALLBACK_TYPE {
+    (e: PARAM_TYPE): void;
 }
 ```
 
 ## Value
 onClick callback with the following type
-- IEVENT_TYPE[]
-- IEVENT_TYPE
+- CALLBACK_TYPE[]
+- CALLBACK_TYPE
 - null
 
 ## Usage

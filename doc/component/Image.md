@@ -1,4 +1,4 @@
-Component View mapping [lvgl Base object (lv_obj)](https://docs.lvgl.io/master/widgets/obj.html)
+Component Image mapping [lvgl lv_img)](https://docs.lvgl.io/master/widgets/img.html#overview)
 
 ## Api
 - [style](../api/style.md)
@@ -10,53 +10,29 @@ Component View mapping [lvgl Base object (lv_obj)](https://docs.lvgl.io/master/w
 ## Props
 - [style](../props/style.md)
 - [onPressedStyle](../props/onPressedStyle.md)
-- [scrollbarStyle](../props/scrollbarStyle.md)
-- [onScrollbarPressedStyle](../props/onScrollbarPressedStyle.md)
-- [onScrollbarScrollingStyle](../props/onScrollbarScrollingStyle.md)
 - [onClick](../props/onClick.md)
 - [onPressed](../props/onPressed.md)
 - [onLongPressed](../props/onLongPressed.md)
 - [onLongPressRepeat](../props/onLongPressRepeat.md)
 - [align](../props/align.md)
 - [alignTo](../props/alignTo.md)
+- [src](../props/src.md)
 
 ## Usage
 ```jsx
-import { View, EAlignType, Window, Button, Text } from 'lvlgjs-ui'
-import { useRef, useEffect } from 'react'
+import { Window, Image } from 'lvlgjs-ui'
 
+const path = require('path')
 function Component () {
-    const ref = useRef()
-    useEffect(() => {
-        console.log(ref.current.style.left)
-    })
-
     return (
         <Window>
-             <View
-                style={style.view}
-                onPressedStyle={style.viewPressed}
-                onClick={e => { e.stopPropagation() }}
-                onPressed={() => {}}
-                onLongPressed={() => {}}
-                onLongPressRepeat={() => {}}
-                align={{
-                    type: EAlignType.ALIGN_CENTER,
-                    pos: [10, 0]
-                }}
-                ref={ref}
-            >
-                <Button>
-                    <Text>2222</Text>
-                </Button>
-            </View>
+            <Image src={path.resolve(__dirname, './assets/images/1.png')} />
+            <Image src={'https://somewebsite/images/1.png'} />
+            <Image src="audio" />
         </Window>
     )
 }
-
-const style = {
-    view: {},
-    viewPressed: {}
-}
 ```
 
+## Demo
+test/image
