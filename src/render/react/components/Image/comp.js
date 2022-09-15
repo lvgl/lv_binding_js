@@ -1,6 +1,6 @@
 import { setStyle, handleEvent, EVENTTYPE_MAP, styleGetterProp } from '../config'
 import { isValidUrl } from '../../utils/helpers'
-import { builtInSymbol } from '../../core/style/symbol'
+import { BUILT_IN_SYMBOL } from '../../core/style/symbol'
 import { CommonComponentApi } from '../common/index'
 
 const fs = require('fs')
@@ -27,8 +27,8 @@ function setImageProps(comp, newProps, oldProps) {
         },
         src(url) {
             if (url && url !== oldProps.src) {
-                if (builtInSymbol[url]) {
-                    comp.setSymbol(builtInSymbol[url])
+                if (BUILT_IN_SYMBOL[url]) {
+                    comp.setSymbol(BUILT_IN_SYMBOL[url])
                     return
                 }
                 if (!isValidUrl(url)) {

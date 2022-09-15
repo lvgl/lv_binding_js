@@ -1,4 +1,4 @@
-export const builtInSymbol = {
+export const BUILT_IN_SYMBOL = {
     "audio": "\uF001",
     "video": "\uF008",
     "list": "\uF00B",

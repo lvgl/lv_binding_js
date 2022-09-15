@@ -41,5 +41,6 @@ export const GIF = registerComponent(new GIFConfig());
 export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'
 export { Dimensions } from './core/dimensions'
+export { BUILT_IN_SYMBOL } from './core/style/symbol'
 
 export const Render = Renderer;

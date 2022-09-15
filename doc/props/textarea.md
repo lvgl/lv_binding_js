@@ -1,20 +1,9 @@
-Component Keyboard mapping [lvgl lv_keyboard)](https://docs.lvgl.io/master/widgets/keyboard.html)
+# Component prop textarea
 
-It's used to realize a virtual keyboard to write texts into a Text area.
+Prop textarea usually use in component Keyboard
 
-## Api
-- [style](../api/style.md)
-- [moveToFront](../api/moveToFront.md)
-- [moveToBackground](../api/moveToBackground.md)
-- [setStyle](../api/setStyle.md)
-- [scrollIntoView](../api/scrollIntoView.md)
-
-## Props
-- [style](../props/style.md)
-- [align](../props/align.md)
-- [alignTo](../props/alignTo.md)
-- [textarea](../props/textarea.md)
-- [mode](../props/mode/2.md)
+## Value
+some textarea、input's componentInstance
 
 ## Usage
 ```jsx

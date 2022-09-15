@@ -12,7 +12,7 @@ Component Textarea mapping [lvgl lv_textarea)](https://docs.lvgl.io/master/widge
 - [align](../props/align.md)
 - [alignTo](../props/alignTo.md)
 - [placeholder](../props/placeholder.md)
-- [mode](../props/mode.md)
+- [mode](../props/mode/1.md)
 - [maxLength](../props/maxLength.md)
 - [onChange](../props/onChange/1.md)
 - [onFocus](../props/onFocus.md)
