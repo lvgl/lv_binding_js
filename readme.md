@@ -9,9 +9,9 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 - [Screenshot](#Screenshot)
 - [Build](#Build)
 - [Components](#Components)
-- [Font-Symbol](#Font-Symbol)
-- [Animation](#Animation)
 - [Style](#Style)
+- [Animation](#Animation)
+- [Font](#Font)
 
 ## Features
 - Support all lvgl built-in components
@@ -59,7 +59,7 @@ make dev-x86 or make build-x86
 - [Keyboard](./doc/component/Keyboard.md)
 - [Calendar](./doc/component/Calendar.md)
 
-## Font-Symbol
+## Font
 [Buitin-Symbol](./doc/Symbol/symbol.md)
 
 ## Animation
