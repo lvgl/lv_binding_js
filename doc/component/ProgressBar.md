@@ -1,4 +1,4 @@
-Component ProgressBar mapping [lvgl lv_bar)](https://docs.lvgl.io/master/widgets/bar.html)
+# Component ProgressBar mapping [lvgl lv_bar)](https://docs.lvgl.io/master/widgets/bar.html)
 
 ## Api
 - [style](../api/style.md)

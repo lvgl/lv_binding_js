@@ -1,4 +1,4 @@
-Component Keyboard mapping [lvgl lv_calendar)](https://docs.lvgl.io/master/widgets/calendar.html#overview)
+# Component Keyboard mapping [lvgl lv_calendar)](https://docs.lvgl.io/master/widgets/calendar.html#overview)
 
 It's used to realize a virtual keyboard to write texts into a Text area.
 

@@ -1,4 +1,4 @@
-Animate mapping [lvgl Animations](https://docs.lvgl.io/master/overview/animation.html)
+# Animate mapping [lvgl Animations](https://docs.lvgl.io/master/overview/animation.html)
 
 Animated focuses on control time-based animation execution
 

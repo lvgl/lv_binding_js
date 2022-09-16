@@ -1,4 +1,4 @@
-Component Slider mapping [lvgl lv_slider)](https://docs.lvgl.io/master/widgets/slider.html#overview)
+# Component Slider mapping [lvgl lv_slider)](https://docs.lvgl.io/master/widgets/slider.html#overview)
 
 ## Api
 - [style](../api/style.md)

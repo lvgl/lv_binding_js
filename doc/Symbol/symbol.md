@@ -1,4 +1,4 @@
-Symbol mapping [lvgl Fonts Symbol](https://docs.lvgl.io/master/overview/font.html)
+# Symbol mapping [lvgl Fonts Symbol](https://docs.lvgl.io/master/overview/font.html)
 
 ## Value
 the following symbols are also added to the built-in fonts:

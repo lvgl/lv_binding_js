@@ -1,4 +1,4 @@
-Component Line mapping [lvgl lv_line)](https://docs.lvgl.io/master/widgets/line.html)
+# Component Line mapping [lvgl lv_line)](https://docs.lvgl.io/master/widgets/line.html)
 
 ## Api
 - [style](../api/style.md)

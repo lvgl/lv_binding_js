@@ -1,4 +1,4 @@
-Component Keyboard mapping [lvgl lv_keyboard)](https://docs.lvgl.io/master/widgets/keyboard.html)
+# Component Keyboard mapping [lvgl lv_keyboard)](https://docs.lvgl.io/master/widgets/keyboard.html)
 
 It's used to realize a virtual keyboard to write texts into a Text area.
 

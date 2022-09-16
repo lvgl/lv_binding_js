@@ -66,45 +66,16 @@ make dev-x86 or make build-x86
 [Animation](./doc/animate/animate.md)
 
 ## Style
-[Layout](./doc/style/layout.md)
+- [position-size-layout](./doc/style/position-size-layout.md)
+- [boxing-model](./doc/style/boxing-model.md)
+- [color](./doc/style/color.md)
+- [flex](./doc/style/flex.md)
+- [grid](./doc/style/grid.md)
+- [Font](./doc/style/font.md)
 
 
 ### Style
 
-#### Position and Size (support absolute value、pixel values、percentage、auto)
-- left
-- top
-- width
-- height
-
-```js
-const style = {
-    "width": "50%" | "100px" | 100,
-    "height": "100px",
-    "left": 20,
-    "top": "50px",
-    "width": "auto",
-}
-```
-
-#### Box Model
-- padding
-- padding-left、padding-right、padding-top、padding-bottom
-- border-width、border-color、border-side、border-radius
-- outline-width、outline-color、outline-padding
-  
-```js
-const style = {
-    "padding": "20px" | "20px 20px" | "20px 20px 20px" | "20px 20px 20px 20px",
-    "padding-left": "100px" | 100,
-    "border-color": "yellow",
-    "border-side": "left" | "right" | "top" | "bottom" | "full" | "top-right" | "top-bottom" | "top-left" | "right-bottom" | "right-left" | "bottom-left",
-    "border-width": 8,
-    "border-radius": 10,
-    "outline-width": "50px",
-    "outline-color": "green"
-}
-```
 
 #### font
 - font-size
@@ -127,27 +98,6 @@ const style = {
 }
 ```  
 
-#### flex
-must use with display: "flex", flex can not mixed with left or top
-- flex-direction (row | column)
-- flex-wrap (wrap | nowrap | reverse)
-- justify-content (flex-start | flex-end | center | space-evenly | space-around | space-between)
-- align-items (flex-start | flex-end | center | space-evenly | space-around | space-between)
-- align-content (flex-start | flex-end | center | space-evenly | space-around | space-between)
-- flex-grow
-  
-```js
-const style = {
-    "display": "flex",
-    "flex-wrap": "wrap",
-    "justify-content": "center",
-    "align-items": "center",
-    "align-content": "center",
-    "flex-grow": 1
-}
-```
-
-#### grid
 
 #### opacity
 - opacity

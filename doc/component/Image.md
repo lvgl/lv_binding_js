@@ -1,4 +1,4 @@
-Component Image mapping [lvgl lv_img)](https://docs.lvgl.io/master/widgets/img.html#overview)
+# Component Image mapping [lvgl lv_img)](https://docs.lvgl.io/master/widgets/img.html#overview)
 
 ## Api
 - [style](../api/style.md)

@@ -1,4 +1,4 @@
-Component Input mapping [lvgl lv_textarea)](https://docs.lvgl.io/master/widgets/textarea.html)
+# Component Input mapping [lvgl lv_textarea)](https://docs.lvgl.io/master/widgets/textarea.html)
 
 ## Api
 - [style](../api/style.md)

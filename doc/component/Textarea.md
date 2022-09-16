@@ -1,4 +1,4 @@
-Component Textarea mapping [lvgl lv_textarea)](https://docs.lvgl.io/master/widgets/textarea.html)
+# Component Textarea mapping [lvgl lv_textarea)](https://docs.lvgl.io/master/widgets/textarea.html)
 
 ## Api
 - [style](../api/style.md)

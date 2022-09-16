@@ -1,4 +1,4 @@
-Component Button mapping [lvgl lv_btn)](https://docs.lvgl.io/master/widgets/btn.html)
+# Component Button mapping [lvgl lv_btn)](https://docs.lvgl.io/master/widgets/btn.html)
 
 ## Api
 - [style](../api/style.md)

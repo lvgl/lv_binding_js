@@ -1,4 +1,4 @@
-Component Text mapping [lvgl lv_label)](https://docs.lvgl.io/master/widgets/label.html)
+# Component Text mapping [lvgl lv_label)](https://docs.lvgl.io/master/widgets/label.html)
 
 ## Api
 - [style](../api/style.md)

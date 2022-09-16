@@ -1,4 +1,4 @@
-Component View mapping [lvgl Base object (lv_obj)](https://docs.lvgl.io/master/widgets/obj.html)
+# Component View mapping [lvgl Base object (lv_obj)](https://docs.lvgl.io/master/widgets/obj.html)
 
 ## Api
 - [style](../api/style.md)

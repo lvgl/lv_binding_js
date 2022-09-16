@@ -1,4 +1,4 @@
-Component Checkbox mapping [lvgl lv_checkbox)](https://docs.lvgl.io/master/widgets/checkbox.html)
+# Component Checkbox mapping [lvgl lv_checkbox)](https://docs.lvgl.io/master/widgets/checkbox.html)
 
 ## Api
 - [style](../api/style.md)

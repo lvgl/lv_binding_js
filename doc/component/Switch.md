@@ -1,4 +1,4 @@
-Component Switch mapping [lvgl lv_switch)](https://docs.lvgl.io/master/widgets/switch.html)
+# Component Switch mapping [lvgl lv_switch)](https://docs.lvgl.io/master/widgets/switch.html)
 
 ## Api
 - [style](../api/style.md)
