@@ -17,7 +17,6 @@ function App () {
                         'row-spacing': value
                     })
                 },
-
             }),
             Animate.timing({
                 duration: 3000,

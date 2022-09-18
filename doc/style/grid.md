@@ -19,8 +19,8 @@ The property with the following value
 ### justify-content
 If there are some empty space the rows can be aligned several ways
 The property with the following value
-- flex-start
-- flex-end
+- start
+- end
 - center
 - space-evenly
 - space-around
@@ -28,8 +28,8 @@ The property with the following value
 
 ### align-items
 If there are some empty space the column can be aligned several ways:
-- flex-start
-- flex-end
+- start
+- end
 - center
 - space-evenly
 - space-around
@@ -50,13 +50,27 @@ specifies a grid item's row span
 ### grid-column-span
 specifies a grid item's column span
 
+### justify-self
+determine how to align the children in its cell, with the following value
+- start
+- center
+- end
+- stretch
+
+### align-self
+determine how to align the children in its cell
+- start
+- center
+- end
+- stretch
+
 ## Usage
 ```js
 
 ```
 
 ## Demo
-
+test/grid
 
 
 

@@ -7,11 +7,13 @@ const gridChildJustifySelfObj = {
     'start': 0,
     'end': 2,
     'center': 1,
+    'stretch': 3
 }
 const gridChildAlignSelfObj = {
     'start': 0,
     'end': 2,
     'center': 1,
+    'stretch': 3
 }
 
 const gridJustifyContentObj = {
@@ -39,6 +41,8 @@ export function GridStyle (style, result) {
         let columns = style['grid-template-columns']?.split(/\s/).filter(Boolean)
         let rows = style['grid-template-rows']?.split(/\s/).filter(Boolean)
 
+        if (!columns || !rows) return
+
         columns = columns.map(column => {
             if (column === 'auto') {
                 return GRID_SIZE_MAX
@@ -65,7 +69,7 @@ export function GridStyle (style, result) {
         result['display'] = 'grid'
         result['grid-template'] = [columns, rows]
         const justifyContent = gridJustifyContentObj[style['justify-content']] || gridJustifyContentObj.start
-        const alignContent = gridAlignItemsObj[style['align-content']] || gridAlignItemsObj.start
+        const alignContent = gridAlignItemsObj[style['align-items']] || gridAlignItemsObj.start
 
         result['grid-align'] = [justifyContent, alignContent]
     }
@@ -81,8 +85,8 @@ export function GridStyle (style, result) {
         if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan)) return
 
         let column_align, row_align
-        row_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start
-        column_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start
+        column_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start
+        row_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start
 
         result['grid-child'] = [column_align, gridColumnPos, gridColumnSpan, row_align, gridRowPos, gridRowSpan]
     }

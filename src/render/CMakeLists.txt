@@ -24,6 +24,8 @@ add_library(render STATIC
     ./native/core/animate/animate.cpp
     ./native/components/gif/gif.cpp
     ./native/components/gif/gif_wrap.cpp
+    ./native/components/tabview/tabview.cpp
+    ./native/components/tabview/tabview_wrap.cpp
     ./native/components/calendar/calendar.cpp
     ./native/components/calendar/calendar_wrap.cpp
     ./native/components/line/line.cpp

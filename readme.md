@@ -6,7 +6,8 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 ## Table of Contents
 - [Features](#Features)
-- [Screenshot](#Screenshot)
+- [Demo](#Demo)
+
 - [Build](#Build)
 - [Components](#Components)
 - [Style](#Style)
@@ -20,7 +21,12 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 - support dynamic load image
 - Fully support lvgl animation
 
-## Screenshot
+## Demo
+### Calculator
+#### sdl_simulator
+![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
+
+
 ## Build
 ### Unix
 

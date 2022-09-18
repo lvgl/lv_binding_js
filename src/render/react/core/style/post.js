@@ -1,5 +1,5 @@
 import { isValidUrl } from '../../utils/helpers'
-import { builtInSymbol } from '../style/symbol'
+import { BUILT_IN_SYMBOL } from '../style/symbol'
 
 const path = require('path')
 const fs = require('fs')
@@ -15,8 +15,8 @@ export function PostProcessStyle ({comp, styleSheet, styleType}) {
     if (styleSheet['background-image'] !== void 0) {
         let url = styleSheet['background-image']
 
-        if (builtInSymbol[url]) {
-            comp.setBackgroundImage(null, styleType, builtInSymbol[url]);
+        if (BUILT_IN_SYMBOL[url]) {
+            comp.setBackgroundImage(null, styleType, BUILT_IN_SYMBOL[url]);
             return
         }
 

@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState2(initialState) {
+        function useState3(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef2(initialValue) {
+        function useRef3(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect2(create, deps) {
+        function useEffect3(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1412,7 +1412,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback2(callback, deps) {
+        function useCallback3(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1674,16 +1674,16 @@ var require_react_development = __commonJS({
         exports.isValidElement = isValidElement;
         exports.lazy = lazy;
         exports.memo = memo;
-        exports.useCallback = useCallback2;
+        exports.useCallback = useCallback3;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect2;
+        exports.useEffect = useEffect3;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef2;
-        exports.useState = useState2;
+        exports.useRef = useRef3;
+        exports.useState = useState3;
         exports.version = ReactVersion;
       })();
     }
@@ -6910,11 +6910,11 @@ var require_react_reconciler_development = __commonJS({
       module.exports = function $$$reconciler($$$hostConfig) {
         "use strict";
         var _assign = require_object_assign();
-        var React2 = require_react();
+        var React3 = require_react();
         var checkPropTypes = require_checkPropTypes();
         var Scheduler = require_scheduler();
         var tracing = require_tracing();
-        var ReactSharedInternals = React2.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         if (!ReactSharedInternals.hasOwnProperty("ReactCurrentDispatcher")) {
           ReactSharedInternals.ReactCurrentDispatcher = {
             current: null
@@ -9239,7 +9239,7 @@ var require_react_reconciler_development = __commonJS({
         }
         var fakeInternalInstance = {};
         var isArray = Array.isArray;
-        var emptyRefsObject = new React2.Component().refs;
+        var emptyRefsObject = new React3.Component().refs;
         var didWarnAboutStateAssignmentForComponent;
         var didWarnAboutUninitializedState;
         var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -18423,12 +18423,12 @@ function ProcessBoolean(key, value, result) {
 }
 
 // src/render/react/core/style/pipe/misc.js
-function MiscStyle(style2, result, compName) {
-  if (style2["recolor"] && compName === "Image") {
-    ProcessColor("recolor", style2["recolor"], result);
+function MiscStyle(style3, result, compName) {
+  if (style3["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style3["recolor"], result);
   }
-  if (style2["style-transition-time"]) {
-    const value = style2["style-transition-time"];
+  if (style3["style-transition-time"]) {
+    const value = style3["style-transition-time"];
     if (!isNaN(value)) {
       result["style-transition-time"] = value;
     }
@@ -18529,9 +18529,9 @@ var transitionProperty = {
   "transform-pivot-y": 111
 };
 var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "rotate", "transform-width", "transform-height"];
-function TransStyle(style2, result, compName) {
-  if (style2["transition"]) {
-    let value = style2["transition"];
+function TransStyle(style3, result, compName) {
+  if (style3["transition"]) {
+    let value = style3["transition"];
     const transProps = [];
     value = value.split(",").filter((item) => !!item).map((item) => item.split(/\s/)).map((item) => item.filter((a) => !!a));
     value.forEach((item) => {
@@ -18544,8 +18544,8 @@ function TransStyle(style2, result, compName) {
     const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
-  if (style2["transform"]) {
-    let value = style2["transform"];
+  if (style3["transform"]) {
+    let value = style3["transform"];
     value = value.match(/[a-zA-Z\-]+\([^\(]+\)/g);
     const reg = /^([a-zA-Z\-]+)\((.+)\)$/;
     value && value.forEach((item) => {
@@ -18574,8 +18574,8 @@ function TransStyle(style2, result, compName) {
       }
     });
   }
-  if (style2["transform-origin"] && compName === "Image") {
-    const [x, y] = style2["transform-origin"].trim()?.split(" ");
+  if (style3["transform-origin"] && compName === "Image") {
+    const [x, y] = style3["transform-origin"].trim()?.split(" ");
     result["img-origin"] = [NormalizePx(+x), NormalizePx(+y)];
   }
   return result;
@@ -18583,14 +18583,14 @@ function TransStyle(style2, result, compName) {
 
 // src/render/react/core/style/pipe/padding.js
 var keys = ["padding-left", "padding-top", "padding-right", "padding-bottom"];
-function PaddingStyle(style2, result, compName) {
+function PaddingStyle(style3, result, compName) {
   keys.forEach((key) => {
-    if (style2[key] !== void 0) {
-      ProcessPx(key, style2[key], result);
+    if (style3[key] !== void 0) {
+      ProcessPx(key, style3[key], result);
     }
   });
-  if (style2["padding"] !== void 0) {
-    const value = style2["padding"];
+  if (style3["padding"] !== void 0) {
+    const value = style3["padding"];
     if (typeof value == "number") {
       keys.forEach((styleKey) => {
         result[styleKey] = value;
@@ -18640,10 +18640,10 @@ var obj = {
   })
 };
 var keys2 = Object.keys(obj);
-function BackgroundStyle(style2, result, compName) {
+function BackgroundStyle(style3, result, compName) {
   keys2.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj[key](key, style3[key], result);
     }
   });
 }
@@ -18661,10 +18661,10 @@ var obj2 = {
   })
 };
 var keys3 = Object.keys(obj2);
-function PosStyle(style2, result, compName) {
+function PosStyle(style3, result, compName) {
   keys3.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj2[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj2[key](key, style3[key], result);
     }
   });
 }
@@ -18689,10 +18689,10 @@ var obj3 = {
   })
 };
 var keys4 = Object.keys(obj3);
-function BorderStyle(style2, result, compName) {
+function BorderStyle(style3, result, compName) {
   keys4.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj3[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj3[key](key, style3[key], result);
     }
   });
 }
@@ -18704,10 +18704,10 @@ var obj4 = {
   "outline-padding": ProcessPxOrPercent
 };
 var keys5 = Object.keys(obj4);
-function OutlineStyle(style2, result, compName) {
+function OutlineStyle(style3, result, compName) {
   keys5.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj4[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj4[key](key, style3[key], result);
     }
   });
 }
@@ -18739,14 +18739,14 @@ var obj5 = {
   "font-size": ProcessPx
 };
 var keys6 = Object.keys(obj5);
-function TextStyle(style2, result, compName) {
+function TextStyle(style3, result, compName) {
   keys6.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj5[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj5[key](key, style3[key], result);
     }
   });
-  if (style2["font-size"]) {
-    let size = style2["font-size"];
+  if (style3["font-size"]) {
+    let size = style3["font-size"];
     if (typeof size == "string") {
       const reg = /(\d+\.?\d*)(px)?$/;
       size = size.replace(/(^\s*)|(\s*$)/g, "").match(reg)?.[1];
@@ -18784,12 +18784,12 @@ var flexAlignObj = {
   "space-around": 4,
   "space-between": 5
 };
-function FlexStyle(style2, result) {
-  if (style2.display !== "flex")
+function FlexStyle(style3, result) {
+  if (style3.display !== "flex")
     return result;
   let flexFlow = 0;
-  const flexDirection = style2["flex-direction"] || "row";
-  const flexWrap = style2["flex-wrap"] || "nowrap";
+  const flexDirection = style3["flex-direction"] || "row";
+  const flexWrap = style3["flex-wrap"] || "nowrap";
   if (flexFlowObj[`${flexDirection}_${flexWrap}`]) {
     flexFlow = flexFlowObj[`${flexDirection}_${flexWrap}`];
   }
@@ -18797,9 +18797,9 @@ function FlexStyle(style2, result) {
   let mainPlace = 0;
   let crossPlace = 0;
   let trackCrossPlace = 0;
-  const justifyContent = style2["justify-content"];
-  const alignItems = style2["align-items"];
-  const alignContent = style2["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
+  const justifyContent = style3["justify-content"];
+  const alignItems = style3["align-items"];
+  const alignContent = style3["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
   if (flexAlignObj[justifyContent]) {
     mainPlace = flexAlignObj[justifyContent];
   }
@@ -18816,8 +18816,8 @@ function FlexStyle(style2, result) {
   if (alignContent) {
     result["align-content"] = trackCrossPlace;
   }
-  if (!isNaN(style2["flex-grow"])) {
-    result["flex-grow"] = style2["flex-grow"];
+  if (!isNaN(style3["flex-grow"])) {
+    result["flex-grow"] = style3["flex-grow"];
   }
   return result;
 }
@@ -18855,10 +18855,12 @@ var gridAlignItemsObj = {
   "space-between": 6,
   "stretch": 3
 };
-function GridStyle(style2, result) {
-  if (style2.display == "grid") {
-    let columns = style2["grid-template-columns"]?.split(/\s/).filter(Boolean);
-    let rows = style2["grid-template-rows"]?.split(/\s/).filter(Boolean);
+function GridStyle(style3, result) {
+  if (style3.display == "grid") {
+    let columns = style3["grid-template-columns"]?.split(/\s/).filter(Boolean);
+    let rows = style3["grid-template-rows"]?.split(/\s/).filter(Boolean);
+    if (!columns || !rows)
+      return;
     columns = columns.map((column) => {
       if (column === "auto") {
         return GRID_SIZE_MAX;
@@ -18883,22 +18885,22 @@ function GridStyle(style2, result) {
     rows = rows.filter(Boolean);
     result["display"] = "grid";
     result["grid-template"] = [columns, rows];
-    const justifyContent = gridJustifyContentObj[style2["justify-content"]] || gridJustifyContentObj.start;
-    const alignContent = gridAlignItemsObj[style2["align-content"]] || gridAlignItemsObj.start;
+    const justifyContent = gridJustifyContentObj[style3["justify-content"]] || gridJustifyContentObj.start;
+    const alignContent = gridAlignItemsObj[style3["align-items"]] || gridAlignItemsObj.start;
     result["grid-align"] = [justifyContent, alignContent];
   }
-  if (style2["grid-child"]) {
-    const justifySelf = style2["justify-self"];
-    const alignSelf = style2["align-self"];
-    const gridColumnPos = style2["grid-column-pos"];
-    const gridRowPos = style2["grid-row-pos"];
-    const gridColumnSpan = style2["grid-column-span"] || 1;
-    const gridRowSpan = style2["grid-row-span"] || 1;
+  if (style3["grid-child"]) {
+    const justifySelf = style3["justify-self"];
+    const alignSelf = style3["align-self"];
+    const gridColumnPos = style3["grid-column-pos"];
+    const gridRowPos = style3["grid-row-pos"];
+    const gridColumnSpan = style3["grid-column-span"] || 1;
+    const gridRowSpan = style3["grid-row-span"] || 1;
     if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan))
       return;
     let column_align, row_align;
-    row_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start;
-    column_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start;
+    column_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start;
+    row_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start;
     result["grid-child"] = [column_align, gridColumnPos, gridColumnSpan, row_align, gridRowPos, gridRowSpan];
   }
 }
@@ -18939,10 +18941,10 @@ var obj6 = {
   "scroll-enable-snap": ProcessBoolean
 };
 var keys7 = Object.keys(obj6);
-function ScrollStyle(style2, result, compName) {
+function ScrollStyle(style3, result, compName) {
   keys7.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj6[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj6[key](key, style3[key], result);
     }
   });
 }
@@ -18955,28 +18957,28 @@ function NormalizeOpacity(value) {
     return 0;
   return Math.floor(value * 255);
 }
-function OpacityStyle(style2, result, compName) {
-  if (style2["opacity"]) {
+function OpacityStyle(style3, result, compName) {
+  if (style3["opacity"]) {
     if (compName === "Image") {
-      result["img-opacity"] = NormalizeOpacity(style2["opacity"]);
+      result["img-opacity"] = NormalizeOpacity(style3["opacity"]);
     } else {
-      result["opacity"] = NormalizeOpacity(style2["opacity"]);
+      result["opacity"] = NormalizeOpacity(style3["opacity"]);
     }
   }
-  if (style2["background-opacity"]) {
-    result["background-opacity"] = NormalizeOpacity(style2["background-opacity"]);
+  if (style3["background-opacity"]) {
+    result["background-opacity"] = NormalizeOpacity(style3["background-opacity"]);
   }
-  if (style2["border-opacity"]) {
-    result["border-opacity"] = NormalizeOpacity(style2["border-opacity"]);
+  if (style3["border-opacity"]) {
+    result["border-opacity"] = NormalizeOpacity(style3["border-opacity"]);
   }
-  if (style2["outline-opacity"]) {
-    result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
+  if (style3["outline-opacity"]) {
+    result["outline-opacity"] = NormalizeOpacity(style3["outline-opacity"]);
   }
-  if (style2["recolor-opacity"] && compName === "Image") {
-    result["recolor-opacity"] = NormalizeOpacity(style2["recolor-opacity"]);
+  if (style3["recolor-opacity"] && compName === "Image") {
+    result["recolor-opacity"] = NormalizeOpacity(style3["recolor-opacity"]);
   }
-  if (style2["shadow-opacity"]) {
-    result["shadow-opacity"] = NormalizeOpacity(style2["shadow-opacity"]);
+  if (style3["shadow-opacity"]) {
+    result["shadow-opacity"] = NormalizeOpacity(style3["shadow-opacity"]);
   }
   return result;
 }
@@ -18987,14 +18989,14 @@ var obj7 = {
   "line-color": ProcessColor
 };
 var keys8 = Object.keys(obj7);
-function LineStyle(style2, result, compName) {
+function LineStyle(style3, result, compName) {
   keys8.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj7[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj7[key](key, style3[key], result);
     }
   });
-  if (style2["line-rounded"]) {
-    result["line-rounded"] = Boolean(style2["line-rounded"]);
+  if (style3["line-rounded"]) {
+    result["line-rounded"] = Boolean(style3["line-rounded"]);
   }
 }
 
@@ -19007,17 +19009,17 @@ var obj8 = {
   "shadow-spread": ProcessPx
 };
 var keys9 = Object.keys(obj8);
-function ShadowStyle(style2, result, compName) {
+function ShadowStyle(style3, result, compName) {
   keys9.forEach((key) => {
-    if (style2[key] !== void 0) {
-      obj8[key](key, style2[key], result);
+    if (style3[key] !== void 0) {
+      obj8[key](key, style3[key], result);
     }
   });
 }
 
 // src/render/react/core/style/pipe/display.js
-function DisplayStyle(style2, result, compName) {
-  result["display"] = style2["display"];
+function DisplayStyle(style3, result, compName) {
+  result["display"] = style3["display"];
 }
 
 // src/render/react/utils/helpers.ts
@@ -19069,12 +19071,12 @@ var BUILT_IN_SYMBOL = {
   "loop": "",
   "directory": "",
   "upload": "",
-  "call": "",
+  "call": "\uF095",
   "cut": "",
   "copy": "",
   "save": "",
   "bars": "",
-  "envelope": "",
+  "envelope": "\uF0E0",
   "charge": "",
   "paste": "",
   "bell": "",
@@ -19132,14 +19134,14 @@ function PostProcessStyle({ comp, styleSheet, styleType }) {
 // src/render/react/core/style/index.js
 var _StyleSheet = class {
   static pipeline(args) {
-    _StyleSheet.transformStyle = (style2, compName) => {
+    _StyleSheet.transformStyle = (style3, compName) => {
       const result = {};
-      args.reduce((_, func) => func(style2, result, compName), null);
+      args.reduce((_, func) => func(style3, result, compName), null);
       return result;
     };
   }
-  static transform(style2, compName) {
-    const result = _StyleSheet.transformStyle(style2, compName);
+  static transform(style3, compName) {
+    const result = _StyleSheet.transformStyle(style3, compName);
     return result;
   }
   static create() {
@@ -19310,12 +19312,12 @@ var ViewComp = class extends NativeView {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19337,8 +19339,8 @@ var ViewComp = class extends NativeView {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19410,12 +19412,12 @@ var Window = class extends NativeComp {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19436,8 +19438,8 @@ var Window = class extends NativeComp {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false });
   }
 };
 
@@ -19504,12 +19506,12 @@ var TextComp = class extends NativeText {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19527,8 +19529,8 @@ var TextComp = class extends NativeText {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19629,12 +19631,12 @@ var ImageComp = class extends NativeImage {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19652,8 +19654,8 @@ var ImageComp = class extends NativeImage {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19735,12 +19737,12 @@ var ButtonComp = class extends NativeButton {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19760,8 +19762,8 @@ var ButtonComp = class extends NativeButton {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19863,12 +19865,12 @@ var SliderComp = class extends NativeSlider {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -19888,8 +19890,8 @@ var SliderComp = class extends NativeSlider {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19974,12 +19976,12 @@ var SwitchComp = class extends NativeComp2 {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20001,8 +20003,8 @@ var SwitchComp = class extends NativeComp2 {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20096,12 +20098,12 @@ var TextareaComp = class extends NativeView2 {
     super({ uid });
     this.uid = uid;
     super.setOneLine(false);
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20119,8 +20121,8 @@ var TextareaComp = class extends NativeView2 {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20224,12 +20226,12 @@ var InputComp = class extends NativeView3 {
     super({ uid });
     this.uid = uid;
     super.setOneLine(true);
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20247,8 +20249,8 @@ var InputComp = class extends NativeView3 {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20331,12 +20333,12 @@ var KeyboardComp = class extends NativeView4 {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20354,8 +20356,8 @@ var KeyboardComp = class extends NativeView4 {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20449,12 +20451,12 @@ var CheckboxComp = class extends NativeView5 {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20476,8 +20478,8 @@ var CheckboxComp = class extends NativeView5 {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20577,12 +20579,12 @@ var DropdownlistComp = class extends NativeDropdownlist {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20600,8 +20602,8 @@ var DropdownlistComp = class extends NativeDropdownlist {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20687,12 +20689,12 @@ var ProgressBarComp = class extends NativeProgressBar {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20710,8 +20712,8 @@ var ProgressBarComp = class extends NativeProgressBar {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20799,12 +20801,12 @@ var RollerComp = class extends NativeRoller {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20822,8 +20824,8 @@ var RollerComp = class extends NativeRoller {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20895,12 +20897,12 @@ var LineComp = class extends NativeLine {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -20920,8 +20922,8 @@ var LineComp = class extends NativeLine {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21012,12 +21014,12 @@ var CalendarComp = class extends NativeCalendar {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -21037,8 +21039,8 @@ var CalendarComp = class extends NativeCalendar {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21139,12 +21141,12 @@ var GIFComp = class extends NativeGIF {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
-    const style2 = super.style;
+    const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
+          return style3[prop].call(that);
         }
       }
     });
@@ -21162,8 +21164,8 @@ var GIFComp = class extends NativeGIF {
   }
   close() {
   }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21206,6 +21208,121 @@ var GIFConfig = class {
   }
 };
 
+// src/render/react/components/Tabs/comp.js
+var bridge18 = globalThis.SJSJSBridge;
+var NativeTabs = bridge18.NativeRender.NativeComponents.TabView;
+function setTabsProps(comp, newProps, oldProps) {
+  const setter = {
+    ...CommonComponentApi({ compName: "Tabs", comp, newProps, oldProps }),
+    onClick(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+    },
+    onPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+    },
+    onLongPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+    },
+    onLongPressRepeat(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    }
+  };
+  Object.keys(setter).forEach((key) => {
+    if (newProps[key]) {
+      setter[key](newProps[key]);
+    }
+  });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var tabPositionObj = {
+  "left": 1 << 0,
+  "top": 1 << 2,
+  "right": 1 << 1,
+  "bottom": 1 << 3
+};
+var TabsComp = class extends NativeTabs {
+  constructor({ uid, tabPosition, tabSize = 0 }) {
+    tabPosition = tabPositionObj[tabPosition] || tabPositionObj.top;
+    super({ uid, tabPosition, tabSize });
+    this.uid = uid;
+    const style3 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj9, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style3[prop].call(that);
+        }
+      }
+    });
+    this.currentAppendIndex = 0;
+  }
+  setProps(newProps, oldProps) {
+    this.tabs = newProps.tabs;
+    setTabsProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+    this.appendChild(child);
+  }
+  appendChild(child) {
+    this.setTab(this.tabs[this.currentAppendIndex] || "", child);
+    this.currentAppendIndex++;
+  }
+  removeChild(child) {
+  }
+  close() {
+  }
+  setStyle(style3, type = 0) {
+    setStyle({ comp: this, styleSheet: style3, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
+};
+__publicField(TabsComp, "tagName", "Tabs");
+
+// src/render/react/components/Tabs/config.js
+var TabsConfig = class {
+  tagName = "Tabs";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new TabsComp({ uid, ...newProps });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
@@ -21221,8 +21338,8 @@ var Renderer = _Renderer;
 __publicField(Renderer, "container");
 
 // src/render/react/core/animate/index.js
-var bridge18 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge18.NativeRender.Animate;
+var bridge19 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge19.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -21235,8 +21352,8 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
 };
 
 // src/render/react/core/dimensions/index.js
-var bridge19 = globalThis.SJSJSBridge;
-var dimensions = bridge19.NativeRender.dimensions;
+var bridge20 = globalThis.SJSJSBridge;
+var dimensions = bridge20.NativeRender.dimensions;
 var Dimensions = dimensions;
 
 // src/render/react/index.js
@@ -21257,404 +21374,287 @@ var Roller = registerComponent(new RollerConfig());
 var Line = registerComponent(new LineConfig());
 var Calendar = registerComponent(new CalendarConfig());
 var GIF = registerComponent(new GIFConfig());
+var Tabs = registerComponent(new TabsConfig());
 var Render = Renderer;
 
-// demo/calculator/index.jsx
+// demo/widgets/index.jsx
+var import_react2 = __toESM(require_react());
+
+// demo/widgets/components/profile/index.jsx
 var import_react = __toESM(require_react());
-var { width, height } = Dimensions.window;
-function evaluate(arrFormula) {
-  const arrPostfix = infix2Postfix(arrFormula);
-  return evaluatePostfix(arrPostfix);
-}
-function isNotNumber(input) {
-  return input === "(" || input === ")" || input === "+" || input === "-" || input === "*" || input === "/" || input === "%";
-}
-function isNumber(input) {
-  return !isNotNumber(input);
-}
-function isOperator(input) {
-  return input === "+" || input === "-" || input === "*" || input === "/" || input === "%";
-}
-function getPriority(input) {
-  if (input === "+" || input === "-")
-    return 1;
-  else if (input === "*" || input === "/" || input === "%")
-    return 2;
-  return 0;
-}
-function infix2Postfix(arrFormula) {
-  let result = [], stack = [];
-  arrFormula.forEach((item) => {
-    if (isNumber(item)) {
-      result.push(item);
-    } else if (item === "(") {
-      stack.push(item);
-    } else if (item === ")") {
-      while (stack.length > 0) {
-        const pulledItem = stack.pop();
-        if (pulledItem === "(")
-          break;
-        else
-          result.push(pulledItem);
-      }
-    } else if (isOperator(item)) {
-      while (stack.length > 0) {
-        const peekedItem = stack[stack.length - 1];
-        if (isOperator(peekedItem) && getPriority(peekedItem) >= getPriority(item)) {
-          result.push(peekedItem);
-          stack.pop();
-        } else
-          break;
-      }
-      stack.push(item);
-    } else {
-      console.log("Something else!!!");
-    }
-  });
-  while (stack.length > 0) {
-    result.push(stack.pop());
-  }
-  return result;
-}
-function evaluatePostfix(arrPostfix) {
-  let stack = [];
-  arrPostfix.forEach((item) => {
-    if (isNumber(item)) {
-      stack.push(item);
-    } else if (isOperator(item)) {
-      const num1 = Number.parseFloat(stack.pop()), num2 = Number.parseFloat(stack.pop());
-      let result = "";
-      switch (item) {
-        case "+":
-          result = num2 + num1;
-          break;
-        case "-":
-          result = num2 - num1;
-          break;
-        case "*":
-          result = num2 * num1;
-          break;
-        case "/":
-          result = num2 / num1;
-          break;
-        case "%":
-          result = num2 % num1;
-          break;
-        default:
-          console.log("Something else!!!");
-      }
-      stack.push(result + "");
-    } else {
-      console.log("Something else!!!");
-    }
-  });
-  return Number.parseFloat(stack[0]);
-}
 function App() {
-  const [formula, setFormula] = (0, import_react.useState)([]);
-  const [history, setHistory] = (0, import_react.useState)([]);
-  const [input, setInput] = (0, import_react.useState)("");
-  const [afterCalculation, setAfterCalculation] = (0, import_react.useState)(false);
-  const onDigit = (e) => {
-    const digit = e.target.dataset?.value;
-    if (afterCalculation) {
-      setInput(digit);
-      setAfterCalculation(false);
-    } else if (input === "0") {
-      setInput(digit);
-    } else if (isNotNumber(input)) {
-      setInput(digit);
-      setFormula(formula.concat(input));
-    } else {
-      setInput(input.concat(digit));
-    }
-  };
-  const onDecimal = ({ target }) => {
-    const decimal = target.dataset.value;
-    if (afterCalculation) {
-      setInput(`0${decimal}`);
-      setAfterCalculation(false);
-    } else if (isNotNumber(input)) {
-      setInput(`0${decimal}`);
-      setFormula(formula.concat(input));
-    } else if (!input.includes(decimal)) {
-      setInput(input.concat(decimal));
-    }
-  };
-  const onOperator = ({ target }) => {
-    const operator = target.dataset.value;
-    if (isOperator(input)) {
-      setInput(operator);
-      setAfterCalculation(false);
-    } else if (input !== "(") {
-      setInput(operator);
-      setFormula(formula.concat(input));
-      setAfterCalculation(false);
-    }
-  };
-  const onClear = () => {
-    setFormula([]);
-    setInput("0");
-    setAfterCalculation(false);
-  };
-  const onParenthesis = ({ target }) => {
-    const parenthesis = target.dataset.value;
-    if (parenthesis === "(") {
-      if (isNumber(input) && input !== "0" || isNumber(input) && input === "0" && formula.length > 0 || input === ")") {
-        setInput(parenthesis);
-        setFormula(formula.concat([input, "*"]));
-        setAfterCalculation(false);
-      } else if (isOperator(input) || input === "(") {
-        setInput(parenthesis);
-        setFormula(formula.concat(input));
-        setAfterCalculation(false);
-      } else if (isNumber(input) && input === "0" && formula.length === 0) {
-        setInput(parenthesis);
-        setAfterCalculation(false);
-      }
-    } else {
-      const arrayOpenParenthesis = formula.join("").match(/\(/g);
-      const numOpenParenthesis = arrayOpenParenthesis ? arrayOpenParenthesis.length : 0;
-      const arrayCloseParenthesis = formula.join("").match(/\)/g);
-      const numCloseParenthesis = arrayCloseParenthesis ? arrayCloseParenthesis.length : 0;
-      if ((isNumber(input) || input === ")") && numOpenParenthesis > 0 && numOpenParenthesis > numCloseParenthesis) {
-        setInput(parenthesis);
-        setAfterCalculation(false);
-        setFormula(formula.concat(input));
-      }
-    }
-  };
-  const onBackspace = () => {
-    const currentInputLength = input.length;
-    if (input === "Infinity" || input === "-Infinity" || input === "NaN") {
-      setInput("0");
-      setAfterCalculation(false);
-    } else if (currentInputLength > 1) {
-      setInput(input.slice(0, currentInputLength - 1));
-      setAfterCalculation(false);
-    } else if (input !== "0") {
-      setInput("0");
-      setAfterCalculation(false);
-    } else if (formula.length > 0) {
-      setInput(formula[formula.length - 1]);
-      setFormula(formula.slice(0, formula.length - 1));
-      setAfterCalculation(false);
-    }
-  };
-  const onEqual = () => {
-    const finalFormula = formula.concat(input);
-    const result = evaluate(finalFormula);
-    if (!Number.isNaN(result)) {
-      const newHistoryItem = {
-        formula: finalFormula,
-        result
-      };
-      setInput(result + "");
-      setFormula([]);
-      setHistory([].concat(history, newHistoryItem));
-      setAfterCalculation(true);
-    }
-  };
-  let historyStr = "";
-  history.forEach((item) => {
-    historyStr += item.formula.join("");
-    historyStr += "\n";
-    historyStr += `=${item.result}`;
-    historyStr += "\n";
-  });
-  return /* @__PURE__ */ import_react.default.createElement(Window2, {
-    style: style.window
-  }, /* @__PURE__ */ import_react.default.createElement(Textarea, {
-    style: style.textarea,
-    value: `${historyStr}
-${formula.join("")}${input}`
-  }), /* @__PURE__ */ import_react.default.createElement(View, {
-    style: style.buttonWrapper
-  }, /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button1],
-    onClick: onParenthesis,
-    "data-value": "("
+  return /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.profileWrapper
+  }, /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.panel1
+  }, /* @__PURE__ */ import_react.default.createElement(Image, {
+    style: style.panel1_avatar,
+    src: "./assets/avatar.png"
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_name
+  }, "Elena Smith"), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_desc
+  }, "This is a short description of me. Take a look at my profile!"), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_email_icon
+  }, BUILT_IN_SYMBOL.envelope), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_email
+  }, "elena@smith.com"), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_phone_icon
+  }, BUILT_IN_SYMBOL.call), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel1_phone
+  }, "+79 246 123 4567"), /* @__PURE__ */ import_react.default.createElement(Button, {
+    style: style.panel1_logout
+  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Log out")), /* @__PURE__ */ import_react.default.createElement(Button, {
+    style: style.panel1_invite
+  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Invite"))), /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.panel2
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "(")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button2],
-    onClick: onParenthesis,
-    "data-value": ")"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, ")")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button3],
-    onClick: onClear,
-    "data-value": "AC"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "AC")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button4],
-    onClick: onBackspace
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "CE")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button5],
-    onClick: onDigit,
-    "data-value": "1"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "1")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button6],
-    onClick: onDigit,
-    "data-value": "2"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "2")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button7],
-    onClick: onDigit,
-    "data-value": "3"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "3")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button8],
-    onClick: onOperator,
-    "data-value": "*"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "*")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button9],
-    onClick: onDigit,
-    "data-value": "4"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "4")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button10],
-    onClick: onDigit,
-    "data-value": "5"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "5")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button11],
-    onClick: onDigit,
-    "data-value": "6"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "6")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button12],
-    onClick: onOperator,
-    "data-value": "/"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "/")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button13],
-    onClick: onDigit,
-    "data-value": "7"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "7")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button14],
-    onClick: onDigit,
-    "data-value": "8"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "8")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button15],
-    onClick: onDigit,
-    "data-value": "9"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "9")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button16],
-    onClick: onOperator,
-    "data-value": "-"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "-")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button17],
-    onClick: onDigit,
-    "data-value": "0"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "0")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button18],
-    onClick: onDecimal,
-    "data-value": "."
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, ".")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button19],
-    onClick: onEqual
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "=")), /* @__PURE__ */ import_react.default.createElement(Button, {
-    style: [style.button, style.button20],
-    onClick: onOperator,
-    "data-value": "+"
-  }, /* @__PURE__ */ import_react.default.createElement(Text, {
-    style: style.buttonText
-  }, "+"))));
+    style: style.panel2_title
+  }, "Your profile"), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel2_username
+  }, "User name"), /* @__PURE__ */ import_react.default.createElement(Input, {
+    placeholder: "Your name",
+    style: style.panel2_username_input
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel2_password
+  }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
+    placeholder: "Min. 8 chars.",
+    mode: "password",
+    style: style.panel2_password_input
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel2_gender
+  }, "Gender"), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
+    items: [
+      "Male",
+      "Female",
+      "Other"
+    ],
+    style: style.panel2_gender_dropdownlist
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel2_birthday
+  }, "Birthday"), /* @__PURE__ */ import_react.default.createElement(Input, {
+    style: style.panel2_birthday_input
+  })));
 }
 var style = {
+  profileWrapper: {
+    "display": "grid",
+    "grid-template-columns": "1fr 1fr",
+    "grid-template-rows": "auto auto",
+    "width": "100%",
+    "height": "100%"
+  },
+  panel1: {
+    "width": "100%",
+    "height": "auto",
+    "display": "grid",
+    "grid-template-columns": "auto 5 auto 2fr 1fr 1fr",
+    "grid-template-rows": "auto auto 10 auto auto",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  panel1_avatar: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "center",
+    "align-self": "center",
+    "grid-row-pos": 0,
+    "grid-row-span": 5
+  },
+  panel1_name: {
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  panel1_desc: {
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 4,
+    "justify-self": "stretch",
+    "align-self": "start",
+    "grid-row-pos": 1,
+    "grid-row-span": 1
+  },
+  panel1_email_icon: {
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 1,
+    "justify-self": "center",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel1_email: {
+    "grid-child": true,
+    "grid-column-pos": 3,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel1_phone_icon: {
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 1,
+    "justify-self": "center",
+    "align-self": "center",
+    "grid-row-pos": 4,
+    "grid-row-span": 1
+  },
+  panel1_phone: {
+    "grid-child": true,
+    "grid-column-pos": 3,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 4,
+    "grid-row-span": 1
+  },
+  panel1_logout: {
+    "grid-child": true,
+    "grid-column-pos": 4,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 2
+  },
+  panel1_invite: {
+    "grid-child": true,
+    "grid-column-pos": 5,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 2
+  },
+  panel2: {
+    "display": "grid",
+    "grid-template-columns": "1fr 1fr",
+    "grid-template-rows": "auto 5 auto 30 5 auto 30",
+    "height": "auto",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "start",
+    "grid-row-pos": 1,
+    "grid-row-span": 1
+  },
+  panel2_title: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  panel2_username: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 2,
+    "grid-row-span": 1
+  },
+  panel2_username_input: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel2_password: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 2,
+    "grid-row-span": 1
+  },
+  panel2_password_input: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel2_gender: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 5,
+    "grid-row-span": 1
+  },
+  panel2_gender_dropdownlist: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 6,
+    "grid-row-span": 1
+  },
+  panel2_birthday: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 5,
+    "grid-row-span": 1
+  },
+  panel2_birthday_input: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "center",
+    "grid-row-pos": 6,
+    "grid-row-span": 1
+  }
+};
+
+// demo/widgets/index.jsx
+var { width, height } = Dimensions.window;
+function App2() {
+  return /* @__PURE__ */ import_react2.default.createElement(Window2, {
+    style: style2.window
+  }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
+    tabs: ["Profile", "Analytics", "Shop"],
+    tabSize: 70
+  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))));
+}
+var style2 = {
   window: {
     "display": "flex",
-    "flex-direction": "column",
-    "align-items": "center",
-    "justify-content": "space-between",
     "height": height,
     "width": width,
     "padding": 0,
     "border-radius": 0,
     "border-width": 0
   },
-  textarea: {
-    "font-size": "34px",
-    "background-color": "black",
-    "text-color": "white",
-    "border-radius": 0,
-    "height": Math.floor(height / 4),
-    "width": width,
-    "left": 0,
-    "top": 0,
-    "flex-grow": 0
-  },
-  buttonWrapper: {
-    "background-color": "white",
-    "padding": "8px",
-    "row-spacing": "8px",
-    "column-spacing": "8px",
-    "width": width,
-    "height": Math.floor(height * 3 / 4),
-    "border-radius": 0,
-    "display": "grid",
-    "grid-template-columns": "1fr 1fr 1fr 1fr",
-    "grid-template-rows": "1fr 1fr 1fr 1fr 1fr"
-  },
-  button: {
-    "grid-child": true,
-    "justify-self": "stretch",
-    "align-self": "stretch"
-  },
-  buttonText: {
-    "font-size": 26
-  },
-  button1: { "grid-column-pos": 0, "grid-row-pos": 0 },
-  button2: { "grid-column-pos": 1, "grid-row-pos": 0 },
-  button3: { "grid-column-pos": 2, "grid-row-pos": 0 },
-  button4: { "grid-column-pos": 3, "grid-row-pos": 0 },
-  button5: { "grid-column-pos": 0, "grid-row-pos": 1 },
-  button6: { "grid-column-pos": 1, "grid-row-pos": 1 },
-  button7: { "grid-column-pos": 2, "grid-row-pos": 1 },
-  button8: { "grid-column-pos": 3, "grid-row-pos": 1 },
-  button9: { "grid-column-pos": 0, "grid-row-pos": 2 },
-  button10: { "grid-column-pos": 1, "grid-row-pos": 2 },
-  button11: { "grid-column-pos": 2, "grid-row-pos": 2 },
-  button12: { "grid-column-pos": 3, "grid-row-pos": 2 },
-  button13: { "grid-column-pos": 0, "grid-row-pos": 3 },
-  button14: { "grid-column-pos": 1, "grid-row-pos": 3 },
-  button15: { "grid-column-pos": 2, "grid-row-pos": 3 },
-  button16: { "grid-column-pos": 3, "grid-row-pos": 3 },
-  button17: { "grid-column-pos": 0, "grid-row-pos": 4 },
-  button18: { "grid-column-pos": 1, "grid-row-pos": 4 },
-  button19: { "grid-column-pos": 2, "grid-row-pos": 4 },
-  button20: { "grid-column-pos": 3, "grid-row-pos": 4 }
+  profileWrapper: {}
 };
-Render.render(/* @__PURE__ */ import_react.default.createElement(App, null));
+Render.render(/* @__PURE__ */ import_react2.default.createElement(App2, null));
 /*
 object-assign
 (c) Sindre Sorhus

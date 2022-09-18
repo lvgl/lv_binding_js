@@ -631,7 +631,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
         column_ptr[len] = LV_GRID_TEMPLATE_LAST;
         JS_FreeValue(ctx, column_len_value);
         
-        JSValue row_len_value = JS_GetPropertyStr(ctx, column_value, "length");
+        JSValue row_len_value = JS_GetPropertyStr(ctx, row_value, "length");
         JS_ToInt32(ctx, &len, row_len_value);
         lv_coord_t* row_ptr = static_cast<lv_coord_t*>(malloc((len + 1) * sizeof(lv_coord_t)));
         for(int i=0; i < len; i++) {
