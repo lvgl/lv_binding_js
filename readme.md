@@ -22,9 +22,16 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 - Fully support lvgl animation
 
 ## Demo
+
+### Widgets
+#### sdl_simulator
+222
+<br/>
 ### Calculator
 #### sdl_simulator
 ![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
+
+#### real-device
 
 
 ## Build
@@ -77,122 +84,12 @@ make dev-x86 or make build-x86
 - [color](./doc/style/color.md)
 - [flex](./doc/style/flex.md)
 - [grid](./doc/style/grid.md)
-- [Font](./doc/style/font.md)
+- [font](./doc/style/font.md)
+- [opacity](./doc/style/opacity.md)
+- [display](./doc/style/display.md)
+- [background](./doc/style/background.md)
+- [scroll](./doc/style/scroll.md)
+- [shadow](./doc/style/shadow.md)
+- [recolor](./doc/style/recolor.md)
 
 
-### Style
-
-
-#### font
-- font-size
-- text-color
-- letter-spacing
-- line-spacing
-- text-overflow
-- text-align
-- text-decoration
-
-```js
-const style = {
-    "font-size": "20px",
-    "text-color": "blue",
-    "letter-spacing": "3px",
-    "line-spacing": "15px",
-    "text-overflow": "ellipsis" | "clip" | "auto" | "scroll" | "circular",
-    "text-align": "auto" | "left" | "center" | "right",
-    "text-decoration": "none" | "underline" | "strikethrough"
-}
-```  
-
-
-#### opacity
-- opacity
-- img-opacity
-- border-opacity
-- outline-opacity
-- recolor-opacity
-- shadow-opacity
-  
-```js
-const style = {
-    "opacity": 0.2,
-    "img-opacity": 0.5,
-    "border-opacity": 0.7,
-    "outline-opacity": 0,
-    "recolor-opacity": 1
-}
-```
-
-#### display 
-none | flex | grid
-```js
-const style = {
-    "display": "none",
-    "display": "grid",
-    "display": "flex",
-}
-```
-
-#### recolor
-used with component Image
-```js
-const style = {
-    "recolor": "green",
-}
-```
-
-#### scrolling
-- overflow-scrolling
-- overflow
-- scroll-dir
-- scroll-snap-x
-- scroll-snap-y
-- scroll-enable-snap
-```js
-const style = {
-    "overflow": "hidden" | "scroll" | "auto",
-    "overflow-scrolling": "auto" | "touch",
-    "scroll-dir": "none" | "left" | "right" | "top" | "bottom" | "horizontal" | "all",
-    "scroll-snap-x": "none" | "snap_start" | "snap_end" | "snap_center",
-    "scroll-snap-y": "none" | "snap_start" | "snap_end" | "snap_center",
-    "scroll-enable-snap": true | false
-}
-```
-
-#### spacing
-set inner object row and column spacing
-- row-spacing
-- column-spacing
-
-#### background
-supoort local image、buildtin symbol、online image
-- background-image
-- background-color
-- background-grad-color
-- background-grad-color-dir
-
-```js
-const style = {
-    "background-image": "./assets/somepic.png" | "http://some_website/somepic.png" | "audio"
-    "background-color": "black",
-    "background-grad-color": "green",
-    "background-grad-color-dir": "none" | "vertical" | "horizontal"
-}
-```
-
-#### shadow
-- shadow-width
-- shadow-color
-- shadow-offset-x
-- shadow-offset-y
-- shadow-spread
-
-```js
-const style = {
-    "shadow-width": "8px"
-    "shadow-color": "black",
-    "shadow-offset-x": "4px",
-    "shadow-offset-y": "4px",
-    "shadow-spread": "2px"
-}
-```

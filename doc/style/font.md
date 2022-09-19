@@ -4,48 +4,107 @@
 
 support pixel value
 
-
-
 ### Usage
 ```jsx
 const style = {
-    "width": "50%" | "100px" | 100,
-    "height": "100px",
-    "left": 20,
-    "top": "50px",
-    "width": "auto",
+    "font-size": "20px",
 }
 ```
-
-### Demo
-test/style/size
 
 <br />
 
-## Layout
-
-support flex、grid、absolute layout
-
-display, property with following value
-- [flex](./flex.md)
-- [grid](./grid.md)
-
-position, property with following value
-- [absolute](https://docs.lvgl.io/master/overview/coords.html#flags?LV_OBJ_FLAG_FLOATING)
+## text-color
+Sets the color of the Text Component
 
 ### Usage
 ```jsx
 const style = {
-    'position': 'absolute'
+    "text-color": "blue",
 }
 ```
 
-## Spacing
+<br />
 
-used to controll line、row spacing，support pixel value、absolute value
+## letter-spacing
+sets the horizontal spacing behavior between text characters
 
-- [row-spacing](https://docs.lvgl.io/master/overview/style.html?highlight=lv_style_set_pad_row#_CPPv420lv_style_set_pad_rowP10lv_style_t10lv_coord_t)
-- [column-spacing](https://docs.lvgl.io/master/overview/style.html?highlight=lv_style_set_pad_row#_CPPv423lv_style_set_pad_columnP10lv_style_t10lv_coord_t)
+### Usage
+```jsx
+const style = {
+    "letter-spacing": "3px",
+}
+```
 
-### Demo
-test/scroll/3
+<br />
+
+## line-spacing
+sets the horizontal spacing behavior between text line
+
+### Usage
+```jsx
+const style = {
+    "line-spacing": "3px",
+}
+```
+
+<br />
+
+## text-overflow
+sets the desired behavior for an Text component's overflow
+
+### Value
+property with the following value 
+- ellipsis, p the size and write dots at the end if the text is too long
+- clip, Keep the size and clip the text out of it
+- auto, Keep the object width, wrap the too long lines and expand the object height
+- scroll, Keep the size and roll the text back and forth
+- circular, Keep the size and roll the text circularly
+
+### Usage
+```jsx
+const style = {
+    "text-overflow": "clip",
+}
+```
+
+<br />
+
+## text-align
+sets the horizontal alignment of Text Component content
+
+### Value
+property with the following value 
+- auto 
+- left
+- center
+- right
+
+### Usage
+```jsx
+const style = {
+    "text-align": "center",
+}
+```
+
+<br />
+
+## text-decoration
+sets the orientation of the text characters in a line
+
+### Value
+property with the following value 
+- none 
+- underline
+- strikethrough
+
+### Usage
+```jsx
+const style = {
+    "text-decoration": "underline",
+}
+```
+
+<br />
+
+## Demo
+test/style/text

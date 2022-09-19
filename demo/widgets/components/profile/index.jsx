@@ -1,10 +1,13 @@
 import { View, Render, Window, Text, Image, Input, Dropdownlist, Button, Tabs, BUILT_IN_SYMBOL } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
+const { width, height } = Dimensions.window
+
 export default function App () {
     const panel2_username_input_ref = useRef()
     const panel2_password_input_ref = useRef()
-    
+
+    const [inputFocus, setInputFocus] = useState(0)
 
     return (
         <View style={style.profileWrapper}>
@@ -29,13 +32,20 @@ export default function App () {
                 <Input 
                     placeholder={'Your name'}
                     style={style.panel2_username_input}
-                    onFocus={}
+                    onFocus={() => {
+                        setInputFocus('user_name')
+                    }}
+                    ref={panel2_username_input_ref}
                 />
                 <Text style={style.panel2_password}>Password</Text>
                 <Input
+                    onFocus={() => {
+                        setInputFocus('password')
+                    }}
                     placeholder={'Min. 8 chars.'}
                     mode="password"
                     style={style.panel2_password_input}
+                    ref={panel2_password_input_ref}
                 />
                 <Text style={style.panel2_gender}>Gender</Text>
                 <Dropdownlist
@@ -49,8 +59,16 @@ export default function App () {
                 <Text style={style.panel2_birthday}>Birthday</Text>
                 <Input
                     style={style.panel2_birthday_input}
+                    onFocus={() => {}}
                 />
             </View>
+            {!!inputFocus && Render.createPortal(
+                <Keyboard
+                    textarea={inputFocus === 'user_name' ? panel2_username_input_ref.current : panel2_password_input_ref.current }
+                    style={style.keyboard}
+                />, 
+                Render.container
+            )}
         </View>
     )
 }
@@ -253,5 +271,11 @@ const style = {
         'align-self': 'center',
         'grid-row-pos': 6,
         'grid-row-span': 1,
+    },
+    keyboard: {
+        'left': 0,
+        'top': height / 3,
+        'height': height * 2 / 3,
+        'width': '100%'
     }
 }
