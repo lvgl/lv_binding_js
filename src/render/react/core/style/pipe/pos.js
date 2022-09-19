@@ -8,7 +8,8 @@ const obj = {
     'row-spacing': ProcessPx,
     'column-spacing': ProcessPx,
     'position': ProcessEnum({
-        'absolute': 'absolute'
+        'absolute': 'absolute',
+        'fixed': 'fixed'
     })
 }
 const keys = Object.keys(obj)

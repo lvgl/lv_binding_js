@@ -1,7 +1,13 @@
-import { View, Render, Window, Text, Image, Input, Dropdownlist, Button, Tabs, BUILT_IN_SYMBOL } from 'lvgljs-ui';
+import { View, Render, Keyboard, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const { width, height } = Dimensions.window
+
+const items = [
+    'Male',
+    'Female',
+    'Other'
+]
 
 export default function App () {
     const panel2_username_input_ref = useRef()
@@ -35,12 +41,21 @@ export default function App () {
                     onFocus={() => {
                         setInputFocus('user_name')
                     }}
+                    onBlur={() => {
+                        setInputFocus(false)
+                    }}
                     ref={panel2_username_input_ref}
                 />
                 <Text style={style.panel2_password}>Password</Text>
                 <Input
                     onFocus={() => {
                         setInputFocus('password')
+                        setTimeout(() => {
+                            panel2_password_input_ref.current.scrollIntoView()
+                        })
+                    }}
+                    onBlur={() => {
+                        setInputFocus(false)
                     }}
                     placeholder={'Min. 8 chars.'}
                     mode="password"
@@ -49,11 +64,7 @@ export default function App () {
                 />
                 <Text style={style.panel2_gender}>Gender</Text>
                 <Dropdownlist
-                    items={[
-                        'Male',
-                        'Female',
-                        'Other'
-                    ]}
+                    items={items}
                     style={style.panel2_gender_dropdownlist}
                 />
                 <Text style={style.panel2_birthday}>Birthday</Text>
@@ -62,12 +73,15 @@ export default function App () {
                     onFocus={() => {}}
                 />
             </View>
-            {!!inputFocus && Render.createPortal(
+            {!!inputFocus && (
                 <Keyboard
                     textarea={inputFocus === 'user_name' ? panel2_username_input_ref.current : panel2_password_input_ref.current }
                     style={style.keyboard}
-                />, 
-                Render.container
+                    onClose={() => {
+                        console.log('keyboard close')
+                        setInputFocus(false)
+                    }}
+                />
             )}
         </View>
     )
@@ -274,8 +288,9 @@ const style = {
     },
     keyboard: {
         'left': 0,
-        'top': height / 3,
-        'height': height * 2 / 3,
-        'width': '100%'
+        'top': height / 2,
+        'height': height / 2,
+        'width': '100%',
+        'position': 'fixed'
     }
 }

@@ -10,6 +10,7 @@ extern "C" {
 #include <string>
 
 #include "native/core/style/font/font.hpp"
+#include "native/core/basic/comp.hpp"
 
 using CompSetStyle = void (lv_obj_t*, lv_style_t*, JSContext*, JSValue);
 

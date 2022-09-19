@@ -40,6 +40,7 @@ class BasicComponent {
     ~BasicComponent();
 
     lv_obj_t* instance = nullptr;
+    lv_obj_t* parent_instance = nullptr;  // used to style position: fixed to normal position
     std::string uid;
 
     std::unordered_map<int32_t, lv_style_t*> style_map;
@@ -49,6 +50,7 @@ class BasicComponent {
     lv_style_transition_dsc_t trans;
     lv_style_prop_t* transProps = nullptr;
 
+    bool is_fixed;
     bool has_setstyle;
     bool listening = false;
     ECOMP_TYPE type;

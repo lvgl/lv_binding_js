@@ -44,6 +44,8 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
     { LV_EVENT_VALUE_CHANGED, &WrapValueChangeEvent },
     { LV_EVENT_FOCUSED, &WrapFocusEvent },
     { LV_EVENT_DEFOCUSED, &WrapFocusEvent },
+    { LV_EVENT_CANCEL, &WrapFocusEvent },
+    { LV_EVENT_READY, &WrapFocusEvent },
 };
 
 #define WRAPPED_STOPPROPAGATION                                                                                                       \

@@ -24,6 +24,12 @@ function setKeyboardProps(comp, newProps, oldProps) {
                 comp.setTextarea(textarea)
             }
         },
+        onClose (fn) {
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CANCEL)
+        },
+        onOk (fn) {
+            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_READY)
+        }
     }
     Object.keys(setter).forEach(key => {
         if (newProps[key]) {

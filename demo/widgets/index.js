@@ -18657,7 +18657,8 @@ var obj2 = {
   "row-spacing": ProcessPx,
   "column-spacing": ProcessPx,
   "position": ProcessEnum({
-    "absolute": "absolute"
+    "absolute": "absolute",
+    "fixed": "fixed"
   })
 };
 var keys3 = Object.keys(obj2);
@@ -20314,6 +20315,9 @@ function setKeyboardProps(comp, newProps, oldProps) {
       if (textarea?.uid !== oldProps.textarea?.uid) {
         comp.setTextarea(textarea);
       }
+    },
+    onClose(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CANCEL);
     }
   };
   Object.keys(setter).forEach((key) => {
@@ -20528,9 +20532,9 @@ var NativeDropdownlist = bridge12.NativeRender.NativeComponents.Dropdownlist;
 function setListProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Dropdownlist", comp, newProps, oldProps }),
-    items(items) {
-      if (items !== oldProps.items && Array.isArray(items)) {
-        comp.setItems(items, items.length);
+    items(items2) {
+      if (items2 !== oldProps.items && Array.isArray(items2)) {
+        comp.setItems(items2, items2.length);
       }
     },
     arrow(arrow) {
@@ -21336,6 +21340,7 @@ var _Renderer = class {
 };
 var Renderer = _Renderer;
 __publicField(Renderer, "container");
+__publicField(Renderer, "portalContainer");
 
 // src/render/react/core/animate/index.js
 var bridge19 = globalThis.SJSJSBridge;
@@ -21382,7 +21387,16 @@ var import_react2 = __toESM(require_react());
 
 // demo/widgets/components/profile/index.jsx
 var import_react = __toESM(require_react());
+var { width, height } = Dimensions.window;
+var items = [
+  "Male",
+  "Female",
+  "Other"
+];
 function App() {
+  const panel2_username_input_ref = (0, import_react.useRef)();
+  const panel2_password_input_ref = (0, import_react.useRef)();
+  const [inputFocus, setInputFocus] = (0, import_react.useState)(0);
   return /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.profileWrapper
   }, /* @__PURE__ */ import_react.default.createElement(View, {
@@ -21414,27 +21428,49 @@ function App() {
     style: style.panel2_username
   }, "User name"), /* @__PURE__ */ import_react.default.createElement(Input, {
     placeholder: "Your name",
-    style: style.panel2_username_input
+    style: style.panel2_username_input,
+    onFocus: () => {
+      setInputFocus("user_name");
+    },
+    onBlur: () => {
+      setInputFocus(false);
+    },
+    ref: panel2_username_input_ref
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_password
   }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
+    onFocus: () => {
+      setInputFocus("password");
+      setTimeout(() => {
+        panel2_password_input_ref.current.scrollIntoView();
+      });
+    },
+    onBlur: () => {
+      setInputFocus(false);
+    },
     placeholder: "Min. 8 chars.",
     mode: "password",
-    style: style.panel2_password_input
+    style: style.panel2_password_input,
+    ref: panel2_password_input_ref
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_gender
   }, "Gender"), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
-    items: [
-      "Male",
-      "Female",
-      "Other"
-    ],
+    items,
     style: style.panel2_gender_dropdownlist
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_birthday
   }, "Birthday"), /* @__PURE__ */ import_react.default.createElement(Input, {
-    style: style.panel2_birthday_input
-  })));
+    style: style.panel2_birthday_input,
+    onFocus: () => {
+    }
+  })), !!inputFocus && /* @__PURE__ */ import_react.default.createElement(Keyboard, {
+    textarea: inputFocus === "user_name" ? panel2_username_input_ref.current : panel2_password_input_ref.current,
+    style: style.keyboard,
+    onClose: () => {
+      console.log("keyboard close");
+      setInputFocus(false);
+    }
+  }));
 }
 var style = {
   profileWrapper: {
@@ -21630,11 +21666,18 @@ var style = {
     "align-self": "center",
     "grid-row-pos": 6,
     "grid-row-span": 1
+  },
+  keyboard: {
+    "left": 0,
+    "top": height / 2,
+    "height": height / 2,
+    "width": "100%",
+    "position": "fixed"
   }
 };
 
 // demo/widgets/index.jsx
-var { width, height } = Dimensions.window;
+var { width: width2, height: height2 } = Dimensions.window;
 function App2() {
   return /* @__PURE__ */ import_react2.default.createElement(Window2, {
     style: style2.window
@@ -21646,8 +21689,8 @@ function App2() {
 var style2 = {
   window: {
     "display": "flex",
-    "height": height,
-    "width": width,
+    "height": height2,
+    "width": width2,
     "padding": 0,
     "border-radius": 0,
     "border-width": 0
