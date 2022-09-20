@@ -74,14 +74,14 @@ BasicComponent::BasicComponent () {
     
 };
 
-void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* style) {
+void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* style, int32_t type) {
     int32_t len;
     JSValue value_len = JS_GetPropertyUint32(ctx, obj, 0);
     JS_ToInt32(ctx, &len, value_len);
 
-    lv_style_prop_t* old_transProps = this->transProps;
-    
-    this->transProps = (lv_style_prop_t*)malloc((len + 1) * sizeof(lv_style_prop_t));
+    lv_style_prop_t* old_transProps = this->trans_props_map[type];
+
+    this->trans_props_map[type] = (lv_style_prop_t*)malloc((len + 1) * sizeof(lv_style_prop_t));
     
     JSValue props = JS_GetPropertyUint32(ctx, obj, 1);
     int32_t prop_key;
@@ -89,9 +89,9 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
         JSValue prop = JS_GetPropertyUint32(ctx, props, i);
         JS_ToInt32(ctx, &prop_key, prop);
         JS_FreeValue(ctx, prop);
-        this->transProps[i] = (lv_style_prop_t)prop_key;
+        this->trans_props_map[type][i] = (lv_style_prop_t)prop_key;
     }
-    this->transProps[len] = LV_STYLE_PROP_INV;
+    this->trans_props_map[type][len] = LV_STYLE_PROP_INV;
 
     int32_t dura;
     JSValue dura_value = JS_GetPropertyUint32(ctx, obj, 2);
@@ -107,7 +107,7 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     JSValue delay_value = JS_GetPropertyUint32(ctx, obj, 4);
     JS_ToInt32(ctx, &delay, delay_value);
 
-    CompSetTransition(style, &this->trans, this->transProps, func_str_1, dura, delay);
+    CompSetTransition(style, &this->trans, this->trans_props_map[type], func_str_1, dura, delay);
 
     JS_FreeValue(ctx, value_len);
     JS_FreeValue(ctx, props);
@@ -167,7 +167,7 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
         std::string key = keys[i];
         if (key == "transition") {
             JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
-            this->setTransition(ctx, value, style);
+            this->setTransition(ctx, value, style, type);
             JS_FreeValue(ctx, value);
         }
     }
@@ -228,10 +228,6 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 };
 
 BasicComponent::~BasicComponent () {
-    if (this->transProps != nullptr) {
-        free(this->transProps);
-    }
-
     for(auto& desc : this->image_desc_map) {
         if (desc.second != nullptr) {
             const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;

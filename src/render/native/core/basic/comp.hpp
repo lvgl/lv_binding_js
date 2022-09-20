@@ -48,7 +48,7 @@ class BasicComponent {
     std::unordered_map<int32_t, std::string> symbol_map;
 
     lv_style_transition_dsc_t trans;
-    lv_style_prop_t* transProps = nullptr;
+    std::unordered_map<int32_t, lv_style_prop_t*> trans_props_map;
 
     bool is_fixed;
     bool has_setstyle;
@@ -62,7 +62,9 @@ class BasicComponent {
     bool isEventRegist(int eventType);
     void eventCallback (lv_obj_t * obj, lv_event_t event);
     static void EventCallback (lv_event_t * event);
-    void setTransition (JSContext* ctx, JSValue obj, lv_style_t* style);
+
+    void setTransition (JSContext* ctx, JSValue obj, lv_style_t* style, int32_t type);
+
     void setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type, std::string& symbol);
   
     void initStyle (int32_t type);

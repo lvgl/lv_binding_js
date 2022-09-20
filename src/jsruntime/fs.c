@@ -874,7 +874,7 @@ static JSValue SJSFSRealpath(JSContext* ctx, JSValueConst this_val, int argc, JS
     return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
 }
 
-static JSValue SJSFSUnlink(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSUnlink(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -885,14 +885,21 @@ static JSValue SJSFSUnlink(JSContext* ctx, JSValueConst this_val, int argc, JSVa
         return JS_EXCEPTION;
     }
 
-    int r = uv_fs_unlink(SJSGetLoop(ctx), &fr->req, path, UVFSReqCb);
+    int r = uv_fs_unlink(SJSGetLoop(ctx), &fr->req, path, is_sync ? NULL : UVFSReqCb);
     JS_FreeCString(ctx, path);
     if (r != 0) {
         js_free(ctx, fr);
         return SJSThrowErrno(ctx, r);
     }
 
-    return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    if (is_sync) {
+        UVFSReqCb(&fr->req);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr);
+        return result;
+    } else {
+        return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    }
 }
 
 static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -1410,7 +1417,8 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("stat", 1, SJSFSStat, 0),
     SJS_CFUNC_MAGIC_DEF("lstat", 1, SJSFSStat, 1),
     SJS_CFUNC_DEF("realpath", 1, SJSFSRealpath),
-    SJS_CFUNC_DEF("unlink", 1, SJSFSUnlink),
+    SJS_CFUNC_MAGIC_DEF("unlink", 1, SJSFSUnlink, 0),
+    SJS_CFUNC_MAGIC_DEF("unlinkSync", 1, SJSFSUnlink, 1),
     SJS_CFUNC_DEF("rename", 2, SJSFSRename),
     SJS_CFUNC_DEF("mkdtemp", 1, SJSFSMkdtemp),
     SJS_CFUNC_DEF("mkstemp", 1, SJSFSMkstemp),

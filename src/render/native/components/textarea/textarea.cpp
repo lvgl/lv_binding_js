@@ -12,6 +12,39 @@ Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent() {
     lv_obj_clear_state(this->instance, LV_STATE_FOCUSED);
     this->initStyle(LV_PART_MAIN);
     this->initStyle(LV_STATE_FOCUSED);
+
+    lv_obj_add_event_cb(this->instance, &Textarea::raiseKeyboard, LV_EVENT_FOCUSED, this);
+    lv_obj_add_event_cb(this->instance, &Textarea::hideKeyboard, LV_EVENT_DEFOCUSED, this);
+};
+
+void Textarea::raiseKeyboard (lv_event_t* event) {
+    lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
+    Textarea* comp = static_cast<Textarea*>(event->user_data);
+    if (!comp->auto_raise_keyboard) return;
+    comp->keyboard = keyboard;
+
+    uint32_t width, height;
+    lv_disp_t* disp_default = lv_disp_get_default();
+    width = disp_default->driver->hor_res;
+    height = disp_default->driver->ver_res;
+
+    lv_keyboard_set_textarea(keyboard, comp->instance);
+    lv_obj_set_style_max_height(keyboard, height * 2 / 3, 0);
+    lv_obj_set_pos(keyboard, 0, height / 3);
+    lv_obj_update_layout(lv_scr_act());   /*Be sure the sizes are recalculated*/
+
+    lv_obj_set_style_max_height(lv_scr_act(), height - lv_obj_get_height(keyboard), 0);
+    lv_obj_scroll_to_view_recursive(comp->instance, LV_ANIM_ON);
+
+    lv_obj_add_event_cb(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_CANCEL, comp);
+    lv_obj_add_event_cb(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_READY, comp);
+};
+
+void Textarea::hideKeyboard (lv_event_t * event) {
+    Textarea* comp = static_cast<Textarea*>(event->user_data);
+    lv_keyboard_set_textarea(comp->keyboard, nullptr);
+    lv_obj_del_async(comp->keyboard);
+    comp->keyboard = nullptr;
 };
 
 void Textarea::setOneLine (bool payload) {
@@ -36,6 +69,10 @@ void Textarea::setMaxLength (int32_t len) {
 
 void Textarea::setMode (int32_t mode) {
     lv_keyboard_set_mode(this->instance, static_cast<lv_keyboard_mode_t>(mode));
+};
+
+void Textarea::setAutoRaiseKeyboard (bool payload) {
+    this->auto_raise_keyboard = payload;
 };
 
 void Textarea::initCompStyle (int32_t type) {

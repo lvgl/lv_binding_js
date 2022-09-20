@@ -7,12 +7,12 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 ## Table of Contents
 - [Features](#Features)
 - [Demo](#Demo)
-
 - [Build](#Build)
 - [Components](#Components)
 - [Style](#Style)
 - [Animation](#Animation)
 - [Font](#Font)
+- [JSAPI](#JSAPI)
 
 ## Features
 - Support all lvgl built-in components
@@ -91,5 +91,9 @@ make dev-x86 or make build-x86
 - [scroll](./doc/style/scroll.md)
 - [shadow](./doc/style/shadow.md)
 - [recolor](./doc/style/recolor.md)
+- [line](./doc/style/line.md)
+- [transition](./doc/style/transition.md)
 
-
+## JSAPI
+[network](./doc/jsapi/network.md)
+[filesystem](./doc/jsapi/fs.md)

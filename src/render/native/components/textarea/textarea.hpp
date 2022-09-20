@@ -6,6 +6,10 @@
 
 class Textarea : public BasicComponent {
  public:
+  bool auto_raise_keyboard = true;
+
+  lv_obj_t* keyboard;
+
   Textarea(std::string uid, lv_obj_t* parent = nullptr);
 
   void setOneLine (bool payload);
@@ -19,6 +23,11 @@ class Textarea : public BasicComponent {
   void setMaxLength (int32_t len);
 
   void setMode (int32_t mode);
+
+  void setAutoRaiseKeyboard (bool payload);
+
+  static void raiseKeyboard (lv_event_t * event);
+  static void hideKeyboard (lv_event_t * event);
 
   virtual void initCompStyle (int32_t type);
 };
