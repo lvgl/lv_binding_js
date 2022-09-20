@@ -19384,97 +19384,9 @@ var ViewConfig = class {
   }
 };
 
-// src/render/react/components/Window/comp.js
-var bridge2 = globalThis.SJSJSBridge;
-var NativeComp = bridge2.NativeRender.NativeComponents.Window;
-function setWindowProps(comp, newProps, oldProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Window", comp, newProps, oldProps }),
-    title(title) {
-      if (oldProps.title != title) {
-        comp.setTitle(title);
-      }
-    }
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
-var Window = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
-    const style3 = super.style;
-    const that = this;
-    this.style = new Proxy(this, {
-      get(obj9, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
-        }
-      }
-    });
-  }
-  setProps(newProps, oldProps) {
-    setWindowProps(this, newProps, oldProps);
-  }
-  insertBefore(child, beforeChild) {
-  }
-  appendInitialChild(child) {
-    this.appendChild(child);
-  }
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
-  close() {
-  }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false });
-  }
-};
-
-// src/render/react/components/Window/config.js
-var WindowConfig = class {
-  tagName = "Window";
-  shouldSetTextContent() {
-    return false;
-  }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new Window({ uid });
-    instance.setProps(newProps, {});
-    return instance;
-  }
-  commitMount(instance, props, internalInstanceHandle) {
-  }
-  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
-  }
-  setProps(newProps, oldProps) {
-  }
-  insertBefore(child, beforeChild) {
-  }
-  appendInitialChild(child) {
-  }
-  appendChild(child) {
-  }
-  removeChild(child) {
-  }
-};
-
 // src/render/react/components/Text/comp.js
-var bridge3 = globalThis.SJSJSBridge;
-var NativeText = bridge3.NativeRender.NativeComponents.Text;
+var bridge2 = globalThis.SJSJSBridge;
+var NativeText = bridge2.NativeRender.NativeComponents.Text;
 function setTextProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
@@ -19577,8 +19489,8 @@ var TextConfig = class {
 // src/render/react/components/Image/comp.js
 var fs2 = __require("fs");
 var path2 = __require("path");
-var bridge4 = globalThis.SJSJSBridge;
-var NativeImage = bridge4.NativeRender.NativeComponents.Image;
+var bridge3 = globalThis.SJSJSBridge;
+var NativeImage = bridge3.NativeRender.NativeComponents.Image;
 async function getImageBinary2(url) {
   const resp = await fetch(url, {
     headers: {
@@ -19700,8 +19612,8 @@ var ImageConfig = class {
 };
 
 // src/render/react/components/Button/comp.js
-var bridge5 = globalThis.SJSJSBridge;
-var NativeButton = bridge5.NativeRender.NativeComponents.Button;
+var bridge4 = globalThis.SJSJSBridge;
+var NativeButton = bridge4.NativeRender.NativeComponents.Button;
 function setButtonProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Button", comp, newProps, oldProps }),
@@ -19808,8 +19720,8 @@ var ButtonConfig = class {
 };
 
 // src/render/react/components/Slider/comp.js
-var bridge6 = globalThis.SJSJSBridge;
-var NativeSlider = bridge6.NativeRender.NativeComponents.Slider;
+var bridge5 = globalThis.SJSJSBridge;
+var NativeSlider = bridge5.NativeRender.NativeComponents.Slider;
 function setSliderProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Slider", comp, newProps, oldProps }),
@@ -19936,8 +19848,8 @@ var SliderConfig = class {
 };
 
 // src/render/react/components/Switch/comp.js
-var bridge7 = globalThis.SJSJSBridge;
-var NativeComp2 = bridge7.NativeRender.NativeComponents.Switch;
+var bridge6 = globalThis.SJSJSBridge;
+var NativeComp = bridge6.NativeRender.NativeComponents.Switch;
 function setSwitchProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Switch", comp, newProps, oldProps }),
@@ -19973,7 +19885,7 @@ function setSwitchProps(comp, newProps, oldProps) {
     }
   });
 }
-var SwitchComp = class extends NativeComp2 {
+var SwitchComp = class extends NativeComp {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -20049,8 +19961,8 @@ var SwitchConfig = class {
 };
 
 // src/render/react/components/Textarea/comp.js
-var bridge8 = globalThis.SJSJSBridge;
-var NativeView2 = bridge8.NativeRender.NativeComponents.Textarea;
+var bridge7 = globalThis.SJSJSBridge;
+var NativeView2 = bridge7.NativeRender.NativeComponents.Textarea;
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
@@ -20167,8 +20079,8 @@ var TextareaConfig = class {
 };
 
 // src/render/react/components/Input/comp.js
-var bridge9 = globalThis.SJSJSBridge;
-var NativeView3 = bridge9.NativeRender.NativeComponents.Textarea;
+var bridge8 = globalThis.SJSJSBridge;
+var NativeView3 = bridge8.NativeRender.NativeComponents.Textarea;
 function setInputProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Input", comp, newProps, oldProps }),
@@ -20295,8 +20207,8 @@ var InputConfig = class {
 };
 
 // src/render/react/components/Keyboard/comp.js
-var bridge10 = globalThis.SJSJSBridge;
-var NativeView4 = bridge10.NativeRender.NativeComponents.Keyboard;
+var bridge9 = globalThis.SJSJSBridge;
+var NativeView4 = bridge9.NativeRender.NativeComponents.Keyboard;
 var modes = {
   "lower": 0,
   "upper": 1,
@@ -20318,6 +20230,9 @@ function setKeyboardProps(comp, newProps, oldProps) {
     },
     onClose(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CANCEL);
+    },
+    onOk(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_READY);
     }
   };
   Object.keys(setter).forEach((key) => {
@@ -20405,8 +20320,8 @@ var KeyboardConfig = class {
 };
 
 // src/render/react/components/Checkbox/comp.js
-var bridge11 = globalThis.SJSJSBridge;
-var NativeView5 = bridge11.NativeRender.NativeComponents.Checkbox;
+var bridge10 = globalThis.SJSJSBridge;
+var NativeView5 = bridge10.NativeRender.NativeComponents.Checkbox;
 function setCheckboxProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Checkbox", comp, newProps, oldProps }),
@@ -20527,8 +20442,8 @@ var CheckboxConfig = class {
 };
 
 // src/render/react/components/Dropdownlist/comp.js
-var bridge12 = globalThis.SJSJSBridge;
-var NativeDropdownlist = bridge12.NativeRender.NativeComponents.Dropdownlist;
+var bridge11 = globalThis.SJSJSBridge;
+var NativeDropdownlist = bridge11.NativeRender.NativeComponents.Dropdownlist;
 function setListProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Dropdownlist", comp, newProps, oldProps }),
@@ -20651,8 +20566,8 @@ var DropdownlistConfig = class {
 };
 
 // src/render/react/components/ProgressBar/comp.js
-var bridge13 = globalThis.SJSJSBridge;
-var NativeProgressBar = bridge13.NativeRender.NativeComponents.ProgressBar;
+var bridge12 = globalThis.SJSJSBridge;
+var NativeProgressBar = bridge12.NativeRender.NativeComponents.ProgressBar;
 function setProgressBarProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "ProgressBar", comp, newProps, oldProps }),
@@ -20761,8 +20676,8 @@ var ProgressBarConfig = class {
 };
 
 // src/render/react/components/Roller/comp.js
-var bridge14 = globalThis.SJSJSBridge;
-var NativeRoller = bridge14.NativeRender.NativeComponents.Roller;
+var bridge13 = globalThis.SJSJSBridge;
+var NativeRoller = bridge13.NativeRender.NativeComponents.Roller;
 function setRollerProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Roller", comp, newProps, oldProps }),
@@ -20873,8 +20788,8 @@ var RollerConfig = class {
 };
 
 // src/render/react/components/Line/comp.js
-var bridge15 = globalThis.SJSJSBridge;
-var NativeLine = bridge15.NativeRender.NativeComponents.Line;
+var bridge14 = globalThis.SJSJSBridge;
+var NativeLine = bridge14.NativeRender.NativeComponents.Line;
 function setLineProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
@@ -20971,8 +20886,8 @@ var LineConfig = class {
 };
 
 // src/render/react/components/Calendar/comp.js
-var bridge16 = globalThis.SJSJSBridge;
-var NativeCalendar = bridge16.NativeRender.NativeComponents.Calendar;
+var bridge15 = globalThis.SJSJSBridge;
+var NativeCalendar = bridge15.NativeRender.NativeComponents.Calendar;
 function setCalendarProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Calendar", comp, newProps, oldProps }),
@@ -21090,8 +21005,8 @@ var CalendarConfig = class {
 // src/render/react/components/GIF/comp.js
 var fs3 = __require("fs");
 var path3 = __require("path");
-var bridge17 = globalThis.SJSJSBridge;
-var NativeGIF = bridge17.NativeRender.NativeComponents.GIF;
+var bridge16 = globalThis.SJSJSBridge;
+var NativeGIF = bridge16.NativeRender.NativeComponents.GIF;
 async function getGIFBinary(url) {
   const resp = await fetch(url, {
     headers: {
@@ -21213,8 +21128,8 @@ var GIFConfig = class {
 };
 
 // src/render/react/components/Tabs/comp.js
-var bridge18 = globalThis.SJSJSBridge;
-var NativeTabs = bridge18.NativeRender.NativeComponents.TabView;
+var bridge17 = globalThis.SJSJSBridge;
+var NativeTabs = bridge17.NativeRender.NativeComponents.TabView;
 function setTabsProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Tabs", comp, newProps, oldProps }),
@@ -21343,8 +21258,8 @@ __publicField(Renderer, "container");
 __publicField(Renderer, "portalContainer");
 
 // src/render/react/core/animate/index.js
-var bridge19 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge19.NativeRender.Animate;
+var bridge18 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge18.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -21357,13 +21272,12 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
 };
 
 // src/render/react/core/dimensions/index.js
-var bridge20 = globalThis.SJSJSBridge;
-var dimensions = bridge20.NativeRender.dimensions;
+var bridge19 = globalThis.SJSJSBridge;
+var dimensions = bridge19.NativeRender.dimensions;
 var Dimensions = dimensions;
 
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
-var Window2 = registerComponent(new WindowConfig());
 var Text = registerComponent(new TextConfig());
 var Image = registerComponent(new ImageConfig());
 var Button = registerComponent(new ButtonConfig());
@@ -21429,25 +21343,10 @@ function App() {
   }, "User name"), /* @__PURE__ */ import_react.default.createElement(Input, {
     placeholder: "Your name",
     style: style.panel2_username_input,
-    onFocus: () => {
-      setInputFocus("user_name");
-    },
-    onBlur: () => {
-      setInputFocus(false);
-    },
     ref: panel2_username_input_ref
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_password
   }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
-    onFocus: () => {
-      setInputFocus("password");
-      setTimeout(() => {
-        panel2_password_input_ref.current.scrollIntoView();
-      });
-    },
-    onBlur: () => {
-      setInputFocus(false);
-    },
     placeholder: "Min. 8 chars.",
     mode: "password",
     style: style.panel2_password_input,
@@ -21463,14 +21362,7 @@ function App() {
     style: style.panel2_birthday_input,
     onFocus: () => {
     }
-  })), !!inputFocus && /* @__PURE__ */ import_react.default.createElement(Keyboard, {
-    textarea: inputFocus === "user_name" ? panel2_username_input_ref.current : panel2_password_input_ref.current,
-    style: style.keyboard,
-    onClose: () => {
-      console.log("keyboard close");
-      setInputFocus(false);
-    }
-  }));
+  })));
 }
 var style = {
   profileWrapper: {
@@ -21679,7 +21571,7 @@ var style = {
 // demo/widgets/index.jsx
 var { width: width2, height: height2 } = Dimensions.window;
 function App2() {
-  return /* @__PURE__ */ import_react2.default.createElement(Window2, {
+  return /* @__PURE__ */ import_react2.default.createElement(View, {
     style: style2.window
   }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
     tabs: ["Profile", "Analytics", "Shop"],

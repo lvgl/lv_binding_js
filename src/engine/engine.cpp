@@ -22,6 +22,8 @@ Engine::Engine (char* filePath) {
     lv_init();
     hal_init();
 
+    WindowInit();
+
     char* path = (char*)malloc(PATH_MAX);
     if (!access(path, 0)) {
         printf("bundle.js miss, engine will stop \n");

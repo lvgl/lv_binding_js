@@ -38,25 +38,22 @@ export default function App () {
                 <Input 
                     placeholder={'Your name'}
                     style={style.panel2_username_input}
-                    onFocus={() => {
-                        setInputFocus('user_name')
-                    }}
-                    onBlur={() => {
-                        setInputFocus(false)
-                    }}
+                    // onFocus={() => {
+                    //     setInputFocus('user_name')
+                    // }}
+                    // onBlur={() => {
+                    //     setInputFocus(false)
+                    // }}
                     ref={panel2_username_input_ref}
                 />
                 <Text style={style.panel2_password}>Password</Text>
                 <Input
-                    onFocus={() => {
-                        setInputFocus('password')
-                        setTimeout(() => {
-                            panel2_password_input_ref.current.scrollIntoView()
-                        })
-                    }}
-                    onBlur={() => {
-                        setInputFocus(false)
-                    }}
+                    // onFocus={() => {
+                    //     setInputFocus('password')
+                    // }}
+                    // onBlur={() => {
+                    //     setInputFocus(false)
+                    // }}
                     placeholder={'Min. 8 chars.'}
                     mode="password"
                     style={style.panel2_password_input}
@@ -73,7 +70,7 @@ export default function App () {
                     onFocus={() => {}}
                 />
             </View>
-            {!!inputFocus && (
+            {/* {!!inputFocus && (
                 <Keyboard
                     textarea={inputFocus === 'user_name' ? panel2_username_input_ref.current : panel2_password_input_ref.current }
                     style={style.keyboard}
@@ -82,7 +79,7 @@ export default function App () {
                         setInputFocus(false)
                     }}
                 />
-            )}
+            )} */}
         </View>
     )
 }

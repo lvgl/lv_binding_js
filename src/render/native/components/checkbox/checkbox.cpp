@@ -4,7 +4,7 @@
 Checkbox::Checkbox(std::string uid, lv_obj_t* parent): BasicComponent() {
     this->type = COMP_TYPE_CHECKBOX;
     this->uid = uid;
-    this->instance = lv_checkbox_create(parent != nullptr ? parent : lv_scr_act());
+    this->instance = lv_checkbox_create(parent != nullptr ? parent : GetWindowInstance());
     
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE);
     lv_obj_set_user_data(this->instance, this);

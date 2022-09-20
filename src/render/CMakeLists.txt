@@ -56,7 +56,7 @@ add_library(render STATIC
     ./native/components/view/view.cpp
     ./native/components/view/view_wrap.cpp
     ./native/components/window/window.cpp
-    ./native/components/window/window_wrap.cpp
+    # ./native/components/window/window_wrap.cpp
     ./native/components/component.cpp
     ./native/bootstrap/render_bootstrap.cpp
 )

@@ -1,6 +1,6 @@
 import * as react from 'react'
 import ViewConfig from "./components/View/config";
-import WindowConfig from "./components/Window/config";
+// import WindowConfig from "./components/Window/config";
 import TextConfig from "./components/Text/config";
 import ImageConfig from "./components/Image/config";
 import ButtonConfig from "./components/Button/config";
@@ -22,7 +22,7 @@ import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
 
 export const View = registerComponent(new ViewConfig());
-export const Window = registerComponent(new WindowConfig());
+// export const Window = registerComponent(new WindowConfig());
 export const Text = registerComponent(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
 export const Button = registerComponent(new ButtonConfig());

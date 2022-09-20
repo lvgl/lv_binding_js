@@ -3,6 +3,7 @@
 
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
+#include "native/components/window/window.hpp"
 
 class Textarea : public BasicComponent {
  public:

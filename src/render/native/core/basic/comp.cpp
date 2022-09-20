@@ -39,16 +39,19 @@ void BasicComponent::insertChildBefore(void *child) {
         uint32_t index = lv_obj_get_index(ins);
         lv_obj_move_to_index(ins, index);
     }
+    lv_obj_invalidate(this->instance);
 };
 
 void BasicComponent::removeChild(void* child) {
     lv_obj_del((static_cast<BasicComponent*>(child))->instance);
+    lv_obj_invalidate(this->instance);
 };
 
 void BasicComponent::appendChild (void* child) {
     static_cast<BasicComponent*>(child)->parent_instance = this->instance;
     if (!static_cast<BasicComponent*>(child)->is_fixed) {
         lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
+        lv_obj_invalidate(this->instance);
     }
 };
 

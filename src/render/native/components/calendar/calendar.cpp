@@ -5,7 +5,7 @@ Calendar::Calendar(std::string uid, lv_obj_t* parent): BasicComponent() {
     this->type = COMP_TYPE_CALENDAR;
 
     this->uid = uid;
-    this->instance = lv_calendar_create(parent != nullptr ? parent : lv_scr_act());
+    this->instance = lv_calendar_create(parent != nullptr ? parent : GetWindowInstance());
     lv_calendar_header_dropdown_create(this->instance);
     lv_calendar_header_arrow_create(this->instance);
     

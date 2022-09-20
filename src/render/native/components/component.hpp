@@ -14,11 +14,13 @@ typedef struct COMP_REF {
     const char* uid;
 } COMP_REF;
 
+lv_obj_t* GetWindowInstance ();
+
+void WindowInit ();
+
 void NativeComponentViewInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentInit (JSContext* ctx, JSValue ns);
-
-void NativeComponentWindowInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentTextInit (JSContext* ctx, JSValue ns);
 
