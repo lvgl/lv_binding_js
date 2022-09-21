@@ -18530,17 +18530,12 @@ var transitionProperty = {
 };
 var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "rotate", "transform-width", "transform-height"];
 function TransStyle(style3, result, compName) {
-  if (style3["transition"]) {
-    let value = style3["transition"];
-    const transProps = [];
-    value = value.split(",").filter((item) => !!item).map((item) => item.split(/\s/)).map((item) => item.filter((a) => !!a));
-    value.forEach((item) => {
-      let [property2, duration2, func2 = "linear", delay2 = 0] = item;
-      if (property2 && NormalizeTime(duration2) != null && transitionProperty[property2]) {
-        transProps.push(transitionProperty[property2]);
-      }
-    });
-    let [property, duration, func = "linear", delay = 0] = value[0];
+  if (style3["transition-property"]) {
+    let properties = style3["transition-property"];
+    properties = properties.split(",").map((item) => item.replace(/\s/, "")).map((item) => transitionProperty[item]).filter((item) => !!item);
+    const duration = style3["transition-duration"] || 0;
+    const func = style3["transition-linear"] || "linear";
+    const delay = style3["transition-delay"] || 0;
     const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
@@ -21243,6 +21238,8 @@ var TabsConfig = class {
 };
 
 // src/render/react/core/renderer/index.js
+var bridge18 = globalThis.SJSJSBridge;
+var NativeRenderUtil = bridge18.NativeRender.RenderUtil;
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
   static render(element, options) {
@@ -21251,6 +21248,7 @@ var _Renderer = class {
     _Renderer.container = reconciler_default.createContainer(containerInfo, isConcurrent, hydrate);
     const parentComponent = null;
     reconciler_default.updateContainer(element, _Renderer.container, parentComponent);
+    NativeRenderUtil.refreshWindow();
   }
 };
 var Renderer = _Renderer;
@@ -21258,8 +21256,8 @@ __publicField(Renderer, "container");
 __publicField(Renderer, "portalContainer");
 
 // src/render/react/core/animate/index.js
-var bridge18 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge18.NativeRender.Animate;
+var bridge19 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge19.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -21272,8 +21270,8 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
 };
 
 // src/render/react/core/dimensions/index.js
-var bridge19 = globalThis.SJSJSBridge;
-var dimensions = bridge19.NativeRender.dimensions;
+var bridge20 = globalThis.SJSJSBridge;
+var dimensions = bridge20.NativeRender.dimensions;
 var Dimensions = dimensions;
 
 // src/render/react/index.js

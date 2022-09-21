@@ -66,7 +66,7 @@ static JSValue NativeCompSetTab(JSContext *ctx, JSValueConst this_val, int argc,
         static_cast<TabView*>(ref->comp)->setTab(str, static_cast<BasicComponent*>(ref_content->comp));
         JS_FreeCString(ctx, str_ori);
         
-        LV_LOG_USER("TabView %s setTab", ref->uid);
+        LV_LOG_USER("TabView %s setTab child %s", ref->uid, ref_content->uid);
     };
     return JS_UNDEFINED;
 };

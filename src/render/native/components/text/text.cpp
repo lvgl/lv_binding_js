@@ -17,6 +17,7 @@ Text::Text(std::string uid, lv_obj_t* parent): BasicComponent() {
 
 void Text::setText(std::string str) {
     lv_label_set_text(this->instance, str.c_str());
+    lv_obj_invalidate(this->instance);
 };
 
 void Text::initCompStyle (int32_t type) {

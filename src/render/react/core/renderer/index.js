@@ -1,5 +1,8 @@
 import reconciler from '../reconciler'
 
+const bridge = globalThis.SJSJSBridge
+const NativeRenderUtil = bridge.NativeRender.RenderUtil
+
 const containerInfo = new Set()
 
 export class Renderer {
@@ -22,5 +25,7 @@ export class Renderer {
       Renderer.container,
       parentComponent
     )
+
+    NativeRenderUtil.refreshWindow()
   }
 };

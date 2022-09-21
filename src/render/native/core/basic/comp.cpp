@@ -228,6 +228,7 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 
         lv_style_set_bg_img_src(style, this->symbol_map[style_type].c_str());
     }
+    lv_obj_invalidate(this->instance);
 };
 
 BasicComponent::~BasicComponent () {

@@ -26,19 +26,23 @@ void Dropdownlist::setItems (std::vector<std::string> items) {
         str.append("\0");
         lv_dropdown_set_options(this->instance, str.c_str());
     }
+    lv_obj_invalidate(this->instance);
 };
 
 void Dropdownlist::setSelectIndex (int32_t index) {
     lv_dropdown_set_selected(this->instance, index);
+    lv_obj_invalidate(this->instance);
 };
 
 void Dropdownlist::setText (std::string text) {
     this->text = text;
     lv_dropdown_set_text(this->instance, this->text.c_str());
+    lv_obj_invalidate(this->instance);
 };
 
 void Dropdownlist::setDir (lv_dir_t dir) {
     lv_dropdown_set_dir(this->instance, dir);
+    lv_obj_invalidate(this->instance);
 };
 
 void Dropdownlist::setArrowDir (int32_t dir) {
@@ -67,8 +71,10 @@ void Dropdownlist::setArrowDir (int32_t dir) {
     if (arrow) {
         lv_dropdown_set_symbol(this->instance, arrow);
     }
+    lv_obj_invalidate(this->instance);
 };
 
 void Dropdownlist::setHighLightSelect (bool payload) {
     lv_dropdown_set_selected_highlight(this->instance, payload);
+    lv_obj_invalidate(this->instance);
 };

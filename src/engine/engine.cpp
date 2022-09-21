@@ -19,7 +19,6 @@ Engine::Engine (char* filePath) {
 
     NativeRenderInit(qrt->ctx);
 
-    lv_init();
     hal_init();
 
     WindowInit();

@@ -41,8 +41,10 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
 
 void Textarea::hideKeyboard (lv_event_t * event) {
     Textarea* comp = static_cast<Textarea*>(event->user_data);
+    if (comp->keyboard == nullptr) return;
+
     lv_keyboard_set_textarea(comp->keyboard, nullptr);
-    lv_obj_del(comp->keyboard);
+    lv_obj_del_async(comp->keyboard);
 
     lv_disp_t* disp_default = lv_disp_get_default();
     lv_obj_set_style_height(GetWindowInstance(), disp_default->driver->ver_res, 0);

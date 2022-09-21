@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include <mutex>
 
+extern "C" {
+    #include "lvgl.h"
+    #include "quickjs-libc.h"
+    #include "sjs.h"
+};
+
+void NativeRenderUtilInit (JSContext* ctx, JSValue& ns);
+
 template<size_t BlockSize, size_t BlockNum = 10>
 class MemoryPool {
   public:

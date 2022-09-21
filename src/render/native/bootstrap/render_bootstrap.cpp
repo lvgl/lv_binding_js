@@ -17,6 +17,8 @@ void NativeRenderInit (JSContext* ctx) {
 
     NativeDimensionsInit(ctx, obj);
 
+    NativeRenderUtilInit (ctx, obj);
+
     lv_init();
     lv_png_init();
 };
