@@ -231,6 +231,9 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 };
 
 BasicComponent::~BasicComponent () {
+    const lv_coord_t* ptr1 = this->grid_row_desc;
+    const lv_coord_t* ptr2 = this->grid_column_desc;
+    
     for(auto& desc : this->image_desc_map) {
         if (desc.second != nullptr) {
             const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;
@@ -241,8 +244,6 @@ BasicComponent::~BasicComponent () {
         }
     }
 
-    const lv_coord_t* ptr1 = lv_obj_get_style_grid_row_dsc_array(this->instance, 0);
-    const lv_coord_t* ptr2 = lv_obj_get_style_grid_column_dsc_array(this->instance, 0);
     if (ptr1) {
         free((lv_coord_t*)(ptr1));
     }

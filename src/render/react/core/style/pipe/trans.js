@@ -218,19 +218,13 @@ const transitionProperty = {
 const transformSupportKeys = ['translate', 'translate-x', 'translate-y', 'scale', 'rotate', 'transform-width', 'transform-height']
 
 export function TransStyle (style, result, compName) {
-    if (style['transition']) {
-        let value = style['transition']
-        const transProps = []
-        value = value.split(',').filter(item => !!item).map(item => item.split(/\s/)).map(item => item.filter(a => !!a))
-        value.forEach(item => {
-            let [property, duration, func = 'linear', delay = 0] = item
-            if (property && NormalizeTime(duration) != null && transitionProperty[property]) {
-                transProps.push(transitionProperty[property])
-            }
-        })
+    if (style['transition-property']) {
+        let properties = style['transition-property']
+        properties = properties.split(',').map(item => item.replace(/\s/, '')).map(item => transitionProperty[item]).filter(item => !!item)
 
-        // use first item duration、func、delay
-        let [property, duration, func = 'linear', delay = 0] = value[0]
+        const duration = style['transition-duration'] || 0
+        const func = style['transition-linear'] || 'linear'
+        const delay = style['transition-delay'] || 0
 
         const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay]
         result['transition'] = trans

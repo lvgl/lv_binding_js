@@ -617,8 +617,9 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
 
 static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     if (JS_IsArray(ctx, obj)) {
-        const lv_coord_t* old_ptr1 = lv_obj_get_style_grid_row_dsc_array(comp, 0);
-        const lv_coord_t* old_ptr2 = lv_obj_get_style_grid_column_dsc_array(comp, 0);
+        BasicComponent* instance = static_cast<BasicComponent*>(lv_obj_get_user_data(comp));
+        const lv_coord_t* old_ptr1 = instance->grid_column_desc;
+        const lv_coord_t* old_ptr2 = instance->grid_row_desc;
 
         JSValue column_value = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue row_value = JS_GetPropertyUint32(ctx, obj, 1);
@@ -637,6 +638,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
             JS_FreeValue(ctx, num_value);
         }
         column_ptr[len] = LV_GRID_TEMPLATE_LAST;
+        instance->grid_column_desc = column_ptr;
         JS_FreeValue(ctx, column_len_value);
         
         JSValue row_len_value = JS_GetPropertyStr(ctx, row_value, "length");
@@ -649,6 +651,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
             JS_FreeValue(ctx, num_value);
         }
         row_ptr[len] = LV_GRID_TEMPLATE_LAST;
+        instance->grid_row_desc = row_ptr;
         JS_FreeValue(ctx, row_len_value);
         
         JS_FreeValue(ctx, column_value);

@@ -16,16 +16,26 @@ async function test2 () {
     assert.equal(data, content)
 }
 
-// function test3 () {
-//     const data = fs.readFileSync(path.join(__dirname, './01d.png'), { encoding: 'binary' })
-//     fs.writeFileSync(path.join(__dirname, './01d_copy.png'), data)
-//     console.log(222)
-// }
+function test3 () {
+    const data = fs.readFileSync(path.join(__dirname, './01d.png'), { encoding: 'binary' })
+    fs.writeFileSync(path.join(__dirname, './01d_copy.png'), data)
+}
+
+async function test4 () {
+    await fs.unlink(path.join(__dirname, './01d_copy.png'))
+}
+
+function test5 () {
+    test3()
+    fs.unlinkSync(path.join(__dirname, './01d_copy.png'))
+}
 
 async function test () {
     test1()
     await test2()
     test3()
+    await test4()
+    test5()
 }
 
 try {

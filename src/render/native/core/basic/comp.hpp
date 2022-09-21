@@ -55,6 +55,9 @@ class BasicComponent {
     bool listening = false;
     ECOMP_TYPE type;
 
+    lv_coord_t* grid_row_desc = nullptr;
+    lv_coord_t* grid_column_desc = nullptr;
+
     std::map<int, bool> registeEvents;
 
     void addEventListener(int eventType);

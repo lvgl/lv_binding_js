@@ -12,6 +12,8 @@ fs module with following function
 - readFileSync(path: string): Buffer | string
 - writeFile(path: string, data: string | buffer): Promise<void>
 - writeFileSync(path: string, data: string | buffer): void
+- unlink (path: string): Promise<void>
+- unlinkSync(path: string): void
 
 <br />
 

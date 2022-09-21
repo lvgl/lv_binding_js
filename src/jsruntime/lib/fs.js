@@ -131,9 +131,17 @@ async function writeFile (path, data) {
     return await nativefs.writeFile(path, data.buffer)
 }
 
-async function writeFileSync (path, data) {
+function writeFileSync (path, data) {
     data = Buffer.from(data)
     return nativefs.writeFileSync(path, data.buffer)
+}
+
+async function unlink (path) {
+    return await nativefs.unlink(path)
+}
+
+function unlinkSync (path) {
+    return nativefs.unlinkSync(path)
 }
 
 module.exports = {
@@ -144,5 +152,7 @@ module.exports = {
     readFileSync,
     readFile,
     writeFile,
-    writeFileSync
+    writeFileSync,
+    unlink,
+    unlinkSync
 }
