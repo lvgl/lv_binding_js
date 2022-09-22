@@ -4,38 +4,61 @@ const assert = require('assert')
 
 const content = '{"url":"https://www.google.com","data":88,"status":"ok"}'
 const filePath = path.resolve(__dirname, 'file.json')
-function test1 () {
+
+function readWriteStrUnlinkSync () {
     fs.writeFileSync(filePath, content)
     const data = fs.readFileSync(filePath)
     assert.equal(data, content)
+    fs.unlinkSync(filePath)
+
+    const stat = fs.statSync(filePath)
+    assert.equal(stat.isFile(), false)
 }
 
-async function test2 () {
+async function readWriteStrUnlinkAsync () {
     await fs.writeFile(filePath, content)
     const data = await fs.readFile(filePath)
     assert.equal(data, content)
+    fs.unlinkSync(filePath)
+
+    const stat = await fs.stat(filePath)
+    assert.equal(stat.isFile(), false)
 }
 
-function test3 () {
+function readWriteBufferUnlinkSync () {
     const data = fs.readFileSync(path.join(__dirname, './01d.png'), { encoding: 'binary' })
     fs.writeFileSync(path.join(__dirname, './01d_copy.png'), data)
-}
 
-async function test4 () {
-    await fs.unlink(path.join(__dirname, './01d_copy.png'))
-}
+    let stat = fs.statSync(path.join(__dirname, './01d_copy.png'))
+    assert.equal(stat.isFile(), true)
 
-function test5 () {
-    test3()
     fs.unlinkSync(path.join(__dirname, './01d_copy.png'))
+    stat = fs.statSync(path.join(__dirname, './01d_copy.png'))
+    assert.equal(stat.isFile(), false)
+}
+
+function mkdirSync () {
+    const p = path.resolve(__dirname, './test_mkdir')
+    fs.mkdirSync(p)
+    const stat = fs.statSync(p)
+    assert.equal(stat.isDirectory(), true)
+    fs.unlinkSync(p)
+}
+
+async function mkdirAsync () {
+    await fs.mkdir(p)
+    const stat = await fs.statSync(p)
+    assert.equal(stat.isDirectory(), true)
+    await fs.unlink(p)
 }
 
 async function test () {
-    test1()
-    await test2()
-    test3()
-    await test4()
-    test5()
+    readWriteStrUnlinkSync()
+    await readWriteStrUnlinkAsync()
+    readWriteBufferUnlinkSync()
+
+    mkdirSync()
+    await mkdirAsync()
 }
 
 try {

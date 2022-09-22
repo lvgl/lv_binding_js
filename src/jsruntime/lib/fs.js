@@ -144,6 +144,14 @@ function unlinkSync (path) {
     return nativefs.unlinkSync(path)
 }
 
+async function mkdir (path) {
+    return nativefs.mkdir (path)
+}
+
+function mkdirSync (path) {
+    return nativefs.mkdirSync (path)
+}
+
 module.exports = {
     statSync,
     stat: statAsync,
@@ -154,5 +162,7 @@ module.exports = {
     writeFile,
     writeFileSync,
     unlink,
-    unlinkSync
+    unlinkSync,
+    mkdirSync,
+    mkdir,
 }

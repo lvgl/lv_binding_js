@@ -339,6 +339,7 @@ static void UVFSReqCb(uv_fs_t *req) {
         case UV_FS_FTRUNCATE:
         case UV_FS_RENAME:
         case UV_FS_RMDIR:
+        case UV_FS_MKDIR:
         case UV_FS_UNLINK:
             arg = JS_UNDEFINED;
             break;
@@ -902,7 +903,7 @@ static JSValue SJSFSUnlink(JSContext* ctx, JSValueConst this_val, int argc, JSVa
     }
 }
 
-static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
     const char *path = JS_ToCString(ctx, argv[0]);
     if (!path)
         return JS_EXCEPTION;
@@ -920,7 +921,7 @@ static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSVa
         return JS_EXCEPTION;
     }
 
-    int r = uv_fs_rename(SJSGetLoop(ctx), &fr->req, path, new_path, UVFSReqCb);
+    int r = uv_fs_rename(SJSGetLoop(ctx), &fr->req, path, new_path, is_sync ? NULL : UVFSReqCb);
     JS_FreeCString(ctx, path);
     JS_FreeCString(ctx, new_path);
     if (r != 0) {
@@ -928,7 +929,14 @@ static JSValue SJSFSRename(JSContext* ctx, JSValueConst this_val, int argc, JSVa
         return SJSThrowErrno(ctx, r);
     }
 
-    return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    if (is_sync) {
+        UVFSReqCb(&fr->req);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr);
+        return result;
+    } else {
+        return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    }
 }
 
 static JSValue SJSFSMkdtemp(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -1210,6 +1218,42 @@ static JSValue SJSFSReadFile(JSContext* ctx, JSValueConst this_val, int argc, JS
     }
 };
 
+static JSValue SJSFSMkdir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv, int is_sync) {
+    const char *path = JS_ToCString(ctx, argv[0]);
+    if (!path)
+        return JS_EXCEPTION;
+
+    int32_t mode = 0777;
+    if (argc >= 2 && !JS_IsUndefined(argv[1])) {
+        if (JS_ToInt32(ctx, &mode, argv[1])) {
+            JS_FreeCString(ctx, path);
+            return JS_EXCEPTION;
+        }
+    }
+
+    SJSFsReq *fr = js_malloc(ctx, sizeof(*fr));
+    if (!fr) {
+        JS_FreeCString(ctx, path);
+        return JS_EXCEPTION;
+    }
+
+    int r = uv_fs_mkdir(SJSGetLoop(ctx), &fr->req, path, mode, is_sync ? NULL : UVFSReqCb);
+    JS_FreeCString(ctx, path);
+    if (r != 0) {
+        js_free(ctx, fr);
+        return SJSThrowErrno(ctx, r);
+    }
+
+    if (is_sync) {
+        UVFSReqCb(&fr->req);
+        JSValue result = fr->sync_result;
+        js_free(ctx, fr);
+        return result;
+    } else {
+        return SJSFSReqInit(ctx, fr, JS_UNDEFINED);
+    }
+}
+
 #if !defined(_WIN32)
 static int64_t TimeSpecToMS(const struct timespec *tv)
 {
@@ -1415,11 +1459,16 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("openSync", 3, SJSFSOpen, 1),
     SJS_CFUNC_DEF("newStdioFile", 2, SJSFSNewStdioFile),
     SJS_CFUNC_MAGIC_DEF("stat", 1, SJSFSStat, 0),
+    SJS_CFUNC_DEF("statSync", 1, SJSFSStatsSync),
     SJS_CFUNC_MAGIC_DEF("lstat", 1, SJSFSStat, 1),
     SJS_CFUNC_DEF("realpath", 1, SJSFSRealpath),
+    SJS_CFUNC_DEF("realPathSync", 1, SJSRealPathSync),
     SJS_CFUNC_MAGIC_DEF("unlink", 1, SJSFSUnlink, 0),
     SJS_CFUNC_MAGIC_DEF("unlinkSync", 1, SJSFSUnlink, 1),
-    SJS_CFUNC_DEF("rename", 2, SJSFSRename),
+    SJS_CFUNC_MAGIC_DEF("mkdir", 3, SJSFSMkdir, 0),
+    SJS_CFUNC_MAGIC_DEF("mkdirSync", 3, SJSFSMkdir, 1),
+    SJS_CFUNC_MAGIC_DEF("rename", 2, SJSFSRename, 0),
+    SJS_CFUNC_MAGIC_DEF("renameSync", 2, SJSFSRename, 1),
     SJS_CFUNC_DEF("mkdtemp", 1, SJSFSMkdtemp),
     SJS_CFUNC_DEF("mkstemp", 1, SJSFSMkstemp),
     SJS_CFUNC_DEF("rmdir", 1, SJSFSRmdir),
@@ -1430,8 +1479,6 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSFSReadFile, 1),
     SJS_CFUNC_MAGIC_DEF("writeFile", 2, SJSFSWriteFile, 0),
     SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 1),
-    SJS_CFUNC_DEF("statSync", 1, SJSFSStatsSync),
-    SJS_CFUNC_DEF("realPathSync", 1, SJSRealPathSync),
 };
 
 static const JSCFunctionListEntry fs[] = {
