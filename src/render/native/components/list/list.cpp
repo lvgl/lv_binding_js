@@ -1,7 +1,7 @@
 
 #include "list.hpp"
 
-List::List(std::string uid, lv_obj_t* parent): BasicComponent() {
+List::List(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_LIST;
 
     this->uid = uid;

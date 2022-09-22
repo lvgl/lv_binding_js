@@ -1,7 +1,7 @@
 
 #include "dropdownlist.hpp"
 
-Dropdownlist::Dropdownlist(std::string uid, lv_obj_t* parent): BasicComponent() {
+Dropdownlist::Dropdownlist(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_DROPDOWNLIST;
 
     this->uid = uid;

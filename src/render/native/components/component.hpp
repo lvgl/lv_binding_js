@@ -9,6 +9,8 @@ extern "C" {
 #include <vector>
 #include <string>
 
+#include "native/core/utils/utils.hpp"
+
 typedef struct COMP_REF {
     void* comp;
     const char* uid;

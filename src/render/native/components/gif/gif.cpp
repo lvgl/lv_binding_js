@@ -1,7 +1,7 @@
 
 #include "gif.hpp"
 
-GIF::GIF(std::string uid, lv_obj_t* parent): BasicComponent() {
+GIF::GIF(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_GIF;
 
     this->uid = uid;

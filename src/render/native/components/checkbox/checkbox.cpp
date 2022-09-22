@@ -1,7 +1,7 @@
 
 #include "checkbox.hpp"
 
-Checkbox::Checkbox(std::string uid, lv_obj_t* parent): BasicComponent() {
+Checkbox::Checkbox(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_CHECKBOX;
     this->uid = uid;
     this->instance = lv_checkbox_create(parent != nullptr ? parent : GetWindowInstance());

@@ -7,33 +7,34 @@ const { width, height } = Dimensions.window
 function App () {
     return (
         <View style={style.window}>
-            <Tabs
+            <Profile />
+            {/* <Tabs
                 tabs={["Profile", "Analytics", "Shop"]}
                 tabSize={70}
+                style={style.tabs}
             >
-                <Profile />
                 <View>
                     <Text>Tab2</Text>
                 </View>
                 <View>
                     <Text>Tab3</Text>
                 </View>
-            </Tabs>
+            </Tabs> */}
         </View>
     )
 };
 
 const style = {
     window: {
-        'display': 'flex',
         'height': height,
         'width': width,
         'padding': 0,
         'border-radius': 0,
         'border-width': 0,
     },
-    profileWrapper: {
-        
+    tabs: {
+        'height': 'auto',
+        'width': 'auto',
     }
 };
 

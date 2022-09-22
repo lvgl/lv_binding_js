@@ -3,12 +3,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <mutex>
+#include <string>
+#include <unordered_map>
 
 extern "C" {
     #include "lvgl.h"
     #include "quickjs-libc.h"
     #include "sjs.h"
 };
+
+#include "native/core/basic/comp.hpp"
+#include "native/components/window/window.hpp"
 
 void NativeRenderUtilInit (JSContext* ctx, JSValue& ns);
 

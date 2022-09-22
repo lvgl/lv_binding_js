@@ -1,7 +1,7 @@
 
 #include "button.hpp"
 
-Button::Button(std::string uid, lv_obj_t* parent): BasicComponent() {
+Button::Button(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_BUTTON;
 
     this->uid = uid;

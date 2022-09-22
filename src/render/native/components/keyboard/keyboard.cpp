@@ -1,7 +1,7 @@
 
 #include "keyboard.hpp"
 
-Keyboard::Keyboard(std::string uid, lv_obj_t* parent): BasicComponent() {
+Keyboard::Keyboard(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_TEXTAREA;
     this->uid = uid;
     this->instance = lv_keyboard_create(parent != nullptr ? parent : GetWindowInstance());

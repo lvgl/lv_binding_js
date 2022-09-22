@@ -1,7 +1,7 @@
 
 #include "slider.hpp"
 
-Slider::Slider(std::string uid, lv_obj_t* parent): BasicComponent() {
+Slider::Slider(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_SLIDER;
 
     this->uid = uid;

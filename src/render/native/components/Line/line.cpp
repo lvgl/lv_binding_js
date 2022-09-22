@@ -1,7 +1,7 @@
 
 #include "line.hpp"
 
-Line::Line(std::string uid, lv_obj_t* parent): BasicComponent() {
+Line::Line(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_LINE;
 
     this->uid = uid;

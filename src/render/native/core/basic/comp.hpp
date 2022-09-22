@@ -31,12 +31,11 @@ enum ECOMP_TYPE {
 
 #include "native/core/event/event.hpp"
 #include "native/core/style/style.hpp"
-#include "native/core/utils/utils.hpp"
 #include "native/core/img/img.hpp"
 
 class BasicComponent {
   public:
-    BasicComponent();
+    BasicComponent(std::string& uid);
     ~BasicComponent();
 
     lv_obj_t* instance = nullptr;
@@ -86,3 +85,5 @@ class BasicComponent {
     void setAlign (int32_t align_type, int32_t x, int32_t y);
     void setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent);
 };
+
+extern std::unordered_map<std::string, BasicComponent*> comp_map;

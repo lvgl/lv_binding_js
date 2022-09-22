@@ -1,7 +1,7 @@
 
 #include "tabview.hpp"
 
-TabView::TabView(std::string uid, uint32_t pos, uint32_t size, lv_obj_t* parent): BasicComponent() {
+TabView::TabView(std::string uid, uint32_t pos, uint32_t size, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_TABVIEW;
 
     this->uid = uid;
@@ -17,5 +17,4 @@ TabView::TabView(std::string uid, uint32_t pos, uint32_t size, lv_obj_t* parent)
 void TabView::setTab(std::string& tab, BasicComponent* content) {
     lv_obj_t* page = lv_tabview_add_tab(this->instance, tab.c_str());
     lv_obj_set_parent(content->instance, page);
-    lv_obj_invalidate(this->instance);
 };

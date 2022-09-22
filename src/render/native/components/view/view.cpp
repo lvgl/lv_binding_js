@@ -1,7 +1,7 @@
 
 #include "view.hpp"
 
-View::View(std::string uid, lv_obj_t* parent): BasicComponent() {
+View::View(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_VIEW;
     this->uid = uid;
     this->instance = lv_obj_create(parent != nullptr ? parent : GetWindowInstance());

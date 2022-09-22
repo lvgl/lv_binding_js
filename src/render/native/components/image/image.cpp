@@ -1,7 +1,7 @@
 
 #include "image.hpp"
 
-Image::Image(std::string uid, lv_obj_t* parent): BasicComponent() {
+Image::Image(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_IMAGE;
 
     this->uid = uid;

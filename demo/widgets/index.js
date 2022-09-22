@@ -21313,7 +21313,7 @@ function App() {
     style: style.profileWrapper
   }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.panel1
-  }, /* @__PURE__ */ import_react.default.createElement(Image, {
+  }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.panel1_avatar,
     src: "./assets/avatar.png"
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
@@ -21571,21 +21571,20 @@ var { width: width2, height: height2 } = Dimensions.window;
 function App2() {
   return /* @__PURE__ */ import_react2.default.createElement(View, {
     style: style2.window
-  }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
-    tabs: ["Profile", "Analytics", "Shop"],
-    tabSize: 70
-  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))));
+  }, /* @__PURE__ */ import_react2.default.createElement(App, null));
 }
 var style2 = {
   window: {
-    "display": "flex",
     "height": height2,
     "width": width2,
     "padding": 0,
     "border-radius": 0,
     "border-width": 0
   },
-  profileWrapper: {}
+  tabs: {
+    "height": "auto",
+    "width": "auto"
+  }
 };
 Render.render(/* @__PURE__ */ import_react2.default.createElement(App2, null));
 /*

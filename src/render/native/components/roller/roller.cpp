@@ -1,7 +1,7 @@
 
 #include "roller.hpp"
 
-Roller::Roller(std::string uid, lv_obj_t* parent): BasicComponent() {
+Roller::Roller(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_ROLLER;
     this->uid = uid;
     this->instance = lv_roller_create(parent != nullptr ? parent : GetWindowInstance());

@@ -1,7 +1,7 @@
 
 #include "progressbar.hpp"
 
-ProgressBar::ProgressBar(std::string uid, lv_obj_t* parent): BasicComponent() {
+ProgressBar::ProgressBar(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_PROGRESSBAR;
 
     this->uid = uid;

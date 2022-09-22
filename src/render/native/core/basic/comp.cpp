@@ -1,5 +1,9 @@
 #include "./comp.hpp"
 
+#include "native/core/utils/utils.hpp"
+
+std::unordered_map<std::string, BasicComponent*> comp_map;
+
 static MemoryPool<sizeof(lv_style_t), 30> style_pool;
 
 void BasicComponent::addEventListener (int eventType) {
@@ -40,8 +44,9 @@ void BasicComponent::insertChildBefore(void *child) {
         lv_obj_move_to_index(ins, index);
 
         // mark parent as dirty to prevent parent or child has special layout(grid or flex)
-        lv_obj_mark_layout_as_dirty(this->instance);
-        lv_obj_mark_layout_as_dirty(ins);
+        // lv_obj_mark_layout_as_dirty(this->instance);
+        // lv_obj_mark_layout_as_dirty((static_cast<BasicComponent*>(child))->instance);
+        // lv_obj_update_layout(this->instance);
     }
 };
 
@@ -49,8 +54,8 @@ void BasicComponent::removeChild(void* child) {
     lv_obj_del((static_cast<BasicComponent*>(child))->instance);
 
     // mark parent as dirty to prevent parent or child has special layout(grid or flex)
-    lv_obj_mark_layout_as_dirty(this->instance);
-    lv_obj_mark_layout_as_dirty((static_cast<BasicComponent*>(child))->instance);
+    // lv_obj_mark_layout_as_dirty(this->instance);
+    // lv_obj_update_layout(this->instance);
 };
 
 void BasicComponent::appendChild (void* child) {
@@ -59,8 +64,10 @@ void BasicComponent::appendChild (void* child) {
         lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
 
         // mark parent as dirty to prevent parent or child has special layout(grid or flex)
-        lv_obj_mark_layout_as_dirty(this->instance);
-        lv_obj_mark_layout_as_dirty((static_cast<BasicComponent*>(child))->instance);
+        // lv_obj_mark_layout_as_dirty(this->instance);
+        // lv_obj_mark_layout_as_dirty((static_cast<BasicComponent*>(child))->instance);
+        // lv_obj_update_layout(this->instance);
+        // lv_obj_update_layout(this->instance);
     }
 };
 
@@ -82,8 +89,9 @@ void BasicComponent::initStyle (int32_t type) {
     lv_obj_invalidate(this->instance);
 };
 
-BasicComponent::BasicComponent () {
-    
+BasicComponent::BasicComponent (std::string& uid) {
+    this->uid = uid;
+    comp_map.insert({ this->uid, this });
 };
 
 void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* style, int32_t type) {
@@ -241,6 +249,8 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 };
 
 BasicComponent::~BasicComponent () {
+    comp_map.erase(this->uid);
+
     const lv_coord_t* ptr1 = this->grid_row_desc;
     const lv_coord_t* ptr2 = this->grid_column_desc;
     

@@ -1,7 +1,7 @@
 
 #include "calendar.hpp"
 
-Calendar::Calendar(std::string uid, lv_obj_t* parent): BasicComponent() {
+Calendar::Calendar(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_CALENDAR;
 
     this->uid = uid;

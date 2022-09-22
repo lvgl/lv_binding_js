@@ -1,7 +1,7 @@
 
 #include "text.hpp"
 
-Text::Text(std::string uid, lv_obj_t* parent): BasicComponent() {
+Text::Text(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_TEXT;
 
     this->uid = uid;

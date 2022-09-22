@@ -1,7 +1,7 @@
 
 #include "switch.hpp"
 
-Switch::Switch(std::string uid, lv_obj_t* parent): BasicComponent() {
+Switch::Switch(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_SWITCH;
     this->uid = uid;
     this->instance = lv_switch_create(parent != nullptr ? parent : GetWindowInstance());

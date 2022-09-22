@@ -5,7 +5,7 @@ lv_obj_t* GetWindowInstance () {
     return window_instance;
 };
 
-// Window::Window(std::string uid): BasicComponent() {
+// Window::Window(std::string uid): BasicComponent(uid) {
 //     this->uid = uid;
 //     this->instance = lv_obj_create(lv_scr_act());
 //     window_instance = this->instance;
