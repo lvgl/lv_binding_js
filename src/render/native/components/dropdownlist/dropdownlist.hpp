@@ -15,7 +15,9 @@ class Dropdownlist : public BasicComponent {
  public:
   Dropdownlist(std::string uid, lv_obj_t* parent = nullptr);
 
-  void setItems (std::vector<std::string> items);
+  std::string options;
+
+  void setItems (std::vector<std::string>& items);
 
   void setSelectIndex (int32_t index);
 

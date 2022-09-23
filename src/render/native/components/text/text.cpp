@@ -15,8 +15,9 @@ Text::Text(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->initStyle(LV_PART_MAIN);
 };
 
-void Text::setText(std::string str) {
-    lv_label_set_text(this->instance, str.c_str());
+void Text::setText(std::string& str) {
+    this->text = str;
+    lv_label_set_text_static(this->instance, this->text.c_str());
     lv_obj_invalidate(this->instance);
 };
 

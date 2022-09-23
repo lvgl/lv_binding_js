@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <mutex>
 #include <string>
-#include <unordered_map>
 
 extern "C" {
     #include "lvgl.h"

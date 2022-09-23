@@ -4,9 +4,9 @@ static JSValue NativeRenderRefreshScreen(JSContext *ctx, JSValueConst this_val, 
     for(auto& desc : comp_map) {
         printf("%s \n", desc.second->uid.c_str());
         lv_obj_mark_layout_as_dirty(desc.second->instance);
-        lv_obj_invalidate(desc.second->instance);
     }
     lv_obj_mark_layout_as_dirty(GetWindowInstance());
+    lv_obj_invalidate(GetWindowInstance());
     lv_obj_update_layout(GetWindowInstance());
 
     lv_refr_now(NULL);

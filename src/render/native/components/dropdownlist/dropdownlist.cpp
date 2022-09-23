@@ -13,7 +13,7 @@ Dropdownlist::Dropdownlist(std::string uid, lv_obj_t* parent): BasicComponent(ui
     lv_obj_set_user_data(this->instance, this);
 };
 
-void Dropdownlist::setItems (std::vector<std::string> items) {
+void Dropdownlist::setItems (std::vector<std::string>& items) {
     if (items.size() == 0) {
         lv_dropdown_clear_options(this->instance);
     } else {
@@ -24,7 +24,8 @@ void Dropdownlist::setItems (std::vector<std::string> items) {
             str.append(item.c_str());
         }
         str.append("\0");
-        lv_dropdown_set_options(this->instance, str.c_str());
+        this->options = str;
+        lv_dropdown_set_options_static(this->instance, this->options.c_str());
     }
     lv_obj_invalidate(this->instance);
 };
