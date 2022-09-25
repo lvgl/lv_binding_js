@@ -689,6 +689,7 @@ static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
         JS_ToInt32(ctx, &num5, JSValue5);
         JS_ToInt32(ctx, &num6, JSValue6);
 
+        printf("grid child, %d %d %d %d %d %d \n", num1, num2, num3, num4, num5, num6);
         lv_obj_set_grid_cell(comp, static_cast<lv_grid_align_t>(num1), num2, num3, static_cast<lv_grid_align_t>(num4), num5, num6);
         JS_FreeValue(ctx, JSValue1);
         JS_FreeValue(ctx, JSValue2);

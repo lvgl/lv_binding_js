@@ -26,6 +26,6 @@ export class Renderer {
       parentComponent
     )
 
-    NativeRenderUtil.refreshWindow()
+    // NativeRenderUtil.refreshWindow()
   }
 };

@@ -23,15 +23,6 @@ void Image::setImageBinary(uint8_t* buf, size_t len) {
 
     if (img_data != nullptr) {
         lv_img_set_src(this->instance, this->image_desc);
-        lv_obj_invalidate(lv_scr_act());
-        lv_obj_invalidate(lv_layer_top());
-        lv_obj_invalidate(lv_layer_sys());
-
-        lv_obj_update_layout(lv_scr_act());
-        lv_obj_update_layout(lv_layer_top());
-        lv_obj_update_layout(lv_layer_sys());
-
-        lv_refr_now(NULL);
     }
 
     if (prev_buf != nullptr) {

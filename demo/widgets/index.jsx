@@ -7,19 +7,19 @@ const { width, height } = Dimensions.window
 function App () {
     return (
         <View style={style.window}>
-            <Profile />
-            {/* <Tabs
+            <Tabs
                 tabs={["Profile", "Analytics", "Shop"]}
                 tabSize={70}
                 style={style.tabs}
             >
+                <Profile />
                 <View>
                     <Text>Tab2</Text>
                 </View>
                 <View>
                     <Text>Tab3</Text>
                 </View>
-            </Tabs> */}
+            </Tabs>
         </View>
     )
 };

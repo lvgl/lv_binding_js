@@ -1,5 +1,6 @@
-import { View, Render, Keyboard, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
+import { View, Switch, Slider, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { EAlignType } from '../../../../src/render/react/components/config';
 
 const { width, height } = Dimensions.window
 
@@ -10,10 +11,7 @@ const items = [
 ]
 
 export default function App () {
-    const panel2_username_input_ref = useRef()
-    const panel2_password_input_ref = useRef()
-
-    const [inputFocus, setInputFocus] = useState(0)
+    const ref = useRef()
 
     return (
         <View style={style.profileWrapper}>
@@ -26,10 +24,14 @@ export default function App () {
                 <Text style={style.panel1_phone_icon}>{BUILT_IN_SYMBOL.call}</Text>
                 <Text style={style.panel1_phone}>+79 246 123 4567</Text>
                 <Button style={style.panel1_logout}>
-                    <Text>Log out</Text>
+                    <Text align={{
+                        type: EAlignType.ALIGN_CENTER
+                    }}>Log out</Text>
                 </Button>
                 <Button style={style.panel1_invite}>
-                    <Text>Invite</Text>
+                    <Text align={{
+                        type: EAlignType.ALIGN_CENTER
+                    }}>Invite</Text>
                 </Button>
             </View>
             <View style={style.panel2}>
@@ -38,26 +40,12 @@ export default function App () {
                 <Input 
                     placeholder={'Your name'}
                     style={style.panel2_username_input}
-                    // onFocus={() => {
-                    //     setInputFocus('user_name')
-                    // }}
-                    // onBlur={() => {
-                    //     setInputFocus(false)
-                    // }}
-                    ref={panel2_username_input_ref}
                 />
                 <Text style={style.panel2_password}>Password</Text>
                 <Input
-                    // onFocus={() => {
-                    //     setInputFocus('password')
-                    // }}
-                    // onBlur={() => {
-                    //     setInputFocus(false)
-                    // }}
                     placeholder={'Min. 8 chars.'}
                     mode="password"
                     style={style.panel2_password_input}
-                    ref={panel2_password_input_ref}
                 />
                 <Text style={style.panel2_gender}>Gender</Text>
                 <Dropdownlist
@@ -70,16 +58,21 @@ export default function App () {
                     onFocus={() => {}}
                 />
             </View>
-            {/* {!!inputFocus && (
-                <Keyboard
-                    textarea={inputFocus === 'user_name' ? panel2_username_input_ref.current : panel2_password_input_ref.current }
-                    style={style.keyboard}
-                    onClose={() => {
-                        console.log('keyboard close')
-                        setInputFocus(false)
-                    }}
+            <View style={style.panel3}>
+                <Text style={style.panel3_title}>
+                    Your skills
+                </Text>
+                <Text style={style.panel3_experience}>
+                    Experience
+                </Text>
+                <Slider 
+                    style={style.panel3_slider}
                 />
-            )} */}
+                <Text style={style.panel3_team_player_title}>Team player</Text>
+                <Switch style={style.panel3_teamplayer_switch} />
+                <Text style={style.panel3_hard_working_title}>Hard-working</Text>
+                <Switch style={style.panel3_hardworking_switch} />
+            </View>
         </View>
     )
 }
@@ -140,6 +133,7 @@ const style = {
         'align-self': 'center',
         'grid-row-pos': 3,
         'grid-row-span': 1,
+        'font-size': '24px'
     },
     panel1_email: {
         'grid-child': true,
@@ -158,6 +152,7 @@ const style = {
         'align-self': 'center',
         'grid-row-pos': 4,
         'grid-row-span': 1,
+        'font-size': '24px'
     },
     panel1_phone: {
         'grid-child': true,
@@ -289,5 +284,85 @@ const style = {
         'height': height / 2,
         'width': '100%',
         'position': 'fixed'
+    },
+    panel3: {
+        'display': 'grid',
+        'grid-template-columns': '1fr 1fr',
+        'grid-template-rows': 'auto 5 auto 30 5 auto 30',
+
+        'height': 'auto',
+
+        'grid-child': true,
+        'grid-column-pos': 1,
+        'grid-column-span': 1,
+        'justify-self': 'stretch',
+        'align-self': 'stretch',
+        'grid-row-pos': 1,
+        'grid-row-span': 1,
+    },
+    panel3_title: {
+        'grid-child': true,
+        'grid-column-pos': 0,
+        'grid-column-span': 2,
+        'justify-self': 'start',
+        'align-self': 'center',
+        'grid-row-pos': 0,
+        'grid-row-span': 1,
+    },
+    panel3_experience: {
+        'grid-child': true,
+        'grid-column-pos': 0,
+        'grid-column-span': 1,
+        'justify-self': 'start',
+        'align-self': 'start',
+        'grid-row-pos': 2,
+        'grid-row-span': 1,
+    },
+    panel3_slider: {
+        'width': '95%',
+
+        'grid-child': true,
+        'grid-column-pos': 0,
+        'grid-column-span': 2,
+        'justify-self': 'center',
+        'align-self': 'center',
+        'grid-row-pos': 3,
+        'grid-row-span': 1,
+    },
+    panel3_team_player_title: {
+        'grid-child': true,
+        'grid-column-pos': 0,
+        'grid-column-span': 1,
+        'justify-self': 'start',
+        'align-self': 'start',
+        'grid-row-pos': 5,
+        'grid-row-span': 1,
+    },
+    panel3_teamplayer_switch: {
+        'grid-child': true,
+        'grid-column-pos': 1,
+        'grid-column-span': 1,
+        'justify-self': 'start',
+        'align-self': 'center',
+        'grid-row-pos': 6,
+        'grid-row-span': 1,
+    },
+    panel3_hard_working_title: {
+        'grid-child': true,
+        'grid-column-pos': 1,
+        'grid-column-span': 1,
+        'justify-self': 'start',
+        'align-self': 'start',
+        'grid-row-pos': 5,
+        'grid-row-span': 1,
+    },
+    panel3_hardworking_switch: {
+        'grid-child': true,
+        'grid-column-pos': 0,
+        'grid-column-span': 1,
+        'justify-self': 'start',
+        'align-self': 'center',
+        'grid-row-pos': 6,
+        'grid-row-span': 1,
     }
 }

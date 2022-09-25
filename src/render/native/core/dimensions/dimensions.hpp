@@ -1,3 +1,5 @@
+#pragma once
+
 extern "C" {
     #include "lvgl.h"
     #include "quickjs-libc.h"

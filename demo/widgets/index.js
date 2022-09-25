@@ -18819,7 +18819,7 @@ function FlexStyle(style3, result) {
 }
 
 // src/render/react/core/style/pipe/grid.js
-var GRID_SIZE_MAX = (1 << 13) - 1 - 101;
+var GRID_CONTENT = (1 << 13) - 1 - 101;
 var FR_REG = /([\d]+)fr$/;
 var gridChildJustifySelfObj = {
   "start": 0,
@@ -18859,21 +18859,21 @@ function GridStyle(style3, result) {
       return;
     columns = columns.map((column) => {
       if (column === "auto") {
-        return GRID_SIZE_MAX;
+        return GRID_CONTENT;
       }
       const arr = column?.match(FR_REG);
       if (!isNaN(arr?.[1])) {
-        return (1 << 13) - 1 - 100 + arr[1];
+        return (1 << 13) - 1 - 100 + Number(arr[1]);
       }
       return NormalizePx(column);
     });
     rows = rows.map((row) => {
       if (row === "auto") {
-        return GRID_SIZE_MAX;
+        return GRID_CONTENT;
       }
       const arr = row?.match(FR_REG);
       if (!isNaN(arr?.[1])) {
-        return (1 << 13) - 1 - 100 + arr[1];
+        return (1 << 13) - 1 - 100 + Number(arr[1]);
       }
       return NormalizePx(row);
     });
@@ -19203,6 +19203,30 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
+var EAlignType = {
+  "ALIGN_DEFAULT": 0,
+  "ALIGN_TOP_LEFT": 1,
+  "ALIGN_TOP_MID": 2,
+  "ALIGN_TOP_RIGHT": 3,
+  "ALIGN_BOTTOM_LEFT": 4,
+  "ALIGN_BOTTOM_MID": 5,
+  "ALIGN_BOTTOM_RIGHT": 6,
+  "ALIGN_LEFT_MID": 7,
+  "ALIGN_RIGHT_MID": 8,
+  "ALIGN_CENTER": 9,
+  "ALIGN_OUT_TOP_LEFT": 10,
+  "ALIGN_OUT_TOP_MID": 11,
+  "ALIGN_OUT_TOP_RIGHT": 12,
+  "ALIGN_OUT_BOTTOM_LEFT": 13,
+  "ALIGN_OUT_BOTTOM_MID": 14,
+  "ALIGN_OUT_BOTTOM_RIGHT": 15,
+  "ALIGN_OUT_LEFT_TOP": 16,
+  "ALIGN_OUT_LEFT_MID": 17,
+  "ALIGN_OUT_LEFT_BOTTOM": 18,
+  "ALIGN_OUT_RIGHT_TOP": 19,
+  "ALIGN_OUT_RIGHT_MID": 20,
+  "ALIGN_OUT_RIGHT_BOTTOM": 21
+};
 var STYLE_TYPE = {
   PART_MAIN: 0,
   PART_SCROLLBAR: 65536,
@@ -21248,7 +21272,6 @@ var _Renderer = class {
     _Renderer.container = reconciler_default.createContainer(containerInfo, isConcurrent, hydrate);
     const parentComponent = null;
     reconciler_default.updateContainer(element, _Renderer.container, parentComponent);
-    NativeRenderUtil.refreshWindow();
   }
 };
 var Renderer = _Renderer;
@@ -21306,14 +21329,12 @@ var items = [
   "Other"
 ];
 function App() {
-  const panel2_username_input_ref = (0, import_react.useRef)();
-  const panel2_password_input_ref = (0, import_react.useRef)();
-  const [inputFocus, setInputFocus] = (0, import_react.useState)(0);
+  const ref = (0, import_react.useRef)();
   return /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.profileWrapper
   }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.panel1
-  }, /* @__PURE__ */ import_react.default.createElement(View, {
+  }, /* @__PURE__ */ import_react.default.createElement(Image, {
     style: style.panel1_avatar,
     src: "./assets/avatar.png"
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
@@ -21330,9 +21351,17 @@ function App() {
     style: style.panel1_phone
   }, "+79 246 123 4567"), /* @__PURE__ */ import_react.default.createElement(Button, {
     style: style.panel1_logout
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Log out")), /* @__PURE__ */ import_react.default.createElement(Button, {
+  }, /* @__PURE__ */ import_react.default.createElement(Text, {
+    align: {
+      type: EAlignType.ALIGN_CENTER
+    }
+  }, "Log out")), /* @__PURE__ */ import_react.default.createElement(Button, {
     style: style.panel1_invite
-  }, /* @__PURE__ */ import_react.default.createElement(Text, null, "Invite"))), /* @__PURE__ */ import_react.default.createElement(View, {
+  }, /* @__PURE__ */ import_react.default.createElement(Text, {
+    align: {
+      type: EAlignType.ALIGN_CENTER
+    }
+  }, "Invite"))), /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.panel2
   }, /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_title
@@ -21340,15 +21369,13 @@ function App() {
     style: style.panel2_username
   }, "User name"), /* @__PURE__ */ import_react.default.createElement(Input, {
     placeholder: "Your name",
-    style: style.panel2_username_input,
-    ref: panel2_username_input_ref
+    style: style.panel2_username_input
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_password
   }, "Password"), /* @__PURE__ */ import_react.default.createElement(Input, {
     placeholder: "Min. 8 chars.",
     mode: "password",
-    style: style.panel2_password_input,
-    ref: panel2_password_input_ref
+    style: style.panel2_password_input
   }), /* @__PURE__ */ import_react.default.createElement(Text, {
     style: style.panel2_gender
   }, "Gender"), /* @__PURE__ */ import_react.default.createElement(Dropdownlist, {
@@ -21360,6 +21387,22 @@ function App() {
     style: style.panel2_birthday_input,
     onFocus: () => {
     }
+  })), /* @__PURE__ */ import_react.default.createElement(View, {
+    style: style.panel3
+  }, /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel3_title
+  }, "Your skills"), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel3_experience
+  }, "Experience"), /* @__PURE__ */ import_react.default.createElement(Slider, {
+    style: style.panel3_slider
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel3_team_player_title
+  }, "Team player"), /* @__PURE__ */ import_react.default.createElement(Switch, {
+    style: style.panel3_teamplayer_switch
+  }), /* @__PURE__ */ import_react.default.createElement(Text, {
+    style: style.panel3_hard_working_title
+  }, "Hard-working"), /* @__PURE__ */ import_react.default.createElement(Switch, {
+    style: style.panel3_hardworking_switch
   })));
 }
 var style = {
@@ -21416,7 +21459,8 @@ var style = {
     "justify-self": "center",
     "align-self": "center",
     "grid-row-pos": 3,
-    "grid-row-span": 1
+    "grid-row-span": 1,
+    "font-size": "24px"
   },
   panel1_email: {
     "grid-child": true,
@@ -21434,7 +21478,8 @@ var style = {
     "justify-self": "center",
     "align-self": "center",
     "grid-row-pos": 4,
-    "grid-row-span": 1
+    "grid-row-span": 1,
+    "font-size": "24px"
   },
   panel1_phone: {
     "grid-child": true,
@@ -21563,6 +21608,83 @@ var style = {
     "height": height / 2,
     "width": "100%",
     "position": "fixed"
+  },
+  panel3: {
+    "display": "grid",
+    "grid-template-columns": "1fr 1fr",
+    "grid-template-rows": "auto 5 auto 30 5 auto 30",
+    "height": "auto",
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 1,
+    "grid-row-span": 1
+  },
+  panel3_title: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  panel3_experience: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 2,
+    "grid-row-span": 1
+  },
+  panel3_slider: {
+    "width": "95%",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "center",
+    "align-self": "center",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel3_team_player_title: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 5,
+    "grid-row-span": 1
+  },
+  panel3_teamplayer_switch: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 6,
+    "grid-row-span": 1
+  },
+  panel3_hard_working_title: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 5,
+    "grid-row-span": 1
+  },
+  panel3_hardworking_switch: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "center",
+    "grid-row-pos": 6,
+    "grid-row-span": 1
   }
 };
 
@@ -21571,7 +21693,11 @@ var { width: width2, height: height2 } = Dimensions.window;
 function App2() {
   return /* @__PURE__ */ import_react2.default.createElement(View, {
     style: style2.window
-  }, /* @__PURE__ */ import_react2.default.createElement(App, null));
+  }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
+    tabs: ["Profile", "Analytics", "Shop"],
+    tabSize: 70,
+    style: style2.tabs
+  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))));
 }
 var style2 = {
   window: {

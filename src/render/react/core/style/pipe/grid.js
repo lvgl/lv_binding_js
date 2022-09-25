@@ -1,6 +1,6 @@
 import { NormalizePx } from '../util'
 
-const GRID_SIZE_MAX = ((1 << 13) - 1) - 101
+const GRID_CONTENT = (1 << 13) - 1 - 101
 const FR_REG = /([\d]+)fr$/
 
 const gridChildJustifySelfObj = {
@@ -45,21 +45,21 @@ export function GridStyle (style, result) {
 
         columns = columns.map(column => {
             if (column === 'auto') {
-                return GRID_SIZE_MAX
+                return GRID_CONTENT
             }
             const arr = column?.match(FR_REG)
             if (!isNaN(arr?.[1])) {
-                return ((1 << 13) - 1) - 100 + arr[1]
+                return ((1 << 13) - 1) - 100 + Number(arr[1])
             }
             return NormalizePx(column)
         })
         rows = rows.map(row => {
             if (row === 'auto') {
-                return GRID_SIZE_MAX
+                return GRID_CONTENT
             }
             const arr = row?.match(FR_REG)
             if (!isNaN(arr?.[1])) {
-                return ((1 << 13) - 1) - 100 + arr[1]
+                return ((1 << 13) - 1) - 100 + Number(arr[1])
             }
             return NormalizePx(row)
         })

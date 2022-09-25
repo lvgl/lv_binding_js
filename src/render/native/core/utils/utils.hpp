@@ -11,11 +11,6 @@ extern "C" {
     #include "sjs.h"
 };
 
-#include "native/core/basic/comp.hpp"
-#include "native/components/window/window.hpp"
-
-void NativeRenderUtilInit (JSContext* ctx, JSValue& ns);
-
 template<size_t BlockSize, size_t BlockNum = 10>
 class MemoryPool {
   public:

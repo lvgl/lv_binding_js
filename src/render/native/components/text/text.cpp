@@ -6,7 +6,6 @@ Text::Text(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 
     this->uid = uid;
     this->instance = lv_label_create(parent != nullptr ? parent : GetWindowInstance());
-    lv_label_set_text(this->instance, "");
     lv_group_add_obj(lv_group_get_default(), this->instance);
     
     lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
@@ -16,14 +15,12 @@ Text::Text(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 };
 
 void Text::setText(std::string& str) {
-    this->text = str;
-    lv_label_set_text_static(this->instance, this->text.c_str());
-    lv_obj_invalidate(this->instance);
+    lv_label_set_text(this->instance, str.c_str());
 };
 
 void Text::initCompStyle (int32_t type) {
-    this->ensureStyle(type);
-    lv_style_t* style = this->style_map.at(type);
+    // this->ensureStyle(type);
+    // lv_style_t* style = this->style_map.at(type);
 
-    lv_obj_set_style_text_color(this->instance, lv_color_hex(0), 0);
+    // lv_obj_set_style_text_color(this->instance, lv_color_hex(0), 0);
 };

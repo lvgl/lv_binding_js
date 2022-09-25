@@ -49,7 +49,7 @@ class BasicComponent {
     lv_style_transition_dsc_t trans;
     std::unordered_map<int32_t, lv_style_prop_t*> trans_props_map;
 
-    bool is_fixed;
+    bool is_fixed = false;
     bool has_setstyle;
     bool listening = false;
     ECOMP_TYPE type;
