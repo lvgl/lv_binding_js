@@ -21690,6 +21690,26 @@ var style = {
 
 // demo/widgets/index.jsx
 var { width: width2, height: height2 } = Dimensions.window;
+var colorList = [
+  2201331,
+  5025616,
+  10395294,
+  6323595,
+  16750592,
+  16007990,
+  10233776,
+  38536
+];
+var colorsStyle = [
+  { "background-color": "blue" },
+  { "background-color": "green" },
+  { "background-color": "grey" },
+  { "background-color": "blue-grey" },
+  { "background-color": "orange" },
+  { "background-color": "red" },
+  { "background-color": "purple" },
+  { "background-color": "teal" }
+];
 function App2() {
   return /* @__PURE__ */ import_react2.default.createElement(View, {
     style: style2.window
@@ -21697,7 +21717,15 @@ function App2() {
     tabs: ["Profile", "Analytics", "Shop"],
     tabSize: 70,
     style: style2.tabs
-  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))));
+  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))), /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.colorList,
+    align: {
+      type: EAlignType.ALIGN_BOTTOM_RIGHT
+    }
+  }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react2.default.createElement(Button, {
+    style: [style2.colorButton, color],
+    "data-color": colorList[i]
+  }))));
 }
 var style2 = {
   window: {
@@ -21710,6 +21738,23 @@ var style2 = {
   tabs: {
     "height": "auto",
     "width": "auto"
+  },
+  colorList: {
+    "display": "flex",
+    "background-color": "white",
+    "justify-content": "space-evenly",
+    "align-items": "center",
+    "padding-right": 55,
+    "border-radius": 32767,
+    "width": "800px",
+    "height": "60px",
+    "position": "absolute"
+  },
+  colorButton: {
+    "width": "20px",
+    "height": "20px",
+    "border-radius": 32767,
+    "opacity": 1
   }
 };
 Render.render(/* @__PURE__ */ import_react2.default.createElement(App2, null));
