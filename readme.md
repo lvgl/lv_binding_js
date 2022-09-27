@@ -27,6 +27,9 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 #### sdl_simulator
 222
 <br/>
+#### real-device
+<br />
+
 ### Calculator
 #### sdl_simulator
 ![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
@@ -35,22 +38,23 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 
 ## Build
-### Unix
-
-#### use sdl simulate
+project support x86 and arm platform currently, if you want to build on other platform, please configure Makefile
+### use sdl simulate
 
 Once you have installed openssl、sdl2、curl，you can run follwing script compile lvgljs with sdl simulator
 
 ```shell
 make dev-x86
+
 ./dev_x86/Main ./demo/calculator/index.js
 ```
 
-#### real device
-- First you have to download openssl、curl source code and compile with divece arch
+### Real Device
+- Edit src/engine/hal/release/release.cpp based on your device, please check [lvgl document](https://docs.lvgl.io/latest/en/html/porting/index.html) for more detal
+- You have to download openssl、curl source code and compile with divece arch
 - Fill in CMAKE_BUILD_PLATFORM、CMAKE_C_COMPILER、CMAKE_CXX_COMPILER、CMAKE_CURL_LIB、CMAKE_CURL_INCLUDE_DIRS、CMAKE_SSL_LIB、CMAKE_CRYPTO_LIB in Makefile
-- you can run follwing script compile lvgljs with device arch (default arm)
-- copy executable file ./some_dir/Main and ./some_dir/lib in divece file-system, make sure file Main and dir lib in same dir
+- You can run follwing script compile lvgljs with device arch (default arm)
+- Copy executable file ./some_dir/Main and ./some_dir/lib in divece file-system, make sure file Main and dir lib in same dir
 
 ```shell
 make dev-x86 or make build-x86
@@ -97,3 +101,4 @@ make dev-x86 or make build-x86
 ## JSAPI
 [network](./doc/jsapi/network.md)
 [filesystem](./doc/jsapi/fs.md)
+[dimension](./doc/jsapi/dimension.md)

@@ -20,7 +20,7 @@ const transitionProperty = {
     'top': 8,
     'align': 9,
     'display': 10,
-    'radius': 11,
+    'border-radius': 11,
 
     /*Group 1*/
     'padding-top': 16,
@@ -223,7 +223,7 @@ export function TransStyle (style, result, compName) {
         properties = properties.split(',').map(item => item.replace(/\s/, '')).map(item => transitionProperty[item]).filter(item => !!item)
 
         const duration = style['transition-duration'] || 0
-        const func = style['transition-linear'] || 'linear'
+        const func = style['transition-timing-function'] || 'linear'
         const delay = style['transition-delay'] || 0
 
         const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay]

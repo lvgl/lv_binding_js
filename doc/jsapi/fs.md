@@ -14,6 +14,8 @@ fs module with following function
 - writeFileSync(path: string, data: string | buffer): void
 - unlink (path: string): Promise<void>
 - unlinkSync(path: string): void
+- mkdir (path: string): Promise<void>
+- mkdirSync (path: string): void
 
 <br />
 

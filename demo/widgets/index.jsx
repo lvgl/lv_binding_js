@@ -1,4 +1,4 @@
-import { View, Render, Text, Image, Dimensions, EAlignType, Button, Tabs } from 'lvgljs-ui';
+import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Profile from './components/profile'
 
@@ -27,8 +27,13 @@ const colorsStyle = [
 ]
 
 function App () {
+    const [colorListExpand, setColorListExpand] = useState(false)
+    const colorListItemsRef = useRef([])
+    const wrapperRef = useRef()
+    const colorListRef = useRef()
+
     return (
-        <View style={style.window}>
+        <View ref={wrapperRef} style={style.window}>
             <Tabs
                 tabs={["Profile", "Analytics", "Shop"]}
                 tabSize={70}
@@ -42,17 +47,61 @@ function App () {
                     <Text>Tab3</Text>
                 </View>
             </Tabs>
-            <View 
+            <View
                 style={style.colorList}
                 align={{
-                    type: EAlignType.ALIGN_BOTTOM_RIGHT
+                    type: EAlignType.ALIGN_BOTTOM_RIGHT,
+                    pos: [-10, -10]
                 }}
+                ref={colorListRef}
             >
             {
                 colorsStyle.map((color, i) => (
                     <Button
+                        ref={ins => colorListItemsRef[i] = ins}
                         style={[style.colorButton, color]}
                         data-color={colorList[i]}
+                        align={{
+                            type: EAlignType.ALIGN_BOTTOM_RIGHT,
+                            pos: [-15, -15]
+                        }}
+                        onClick={() => {
+                            setColorListExpand(true)
+                            const width = wrapperRef.current.style.width - 20
+                            if (!colorListExpand) {
+                                Animate.timing({
+                                    duration: 200,
+                                    startValue: 0,
+                                    endValue: 256,
+                                    execCallback: (value) => {
+                                        colorListRef.current.setStyle({
+                                            width: Math.floor(256 / width * value),
+                                        })
+                                        colorListItemsRef.current.forEach(item => {
+                                            item.setStyle({
+                                                opacity: (value / 256).toFixed(2),
+                                            })
+                                        })
+                                    }
+                                })
+                            } else {
+                                Animate.timing({
+                                    duration: 200,
+                                    startValue: 256,
+                                    endValue: 0,
+                                    execCallback: (value) => {
+                                        colorListRef.current.setStyle({
+                                            width: Math.floor(256 / width * value)
+                                        })
+                                        colorListItemsRef.current.forEach(item => {
+                                            item.setStyle({
+                                                opacity: (value / 256).toFixed(2),
+                                            })
+                                        })
+                                    }
+                                })
+                            }
+                        }}
                     />
                 ))
             }
@@ -80,16 +129,25 @@ const style = {
         'align-items': 'center',
         'padding-right': 55,
         'border-radius': 0x7FFF,
-        'width': '800px',
+        'width': '60px',
         'height': '60px',
         'position': 'absolute'
     },
-    colorButton: {
+    colorListButton: {
         'width': '20px',
         'height': '20px',
         'border-radius': 0x7FFF,
-        'opacity': 1,
-
+        'opacity': 0,
+    },
+    colorButton: {
+        'position': 'absolute',
+        'background-color': 'white',
+        'padding': 10,
+        'border-radius': 0x7FFF,
+        'shadow-width': 0,
+        'background-image': 'tint',
+        'width': '50px',
+        'height': '50px',
     }
 };
 

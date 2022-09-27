@@ -7,9 +7,21 @@ It's possible to set
 - the animation path (also known as timing or easing function)
 - the properties to animate
 
+## Value
+transition with following properties:
+- transition-property, supoort multiple values, sets the properties to which a transition effect should be applied
+- transition-duration, support write with millisecond, second
+- transition-timing-function, sets how intermediate values are calculated for properties being affected by a transition effect, with following value
+  - linear
+  - ease-in
+  - ease-out
+  - ease-in-out
+  - overshoot
+  - bounce
+  - step
+- transition-delay, support write with millisecond, second
+
 ## Usage
-
-
 ```jsx
 function App () {
     return (
@@ -31,13 +43,19 @@ const style = {
         'height': '320px',
     },
     view: {
-        'transition': 'background-color 0.1s linear 0.2s, border-color 0.1s linear 0.2s, border-width 0.1s linear 0.2s'
+        'transition-property': 'border-width, background-color, border-color',
+        'transition-duration': '100ms',
+        'transition-timing-function': 'linear',
+        'transition-delay': '200ms',
     },
     pressedStyle: {
         'border-width': 6,
         'border-color': 'red',
         'background-color': 'red',
-        'transition': 'background-color 0.5s linear 0, border-color 0.5s linear 0, border-width 0.5s linear 0'
+        'transition-property': 'border-width, background-color, border-color',
+        'transition-duration': '0.5s',
+        'transition-timing-function': 'linear',
+        'transition-delay': '0',
     }
 };
 ```
