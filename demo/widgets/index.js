@@ -18107,8 +18107,8 @@ var getUid = () => {
   return String(id++);
 };
 var instanceMap = /* @__PURE__ */ new Map();
-var getInstance = (uid) => {
-  return instanceMap[uid];
+var getInstance = (uid2) => {
+  return instanceMap[uid2];
 };
 var HostConfig = {
   now: Date.now,
@@ -18134,9 +18134,9 @@ var HostConfig = {
   },
   createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
     const { createInstance } = getComponentByTagName(type);
-    const uid = getUid();
-    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid);
-    instanceMap[uid] = instance;
+    const uid2 = getUid();
+    const instance = createInstance(newProps, rootContainerInstance, _currentHostContext, workInProgress, uid2);
+    instanceMap[uid2] = instance;
     return instance;
   },
   createTextInstance: (text, rootContainerInstance, context, workInProgress) => {
@@ -18241,15 +18241,15 @@ var EVENTTYPE_MAP = {
   _EVENT_LAST: 44,
   EVENT_PREPROCESS: 128
 };
-function registEvent(uid, eventType, fn) {
-  eventMap[uid] = eventMap[uid] || {};
-  eventMap[uid][eventType] = fn;
+function registEvent(uid2, eventType, fn) {
+  eventMap[uid2] = eventMap[uid2] || {};
+  eventMap[uid2][eventType] = fn;
 }
-function unRegistEvent(uid, eventType) {
+function unRegistEvent(uid2, eventType) {
   if (!eventType) {
-    delete eventMap[uid];
+    delete eventMap[uid2];
   } else {
-    const obj9 = eventMap[uid];
+    const obj9 = eventMap[uid2];
     obj9 && delete obj9[eventType];
   }
 }
@@ -18453,7 +18453,7 @@ var transitionProperty = {
   "top": 8,
   "align": 9,
   "display": 10,
-  "radius": 11,
+  "border-radius": 11,
   "padding-top": 16,
   "padding-bottom": 17,
   "padding-left": 18,
@@ -18534,7 +18534,7 @@ function TransStyle(style3, result, compName) {
     let properties = style3["transition-property"];
     properties = properties.split(",").map((item) => item.replace(/\s/, "")).map((item) => transitionProperty[item]).filter((item) => !!item);
     const duration = style3["transition-duration"] || 0;
-    const func = style3["transition-linear"] || "linear";
+    const func = style3["transition-timing-function"] || "linear";
     const delay = style3["transition-delay"] || 0;
     const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
@@ -18949,31 +18949,31 @@ function ScrollStyle(style3, result, compName) {
 function NormalizeOpacity(value) {
   if (isNaN(value) || value > 1)
     return 255;
-  if (value < 0)
+  if (value <= 0)
     return 0;
   return Math.floor(value * 255);
 }
 function OpacityStyle(style3, result, compName) {
-  if (style3["opacity"]) {
+  if (style3["opacity"] !== void 0) {
     if (compName === "Image") {
       result["img-opacity"] = NormalizeOpacity(style3["opacity"]);
     } else {
       result["opacity"] = NormalizeOpacity(style3["opacity"]);
     }
   }
-  if (style3["background-opacity"]) {
+  if (style3["background-opacity"] !== void 0) {
     result["background-opacity"] = NormalizeOpacity(style3["background-opacity"]);
   }
-  if (style3["border-opacity"]) {
+  if (style3["border-opacity"] !== void 0) {
     result["border-opacity"] = NormalizeOpacity(style3["border-opacity"]);
   }
-  if (style3["outline-opacity"]) {
+  if (style3["outline-opacity"] !== void 0) {
     result["outline-opacity"] = NormalizeOpacity(style3["outline-opacity"]);
   }
-  if (style3["recolor-opacity"] && compName === "Image") {
+  if (style3["recolor-opacity"] !== void 0 && compName === "Image") {
     result["recolor-opacity"] = NormalizeOpacity(style3["recolor-opacity"]);
   }
-  if (style3["shadow-opacity"]) {
+  if (style3["shadow-opacity"] !== void 0) {
     result["shadow-opacity"] = NormalizeOpacity(style3["shadow-opacity"]);
   }
   return result;
@@ -19035,64 +19035,63 @@ var BUILT_IN_SYMBOL = {
   "audio": "\uF001",
   "video": "\uF008",
   "list": "\uF00B",
-  "ok": "0xF00C",
-  "close": "0xF00D",
-  "power": "0xF011",
-  "settings": "0xF013",
-  "home": "0xF015",
-  "download": "0xF019",
-  "drive": "0xF01C",
-  "refresh": "0xF021",
-  "mute": "",
-  "volume_mid": "",
-  "volume_max": "",
-  "image": "",
-  "tint": "",
-  "prev": "",
-  "play": "",
-  "pause": "",
-  "stop": "",
-  "next": "",
-  "eject": "",
-  "left": "",
-  "right": "",
+  "ok": "\uF00C",
+  "close": "\uF00D",
+  "power": "\uF011",
+  "settings": "\uF013",
+  "home": "\uF015",
+  "download": "\uF019",
+  "drive": "\uF01C",
+  "refresh": "\uF021",
+  "mute": "\uF026",
+  "volume_mid": "\uF027",
+  "volume_max": "\uF028",
+  "image": "\uF03E",
+  "tint": "\uF043",
+  "prev": "\uF048",
+  "play": "\uF04B",
+  "pause": "\uF04C",
+  "stop": "\uF04D",
+  "next": "\uF051",
+  "eject": "\uF052",
+  "left": "\uF053",
+  "right": "\uF054",
   "plus": "\uF067",
-  "minus": "",
-  "eye_open": "",
-  "eye_close": "",
-  "warning": "",
-  "shuffle": "",
-  "up": "",
-  "down": "",
-  "loop": "",
-  "directory": "",
-  "upload": "",
+  "minus": "\uF068",
+  "eye_open": "\uF06E",
+  "eye_close": "\uF070",
+  "warning": "\uF071",
+  "shuffle": "\uF074",
+  "up": "\uF077",
+  "down": "\uF078",
+  "loop": "\uF079",
+  "directory": "\uF07B",
+  "upload": "\uF093",
   "call": "\uF095",
-  "cut": "",
-  "copy": "",
-  "save": "",
-  "bars": "",
+  "cut": "\uF0C4",
+  "copy": "\uF0C5",
+  "save": "\uF0C7",
+  "bars": "\uF0C9",
   "envelope": "\uF0E0",
-  "charge": "",
-  "paste": "",
-  "bell": "",
-  "keyboard": "",
-  "gps": "",
-  "file": "",
-  "wifi": "",
-  "battery_full": "",
-  "battery_3": "",
-  "battery_2": "",
-  "battery_1": "",
-  "battery_empty": "",
-  "usb": "",
-  "bluetooth": "",
-  "trash": "",
-  "edit": "",
-  "backspace": "",
-  "sd_card": "",
-  "new_line": "",
-  "dummy": ""
+  "charge": "\uF0E7",
+  "paste": "\uF0EA",
+  "bell": "\uF0F3",
+  "keyboard": "\uF11C",
+  "gps": "\uF124",
+  "file": "\uF158",
+  "wifi": "\uF1EB",
+  "battery_full": "\uF240",
+  "battery_3": "\uF241",
+  "battery_2": "\uF242",
+  "battery_1": "\uF243",
+  "battery_empty": "\uF244",
+  "usb": "\uF287",
+  "bluetooth": "\uF293",
+  "trash": "\uF2ED",
+  "edit": "\uF304",
+  "backspace": "\uF55A",
+  "sd_card": "\uF7C2",
+  "new_line": "\uF8A2"
 };
 
 // src/render/react/core/style/post.js
@@ -19329,9 +19328,9 @@ function setViewProps(comp, newProps, oldProps) {
   });
 }
 var ViewComp = class extends NativeView {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19379,8 +19378,8 @@ var ViewConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ViewComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ViewComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19435,9 +19434,9 @@ function setTextProps(comp, newProps, oldProps) {
   });
 }
 var TextComp = class extends NativeText {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19481,8 +19480,8 @@ var TextConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19560,9 +19559,9 @@ function setImageProps(comp, newProps, oldProps) {
   });
 }
 var ImageComp = class extends NativeImage {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19608,8 +19607,8 @@ var ImageConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ImageComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ImageComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19666,9 +19665,9 @@ function setButtonProps(comp, newProps, oldProps) {
   });
 }
 var ButtonComp = class extends NativeButton {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19716,8 +19715,8 @@ var ButtonConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ButtonComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ButtonComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19794,9 +19793,9 @@ function setSliderProps(comp, newProps, oldProps) {
   });
 }
 var SliderComp = class extends NativeSlider {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19844,8 +19843,8 @@ var SliderConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SliderComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SliderComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -19905,9 +19904,9 @@ function setSwitchProps(comp, newProps, oldProps) {
   });
 }
 var SwitchComp = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -19955,8 +19954,8 @@ var SwitchConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new SwitchComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new SwitchComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20026,9 +20025,9 @@ function setTextareaProps(comp, newProps, oldProps) {
   });
 }
 var TextareaComp = class extends NativeView2 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     super.setOneLine(false);
     const style3 = super.style;
     const that = this;
@@ -20073,8 +20072,8 @@ var TextareaConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TextareaComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TextareaComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20154,9 +20153,9 @@ function setInputProps(comp, newProps, oldProps) {
   });
 }
 var InputComp = class extends NativeView3 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     super.setOneLine(true);
     const style3 = super.style;
     const that = this;
@@ -20201,8 +20200,8 @@ var InputConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new InputComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new InputComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20268,9 +20267,9 @@ function setKeyboardProps(comp, newProps, oldProps) {
   });
 }
 var KeyboardComp = class extends NativeView4 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20314,8 +20313,8 @@ var KeyboardConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new KeyboardComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new KeyboardComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20386,9 +20385,9 @@ function setCheckboxProps(comp, newProps, oldProps) {
   });
 }
 var CheckboxComp = class extends NativeView5 {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20436,8 +20435,8 @@ var CheckboxConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new CheckboxComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new CheckboxComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20514,9 +20513,9 @@ function setListProps(comp, newProps, oldProps) {
   });
 }
 var DropdownlistComp = class extends NativeDropdownlist {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20562,8 +20561,8 @@ var DropdownlistConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new DropdownlistComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new DropdownlistComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20624,9 +20623,9 @@ function setProgressBarProps(comp, newProps, oldProps) {
   });
 }
 var ProgressBarComp = class extends NativeProgressBar {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20672,8 +20671,8 @@ var ProgressBarConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new ProgressBarComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ProgressBarComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20736,9 +20735,9 @@ function setRollerProps(comp, newProps, oldProps) {
   });
 }
 var RollerComp = class extends NativeRoller {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20784,8 +20783,8 @@ var RollerConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new RollerComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new RollerComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20832,9 +20831,9 @@ function setLineProps(comp, newProps, oldProps) {
   });
 }
 var LineComp = class extends NativeLine {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20882,8 +20881,8 @@ var LineConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new LineComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new LineComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -20949,9 +20948,9 @@ function setCalendarProps(comp, newProps, oldProps) {
   });
 }
 var CalendarComp = class extends NativeCalendar {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -20999,8 +20998,8 @@ var CalendarConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new CalendarComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new CalendarComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -21076,9 +21075,9 @@ function setGIFProps(comp, newProps, oldProps) {
   });
 }
 var GIFComp = class extends NativeGIF {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -21124,8 +21123,8 @@ var GIFConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new GIFComp({ uid });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new GIFComp({ uid: uid2 });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -21185,10 +21184,10 @@ var tabPositionObj = {
   "bottom": 1 << 3
 };
 var TabsComp = class extends NativeTabs {
-  constructor({ uid, tabPosition, tabSize = 0 }) {
+  constructor({ uid: uid2, tabPosition, tabSize = 0 }) {
     tabPosition = tabPositionObj[tabPosition] || tabPositionObj.top;
-    super({ uid, tabPosition, tabSize });
-    this.uid = uid;
+    super({ uid: uid2, tabPosition, tabSize });
+    this.uid = uid2;
     const style3 = super.style;
     const that = this;
     this.style = new Proxy(this, {
@@ -21239,8 +21238,8 @@ var TabsConfig = class {
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new TabsComp({ uid, ...newProps });
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new TabsComp({ uid: uid2, ...newProps });
     instance.setProps(newProps, {});
     return instance;
   }
@@ -21281,15 +21280,128 @@ __publicField(Renderer, "portalContainer");
 // src/render/react/core/animate/index.js
 var bridge19 = globalThis.SJSJSBridge;
 var NativeAnimate = bridge19.NativeRender.Animate;
+var uid = 0;
 var callbackObj = {};
-globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
-  if (typeof callbackObj[uid] === "function") {
+var animateInsObj = {};
+globalThis.ANIMIATE_CALLBACK = function(uid2, ...args) {
+  if (typeof callbackObj[uid2] === "function") {
     try {
-      callbackObj[uid].call(null, ...args);
+      callbackObj[uid2].call(null, ...args);
     } catch (e) {
       console.log(e);
     }
   }
+};
+var AnimateBase = class extends NativeAnimate {
+  constructor({
+    duration,
+    startValue,
+    endValue,
+    delay,
+    easing,
+    execCallback,
+    instanceId,
+    useNative = false,
+    playBackDelay,
+    playBackTime,
+    repeatDelay,
+    repeatCount,
+    startCallback,
+    readyCallback
+  }) {
+    super();
+    this.duration = duration;
+    this.startValue = startValue;
+    this.endValue = endValue;
+    this.delay = delay;
+    this.easing = easing;
+    this.execCallback = execCallback;
+    this.instanceId = instanceId;
+    this.useNative = useNative;
+    this.playBackDelay = playBackDelay;
+    this.playBackTime = playBackTime;
+    this.repeatDelay = repeatDelay;
+    this.repeatCount = repeatCount;
+    this.startCallback = startCallback;
+    this.readyCallback = readyCallback;
+  }
+  start() {
+    const {
+      duration,
+      startValue,
+      endValue,
+      delay,
+      easing,
+      execCallback,
+      instanceId,
+      useNative,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount = 0,
+      startCallback,
+      readyCallback
+    } = this;
+    if (duration == void 0 || startValue == void 0 || endValue == void 0 || !execCallback)
+      return;
+    if (!useNative && typeof execCallback === "function") {
+      callbackObj[++uid] = execCallback;
+      this.execUid = uid;
+    }
+    if (typeof startCallback === "function") {
+      callbackObj[++uid] = startCallback;
+      this.startCbUid = uid;
+    }
+    if (typeof readyCallback === "function") {
+      callbackObj[++uid] = readyCallback;
+      this.readyCbUid = uid;
+    }
+    animateInsObj[++uid] = this;
+    this.uid = uid;
+    super.start({
+      duration,
+      startValue,
+      endValue,
+      easing,
+      instanceId,
+      useNative,
+      delay,
+      playBackDelay,
+      playBackTime,
+      repeatDelay,
+      repeatCount: !isFinite(repeatCount) ? 65535 : repeatCount,
+      uid: this.uid,
+      execUid: this.execUid,
+      startCbUid: this.startCbUid,
+      readyCbUid: this.readyCbUid
+    });
+  }
+  release() {
+    delete animateInsObj[this.uid];
+  }
+};
+function createTimingAnimate(params) {
+  return new AnimateBase(params);
+}
+var ParallelAnimate = class {
+  constructor(animates) {
+    this.animates = animates;
+  }
+  start() {
+    this.animates.forEach((animate) => {
+      if (animate instanceof AnimateBase) {
+        animate?.start();
+      }
+    });
+  }
+};
+function createParallelAnimate() {
+  const animates = Array.from(arguments[0]);
+  return new ParallelAnimate(animates);
+}
+var Animate = {
+  timing: createTimingAnimate,
+  parallel: createParallelAnimate
 };
 
 // src/render/react/core/dimensions/index.js
@@ -21711,7 +21823,12 @@ var colorsStyle = [
   { "background-color": "teal" }
 ];
 function App2() {
+  const [colorListExpand, setColorListExpand] = (0, import_react2.useState)(false);
+  const colorListItemsRef = (0, import_react2.useRef)([]);
+  const wrapperRef = (0, import_react2.useRef)();
+  const colorListRef = (0, import_react2.useRef)();
   return /* @__PURE__ */ import_react2.default.createElement(View, {
+    ref: wrapperRef,
     style: style2.window
   }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
     tabs: ["Profile", "Analytics", "Shop"],
@@ -21720,12 +21837,60 @@ function App2() {
   }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))), /* @__PURE__ */ import_react2.default.createElement(View, {
     style: style2.colorList,
     align: {
-      type: EAlignType.ALIGN_BOTTOM_RIGHT
-    }
+      type: EAlignType.ALIGN_BOTTOM_RIGHT,
+      pos: [-10, -10]
+    },
+    ref: colorListRef
   }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react2.default.createElement(Button, {
-    style: [style2.colorButton, color],
+    ref: (ins) => colorListItemsRef.current[i] = ins,
+    style: [style2.colorListButton, color],
     "data-color": colorList[i]
-  }))));
+  }))), /* @__PURE__ */ import_react2.default.createElement(Button, {
+    style: style2.colorButton,
+    align: {
+      type: EAlignType.ALIGN_BOTTOM_RIGHT,
+      pos: [-15, -15]
+    },
+    onClick: () => {
+      setColorListExpand(!colorListExpand);
+      const width3 = wrapperRef.current.style.width - 20;
+      if (!colorListExpand) {
+        const animate = Animate.timing({
+          duration: 200,
+          startValue: 0,
+          endValue: 256,
+          execCallback: (value) => {
+            colorListRef.current.setStyle({
+              width: Math.floor(value / 256 * (width3 - 60) + 60)
+            });
+            colorListItemsRef.current.forEach((item) => {
+              item.setStyle({
+                opacity: (value / 256).toFixed(2)
+              });
+            });
+          }
+        });
+        animate.start();
+      } else {
+        const animate = Animate.timing({
+          duration: 200,
+          startValue: 256,
+          endValue: 0,
+          execCallback: (value) => {
+            colorListRef.current.setStyle({
+              width: Math.floor(value / 256 * (width3 - 60) + 60)
+            });
+            colorListItemsRef.current.forEach((item) => {
+              item.setStyle({
+                opacity: (value / 256).toFixed(2)
+              });
+            });
+          }
+        });
+        animate.start();
+      }
+    }
+  }));
 }
 var style2 = {
   window: {
@@ -21746,15 +21911,25 @@ var style2 = {
     "align-items": "center",
     "padding-right": 55,
     "border-radius": 32767,
-    "width": "800px",
+    "width": "60px",
     "height": "60px",
-    "position": "absolute"
+    "position": "absolute",
+    "overflow": "hidden"
   },
-  colorButton: {
+  colorListButton: {
     "width": "20px",
     "height": "20px",
     "border-radius": 32767,
-    "opacity": 1
+    "opacity": 0
+  },
+  colorButton: {
+    "position": "absolute",
+    "padding": 10,
+    "border-radius": 32767,
+    "shadow-width": 0,
+    "background-image": "tint",
+    "width": "50px",
+    "height": "50px"
   }
 };
 Render.render(/* @__PURE__ */ import_react2.default.createElement(App2, null));

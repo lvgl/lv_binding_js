@@ -55,57 +55,62 @@ function App () {
                 }}
                 ref={colorListRef}
             >
-            {
-                colorsStyle.map((color, i) => (
-                    <Button
-                        ref={ins => colorListItemsRef[i] = ins}
-                        style={[style.colorButton, color]}
-                        data-color={colorList[i]}
-                        align={{
-                            type: EAlignType.ALIGN_BOTTOM_RIGHT,
-                            pos: [-15, -15]
-                        }}
-                        onClick={() => {
-                            setColorListExpand(true)
-                            const width = wrapperRef.current.style.width - 20
-                            if (!colorListExpand) {
-                                Animate.timing({
-                                    duration: 200,
-                                    startValue: 0,
-                                    endValue: 256,
-                                    execCallback: (value) => {
-                                        colorListRef.current.setStyle({
-                                            width: Math.floor(256 / width * value),
-                                        })
-                                        colorListItemsRef.current.forEach(item => {
-                                            item.setStyle({
-                                                opacity: (value / 256).toFixed(2),
-                                            })
-                                        })
-                                    }
+                {
+                    colorsStyle.map((color, i) => (
+                        <Button
+                            ref={ins => colorListItemsRef.current[i] = ins}
+                            style={[style.colorListButton, color]}
+                            data-color={colorList[i]}
+                        />
+                    ))
+                }
+            </View>
+            <Button
+                style={style.colorButton}
+                align={{
+                    type: EAlignType.ALIGN_BOTTOM_RIGHT,
+                    pos: [-15, -15]
+                }}
+                onClick={() => {
+                    setColorListExpand(!colorListExpand)
+                    const width = wrapperRef.current.style.width - 20
+                    if (!colorListExpand) {
+                        const animate = Animate.timing({
+                            duration: 200,
+                            startValue: 0,
+                            endValue: 256,
+                            execCallback: (value) => {
+                                colorListRef.current.setStyle({
+                                    width: Math.floor((value / 256) * (width - 60) + 60),
                                 })
-                            } else {
-                                Animate.timing({
-                                    duration: 200,
-                                    startValue: 256,
-                                    endValue: 0,
-                                    execCallback: (value) => {
-                                        colorListRef.current.setStyle({
-                                            width: Math.floor(256 / width * value)
-                                        })
-                                        colorListItemsRef.current.forEach(item => {
-                                            item.setStyle({
-                                                opacity: (value / 256).toFixed(2),
-                                            })
-                                        })
-                                    }
+                                colorListItemsRef.current.forEach(item => {
+                                    item.setStyle({
+                                        opacity: (value / 256).toFixed(2),
+                                    })
                                 })
                             }
-                        }}
-                    />
-                ))
-            }
-            </View>
+                        })
+                        animate.start()
+                    } else {
+                        const animate = Animate.timing({
+                            duration: 200,
+                            startValue: 256,
+                            endValue: 0,
+                            execCallback: (value) => {
+                                colorListRef.current.setStyle({
+                                    width: Math.floor((value / 256) * (width - 60) + 60),
+                                })
+                                colorListItemsRef.current.forEach(item => {
+                                    item.setStyle({
+                                        opacity: (value / 256).toFixed(2),
+                                    })
+                                })
+                            }
+                        })
+                        animate.start()
+                    }
+                }}
+            />
         </View>
     )
 };
@@ -131,7 +136,8 @@ const style = {
         'border-radius': 0x7FFF,
         'width': '60px',
         'height': '60px',
-        'position': 'absolute'
+        'position': 'absolute',
+        'overflow': 'hidden'
     },
     colorListButton: {
         'width': '20px',
@@ -141,7 +147,6 @@ const style = {
     },
     colorButton: {
         'position': 'absolute',
-        'background-color': 'white',
         'padding': 10,
         'border-radius': 0x7FFF,
         'shadow-width': 0,
