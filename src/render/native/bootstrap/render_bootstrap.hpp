@@ -11,6 +11,7 @@ extern "C" {
 #include "native/core/animate/animate.hpp"
 #include "native/core/dimensions/dimensions.hpp"
 #include "native/core/refresh/refresh.hpp"
+#include "native/core/theme/theme.hpp"
 
 void NativeRenderInit (JSContext* ctx);
 

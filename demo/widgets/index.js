@@ -21409,6 +21409,26 @@ var bridge20 = globalThis.SJSJSBridge;
 var dimensions = bridge20.NativeRender.dimensions;
 var Dimensions = dimensions;
 
+// src/render/react/core/theme/index.js
+var bridge21 = globalThis.SJSJSBridge;
+var nativeTheme = bridge21.NativeRender.theme;
+var Theme = {
+  setTheme({
+    primaryColor,
+    secondPrimaryValue,
+    fontSize
+  }) {
+    nativeTheme.setTheme({
+      primaryColor,
+      secondPrimaryValue,
+      fontSize
+    });
+  },
+  resetTheme() {
+    nativeTheme.resetTheme();
+  }
+};
+
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
 var Text = registerComponent(new TextConfig());
@@ -21844,7 +21864,14 @@ function App2() {
   }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react2.default.createElement(Button, {
     ref: (ins) => colorListItemsRef.current[i] = ins,
     style: [style2.colorListButton, color],
-    "data-color": colorList[i]
+    "data-color": colorList[i],
+    onClick: (e) => {
+      const { dataset } = e.target;
+      const { color: color2 } = dataset;
+      Theme.setTheme({
+        primaryColor: color2
+      });
+    }
   }))), /* @__PURE__ */ import_react2.default.createElement(Button, {
     style: style2.colorButton,
     align: {

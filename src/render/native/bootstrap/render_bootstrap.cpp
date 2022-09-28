@@ -19,6 +19,8 @@ void NativeRenderInit (JSContext* ctx) {
 
     NativeRenderUtilInit (ctx, obj);
 
+    NativeThemeInit(ctx, obj);
+
     lv_init();
     lv_png_init();
 };

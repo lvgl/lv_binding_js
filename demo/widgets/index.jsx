@@ -1,4 +1,4 @@
-import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs } from 'lvgljs-ui';
+import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs, Theme } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Profile from './components/profile'
 
@@ -61,6 +61,14 @@ function App () {
                             ref={ins => colorListItemsRef.current[i] = ins}
                             style={[style.colorListButton, color]}
                             data-color={colorList[i]}
+                            onClick={(e) => {
+                                const { dataset } = e.target
+                                const { color } = dataset
+
+                                Theme.setTheme({
+                                    primaryColor: color
+                                })
+                            }}
                         />
                     ))
                 }
