@@ -2,20 +2,13 @@ import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } fro
 import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
-const NativeChart = bridge.NativeRender.NativeComponents.Chart
+const NativeButton = bridge.NativeRender.NativeComponents.Button
 
-const chartType = {
-    none: 0,
-    line: 1,
-    bar: 2,
-    scatter: 3
-}
-
-function setChartProps(comp, newProps, oldProps) {
+function setButtonProps(comp, newProps, oldProps) {
     const setter = {
-        ...CommonComponentApi({ compName: 'Chart', comp, newProps, oldProps }),
+        ...CommonComponentApi({ compName: 'Button', comp, newProps, oldProps }),
         onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
+            setStyle({ comp, styleSheet, compName: "Button", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
         onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -29,22 +22,6 @@ function setChartProps(comp, newProps, oldProps) {
         onLongPressRepeat (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
-        type (type) {
-            if (chartType[type] !== undefined) {
-                comp.setType(type)
-            }
-        },
-        leftAxis ({
-            data: [],
-            options: {}
-        }) {
-            if (!options.majorLength || !options.minorLength || !options.majorNum || !options.minorNum)
-
-            comp.setLeftAxis({
-                data,
-                options
-            })
-        }
     }
     Object.keys(setter).forEach(key => {
         if (newProps[key]) {
@@ -60,7 +37,7 @@ function setChartProps(comp, newProps, oldProps) {
     })
 }
   
-export class ChartComp extends NativeChart {
+export class ButtonComp extends NativeButton {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -76,11 +53,11 @@ export class ChartComp extends NativeChart {
         })
     }
     setProps(newProps, oldProps) {
-        setChartProps(this, newProps, oldProps);
+        setButtonProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
     }
-    static tagName = "Chart";
+    static tagName = "Button";
     appendInitialChild(child) {
     }
     appendChild(child) {
@@ -92,7 +69,7 @@ export class ChartComp extends NativeChart {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false })
     }
     moveToFront () {
         super.moveToFront()
