@@ -2,13 +2,20 @@ import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } fro
 import { CommonComponentApi } from '../common/index'
 
 const bridge = globalThis.SJSJSBridge
-const NativeButton = bridge.NativeRender.NativeComponents.Button
+const NativeChart = bridge.NativeRender.NativeComponents.Chart
 
-function setButtonProps(comp, newProps, oldProps) {
+const chartType = {
+    'none': 0,
+    'line': 1,
+    'bar': 2,
+    'scatter': 3
+}
+
+function setChartProps(comp, newProps, oldProps) {
     const setter = {
-        ...CommonComponentApi({ compName: 'Button', comp, newProps, oldProps }),
+        ...CommonComponentApi({ compName: 'Chart', comp, newProps, oldProps }),
         onPressedStyle (styleSheet) {
-            setStyle({ comp, styleSheet, compName: "Button", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
+            setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
         onClick (fn) {
             handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
@@ -21,6 +28,78 @@ function setButtonProps(comp, newProps, oldProps) {
         },
         onLongPressRepeat (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+        },
+        type (type) {
+            if (chartType[type] !== void 0) {
+                comp.setType(chartType[type])
+            }
+        },
+        divLineCount (arr) {
+            if (arr?.[0] !== oldProps?.divLineCount?.[0] || arr?.[1] !== oldProps?.divLineCount?.[1]) {
+                comp.setDivLineCount(arr)
+            }
+        },
+        pointNum (num) {
+            if (num !== oldProps?.pointNum) {
+                comp.setPointNum(num)
+            }
+        },
+        leftAxisOption (options) {
+            if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+                return
+            }
+            if (options != oldProps?.leftAxisOption) {
+                comp.setLeftAxisOption(
+                    options
+                )
+            }
+        },
+        leftAxisData(data) {
+            if (data !== oldProps?.leftAxisData && Array.isArray(data)) {
+                comp.setLeftAxisData(data)
+            }
+        },
+        bottomAxisOption (options) {
+            if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+                return
+            }
+
+            if (options != oldProps?.bottomAxisOption) {
+                comp.setBottomAxisOption(options)
+            }
+        },
+        bottomAxisData(data) {
+            if (data !== oldProps?.bottomAxisData && Array.isArray(data)) {
+                comp.setBottomAxisData(data)
+            }
+        },
+        rightAxisOption (options) {
+            if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+                return
+            }
+
+            if (options != oldProps?.rightAxisOption) {
+                comp.setRightAxis(options)
+            }
+        },
+        rightAxisData(data) {
+            if (data !== oldProps?.rightAxisData && Array.isArray(data)) {
+                comp.setRightAxisData(data)
+            }
+        },
+        topAxisOption (options) {
+            if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+                return
+            }
+
+            if (options != oldProps?.topAxisOption) {
+                comp.setTopAxis(options)
+            }
+        },
+        topAxisData(data) {
+            if (data !== oldProps?.topAxisData && Array.isArray(data)) {
+                comp.setTopAxisData(data)
+            }
         },
     }
     Object.keys(setter).forEach(key => {
@@ -37,7 +116,7 @@ function setButtonProps(comp, newProps, oldProps) {
     })
 }
   
-export class ButtonComp extends NativeButton {
+export class ChartComp extends NativeChart {
     constructor ({ uid }) {
         super({ uid })
         this.uid = uid
@@ -53,11 +132,11 @@ export class ButtonComp extends NativeButton {
         })
     }
     setProps(newProps, oldProps) {
-        setButtonProps(this, newProps, oldProps);
+        setChartProps(this, newProps, oldProps);
     }
     insertBefore(child, beforeChild) {
     }
-    static tagName = "Button";
+    static tagName = "Chart";
     appendInitialChild(child) {
     }
     appendChild(child) {
@@ -69,7 +148,7 @@ export class ButtonComp extends NativeButton {
     close () {
     }
     setStyle (style, type = 0x0000) {
-        setStyle({ comp: this, styleSheet: style, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false })
+        setStyle({ comp: this, styleSheet: style, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false })
     }
     moveToFront () {
         super.moveToFront()

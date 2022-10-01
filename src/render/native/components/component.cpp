@@ -5,7 +5,8 @@
 void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JSValue component_obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);
-    
+        
+    NativeComponentChartInit(ctx, component_obj);
     NativeComponentTabViewInit(ctx, component_obj);
     NativeComponentGIFInit(ctx, component_obj);
     NativeComponentCalendarInit(ctx, component_obj);

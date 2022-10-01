@@ -1392,7 +1392,7 @@ var require_react_development = __commonJS({
           }
           return dispatcher.useContext(Context, unstable_observedBits);
         }
-        function useState3(initialState) {
+        function useState4(initialState) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useState(initialState);
         }
@@ -1400,11 +1400,11 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useReducer(reducer, initialArg, init);
         }
-        function useRef3(initialValue) {
+        function useRef4(initialValue) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect3(create, deps) {
+        function useEffect4(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1412,7 +1412,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback3(callback, deps) {
+        function useCallback4(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1674,16 +1674,16 @@ var require_react_development = __commonJS({
         exports.isValidElement = isValidElement;
         exports.lazy = lazy;
         exports.memo = memo;
-        exports.useCallback = useCallback3;
+        exports.useCallback = useCallback4;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect3;
+        exports.useEffect = useEffect4;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
         exports.useReducer = useReducer;
-        exports.useRef = useRef3;
-        exports.useState = useState3;
+        exports.useRef = useRef4;
+        exports.useState = useState4;
         exports.version = ReactVersion;
       })();
     }
@@ -6910,11 +6910,11 @@ var require_react_reconciler_development = __commonJS({
       module.exports = function $$$reconciler($$$hostConfig) {
         "use strict";
         var _assign = require_object_assign();
-        var React3 = require_react();
+        var React4 = require_react();
         var checkPropTypes = require_checkPropTypes();
         var Scheduler = require_scheduler();
         var tracing = require_tracing();
-        var ReactSharedInternals = React3.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
+        var ReactSharedInternals = React4.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
         if (!ReactSharedInternals.hasOwnProperty("ReactCurrentDispatcher")) {
           ReactSharedInternals.ReactCurrentDispatcher = {
             current: null
@@ -9239,7 +9239,7 @@ var require_react_reconciler_development = __commonJS({
         }
         var fakeInternalInstance = {};
         var isArray = Array.isArray;
-        var emptyRefsObject = new React3.Component().refs;
+        var emptyRefsObject = new React4.Component().refs;
         var didWarnAboutStateAssignmentForComponent;
         var didWarnAboutUninitializedState;
         var didWarnAboutGetSnapshotBeforeUpdateWithoutDidUpdate;
@@ -18423,12 +18423,12 @@ function ProcessBoolean(key, value, result) {
 }
 
 // src/render/react/core/style/pipe/misc.js
-function MiscStyle(style3, result, compName) {
-  if (style3["recolor"] && compName === "Image") {
-    ProcessColor("recolor", style3["recolor"], result);
+function MiscStyle(style4, result, compName) {
+  if (style4["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style4["recolor"], result);
   }
-  if (style3["style-transition-time"]) {
-    const value = style3["style-transition-time"];
+  if (style4["style-transition-time"]) {
+    const value = style4["style-transition-time"];
     if (!isNaN(value)) {
       result["style-transition-time"] = value;
     }
@@ -18529,18 +18529,18 @@ var transitionProperty = {
   "transform-pivot-y": 111
 };
 var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "rotate", "transform-width", "transform-height"];
-function TransStyle(style3, result, compName) {
-  if (style3["transition-property"]) {
-    let properties = style3["transition-property"];
+function TransStyle(style4, result, compName) {
+  if (style4["transition-property"]) {
+    let properties = style4["transition-property"];
     properties = properties.split(",").map((item) => item.replace(/\s/, "")).map((item) => transitionProperty[item]).filter((item) => !!item);
-    const duration = style3["transition-duration"] || 0;
-    const func = style3["transition-timing-function"] || "linear";
-    const delay = style3["transition-delay"] || 0;
+    const duration = style4["transition-duration"] || 0;
+    const func = style4["transition-timing-function"] || "linear";
+    const delay = style4["transition-delay"] || 0;
     const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
-  if (style3["transform"]) {
-    let value = style3["transform"];
+  if (style4["transform"]) {
+    let value = style4["transform"];
     value = value.match(/[a-zA-Z\-]+\([^\(]+\)/g);
     const reg = /^([a-zA-Z\-]+)\((.+)\)$/;
     value && value.forEach((item) => {
@@ -18569,8 +18569,8 @@ function TransStyle(style3, result, compName) {
       }
     });
   }
-  if (style3["transform-origin"] && compName === "Image") {
-    const [x, y] = style3["transform-origin"].trim()?.split(" ");
+  if (style4["transform-origin"] && compName === "Image") {
+    const [x, y] = style4["transform-origin"].trim()?.split(" ");
     result["img-origin"] = [NormalizePx(+x), NormalizePx(+y)];
   }
   return result;
@@ -18578,14 +18578,14 @@ function TransStyle(style3, result, compName) {
 
 // src/render/react/core/style/pipe/padding.js
 var keys = ["padding-left", "padding-top", "padding-right", "padding-bottom"];
-function PaddingStyle(style3, result, compName) {
+function PaddingStyle(style4, result, compName) {
   keys.forEach((key) => {
-    if (style3[key] !== void 0) {
-      ProcessPx(key, style3[key], result);
+    if (style4[key] !== void 0) {
+      ProcessPx(key, style4[key], result);
     }
   });
-  if (style3["padding"] !== void 0) {
-    const value = style3["padding"];
+  if (style4["padding"] !== void 0) {
+    const value = style4["padding"];
     if (typeof value == "number") {
       keys.forEach((styleKey) => {
         result[styleKey] = value;
@@ -18635,10 +18635,10 @@ var obj = {
   })
 };
 var keys2 = Object.keys(obj);
-function BackgroundStyle(style3, result, compName) {
+function BackgroundStyle(style4, result, compName) {
   keys2.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj[key](key, style4[key], result);
     }
   });
 }
@@ -18657,10 +18657,10 @@ var obj2 = {
   })
 };
 var keys3 = Object.keys(obj2);
-function PosStyle(style3, result, compName) {
+function PosStyle(style4, result, compName) {
   keys3.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj2[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj2[key](key, style4[key], result);
     }
   });
 }
@@ -18685,10 +18685,10 @@ var obj3 = {
   })
 };
 var keys4 = Object.keys(obj3);
-function BorderStyle(style3, result, compName) {
+function BorderStyle(style4, result, compName) {
   keys4.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj3[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj3[key](key, style4[key], result);
     }
   });
 }
@@ -18700,10 +18700,10 @@ var obj4 = {
   "outline-padding": ProcessPxOrPercent
 };
 var keys5 = Object.keys(obj4);
-function OutlineStyle(style3, result, compName) {
+function OutlineStyle(style4, result, compName) {
   keys5.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj4[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj4[key](key, style4[key], result);
     }
   });
 }
@@ -18735,14 +18735,14 @@ var obj5 = {
   "font-size": ProcessPx
 };
 var keys6 = Object.keys(obj5);
-function TextStyle(style3, result, compName) {
+function TextStyle(style4, result, compName) {
   keys6.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj5[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj5[key](key, style4[key], result);
     }
   });
-  if (style3["font-size"]) {
-    let size = style3["font-size"];
+  if (style4["font-size"]) {
+    let size = style4["font-size"];
     if (typeof size == "string") {
       const reg = /(\d+\.?\d*)(px)?$/;
       size = size.replace(/(^\s*)|(\s*$)/g, "").match(reg)?.[1];
@@ -18780,12 +18780,12 @@ var flexAlignObj = {
   "space-around": 4,
   "space-between": 5
 };
-function FlexStyle(style3, result) {
-  if (style3.display !== "flex")
+function FlexStyle(style4, result) {
+  if (style4.display !== "flex")
     return result;
   let flexFlow = 0;
-  const flexDirection = style3["flex-direction"] || "row";
-  const flexWrap = style3["flex-wrap"] || "nowrap";
+  const flexDirection = style4["flex-direction"] || "row";
+  const flexWrap = style4["flex-wrap"] || "nowrap";
   if (flexFlowObj[`${flexDirection}_${flexWrap}`]) {
     flexFlow = flexFlowObj[`${flexDirection}_${flexWrap}`];
   }
@@ -18793,9 +18793,9 @@ function FlexStyle(style3, result) {
   let mainPlace = 0;
   let crossPlace = 0;
   let trackCrossPlace = 0;
-  const justifyContent = style3["justify-content"];
-  const alignItems = style3["align-items"];
-  const alignContent = style3["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
+  const justifyContent = style4["justify-content"];
+  const alignItems = style4["align-items"];
+  const alignContent = style4["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
   if (flexAlignObj[justifyContent]) {
     mainPlace = flexAlignObj[justifyContent];
   }
@@ -18812,8 +18812,8 @@ function FlexStyle(style3, result) {
   if (alignContent) {
     result["align-content"] = trackCrossPlace;
   }
-  if (!isNaN(style3["flex-grow"])) {
-    result["flex-grow"] = style3["flex-grow"];
+  if (!isNaN(style4["flex-grow"])) {
+    result["flex-grow"] = style4["flex-grow"];
   }
   return result;
 }
@@ -18851,10 +18851,10 @@ var gridAlignItemsObj = {
   "space-between": 6,
   "stretch": 3
 };
-function GridStyle(style3, result) {
-  if (style3.display == "grid") {
-    let columns = style3["grid-template-columns"]?.split(/\s/).filter(Boolean);
-    let rows = style3["grid-template-rows"]?.split(/\s/).filter(Boolean);
+function GridStyle(style4, result) {
+  if (style4.display == "grid") {
+    let columns = style4["grid-template-columns"]?.split(/\s/).filter(Boolean);
+    let rows = style4["grid-template-rows"]?.split(/\s/).filter(Boolean);
     if (!columns || !rows)
       return;
     columns = columns.map((column) => {
@@ -18881,17 +18881,17 @@ function GridStyle(style3, result) {
     rows = rows.filter(Boolean);
     result["display"] = "grid";
     result["grid-template"] = [columns, rows];
-    const justifyContent = gridJustifyContentObj[style3["justify-content"]] || gridJustifyContentObj.start;
-    const alignContent = gridAlignItemsObj[style3["align-items"]] || gridAlignItemsObj.start;
+    const justifyContent = gridJustifyContentObj[style4["justify-content"]] || gridJustifyContentObj.start;
+    const alignContent = gridAlignItemsObj[style4["align-items"]] || gridAlignItemsObj.start;
     result["grid-align"] = [justifyContent, alignContent];
   }
-  if (style3["grid-child"]) {
-    const justifySelf = style3["justify-self"];
-    const alignSelf = style3["align-self"];
-    const gridColumnPos = style3["grid-column-pos"];
-    const gridRowPos = style3["grid-row-pos"];
-    const gridColumnSpan = style3["grid-column-span"] || 1;
-    const gridRowSpan = style3["grid-row-span"] || 1;
+  if (style4["grid-child"]) {
+    const justifySelf = style4["justify-self"];
+    const alignSelf = style4["align-self"];
+    const gridColumnPos = style4["grid-column-pos"];
+    const gridRowPos = style4["grid-row-pos"];
+    const gridColumnSpan = style4["grid-column-span"] || 1;
+    const gridRowSpan = style4["grid-row-span"] || 1;
     if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan))
       return;
     let column_align, row_align;
@@ -18937,10 +18937,10 @@ var obj6 = {
   "scroll-enable-snap": ProcessBoolean
 };
 var keys7 = Object.keys(obj6);
-function ScrollStyle(style3, result, compName) {
+function ScrollStyle(style4, result, compName) {
   keys7.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj6[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj6[key](key, style4[key], result);
     }
   });
 }
@@ -18953,28 +18953,28 @@ function NormalizeOpacity(value) {
     return 0;
   return Math.floor(value * 255);
 }
-function OpacityStyle(style3, result, compName) {
-  if (style3["opacity"] !== void 0) {
+function OpacityStyle(style4, result, compName) {
+  if (style4["opacity"] !== void 0) {
     if (compName === "Image") {
-      result["img-opacity"] = NormalizeOpacity(style3["opacity"]);
+      result["img-opacity"] = NormalizeOpacity(style4["opacity"]);
     } else {
-      result["opacity"] = NormalizeOpacity(style3["opacity"]);
+      result["opacity"] = NormalizeOpacity(style4["opacity"]);
     }
   }
-  if (style3["background-opacity"] !== void 0) {
-    result["background-opacity"] = NormalizeOpacity(style3["background-opacity"]);
+  if (style4["background-opacity"] !== void 0) {
+    result["background-opacity"] = NormalizeOpacity(style4["background-opacity"]);
   }
-  if (style3["border-opacity"] !== void 0) {
-    result["border-opacity"] = NormalizeOpacity(style3["border-opacity"]);
+  if (style4["border-opacity"] !== void 0) {
+    result["border-opacity"] = NormalizeOpacity(style4["border-opacity"]);
   }
-  if (style3["outline-opacity"] !== void 0) {
-    result["outline-opacity"] = NormalizeOpacity(style3["outline-opacity"]);
+  if (style4["outline-opacity"] !== void 0) {
+    result["outline-opacity"] = NormalizeOpacity(style4["outline-opacity"]);
   }
-  if (style3["recolor-opacity"] !== void 0 && compName === "Image") {
-    result["recolor-opacity"] = NormalizeOpacity(style3["recolor-opacity"]);
+  if (style4["recolor-opacity"] !== void 0 && compName === "Image") {
+    result["recolor-opacity"] = NormalizeOpacity(style4["recolor-opacity"]);
   }
-  if (style3["shadow-opacity"] !== void 0) {
-    result["shadow-opacity"] = NormalizeOpacity(style3["shadow-opacity"]);
+  if (style4["shadow-opacity"] !== void 0) {
+    result["shadow-opacity"] = NormalizeOpacity(style4["shadow-opacity"]);
   }
   return result;
 }
@@ -18985,14 +18985,14 @@ var obj7 = {
   "line-color": ProcessColor
 };
 var keys8 = Object.keys(obj7);
-function LineStyle(style3, result, compName) {
+function LineStyle(style4, result, compName) {
   keys8.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj7[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj7[key](key, style4[key], result);
     }
   });
-  if (style3["line-rounded"]) {
-    result["line-rounded"] = Boolean(style3["line-rounded"]);
+  if (style4["line-rounded"]) {
+    result["line-rounded"] = Boolean(style4["line-rounded"]);
   }
 }
 
@@ -19005,17 +19005,17 @@ var obj8 = {
   "shadow-spread": ProcessPx
 };
 var keys9 = Object.keys(obj8);
-function ShadowStyle(style3, result, compName) {
+function ShadowStyle(style4, result, compName) {
   keys9.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj8[key](key, style3[key], result);
+    if (style4[key] !== void 0) {
+      obj8[key](key, style4[key], result);
     }
   });
 }
 
 // src/render/react/core/style/pipe/display.js
-function DisplayStyle(style3, result, compName) {
-  result["display"] = style3["display"];
+function DisplayStyle(style4, result, compName) {
+  result["display"] = style4["display"];
 }
 
 // src/render/react/utils/helpers.ts
@@ -19129,14 +19129,14 @@ function PostProcessStyle({ comp, styleSheet, styleType }) {
 // src/render/react/core/style/index.js
 var _StyleSheet = class {
   static pipeline(args) {
-    _StyleSheet.transformStyle = (style3, compName) => {
+    _StyleSheet.transformStyle = (style4, compName) => {
       const result = {};
-      args.reduce((_, func) => func(style3, result, compName), null);
+      args.reduce((_, func) => func(style4, result, compName), null);
       return result;
     };
   }
-  static transform(style3, compName) {
-    const result = _StyleSheet.transformStyle(style3, compName);
+  static transform(style4, compName) {
+    const result = _StyleSheet.transformStyle(style4, compName);
     return result;
   }
   static create() {
@@ -19331,12 +19331,12 @@ var ViewComp = class extends NativeView {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19358,8 +19358,8 @@ var ViewComp = class extends NativeView {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19437,12 +19437,12 @@ var TextComp = class extends NativeText {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19460,8 +19460,8 @@ var TextComp = class extends NativeText {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19562,12 +19562,12 @@ var ImageComp = class extends NativeImage {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19585,8 +19585,8 @@ var ImageComp = class extends NativeImage {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19668,12 +19668,12 @@ var ButtonComp = class extends NativeButton {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19693,8 +19693,8 @@ var ButtonComp = class extends NativeButton {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19796,12 +19796,12 @@ var SliderComp = class extends NativeSlider {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19821,8 +19821,8 @@ var SliderComp = class extends NativeSlider {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19907,12 +19907,12 @@ var SwitchComp = class extends NativeComp {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -19934,8 +19934,8 @@ var SwitchComp = class extends NativeComp {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20029,12 +20029,12 @@ var TextareaComp = class extends NativeView2 {
     super({ uid: uid2 });
     this.uid = uid2;
     super.setOneLine(false);
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20052,8 +20052,8 @@ var TextareaComp = class extends NativeView2 {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20157,12 +20157,12 @@ var InputComp = class extends NativeView3 {
     super({ uid: uid2 });
     this.uid = uid2;
     super.setOneLine(true);
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20180,8 +20180,8 @@ var InputComp = class extends NativeView3 {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20270,12 +20270,12 @@ var KeyboardComp = class extends NativeView4 {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20293,8 +20293,8 @@ var KeyboardComp = class extends NativeView4 {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20388,12 +20388,12 @@ var CheckboxComp = class extends NativeView5 {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20415,8 +20415,8 @@ var CheckboxComp = class extends NativeView5 {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20516,12 +20516,12 @@ var DropdownlistComp = class extends NativeDropdownlist {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20539,8 +20539,8 @@ var DropdownlistComp = class extends NativeDropdownlist {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20626,12 +20626,12 @@ var ProgressBarComp = class extends NativeProgressBar {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20649,8 +20649,8 @@ var ProgressBarComp = class extends NativeProgressBar {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20738,12 +20738,12 @@ var RollerComp = class extends NativeRoller {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20761,8 +20761,8 @@ var RollerComp = class extends NativeRoller {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20834,12 +20834,12 @@ var LineComp = class extends NativeLine {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20859,8 +20859,8 @@ var LineComp = class extends NativeLine {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20951,12 +20951,12 @@ var CalendarComp = class extends NativeCalendar {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -20976,8 +20976,8 @@ var CalendarComp = class extends NativeCalendar {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21078,12 +21078,12 @@ var GIFComp = class extends NativeGIF {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -21101,8 +21101,8 @@ var GIFComp = class extends NativeGIF {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21188,12 +21188,12 @@ var TabsComp = class extends NativeTabs {
     tabPosition = tabPositionObj[tabPosition] || tabPositionObj.top;
     super({ uid: uid2, tabPosition, tabSize });
     this.uid = uid2;
-    const style3 = super.style;
+    const style4 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style4[prop].call(that);
         }
       }
     });
@@ -21216,8 +21216,8 @@ var TabsComp = class extends NativeTabs {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21260,9 +21260,190 @@ var TabsConfig = class {
   }
 };
 
-// src/render/react/core/renderer/index.js
+// src/render/react/components/Chart/comp.js
 var bridge18 = globalThis.SJSJSBridge;
-var NativeRenderUtil = bridge18.NativeRender.RenderUtil;
+var NativeChart = bridge18.NativeRender.NativeComponents.Chart;
+var chartType = {
+  "none": 0,
+  "line": 1,
+  "bar": 2,
+  "scatter": 3
+};
+function setChartProps(comp, newProps, oldProps) {
+  const setter = {
+    ...CommonComponentApi({ compName: "Chart", comp, newProps, oldProps }),
+    onPressedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
+    },
+    onClick(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+    },
+    onPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+    },
+    onLongPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+    },
+    onLongPressRepeat(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    type(type) {
+      if (chartType[type] !== void 0) {
+        comp.setType(chartType[type]);
+      }
+    },
+    divLineCount(arr) {
+      if (arr?.[0] !== oldProps?.divLineCount?.[0] || arr?.[1] !== oldProps?.divLineCount?.[1]) {
+        comp.setDivLineCount(arr);
+      }
+    },
+    pointNum(num) {
+      if (num !== oldProps?.pointNum) {
+        comp.setPointNum(num);
+      }
+    },
+    leftAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.leftAxisOption) {
+        comp.setLeftAxisOption(options);
+      }
+    },
+    leftAxisData(data) {
+      if (data !== oldProps?.leftAxisData && Array.isArray(data)) {
+        comp.setLeftAxisData(data);
+      }
+    },
+    bottomAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.bottomAxisOption) {
+        comp.setBottomAxisOption(options);
+      }
+    },
+    bottomAxisData(data) {
+      if (data !== oldProps?.bottomAxisData && Array.isArray(data)) {
+        comp.setBottomAxisData(data);
+      }
+    },
+    rightAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.rightAxisOption) {
+        comp.setRightAxis(options);
+      }
+    },
+    rightAxisData(data) {
+      if (data !== oldProps?.rightAxisData && Array.isArray(data)) {
+        comp.setRightAxisData(data);
+      }
+    },
+    topAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.topAxisOption) {
+        comp.setTopAxis(options);
+      }
+    },
+    topAxisData(data) {
+      if (data !== oldProps?.topAxisData && Array.isArray(data)) {
+        comp.setTopAxisData(data);
+      }
+    }
+  };
+  Object.keys(setter).forEach((key) => {
+    if (newProps[key]) {
+      setter[key](newProps[key]);
+    }
+  });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var ChartComp = class extends NativeChart {
+  constructor({ uid: uid2 }) {
+    super({ uid: uid2 });
+    this.uid = uid2;
+    const style4 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj9, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style4[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setChartProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+  }
+  setStyle(style4, type = 0) {
+    setStyle({ comp: this, styleSheet: style4, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
+};
+__publicField(ChartComp, "tagName", "Chart");
+
+// src/render/react/components/Chart/config.js
+var ChartConfig = class {
+  tagName = "Chart";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid2) {
+    const instance = new ChartComp({ uid: uid2 });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/core/renderer/index.js
+var bridge19 = globalThis.SJSJSBridge;
+var NativeRenderUtil = bridge19.NativeRender.RenderUtil;
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
   static render(element, options) {
@@ -21278,8 +21459,8 @@ __publicField(Renderer, "container");
 __publicField(Renderer, "portalContainer");
 
 // src/render/react/core/animate/index.js
-var bridge19 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge19.NativeRender.Animate;
+var bridge20 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge20.NativeRender.Animate;
 var uid = 0;
 var callbackObj = {};
 var animateInsObj = {};
@@ -21405,13 +21586,13 @@ var Animate = {
 };
 
 // src/render/react/core/dimensions/index.js
-var bridge20 = globalThis.SJSJSBridge;
-var dimensions = bridge20.NativeRender.dimensions;
+var bridge21 = globalThis.SJSJSBridge;
+var dimensions = bridge21.NativeRender.dimensions;
 var Dimensions = dimensions;
 
 // src/render/react/core/theme/index.js
-var bridge21 = globalThis.SJSJSBridge;
-var nativeTheme = bridge21.NativeRender.theme;
+var bridge22 = globalThis.SJSJSBridge;
+var nativeTheme = bridge22.NativeRender.theme;
 var Theme = {
   setTheme({
     primaryColor,
@@ -21447,10 +21628,11 @@ var Line = registerComponent(new LineConfig());
 var Calendar = registerComponent(new CalendarConfig());
 var GIF = registerComponent(new GIFConfig());
 var Tabs = registerComponent(new TabsConfig());
+var Chart = registerComponent(new ChartConfig());
 var Render = Renderer;
 
 // demo/widgets/index.jsx
-var import_react2 = __toESM(require_react());
+var import_react3 = __toESM(require_react());
 
 // demo/widgets/components/profile/index.jsx
 var import_react = __toESM(require_react());
@@ -21820,6 +22002,152 @@ var style = {
   }
 };
 
+// demo/widgets/components/analytics/index.jsx
+var import_react2 = __toESM(require_react());
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+function Analytics() {
+  return /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.analyticsWrapper
+  }, /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.wrapper1
+  }, /* @__PURE__ */ import_react2.default.createElement(Text, {
+    style: style2.title1
+  }, "Unique visitors"), /* @__PURE__ */ import_react2.default.createElement(Chart, {
+    style: style2.chart1,
+    pointNum: 12,
+    divLineCount: [0, 12],
+    leftAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 5,
+      minorNum: 1,
+      drawSize: 80
+    },
+    bottomAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 12,
+      minorNum: 1,
+      drawSize: 50
+    },
+    leftAxisData: [
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80)
+    ]
+  })), /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.wrapper2
+  }, /* @__PURE__ */ import_react2.default.createElement(Text, {
+    style: style2.title2
+  }, "Monthly revenue"), /* @__PURE__ */ import_react2.default.createElement(Chart, {
+    style: style2.chart2,
+    type: "bar",
+    pointNum: 12,
+    divLineCount: [6, 0],
+    leftAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 5,
+      minorNum: 1,
+      drawSize: 80
+    },
+    bottomAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 12,
+      minorNum: 1,
+      drawSize: 50
+    },
+    leftAxisData: [
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80),
+      getRandomInt(80)
+    ]
+  })));
+}
+var style2 = {
+  analyticsWrapper: {
+    "display": "flex",
+    "flex-direction": "column",
+    "width": "100%",
+    "height": "100%"
+  },
+  wrapper1: {
+    "display": "grid",
+    "grid-template-columns": "20 1fr",
+    "grid-template-rows": "auto 1fr 10",
+    "height": 300,
+    "width": "100%"
+  },
+  title1: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  chart1: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 1,
+    "grid-row-span": 1,
+    "border-radius": 0,
+    "border-side": "bottom-left"
+  },
+  wrapper2: {
+    "display": "grid",
+    "grid-template-columns": "20 1fr",
+    "grid-template-rows": "auto 1fr 10",
+    "height": 300,
+    "width": "100%"
+  },
+  title2: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  chart2: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 1,
+    "grid-row-span": 1,
+    "border-radius": 0,
+    "border-side": "bottom-left"
+  }
+};
+
 // demo/widgets/index.jsx
 var { width: width2, height: height2 } = Dimensions.window;
 var colorList = [
@@ -21843,27 +22171,27 @@ var colorsStyle = [
   { "background-color": "teal" }
 ];
 function App2() {
-  const [colorListExpand, setColorListExpand] = (0, import_react2.useState)(false);
-  const colorListItemsRef = (0, import_react2.useRef)([]);
-  const wrapperRef = (0, import_react2.useRef)();
-  const colorListRef = (0, import_react2.useRef)();
-  return /* @__PURE__ */ import_react2.default.createElement(View, {
+  const [colorListExpand, setColorListExpand] = (0, import_react3.useState)(false);
+  const colorListItemsRef = (0, import_react3.useRef)([]);
+  const wrapperRef = (0, import_react3.useRef)();
+  const colorListRef = (0, import_react3.useRef)();
+  return /* @__PURE__ */ import_react3.default.createElement(View, {
     ref: wrapperRef,
-    style: style2.window
-  }, /* @__PURE__ */ import_react2.default.createElement(Tabs, {
+    style: style3.window
+  }, /* @__PURE__ */ import_react3.default.createElement(Tabs, {
     tabs: ["Profile", "Analytics", "Shop"],
     tabSize: 70,
-    style: style2.tabs
-  }, /* @__PURE__ */ import_react2.default.createElement(App, null), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab2")), /* @__PURE__ */ import_react2.default.createElement(View, null, /* @__PURE__ */ import_react2.default.createElement(Text, null, "Tab3"))), /* @__PURE__ */ import_react2.default.createElement(View, {
-    style: style2.colorList,
+    style: style3.tabs
+  }, /* @__PURE__ */ import_react3.default.createElement(App, null), /* @__PURE__ */ import_react3.default.createElement(Analytics, null), /* @__PURE__ */ import_react3.default.createElement(View, null, /* @__PURE__ */ import_react3.default.createElement(Text, null, "Tab3"))), /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.colorList,
     align: {
       type: EAlignType.ALIGN_BOTTOM_RIGHT,
       pos: [-10, -10]
     },
     ref: colorListRef
-  }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react2.default.createElement(Button, {
+  }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react3.default.createElement(Button, {
     ref: (ins) => colorListItemsRef.current[i] = ins,
-    style: [style2.colorListButton, color],
+    style: [style3.colorListButton, color],
     "data-color": colorList[i],
     onClick: (e) => {
       const { dataset } = e.target;
@@ -21872,8 +22200,8 @@ function App2() {
         primaryColor: color2
       });
     }
-  }))), /* @__PURE__ */ import_react2.default.createElement(Button, {
-    style: style2.colorButton,
+  }))), /* @__PURE__ */ import_react3.default.createElement(Button, {
+    style: style3.colorButton,
     align: {
       type: EAlignType.ALIGN_BOTTOM_RIGHT,
       pos: [-15, -15]
@@ -21919,7 +22247,7 @@ function App2() {
     }
   }));
 }
-var style2 = {
+var style3 = {
   window: {
     "height": height2,
     "width": width2,
@@ -21959,7 +22287,7 @@ var style2 = {
     "height": "50px"
   }
 };
-Render.render(/* @__PURE__ */ import_react2.default.createElement(App2, null));
+Render.render(/* @__PURE__ */ import_react3.default.createElement(App2, null));
 /*
 object-assign
 (c) Sindre Sorhus

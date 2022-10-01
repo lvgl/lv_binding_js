@@ -1,6 +1,7 @@
 import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs, Theme } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Profile from './components/profile'
+import Analytics from './components/analytics';
 
 const { width, height } = Dimensions.window
 
@@ -40,9 +41,7 @@ function App () {
                 style={style.tabs}
             >
                 <Profile />
-                <View>
-                    <Text>Tab2</Text>
-                </View>
+                <Analytics />
                 <View>
                     <Text>Tab3</Text>
                 </View>
