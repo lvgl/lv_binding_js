@@ -5,14 +5,19 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
+typedef struct axis_data {
+  int32_t color;
+  std::vector<int32_t> data;
+} axis_data;
+
 class Chart : public BasicComponent {
  public:
   Chart(std::string uid, lv_obj_t* parent = nullptr);
 
-  lv_chart_series_t* left_axis = nullptr;
-  lv_chart_series_t* bottom_axis = nullptr;
-  lv_chart_series_t* right_axis = nullptr;
-  lv_chart_series_t* top_axis = nullptr;
+  std::vector<lv_chart_series_t*> left_axis;
+  std::vector<lv_chart_series_t*> bottom_axis;
+  std::vector<lv_chart_series_t*> right_axis;
+  std::vector<lv_chart_series_t*> top_axis;
 
   void setType (int32_t type);
 
@@ -48,10 +53,10 @@ class Chart : public BasicComponent {
     int32_t draw_size
   );
 
-  void setLeftAxisData (std::vector<int32_t> data);
-  void setRightAxisData (std::vector<int32_t> data);
-  void setBottomAxisData (std::vector<int32_t> data);
-  void setTopAxisData (std::vector<int32_t> data);
+  void setLeftAxisData (std::vector<axis_data>& data);
+  void setRightAxisData (std::vector<axis_data>& data);
+  void setBottomAxisData (std::vector<axis_data>& data);
+  void setTopAxisData (std::vector<axis_data>& data);
 
   void setPointNum (int32_t num);
 

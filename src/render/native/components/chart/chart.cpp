@@ -62,45 +62,77 @@ void Chart::setBottomAxisOption (
     lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
-void Chart::setLeftAxisData (std::vector<int32_t> data) {
-    int32_t i;
-    if (this->left_axis == nullptr) {
-        this->left_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_PRIMARY_Y);
+void Chart::setLeftAxisData (std::vector<axis_data>& data) {
+    int32_t i, j, color;
+    axis_data item;
+
+    for (i=0; i<this->left_axis.size(); i++) {
+        lv_chart_remove_series(this->instance, this->left_axis[i]);
     }
+    this->left_axis.clear();
+
     for (i=0; i<data.size(); i++) {
-        this->left_axis->y_points[i] = (lv_coord_t)data[i];
+        color = data[i].color;
+        if (color == -1) {
+            this->left_axis.push_back(lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_PRIMARY_Y));
+        } else {
+            this->left_axis.push_back(lv_chart_add_series(this->instance, lv_color_hex(color), LV_CHART_AXIS_PRIMARY_Y));
+        }
+    }
+
+    for (i=0; i<data.size(); i++) {
+        item = data[i];
+        for (j=0; j<item.data.size(); j++) {
+            this->left_axis[j]->y_points[i] = (lv_coord_t)item.data[j];
+        }
+    } 
+};
+
+void Chart::setRightAxisData (std::vector<axis_data>& data) {
+    int32_t i, j, color;
+    axis_data item;
+
+    for (i=0; i<this->right_axis.size(); i++) {
+        lv_chart_remove_series(this->instance, this->right_axis[i]);
+    }
+    this->right_axis.clear();
+
+    for (i=0; i<data.size(); i++) {
+        color = data[i].color;
+        if (color == -1) {
+            this->right_axis.push_back(lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_PRIMARY_Y));
+        } else {
+            this->right_axis.push_back(lv_chart_add_series(this->instance, lv_color_hex(color), LV_CHART_AXIS_PRIMARY_Y));
+        }
+    }
+
+    for (i=0; i<data.size(); i++) {
+        item = data[i];
+        for (j=0; j<item.data.size(); j++) {
+            this->right_axis[j]->y_points[i] = (lv_coord_t)item.data[j];
+        }
     }
 };
 
-void Chart::setRightAxisData (std::vector<int32_t> data) {
-    int32_t i;
-    if (this->right_axis == nullptr) {
-        this->right_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_SECONDARY_Y);
-    }
-    for (i=0; i<data.size(); i++) {
-        this->right_axis->y_points[i] = (lv_coord_t)data[i];
-    }
-};
+// void Chart::setTopAxisData (std::vector<axis_data>& data) {
+//     if (this->top_axis == nullptr) {
+//         this->top_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_SECONDARY_X);
+//     }
+//     int32_t i;
+//     for (i=0; i<data.size(); i++) {
+//         this->top_axis->y_points[i] = (lv_coord_t)data[i];
+//     }
+// };
 
-void Chart::setTopAxisData (std::vector<int32_t> data) {
-    if (this->top_axis == nullptr) {
-        this->top_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_SECONDARY_X);
-    }
-    int32_t i;
-    for (i=0; i<data.size(); i++) {
-        this->top_axis->y_points[i] = (lv_coord_t)data[i];
-    }
-};
-
-void Chart::setBottomAxisData (std::vector<int32_t> data) {
-    int32_t i;
-    if (this->bottom_axis == nullptr) {
-        this->bottom_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_PRIMARY_X);
-    }
-    for (i=0; i<data.size(); i++) {
-        this->bottom_axis->y_points[i] = (lv_coord_t)data[i];
-    }
-};
+// void Chart::setBottomAxisData (std::vector<axis_data>& data) {
+//     int32_t i;
+//     if (this->bottom_axis == nullptr) {
+//         this->bottom_axis = lv_chart_add_series(this->instance, lv_theme_get_color_primary(this->instance), LV_CHART_AXIS_PRIMARY_X);
+//     }
+//     for (i=0; i<data.size(); i++) {
+//         this->bottom_axis->y_points[i] = (lv_coord_t)data[i];
+//     }
+// };
 
 void Chart::setPointNum (int32_t num) {
     lv_chart_set_point_count(this->instance, (uint16_t)num);
