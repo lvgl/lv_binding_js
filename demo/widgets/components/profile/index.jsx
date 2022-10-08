@@ -1,6 +1,5 @@
-import { View, Switch, Slider, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
+import { View, Switch, Slider, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL, EAlignType } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { EAlignType } from '../../../../src/render/react/components/config';
 
 const { width, height } = Dimensions.window
 

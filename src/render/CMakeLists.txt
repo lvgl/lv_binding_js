@@ -11,8 +11,9 @@ add_library(render STATIC
     ./native/core/style/style.cpp
     ./native/core/style/font/font.cpp
     ./native/core/event/value_change/value_change.cpp
+    ./native/core/event/normal/normal.cpp
+    ./native/core/event/select/select.cpp
     ./native/core/event/click/click.cpp
-    ./native/core/event/focus/focus.cpp
     ./native/core/refresh/refresh.cpp
     ./native/core/utils/utils.cpp
     ./native/core/theme/theme.cpp

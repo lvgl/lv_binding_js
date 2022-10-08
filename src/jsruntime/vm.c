@@ -92,6 +92,17 @@ void SJSRunMain(SJSRuntime *qrt) {
     SJSBootstrap(ctx);
 };
 
+void OnUVClose(uv_handle_t* handle) {
+}
+
+void OnUVWalk(uv_handle_t* handle, void* arg)
+{
+    switch (handle->type) {
+        case UV_TIMER:
+            SJSClearTimer((SJSTimer*)(handle->data));
+    }
+}
+
 BOOL SJSFreeRuntime(SJSRuntime* qrt) {
     if (qrt->foreverLoop) {
         uv_unref((uv_handle_t *) &qrt->jobs.idle);
@@ -99,15 +110,12 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
 
     uv_idle_stop((uv_handle_t *) &qrt->jobs.idle);
 
-    JS_FreeValue(qrt->ctx, qrt->builtins.u8array_ctor);
-    
-    JS_FreeContext(qrt->ctx);
-    JS_FreeRuntime(qrt->rt);
-
     if (qrt->curl_ctx.curlm_h) {
         curl_multi_cleanup(qrt->curl_ctx.curlm_h);
         uv_close((uv_handle_t *) &qrt->curl_ctx.timer, NULL);
     }
+
+    uv_walk(&qrt->loop, OnUVWalk, NULL);
 
     int closed = 0, i;
     for (i = 0; i < 5; i++) {
@@ -117,6 +125,11 @@ BOOL SJSFreeRuntime(SJSRuntime* qrt) {
         }
         uv_run(&qrt->loop, UV_RUN_NOWAIT);
     }
+
+    JS_FreeValue(qrt->ctx, qrt->builtins.u8array_ctor);
+    
+    JS_FreeContext(qrt->ctx);
+    JS_FreeRuntime(qrt->rt);
 
     free(qrt);
 };

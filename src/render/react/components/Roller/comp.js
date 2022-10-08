@@ -72,6 +72,7 @@ export class RollerComp extends NativeRoller {
     removeChild(child) {
     }
     close () {
+        super.close()
     }
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false })

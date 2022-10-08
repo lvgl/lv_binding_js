@@ -1,4 +1,4 @@
-const builtinColor = {
+export const builtinColor = {
     'red': 0xf44336,
     'pink': 0xe91e63,
     'purple': 0x9c27b0,

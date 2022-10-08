@@ -76,6 +76,7 @@ export class CalendarComp extends NativeCalendar {
         super.removeChild(child);
     }
     close () {
+        super.close()
     }
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false })

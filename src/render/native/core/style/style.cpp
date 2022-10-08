@@ -16,6 +16,30 @@ static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSV
     lv_style_set_width(style, static_cast<int16_t>(width));
 };
 
+static void CompSetMaxWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int width;
+    JS_ToInt32(ctx, &width, obj);
+    lv_style_set_max_width(style, static_cast<int16_t>(width));
+};
+
+static void CompSetMinWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int width;
+    JS_ToInt32(ctx, &width, obj);
+    lv_style_set_min_width(style, static_cast<int16_t>(width));
+};
+
+static void CompSetMaxWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int width;
+    JS_ToInt32(ctx, &width, obj);
+    lv_style_set_max_width(style, lv_pct(static_cast<int16_t>(width)));
+};
+
+static void CompSetMinWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int width;
+    JS_ToInt32(ctx, &width, obj);
+    lv_style_set_min_width(style, lv_pct(static_cast<int16_t>(width)));
+};
+
 static void CompSetWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int width;
     JS_ToInt32(ctx, &width, obj);
@@ -32,6 +56,30 @@ static void CompSetHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     int height;
     JS_ToInt32(ctx, &height, obj);
     lv_style_set_height(style, lv_pct(static_cast<int16_t>(height)));
+};
+
+static void CompSetMaxHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int height;
+    JS_ToInt32(ctx, &height, obj);
+    lv_style_set_max_height(style, static_cast<int16_t>(height));
+};
+
+static void CompSetMaxHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int height;
+    JS_ToInt32(ctx, &height, obj);
+    lv_style_set_max_height(style, lv_pct(static_cast<int16_t>(height)));
+};
+
+static void CompSetMinHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int height;
+    JS_ToInt32(ctx, &height, obj);
+    lv_style_set_min_height(style, static_cast<int16_t>(height));
+};
+
+static void CompSetMinHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int height;
+    JS_ToInt32(ctx, &height, obj);
+    lv_style_set_min_height(style, lv_pct(static_cast<int16_t>(height)));
 };
 
 static void CompSetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -415,6 +463,20 @@ static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_img_set_pivot(comp, x, y);
 };
 
+static void CompSetChartScaleX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_chart_set_zoom_x(comp, x);
+};
+
+static void CompSetChartScaleY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int x;
+    JS_ToInt32(ctx, &x, obj);
+
+    lv_chart_set_zoom_y(comp, x);
+};
+
 static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
@@ -719,7 +781,15 @@ static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
 std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     /* size && position */
     {"width", &CompSetWidth},
+    {"max-width", &CompSetMaxWidth},
+    {"max-width_pct", &CompSetMaxWidthPch},
+    {"min-width", &CompSetMinWidth},
+    {"min-width_pct", &CompSetMinWidthPch},
     {"height", &CompSetHeight},
+    {"max-height", &CompSetMaxHeight},
+    {"max-height_pct", &CompSetMaxHeightPch},
+    {"min-height", &CompSetMinHeight},
+    {"min-height_pct", &CompSetMinHeightPch},
     {"left", &CompSetX},
     {"top", &CompSetY},
     {"width_pct", &CompSetWidthPch},
@@ -792,6 +862,8 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
     {"img-scale", &CompSetImgScale},
     {"img-rotate", &CompSetImgRotate},
     {"img-origin", &CompSetTransformOrigin},
+    {"chart-scaleX", &CompSetChartScaleX},
+    {"chart-scaleY", &CompSetChartScaleY},
     {"transform-width", &CompSetTransformWidth},
     {"transform-height", &CompSetTransformHeight},
     {"style-transition-time", &CompSetStyleTransitionTime},

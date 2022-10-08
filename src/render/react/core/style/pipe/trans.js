@@ -215,7 +215,7 @@ const transitionProperty = {
 //     'animate-speed': 102
 // }
 
-const transformSupportKeys = ['translate', 'translate-x', 'translate-y', 'scale', 'rotate', 'transform-width', 'transform-height']
+const transformSupportKeys = ['translate', 'translate-x', 'translate-y', 'scale', 'scaleX', 'scaleY', 'rotate', 'transform-width', 'transform-height']
 
 export function TransStyle (style, result, compName) {
     if (style['transition-property']) {
@@ -251,6 +251,8 @@ export function TransStyle (style, result, compName) {
                         prop = `img-${prop}`
                     }
                     ProcessDeg(prop, val, result)
+                } else if ((prop == 'scaleX' || prop == 'scaleY') && compName == 'Chart') {
+                    ProcessScale(`chart-${prop}`, val, result)
                 } else {
                     if (compName === "Image") {
                         prop = `img-${prop}`

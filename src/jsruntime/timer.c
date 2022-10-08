@@ -1,16 +1,6 @@
 #include <sjs.h>
 
-typedef struct {
-    JSContext *ctx;
-    uv_timer_t handle;
-    int interval;
-    JSValue obj;
-    JSValue func;
-    int argc;
-    JSValue argv[];
-} SJSTimer;
-
-static void SJSClearTimer(SJSTimer *th) {
+void SJSClearTimer(SJSTimer *th) {
     int i;
     JSContext *ctx = th->ctx;
 
@@ -40,12 +30,12 @@ static void SJSInvokeTimerCallback(SJSTimer *th) {
     JS_FreeValue(ctx, ret);
 }
 
-static void uv__timer_close(uv_handle_t *handle) {
+static void UVTimerClose(uv_handle_t *handle) {
     SJSTimer *th = handle->data;
     free(th);
 }
 
-static void uv__timer_cb(uv_timer_t *handle) {
+static void UVTimerCb(uv_timer_t *handle) {
     SJSTimer *th = handle->data;
 
     /* Timer always executes before check phase in libuv,
@@ -63,7 +53,7 @@ static void SJSTimerFinalizer(JSRuntime *rt, JSValue val) {
     SJSTimer *th = JS_GetOpaque(val, SJSTimerClassID);
     if (th) {
         SJSClearTimer(th);
-        uv_close((uv_handle_t *) &th->handle, uv__timer_close);
+        uv_close((uv_handle_t *) &th->handle, UVTimerClose);
     }
 }
 
@@ -125,7 +115,7 @@ static JSValue SJSSetTimeout(JSContext *ctx, JSValueConst this_val, int argc, JS
     for (i = 0; i < nargs; i++)
         th->argv[i] = JS_DupValue(ctx, argv[i + 2]);
 
-    uv_timer_start(&th->handle, uv__timer_cb, delay, magic ? delay : 0 /* repeat */);
+    uv_timer_start(&th->handle, UVTimerCb, delay, magic ? delay : 0 /* repeat */);
 
     JS_SetOpaque(obj, th);
     return obj;

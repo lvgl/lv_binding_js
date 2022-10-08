@@ -192,6 +192,7 @@ void NativeComponentChartInit (JSContext* ctx, JSValue ns);
         }                                                                                                                   \
         return JS_NewBool(ctx, 0);                                                                                          \   
     }                                                                                                                       \
+                                                                                                                            \
 
 #define WRAPPED_JS_Align_To(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetAlignTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {              \
@@ -207,7 +208,7 @@ void NativeComponentChartInit (JSContext* ctx, JSValue ns);
             int align_type;                                                                                                 \
             JS_ToInt32(ctx, &align_type, argv[0]);                                                                          \
                                                                                                                             \
-            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(argv[2]);                                                                          \
+            COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(argv[2]);                                                           \
                                                                                                                             \
             ((COMPONENT*)(s->comp))->BasicComponent::setAlignTo(align_type, x, y, static_cast<BasicComponent*>(parent->comp));   \
             LV_LOG_USER("%s %s setAlignTo", COMPONENT_NAME, s->uid);                                                        \
@@ -217,10 +218,11 @@ void NativeComponentChartInit (JSContext* ctx, JSValue ns);
         }                                                                                                                   \
         return JS_NewBool(ctx, 0);                                                                                          \
     }                                                                                                                       \
+                                                                                                                            \
 
 #define WRAPPED_JS_BACKGROUND_IMAGE(COMPONENT,COMPONENT_NAME)                                                               \
     static JSValue NativeCompSetBackgroundImage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {      \
-        if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {                       \
+        if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {                            \
             COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                               \
             size_t size;                                                                                                    \
             int32_t type;                                                                                                   \
@@ -247,6 +249,21 @@ void NativeComponentChartInit (JSContext* ctx, JSValue ns);
         }                                                                                                                   \
         return JS_NewBool(ctx, 0);                                                                                          \
     }                                                                                                                       \
+                                                                                                                            \
+
+#define WRAPPED_JS_REFRESH_COMPONENT(COMPONENT,COMPONENT_NAME)                                                              \
+    static JSValue NativeCompRefreshComponent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {        \
+        COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
+        lv_obj_invalidate(((BasicComponent*)(s->comp))->instance);                                                          \
+    }                                                                                                                       \
+                                                                                                                            \
+
+#define WRAPPED_JS_CLOSE_COMPONENT(COMPONENT,COMPONENT_NAME)                                                                \
+    static JSValue NativeCompCloseComponent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {          \
+        COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
+        lv_obj_del_async(((BasicComponent*)(s->comp))->instance);                                                                 \
+    }                                                                                                                       \
+                                                                                                                            \
 
 #define STYLE_INFO(COMPONENT,COMPONENT_NAME)                                                                                \
     static JSValue GetStyleLeft (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                     \

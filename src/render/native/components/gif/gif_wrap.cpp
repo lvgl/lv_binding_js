@@ -10,6 +10,7 @@ STYLE_INFO(GIF, "GIF")
 WRAPPED_MOVE_TO_FRONT(GIF, "GIF")
 WRAPPED_MOVE_TO_BACKGROUND(GIF, "GIF")
 WRAPPED_SCROLL_INTO_VIEW(GIF, "GIF")
+WRAPPED_JS_CLOSE_COMPONENT(GIF, "GIF")
 
 static JSValue NativeCompSetGIFBinary(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
@@ -41,6 +42,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

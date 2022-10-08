@@ -14,6 +14,7 @@ WRAPPED_INSERT_CHILD(TabView,"TabView")
 WRAPPED_MOVE_TO_FRONT(TabView, "TabView")
 WRAPPED_MOVE_TO_BACKGROUND(TabView, "TabView")
 WRAPPED_SCROLL_INTO_VIEW(TabView, "TabView")
+WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 
 // static JSValue NativeCompSetTabs(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
 //     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
@@ -86,6 +87,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

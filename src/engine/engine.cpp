@@ -7,10 +7,11 @@ SJSRuntime* Engine::qrt = nullptr;
 static void JSRuntimeFree (int signal) {
     if (Engine::qrt != nullptr) {
         SJSDisableForeverLoop(Engine::qrt);
+        uv_stop(&Engine::qrt->loop);
     }
 };
 
-Engine::Engine (char* filePath) {
+Engine::Engine (char* file_path) {
     SJSRuntime* qrt = Engine::GetSJSInstance();
     
     qrt->foreverLoop = 1;
@@ -36,13 +37,17 @@ Engine::Engine (char* filePath) {
 
     signal(SIGINT, JSRuntimeFree);
 
-    SetJSEntryPath(filePath);
+    SetJSEntryPath(file_path);
 };
 
 Engine::~Engine () {
-    lv_obj_clean(lv_scr_act());
     SJSFreeRuntime(Engine::qrt);
     SJSClearJSApi();
+    lv_obj_clean(lv_scr_act());
+};
+
+void Engine::close () {
+    
 };
 
 void Engine::Start () {
@@ -72,10 +77,10 @@ void Engine::GetBuiltInLibPath (char* result) {
     realpath(path, result);
 };
 
-void Engine::GetEngineAssetPath (char* buf, char* relativePath) {
+void Engine::GetEngineAssetPath (char* buf, char* relative_path) {
     GetEngineDir(buf);
     strcat(buf, SJSPATHSEP);
-    strcat(buf, relativePath);
+    strcat(buf, relative_path);
 };
 
 void Engine::GetBundlePath (char* buf) {
@@ -86,16 +91,16 @@ void Engine::GetBundlePath (char* buf) {
     strcat(buf, "bundle.js");
 };
 
-std::string Engine::SetJSEntryPath (char* filePath) {
+std::string Engine::SetJSEntryPath (char* file_path) {
     char buf[1000]; 
-    realpath(filePath, buf);
-    JSEntryPath = buf;
+    realpath(file_path, buf);
+    js_entry_path = buf;
 
-    return JSEntryPath;
+    return js_entry_path;
 };
 
 void Engine::GetJSAssetsPath (char* buf, const char* url) {
-    strcpy(buf, JSEntryPath.c_str());
+    strcpy(buf, js_entry_path.c_str());
     dirname(buf);
     strcat(buf, url);
 };

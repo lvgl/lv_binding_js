@@ -82,6 +82,7 @@ export class SliderComp extends NativeSlider {
         super.removeChild(child);
     }
     close () {
+        super.close()
     }
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false })

@@ -103,6 +103,18 @@ JSValue SJSGetJSBridge (JSContext* ctx);
 
 void SJSBootstrap (JSContext* ctx);
 
+typedef struct {
+    JSContext *ctx;
+    uv_timer_t handle;
+    int interval;
+    JSValue obj;
+    JSValue func;
+    int argc;
+    JSValue argv[];
+} SJSTimer;
+
+void SJSClearTimer(SJSTimer *th);
+
 #define SJS_UVCONST(x) JS_PROP_INT32_DEF(#x, UV_ ## x, JS_PROP_ENUMERABLE)
 #define SJS_CONST(x) JS_PROP_INT32_DEF(#x, x, JS_PROP_ENUMERABLE)
 #define SJS_CONST2(name, val) JS_PROP_INT32_DEF(name, val, JS_PROP_ENUMERABLE)

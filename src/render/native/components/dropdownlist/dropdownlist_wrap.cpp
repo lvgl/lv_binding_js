@@ -10,6 +10,7 @@ STYLE_INFO(Dropdownlist, "Dropdownlist")
 WRAPPED_MOVE_TO_FRONT(Dropdownlist, "Dropdownlist")
 WRAPPED_MOVE_TO_BACKGROUND(Dropdownlist, "Dropdownlist")
 WRAPPED_SCROLL_INTO_VIEW(Dropdownlist, "Dropdownlist")
+WRAPPED_JS_CLOSE_COMPONENT(Dropdownlist, "Dropdownlist")
 
 static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
@@ -117,6 +118,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

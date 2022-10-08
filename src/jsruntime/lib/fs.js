@@ -87,8 +87,13 @@ class Stat {
     }
 }
 
-async function statAsync () {
-    const [stat, err] = await nativefs.statSync(path);
+async function statAsync (path) {
+    let stat
+    try {
+        stat = await nativefs.stat(path);
+    } catch (e) {
+
+    }
     return new Stat(stat)
 }
 
@@ -99,6 +104,7 @@ function statSync (path) {
 
 function realPathSync (path) {
     const [filename, err] = nativefs.realPathSync(path)
+    if (err) throw err
     return filename
 }
 
@@ -152,6 +158,14 @@ function mkdirSync (path) {
     return nativefs.mkdirSync (path)
 }
 
+async function rmdir (path) {
+    return nativefs.rmdir(path)
+}
+
+function rmdirSync (path) {
+    return nativefs.rmdirSync (path)
+}
+
 module.exports = {
     statSync,
     stat: statAsync,
@@ -165,4 +179,6 @@ module.exports = {
     unlinkSync,
     mkdirSync,
     mkdir,
+    rmdir,
+    rmdirSync
 }

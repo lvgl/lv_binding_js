@@ -8,6 +8,7 @@ STYLE_INFO(Window, "Window")
 WRAPPED_APPEND_CHILD(Window,"Window")
 WRAPPED_REMOVE_CHILD(Window,"Window")
 WRAPPED_INSERT_CHILD(Window,"Window")
+WRAPPED_JS_CLOSE_COMPONENT(Window, "Window")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
@@ -17,6 +18,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
     SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

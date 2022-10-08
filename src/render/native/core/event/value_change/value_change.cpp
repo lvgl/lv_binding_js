@@ -14,19 +14,19 @@ static JSClassDef ValueChangeEventWrapClass = {
 
 static JSValue GetChecked (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapValueChangeEventID));
-    BasicComponent* ins = static_cast<BasicComponent*>(e->user_data);
-    ECOMP_TYPE comp_type = ins->type;
+    BasicComponent* comp = static_cast<BasicComponent*>(e->user_data);
+    ECOMP_TYPE comp_type = comp->type;
     bool checked = false;
 
     switch (comp_type)
     {
         case COMP_TYPE_SWITCH:
-            checked = lv_obj_has_state(ins->instance, LV_STATE_CHECKED);
+            checked = lv_obj_has_state(comp->instance, LV_STATE_CHECKED);
             return JS_NewBool(ctx, checked);
             break;
 
         case COMP_TYPE_CHECKBOX:
-            checked = lv_obj_get_state(ins->instance) & LV_STATE_CHECKED;
+            checked = lv_obj_get_state(comp->instance) & LV_STATE_CHECKED;
             return JS_NewBool(ctx, checked);
             break;
         default:
@@ -38,8 +38,8 @@ static JSValue GetChecked (JSContext* ctx, JSValueConst this_val) {
 
 static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapValueChangeEventID));
-    BasicComponent* ins = static_cast<BasicComponent*>(e->user_data);
-    ECOMP_TYPE comp_type = ins->type;
+    BasicComponent* comp = static_cast<BasicComponent*>(e->user_data);
+    ECOMP_TYPE comp_type = comp->type;
     int32_t value_num = 0;
     const char* value_str;
     char buf[32];
@@ -47,26 +47,26 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     switch (comp_type)
     {
         case COMP_TYPE_SLIDER:
-            value_num = lv_slider_get_value(ins->instance);
+            value_num = lv_slider_get_value(comp->instance);
             return JS_NewInt32(ctx, value_num);
             break;
 
         case COMP_TYPE_TEXTAREA:
-            value_str = lv_textarea_get_text(ins->instance);
+            value_str = lv_textarea_get_text(comp->instance);
             return JS_NewString(ctx, value_str);
 
         case COMP_TYPE_DROPDOWNLIST:
-            lv_dropdown_get_selected_str(ins->instance, buf, sizeof(buf));
+            lv_dropdown_get_selected_str(comp->instance, buf, sizeof(buf));
             return JS_NewString(ctx, buf);
 
         case COMP_TYPE_ROLLER:
-            lv_roller_get_selected_str(ins->instance, buf, sizeof(buf));
+            lv_roller_get_selected_str(comp->instance, buf, sizeof(buf));
             return JS_NewString(ctx, buf);
 
         case COMP_TYPE_CALENDAR:
             lv_calendar_date_t date;
             std::string result;
-            lv_calendar_get_pressed_date(ins->instance, &date);
+            lv_calendar_get_pressed_date(comp->instance, &date);
             result.append(std::to_string(date.year));
             result.append("-");
             result.append(std::to_string(date.month));

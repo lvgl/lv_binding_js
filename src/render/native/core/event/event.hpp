@@ -19,13 +19,17 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
 
 void NativeEventWrapInit (JSContext* ctx);
 
+void NativeNormalEventWrapInit (JSContext* ctx);
+
+JSValue WrapNormalEvent (lv_event_t* e, std::string uid);
+
 void NativeClickEventWrapInit (JSContext* ctx);
 
 JSValue WrapClickEvent (lv_event_t* e, std::string uid);
 
-void NativeFocusEventWrapInit (JSContext* ctx);
+void NativeSelectEventWrapInit (JSContext* ctx);
 
-JSValue WrapFocusEvent (lv_event_t* e, std::string uid);
+JSValue WrapSelectEvent (lv_event_t* e, std::string uid);
 
 void NativeValueChangeEventWrapInit (JSContext* ctx);
 
@@ -42,10 +46,11 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
     { LV_EVENT_LONG_PRESSED, &WrapClickEvent },
     { LV_EVENT_LONG_PRESSED_REPEAT, &WrapClickEvent },
     { LV_EVENT_VALUE_CHANGED, &WrapValueChangeEvent },
-    { LV_EVENT_FOCUSED, &WrapFocusEvent },
-    { LV_EVENT_DEFOCUSED, &WrapFocusEvent },
-    { LV_EVENT_CANCEL, &WrapFocusEvent },
-    { LV_EVENT_READY, &WrapFocusEvent },
+    { LV_EVENT_FOCUSED, &WrapNormalEvent },
+    { LV_EVENT_DEFOCUSED, &WrapNormalEvent },
+    { LV_EVENT_CANCEL, &WrapNormalEvent },
+    { LV_EVENT_READY, &WrapNormalEvent },
+    { LV_EVENT_RELEASED, &WrapNormalEvent },
 };
 
 #define WRAPPED_STOPPROPAGATION                                                                                                       \

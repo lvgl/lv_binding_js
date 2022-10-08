@@ -19,10 +19,13 @@ extern "C" {
 
 class Engine {
   public:  
-    std::string JSEntryPath;
+    std::string js_entry_path;
+    bool is_closed;
 
-    Engine (char* filePath);
+    Engine (char* file_path);
     ~Engine ();
+    
+    void close ();
 
     void Start ();
     static SJSRuntime* GetSJSInstance ();
@@ -32,6 +35,6 @@ class Engine {
     void GetBuiltInLibPath (char* result);
     void GetEngineAssetPath (char* buf, char* relativePath);
     void GetBundlePath (char* buf);
-    std::string SetJSEntryPath (char* filePath);
+    std::string SetJSEntryPath (char* file_path);
     void GetJSAssetsPath (char* buf, const char* url);
 };

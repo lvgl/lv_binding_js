@@ -44,5 +44,11 @@ export const CommonComponentApi = function ({ compName, comp, newProps, oldProps
         onLongPressRepeat (fn) {
             handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
         },
+        onPressLost (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESS_LOST);
+        },
+        onReleased (fn) {
+            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_RELEASED);
+        }
     }
 }

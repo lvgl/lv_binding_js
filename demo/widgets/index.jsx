@@ -2,6 +2,7 @@ import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs, Them
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Profile from './components/profile'
 import Analytics from './components/analytics';
+import Shop from './components/shop'
 
 const { width, height } = Dimensions.window
 
@@ -42,9 +43,7 @@ function App () {
             >
                 <Profile />
                 <Analytics />
-                <View>
-                    <Text>Tab3</Text>
-                </View>
+                <Shop />
             </Tabs>
             <View
                 style={style.colorList}

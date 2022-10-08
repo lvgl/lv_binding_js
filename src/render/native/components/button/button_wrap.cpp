@@ -14,6 +14,7 @@ WRAPPED_INSERT_CHILD(Button,"Button")
 WRAPPED_MOVE_TO_FRONT(Button, "Button")
 WRAPPED_MOVE_TO_BACKGROUND(Button, "Button")
 WRAPPED_SCROLL_INTO_VIEW(Button, "Button")
+WRAPPED_JS_CLOSE_COMPONENT(Button, "Button")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
@@ -29,6 +30,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

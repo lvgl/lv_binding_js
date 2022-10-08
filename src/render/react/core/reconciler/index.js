@@ -120,7 +120,6 @@ const HostConfig = {
   },
   removeChild(parent, child) {
     parent?.removeChild(child);
-    child?.close();
     unRegistEvent(child.uid);
     delete instanceMap[child.uid]
   },

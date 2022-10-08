@@ -11,6 +11,7 @@ WRAPPED_JS_BACKGROUND_IMAGE(Slider,"Slider")
 WRAPPED_MOVE_TO_FRONT(Slider, "Slider")
 WRAPPED_MOVE_TO_BACKGROUND(Slider, "Slider")
 WRAPPED_SCROLL_INTO_VIEW(Slider, "Slider")
+WRAPPED_JS_CLOSE_COMPONENT(Slider, "Slider")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
@@ -54,6 +55,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

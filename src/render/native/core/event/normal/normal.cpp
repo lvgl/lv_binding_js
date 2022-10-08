@@ -1,18 +1,18 @@
-#include "focus.hpp"
-
-static JSClassID WrapFocusEventID;
+#include "normal.hpp"
 
 WRAPPED_STOPPROPAGATION
+
+static JSClassID WrapNormalEventID;
 
 static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
-static JSClassDef ClickEventWrapClass = {
-    "focus",
+static JSClassDef NormalEventWrapClass = {
+    "normal",
     .finalizer = EventFinalizer,
 };
 
-JSValue WrapFocusEvent (lv_event_t* e, std::string uid) {
+JSValue WrapNormalEvent (lv_event_t* e, std::string uid) {
     SJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
@@ -20,8 +20,8 @@ JSValue WrapFocusEvent (lv_event_t* e, std::string uid) {
 
     qrt = Engine::GetSJSInstance();
     ctx = qrt->ctx;
-    proto = JS_GetClassProto(ctx, WrapFocusEventID);
-    obj = JS_NewObjectProtoClass(ctx, proto, WrapFocusEventID);
+    proto = JS_GetClassProto(ctx, WrapNormalEventID);
+    obj = JS_NewObjectProtoClass(ctx, proto, WrapNormalEventID);
     JS_FreeValue(ctx, proto);
 
     JS_SetOpaque(obj, e);
@@ -33,10 +33,10 @@ static const JSCFunctionListEntry component_proto_funcs[] = {
     SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
-void NativeFocusEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapFocusEventID);
-    JS_NewClass(JS_GetRuntime(ctx), WrapFocusEventID, &ClickEventWrapClass);
+void NativeNormalEventWrapInit (JSContext* ctx) {
+    JS_NewClassID(&WrapNormalEventID);
+    JS_NewClass(JS_GetRuntime(ctx), WrapNormalEventID, &NormalEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));
-    JS_SetClassProto(ctx, WrapFocusEventID, proto);
+    JS_SetClassProto(ctx, WrapNormalEventID, proto);
 }

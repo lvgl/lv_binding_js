@@ -11,6 +11,134 @@ WRAPPED_JS_BACKGROUND_IMAGE(Chart,"Chart")
 WRAPPED_MOVE_TO_FRONT(Chart, "Chart")
 WRAPPED_MOVE_TO_BACKGROUND(Chart, "Chart")
 WRAPPED_SCROLL_INTO_VIEW(Chart, "Chart")
+WRAPPED_JS_REFRESH_COMPONENT(Chart, "Chart")
+WRAPPED_JS_CLOSE_COMPONENT(Chart, "Chart")
+
+static JSValue NativeCompSetLeftAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        int32_t len, i;
+        size_t item_len;
+        const char* str_ori;
+        std::vector<std::string> result;
+        std::string item;
+        JSValue item_value;
+        JSValue len_value = JS_GetPropertyStr(ctx, argv[0], "length");
+        JS_ToInt32(ctx, &len, len_value);
+        JS_FreeValue(ctx, len_value);
+
+        for (i=0; i<len; i++) {
+            item_value = JS_GetPropertyUint32(ctx, argv[0], i);
+            str_ori = JS_ToCStringLen(ctx, &item_len, item_value);
+            item = str_ori;
+            item.resize(item_len);
+            result.push_back(item);
+
+            JS_FreeValue(ctx, item_value);
+            JS_FreeCString(ctx, str_ori);
+        }
+
+        ((Chart*)(ref->comp))->setLeftAxisLabels(result);
+        LV_LOG_USER("Chart %s setLeftAxisLabels", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetRightAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        int32_t len, i;
+        size_t item_len;
+        const char* str_ori;
+        std::vector<std::string> result;
+        std::string item;
+        JSValue item_value;
+        JSValue len_value = JS_GetPropertyStr(ctx, argv[0], "length");
+        JS_ToInt32(ctx, &len, len_value);
+        JS_FreeValue(ctx, len_value);
+
+        for (i=0; i<len; i++) {
+            item_value = JS_GetPropertyUint32(ctx, argv[0], i);
+            str_ori = JS_ToCStringLen(ctx, &item_len, item_value);
+            item = str_ori;
+            item.resize(item_len);
+            result.push_back(item);
+
+            JS_FreeValue(ctx, item_value);
+            JS_FreeCString(ctx, str_ori);
+        }
+
+        JS_FreeValue(ctx, len_value);
+
+        ((Chart*)(ref->comp))->setRightAxisLabels(result);
+        LV_LOG_USER("Chart %s setRightAxisLabels", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetTopAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        int32_t len, i;
+        size_t item_len;
+        const char* str_ori;
+        std::vector<std::string> result;
+        std::string item;
+        JSValue item_value;
+        JSValue len_value = JS_GetPropertyStr(ctx, argv[0], "length");
+        JS_ToInt32(ctx, &len, len_value);
+        JS_FreeValue(ctx, len_value);
+
+        for (i=0; i<len; i++) {
+            item_value = JS_GetPropertyUint32(ctx, argv[0], i);
+            str_ori = JS_ToCStringLen(ctx, &item_len, item_value);
+            item = str_ori;
+            item.resize(item_len);
+            result.push_back(item);
+
+            JS_FreeValue(ctx, item_value);
+            JS_FreeCString(ctx, str_ori);
+        }
+
+        ((Chart*)(ref->comp))->setTopAxisLabels(result);
+        LV_LOG_USER("Chart %s setTopAxisLabels", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetBottomAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        int32_t len, i;
+        size_t item_len;
+        const char* str_ori;
+        std::vector<std::string> result;
+        std::string item;
+        JSValue item_value;
+        JSValue len_value = JS_GetPropertyStr(ctx, argv[0], "length");
+        JS_ToInt32(ctx, &len, len_value);
+        JS_FreeValue(ctx, len_value);
+
+        for (i=0; i<len; i++) {
+            item_value = JS_GetPropertyUint32(ctx, argv[0], i);
+            str_ori = JS_ToCStringLen(ctx, &item_len, item_value);
+            item = str_ori;
+            item.resize(item_len);
+            result.push_back(item);
+
+            JS_FreeValue(ctx, item_value);
+            JS_FreeCString(ctx, str_ori);
+        }
+
+        ((Chart*)(ref->comp))->setBottomAxisLabels(result);
+        LV_LOG_USER("Chart %s setBottomAxisLabels", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
 
 static JSValue NativeCompSetDivLine(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
@@ -255,6 +383,7 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
             JS_FreeValue(ctx, color_value);
             JS_FreeValue(ctx, data_value);
             JS_FreeValue(ctx, len2_value);
+            JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
         
@@ -303,6 +432,7 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
             JS_FreeValue(ctx, color_value);
             JS_FreeValue(ctx, data_value);
             JS_FreeValue(ctx, len2_value);
+            JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
         
@@ -312,7 +442,150 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        std::vector<axis_data> data;
+        int32_t len1, len2, i, color, data_item;
+        JSValue item_value;
+        JSValue color_value;
+        JSValue data_value;
+        JSValue data_item_value;
+        JSValue len2_value;
+        JSValue len1_value = JS_GetPropertyStr(ctx, argv[0], "length");
+        JS_ToInt32(ctx, &len1, len1_value);
+
+        for(int i=0; i<len1; i++) {
+            struct axis_data item;
+            item_value = JS_GetPropertyUint32(ctx, argv[0], i);
+
+            color_value = JS_GetPropertyStr(ctx, item_value, "color");
+            data_value = JS_GetPropertyStr(ctx, item_value, "data");
+            len2_value = JS_GetPropertyStr(ctx, data_value, "length");
+
+            JS_ToInt32(ctx, &color, color_value);
+            item.color = color;
+
+            JS_ToInt32(ctx, &len2, len2_value);
+            
+            for (int j=0; j<len2; j++) {
+                data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
+                JS_ToInt32(ctx, &data_item, data_item_value);
+                item.data.push_back(data_item);
+                JS_FreeValue(ctx, data_item_value);   
+            }
+
+            data.push_back(item);
+
+            JS_FreeValue(ctx, color_value);
+            JS_FreeValue(ctx, data_value);
+            JS_FreeValue(ctx, len2_value);
+            JS_FreeValue(ctx, item_value);
+        }
+        JS_FreeValue(ctx, len1_value);
+        
+        ((Chart*)(ref->comp))->setScatterData(data);
+        LV_LOG_USER("Chart %s setScatterData", ref->uid);
+    }
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompSetLeftAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
+        JSValue max_value = JS_GetPropertyUint32(ctx, argv[0], 1);
+
+        int32_t min, max;
+
+        JS_ToInt32(ctx, &min, min_value);
+        JS_ToInt32(ctx, &max, max_value);
+
+        ((Chart*)(ref->comp))->setLeftAxisRange(min, max);
+
+        JS_FreeValue(ctx, min_value);
+        JS_FreeValue(ctx, max_value);
+
+        LV_LOG_USER("Chart %s setLeftAxisRange", ref->uid);
+    }
+};
+
+static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
+        JSValue max_value = JS_GetPropertyUint32(ctx, argv[0], 1);
+
+        int32_t min, max;
+
+        JS_ToInt32(ctx, &min, min_value);
+        JS_ToInt32(ctx, &max, max_value);
+
+        ((Chart*)(ref->comp))->setRightAxisRange(min, max);
+
+        JS_FreeValue(ctx, min_value);
+        JS_FreeValue(ctx, max_value);
+
+        LV_LOG_USER("Chart %s setRightAxisRange", ref->uid);
+    }
+};
+
+static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
+        JSValue max_value = JS_GetPropertyUint32(ctx, argv[0], 1);
+
+        int32_t min, max;
+
+        JS_ToInt32(ctx, &min, min_value);
+        JS_ToInt32(ctx, &max, max_value);
+
+        ((Chart*)(ref->comp))->setTopAxisRange(min, max);
+
+        JS_FreeValue(ctx, min_value);
+        JS_FreeValue(ctx, max_value);
+
+        LV_LOG_USER("Chart %s setTopAxisRange", ref->uid);
+    }
+};
+
+static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
+
+        JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
+        JSValue max_value = JS_GetPropertyUint32(ctx, argv[0], 1);
+
+        int32_t min, max;
+
+        JS_ToInt32(ctx, &min, min_value);
+        JS_ToInt32(ctx, &max, max_value);
+
+        ((Chart*)(ref->comp))->setBottomAxisRange(min, max);
+
+        JS_FreeValue(ctx, min_value);
+        JS_FreeValue(ctx, max_value);
+
+        LV_LOG_USER("Chart %s setBottomAxisRange", ref->uid);
+    }
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
+    SJS_CFUNC_DEF("setLeftAxisRange", 0, NativeCompSetLeftAxisRange),
+    SJS_CFUNC_DEF("setRightAxisRange", 0, NativeCompSetRightAxisRange),
+    SJS_CFUNC_DEF("setBottomAxisRange", 0, NativeCompSetBottomAxisRange),
+    SJS_CFUNC_DEF("setTopAxisRange", 0, NativeCompSetTopAxisRange),
+
+    SJS_CFUNC_DEF("setLeftAxisLabels", 0, NativeCompSetLeftAxisLabels),
+    SJS_CFUNC_DEF("setRightAxisLabels", 0, NativeCompSetRightAxisLabels),
+    SJS_CFUNC_DEF("setBottomAxisLabels", 0, NativeCompSetBottomAxisLabels),
+    SJS_CFUNC_DEF("setTopAxisLabels", 0, NativeCompSetTopAxisLabels),
+
     SJS_CFUNC_DEF("setDivLineCount", 0, NativeCompSetDivLine),
     SJS_CFUNC_DEF("setRightAxisOption", 0, NativeCompSetRightAxisOption),
     SJS_CFUNC_DEF("setTopAxisOption", 0, NativeCompSetTopAxisOption),
@@ -320,10 +593,12 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("setLeftAxisOption", 0, NativeCompSetLeftAxisOption),
     SJS_CFUNC_DEF("setLeftAxisData", 0, NativeCompSetLeftAxisData),
     SJS_CFUNC_DEF("setRightAxisData", 0, NativeCompSetRightAxisData),
+    SJS_CFUNC_DEF("setScatterData", 0, NativeCompSetScatterData),
     // SJS_CFUNC_DEF("setTopAxisData", 0, NativeCompSetTopAxisData),
     // SJS_CFUNC_DEF("setBottomAxisData", 0, NativeCompSetBottomAxisData),
     SJS_CFUNC_DEF("setType", 0, NativeCompSetType),
     SJS_CFUNC_DEF("setPointNum", 0, NativeCompSetPointNum),
+    SJS_CFUNC_DEF("refresh", 0, NativeCompRefreshComponent),
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -334,6 +609,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {

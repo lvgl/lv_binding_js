@@ -27,10 +27,7 @@ static JSValue SJSErrorStrerror(JSContext *ctx, JSValueConst this_val, int argc,
 }
 
 JSValue SJSThrowErrno(JSContext *ctx, int err) {
-    JSValue obj;
-    obj = SJSNewError(ctx, err);
-    if (JS_IsException(obj))
-        obj = JS_NULL;
+    JSValue obj = SJSNewError(ctx, err);
     return JS_Throw(ctx, obj);
 }
 

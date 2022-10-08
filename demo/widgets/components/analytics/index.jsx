@@ -1,6 +1,5 @@
-import { View, Switch, Slider, Text, Image, Input, Chart, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
+import { View, Switch, Slider, Text, Image, Input, Chart, Button, Dimensions, BUILT_IN_SYMBOL, EAlignType } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { EAlignType } from '../../../../src/render/react/components/config';
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -30,18 +29,22 @@ export default function Analytics () {
                         drawSize: 50
                     }}
                     leftAxisData={[
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
+                        {
+                            data: [
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                            ]
+                        }
                     ]}
                 />
             </View>
@@ -67,18 +70,39 @@ export default function Analytics () {
                         drawSize: 50
                     }}
                     leftAxisData={[
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
-                        getRandomInt(80),
+                        {
+                            data: [
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                            ]
+                        },
+                        {
+                            color: 'grey',
+                            data: [
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                                getRandomInt(80),
+                            ]
+                        }
                     ]}
                 />
             </View>
@@ -147,6 +171,7 @@ const style = {
         'grid-row-span': 1,
 
         'border-radius': 0,
-        'border-side': 'bottom-left'
+        'border-side': 'bottom-left',
+        'padding': 16
     },
 }

@@ -97,6 +97,7 @@ make dev-x86 or make build-x86
 - [recolor](./doc/style/recolor.md)
 - [line](./doc/style/line.md)
 - [transition](./doc/style/transition.md)
+- [transform](./doc/style/transform.md)
 
 ## JSAPI
 [network](./doc/jsapi/network.md)

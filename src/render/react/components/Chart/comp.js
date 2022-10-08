@@ -1,5 +1,6 @@
 import { setStyle, handleEvent, styleGetterProp, EVENTTYPE_MAP, STYLE_TYPE } from '../config'
 import { CommonComponentApi } from '../common/index'
+import { colorTransform } from '../../core/style/color'
 
 const bridge = globalThis.SJSJSBridge
 const NativeChart = bridge.NativeRender.NativeComponents.Chart
@@ -17,17 +18,11 @@ function setChartProps(comp, newProps, oldProps) {
         onPressedStyle (styleSheet) {
             setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
         },
-        onClick (fn) {
-            handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+        indicatorStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.PART_INDICATOR, oldStyleSheet: oldProps.pointStyle });
         },
-        onPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
-        },
-        onLongPressed (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
-        },
-        onLongPressRepeat (fn) {
-            handleEvent (comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+        itemStyle (styleSheet) {
+            setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.PART_ITEMS, oldStyleSheet: oldProps.pointStyle });
         },
         type (type) {
             if (chartType[type] !== void 0) {
@@ -44,6 +39,23 @@ function setChartProps(comp, newProps, oldProps) {
                 comp.setPointNum(num)
             }
         },
+        scatterData (data) {
+            if (data !== oldProps?.scatterData) {
+                data = data.map(item => {
+                    const arr = []
+                    item.data.forEach(item1 => {
+                        arr.push(item1[0])
+                        arr.push(item1[1])
+                    })
+                    return {
+                        color: item.color === void 0 ? -1 : colorTransform(item.color),
+                        data: arr
+                    }
+                })
+
+                comp.setScatterData(data)
+            }
+        },
         leftAxisOption (options) {
             if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
                 return
@@ -55,7 +67,11 @@ function setChartProps(comp, newProps, oldProps) {
             }
         },
         leftAxisData(data) {
-            if (data !== oldProps?.leftAxisData && Array.isArray(data)) {
+            if (data !== oldProps?.leftAxisData) {
+                data = data.map(item => ({
+                    ...item,
+                    color: item.color === void 0 ? -1 : colorTransform(item.color)
+                }))
                 comp.setLeftAxisData(data)
             }
         },
@@ -69,7 +85,11 @@ function setChartProps(comp, newProps, oldProps) {
             }
         },
         bottomAxisData(data) {
-            if (data !== oldProps?.bottomAxisData && Array.isArray(data)) {
+            if (data !== oldProps?.bottomAxisData) {
+                data = data.map(item => ({
+                    ...item,
+                    color: item.color === void 0 ? -1 : colorTransform(item.color)
+                }))
                 comp.setBottomAxisData(data)
             }
         },
@@ -79,11 +99,15 @@ function setChartProps(comp, newProps, oldProps) {
             }
 
             if (options != oldProps?.rightAxisOption) {
-                comp.setRightAxis(options)
+                comp.setRightAxisOption(options)
             }
         },
         rightAxisData(data) {
-            if (data !== oldProps?.rightAxisData && Array.isArray(data)) {
+            if (data !== oldProps?.rightAxisData) {
+                data = data.map(item => ({
+                    ...item,
+                    color: item.color === void 0 ? -1 : colorTransform(item.color)
+                }))
                 comp.setRightAxisData(data)
             }
         },
@@ -93,12 +117,56 @@ function setChartProps(comp, newProps, oldProps) {
             }
 
             if (options != oldProps?.topAxisOption) {
-                comp.setTopAxis(options)
+                comp.setTopAxisOption(options)
             }
         },
         topAxisData(data) {
-            if (data !== oldProps?.topAxisData && Array.isArray(data)) {
+            if (data !== oldProps?.topAxisData) {
+                data = data.map(item => ({
+                    ...item,
+                    color: item.color === void 0 ? -1 : colorTransform(item.color)
+                }))
                 comp.setTopAxisData(data)
+            }
+        },
+        leftAxisLabels (arr) {
+            if (arr !== oldProps?.leftAxisLabels) {
+                comp.setLeftAxisLabels(arr)
+            }
+        },
+        rightAxisLabels (arr) {
+            if (arr !== oldProps?.rightAxisLabels) {
+                comp.setRightAxisLabels(arr)
+            }
+        },
+        topAxisLabels (arr) {
+            if (arr !== oldProps?.topAxisLabels) {
+                comp.setTopAxisLabels(arr)
+            }
+        },
+        bottomAxisLabels (arr) {
+            if (arr !== oldProps?.bottomAxisLabels) {
+                comp.setBottomAxisLabels(arr)
+            }
+        },
+        leftAxisRange (arr) {
+            if (arr?.[0] !== oldProps?.leftAxisRange?.[0] || arr?.[1] !== oldProps?.leftAxisRange?.[1]) {
+                comp.setLeftAxisRange(arr)
+            }
+        },
+        rightAxisRange (arr) {
+            if (arr?.[0] !== oldProps?.rightAxisRange?.[0] || arr?.[1] !== oldProps?.rightAxisRange?.[1]) {
+                comp.setRightAxisRange(arr)
+            }
+        },
+        topAxisRange (arr) {
+            if (arr?.[0] !== oldProps?.topAxisRange?.[0] || arr?.[1] !== oldProps?.topAxisRange?.[1]) {
+                comp.setTopAxisRange(arr)
+            }
+        },
+        bottomAxisRange (arr) {
+            if (arr?.[0] !== oldProps?.bottomAxisRange?.[0] || arr?.[1] !== oldProps?.bottomAxisRange?.[1]) {
+                comp.setBottomAxisRange(arr)
             }
         },
     }
@@ -114,6 +182,7 @@ function setChartProps(comp, newProps, oldProps) {
             comp.dataset[prop.substring(5)] = newProps[prop]
         }
     })
+    comp.refresh()
 }
   
 export class ChartComp extends NativeChart {
@@ -146,6 +215,7 @@ export class ChartComp extends NativeChart {
         super.removeChild(child);
     }
     close () {
+        super.close()
     }
     setStyle (style, type = 0x0000) {
         setStyle({ comp: this, styleSheet: style, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false })

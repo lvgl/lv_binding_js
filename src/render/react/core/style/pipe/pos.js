@@ -2,11 +2,15 @@ import { ProcessPxOrPercent, ProcessPx, ProcessEnum } from "../util"
 
 const obj = {
     'height': ProcessPxOrPercent,
+    'max-height': ProcessPxOrPercent,
+    'min-height': ProcessPxOrPercent,
     'width': ProcessPxOrPercent,
+    'max-width': ProcessPxOrPercent,
+    'min-width': ProcessPxOrPercent,
     'left': ProcessPxOrPercent,
     'top': ProcessPxOrPercent,
-    'row-spacing': ProcessPx,
-    'column-spacing': ProcessPx,
+    'row-spacing': ProcessPxOrPercent,
+    'column-spacing': ProcessPxOrPercent,
     'position': ProcessEnum({
         'absolute': 'absolute',
         'fixed': 'fixed'

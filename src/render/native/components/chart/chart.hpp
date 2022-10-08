@@ -19,6 +19,23 @@ class Chart : public BasicComponent {
   std::vector<lv_chart_series_t*> right_axis;
   std::vector<lv_chart_series_t*> top_axis;
 
+  std::vector<std::string> left_axis_labels;
+  std::vector<std::string> right_axis_labels;
+  std::vector<std::string> top_axis_labels;
+  std::vector<std::string> bottom_axis_labels;
+
+  void setLeftAxisRange (int32_t min, int32_t max);
+  void setRightAxisRange (int32_t min, int32_t max);
+  void setTopAxisRange (int32_t min, int32_t max);
+  void setBottomAxisRange (int32_t min, int32_t max);
+
+  void setLeftAxisLabels (std::vector<std::string>& labels);
+  void setRightAxisLabels (std::vector<std::string>& labels);
+  void setBottomAxisLabels (std::vector<std::string>& labels);
+  void setTopAxisLabels (std::vector<std::string>& labels);
+
+  static void draw_event_cb (lv_event_t * e);
+
   void setType (int32_t type);
 
   void setLeftAxisOption (
@@ -57,6 +74,8 @@ class Chart : public BasicComponent {
   void setRightAxisData (std::vector<axis_data>& data);
   void setBottomAxisData (std::vector<axis_data>& data);
   void setTopAxisData (std::vector<axis_data>& data);
+
+  void setScatterData (std::vector<axis_data>& data);
 
   void setPointNum (int32_t num);
 
