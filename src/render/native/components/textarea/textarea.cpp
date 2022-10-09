@@ -18,9 +18,9 @@ Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 };
 
 void Textarea::raiseKeyboard (lv_event_t* event) {
-    lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
     Textarea* comp = static_cast<Textarea*>(event->user_data);
     if (!comp->auto_raise_keyboard) return;
+    lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
     comp->keyboard = keyboard;
 
     uint32_t width, height;
@@ -41,7 +41,7 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
 
 void Textarea::hideKeyboard (lv_event_t * event) {
     Textarea* comp = static_cast<Textarea*>(event->user_data);
-    if (comp->keyboard == nullptr) return;
+    if (comp->keyboard == nullptr || !comp->auto_raise_keyboard) return;
 
     lv_keyboard_set_textarea(comp->keyboard, nullptr);
     lv_obj_del_async(comp->keyboard);

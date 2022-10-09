@@ -41,9 +41,9 @@ Engine::Engine (char* file_path) {
 };
 
 Engine::~Engine () {
+    lv_obj_clean(lv_scr_act());
     SJSFreeRuntime(Engine::qrt);
     SJSClearJSApi();
-    lv_obj_clean(lv_scr_act());
 };
 
 void Engine::close () {

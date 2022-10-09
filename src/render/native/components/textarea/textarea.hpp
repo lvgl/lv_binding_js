@@ -9,7 +9,7 @@ class Textarea : public BasicComponent {
  public:
   bool auto_raise_keyboard = true;
 
-  lv_obj_t* keyboard;
+  lv_obj_t* keyboard = nullptr;
 
   Textarea(std::string uid, lv_obj_t* parent = nullptr);
 

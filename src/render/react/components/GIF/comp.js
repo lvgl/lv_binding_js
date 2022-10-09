@@ -51,7 +51,7 @@ function setGIFProps(comp, newProps, oldProps) {
         },
     }
     Object.keys(setter).forEach(key => {
-        if (newProps[key]) {
+        if (newProps.hasOwnProperty(key)) {
             setter[key](newProps[key])
         }
     })

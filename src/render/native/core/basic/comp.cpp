@@ -37,7 +37,7 @@ bool BasicComponent::isEventRegist(int eventType) {
 
 void BasicComponent::insertChildBefore(void *child) {
     static_cast<BasicComponent*>(child)->parent_instance = this->instance;
-    if (!(static_cast<BasicComponent*>(child)->is_fixed)) {
+    if (!(static_cast<BasicComponent*>(child)->is_fixed) && (static_cast<BasicComponent*>(child)->type != COMP_TYPE_MASK)) {
         lv_obj_t* ins = (static_cast<BasicComponent*>(child))->instance;
         lv_obj_set_parent(ins, this->instance);
         uint32_t index = lv_obj_get_index(ins);
@@ -51,7 +51,7 @@ void BasicComponent::removeChild(void* child) {
 
 void BasicComponent::appendChild (void* child) {
     static_cast<BasicComponent*>(child)->parent_instance = this->instance;
-    if (!(static_cast<BasicComponent*>(child)->is_fixed)) {
+    if (!(static_cast<BasicComponent*>(child)->is_fixed) && (static_cast<BasicComponent*>(child)->type != COMP_TYPE_MASK)) {
         lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
     }
 };
