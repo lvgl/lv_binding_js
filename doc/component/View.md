@@ -22,7 +22,7 @@
 
 ## Usage
 ```jsx
-import { View, EAlignType, Window, Button, Text } from 'lvlgjs-ui'
+import { View, EAlignType, Button, Text } from 'lvlgjs-ui'
 import { useRef, useEffect } from 'react'
 
 function Component () {
@@ -32,25 +32,23 @@ function Component () {
     })
 
     return (
-        <Window>
-             <View
-                style={style.view}
-                onPressedStyle={style.viewPressed}
-                onClick={e => { e.stopPropagation() }}
-                onPressed={() => {}}
-                onLongPressed={() => {}}
-                onLongPressRepeat={() => {}}
-                align={{
-                    type: EAlignType.ALIGN_CENTER,
-                    pos: [10, 0]
-                }}
-                ref={ref}
-            >
-                <Button>
-                    <Text>2222</Text>
-                </Button>
-            </View>
-        </Window>
+       <View
+          style={style.view}
+          onPressedStyle={style.viewPressed}
+          onClick={e => { e.stopPropagation() }}
+          onPressed={() => {}}
+          onLongPressed={() => {}}
+          onLongPressRepeat={() => {}}
+          align={{
+              type: EAlignType.ALIGN_CENTER,
+              pos: [10, 0]
+          }}
+          ref={ref}
+      >
+          <Button>
+              <Text>2222</Text>
+          </Button>
+      </View>
     )
 }
 

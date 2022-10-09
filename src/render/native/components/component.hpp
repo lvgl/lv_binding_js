@@ -56,6 +56,8 @@ void NativeComponentTabViewInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentChartInit (JSContext* ctx, JSValue ns);
 
+void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
+
 #define WRAPPED_APPEND_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
     static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \
         if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \

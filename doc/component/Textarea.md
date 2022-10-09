@@ -24,19 +24,20 @@
 
 ## Note
 - Textarea Component is Multi line mode lv_textarea
+- virtual keyboard will auto raise up when focus on Textarea component 
 
 ## Controlled Mode
 Component Textarea support [controlled mode](https://krasimir.gitbooks.io/react-in-patterns/content/chapter-05/), achieve by onChange and value props  
 
 ## Usage
 ```jsx
-import { Textarea, Window } from 'lvlgjs-ui'
+import { Textarea } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState()
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Textarea
               style={style.textarea}
@@ -53,7 +54,7 @@ function Component () {
               onFocusStyle={style.onFocusStyle}
               mode="password"
             />
-        </Window>
+        </React.Fragment>
     )
 }
 

@@ -22,20 +22,18 @@ onClick callback with the following type
 
 ## Usage
 ```jsx
-import { Input, Window } from 'lvlgjs-ui'
+import { Input } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState()
     return (
-        <Window>
-            <Input
-              style={style.input}
-              onFocus={() => console.log('focus')}
-              onFocusStyle={style.onFocusStyle}
-              mode="password"
-            />
-        </Window>
+        <Input
+          style={style.input}
+          onFocus={() => console.log('focus')}
+          onFocusStyle={style.onFocusStyle}
+          mode="password"
+        />
     )
 }
 

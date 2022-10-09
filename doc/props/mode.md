@@ -8,13 +8,11 @@ mode with following value
 
 ## Usage
 ```jsx
-import { Window, Input } from 'lvlgjs-ui'
+import { Input } from 'lvlgjs-ui'
 
 function Component () {
     return (
-        <Window>
-            <Input mode="password" >
-        </Window>
+        <Input mode="password" >
     )
 }
 

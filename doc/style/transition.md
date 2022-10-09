@@ -25,7 +25,6 @@ transition with following properties:
 ```jsx
 function App () {
     return (
-        <Window style={style.window}>
             <View 
                 align={{
                     type: EAlignType.ALIGN_CENTER
@@ -33,15 +32,10 @@ function App () {
                 style={style.view}
                 onPressedStyle={style.pressedStyle}    
             >{`Text of a label`}</View>
-        </Window>
     )
 };
 
 const style = {
-    window: {
-        'width': '480px',
-        'height': '320px',
-    },
     view: {
         'transition-property': 'border-width, background-color, border-color',
         'transition-duration': '100ms',

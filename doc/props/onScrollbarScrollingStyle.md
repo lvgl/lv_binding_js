@@ -7,19 +7,17 @@ support JS Object or JS Array
 
 ## Usage
 ```jsx
-import { View, Window, Button, Text } from 'lvlgjs-ui'
+import { View, Button, Text } from 'lvlgjs-ui'
 
 function Component () {
     return (
-        <Window>
-             <View
-                onScrollbarScrollingStyle={style.view}
-            >
-                <Button onScrollbarScrollingStyle={[style.button1, style.button2]}>
-                    <Text>2222</Text>
-                </Button>
-            </View>
-        </Window>
+        <View
+            onScrollbarScrollingStyle={style.view}
+        >
+            <Button onScrollbarScrollingStyle={[style.button1, style.button2]}>
+                <Text>2222</Text>
+            </Button>
+        </View>
     )
 }
 

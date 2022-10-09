@@ -5,13 +5,13 @@ Prop disabled used in component Switch、Checkbox
 ## Usage
 
 ```jsx
-import { Checkbox, Window } from 'lvlgjs-ui'
+import { Checkbox } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Checkbox
               style={style.checkbox}
@@ -27,7 +27,7 @@ function Component () {
               disabled={true}
               checked={true}
             />
-        </Window>
+        </React.Fragment>
     )
 }
 

@@ -76,7 +76,20 @@ static JSValue NativeCompSetMaxLength(JSContext *ctx, JSValueConst this_val, int
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompSetAutoKeyboard (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    if (argc >= 1 && JS_IsBool(argv[0])) {
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
+        int32_t payload;
+        JS_ToInt32(ctx, &payload, argv[0]);
+
+        ((Textarea*)(ref->comp))->setAutoRaiseKeyboard(payload);
+        LV_LOG_USER("Textarea %s setAutoRaiseKeyboard %d", ref->uid, payload);
+    }
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
+    SJS_CFUNC_DEF("setAutoKeyboard", 0, NativeCompSetAutoKeyboard),
     SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
     SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),

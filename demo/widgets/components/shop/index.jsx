@@ -1,4 +1,4 @@
-import { View, Switch, Slider, Text, Chart, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
+import { View, Switch, Checkbox, Text, Chart, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const { width, height } = Dimensions.window
@@ -100,7 +100,31 @@ export default function App () {
                         ))
                     }
                 </View>
-                <View style={style.notify}></View>
+                <View style={style.notify}>
+                    <Text style={style.notift_text1}>Notification</Text>
+                    <Checkbox
+                        text="Item purchased"
+                    />
+                    <Checkbox
+                        text="New connection"
+                    />
+                    <Checkbox
+                        text="New subscriber"
+                        checked={true}
+                    />
+                    <Checkbox
+                        text="New message"
+                        disabled={true}
+                    />
+                    <Checkbox
+                        text="New message"
+                        disabled={true}
+                        checked={true}
+                    />
+                    <Checkbox
+                        text="Out of stock"
+                    />
+                </View>
             </View>
         </View>
     )
@@ -243,6 +267,13 @@ const style = {
         'grid-row-span': 1,
     },
     notify: {
+        'height': 'auto',
+        'max-height': '300px',
+        'display': 'flex',
+        'flex-direction': 'column',
         'flex-grow': 1
+    },
+    notift_text1: {
+        'font-size': '24px',
     }
 }

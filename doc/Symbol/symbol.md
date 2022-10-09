@@ -7,7 +7,7 @@ audio、video、list、ok、close、power、settings、home、download、drive�
 
 ## Usage
 ```jsx
-import { Image, Window, Text, BUILT_IN_SYMBOL } from 'lvlgjs-ui'
+import { Image, Text, BUILT_IN_SYMBOL } from 'lvlgjs-ui'
 import { useRef } from 'react'
 
 function Component () {
@@ -17,12 +17,12 @@ function Component () {
     }, [])
 
     return (
-       <Window>
+       <React.Fragment>
           <Text>{BUILT_IN_SYMBOL.audio}<Text>
           <Image
               src={"audio"}
           ></Image>
-       </Window>
+       </React.Fragment>
     )
 }
 ```

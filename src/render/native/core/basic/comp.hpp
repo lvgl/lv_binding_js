@@ -28,6 +28,7 @@ enum ECOMP_TYPE {
   COMP_TYPE_LIST,
   COMP_TYPE_TABVIEW,
   COMP_TYPE_CHART,
+  COMP_TYPE_MASK
 };
 
 #include "native/core/event/event.hpp"

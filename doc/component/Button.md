@@ -19,7 +19,7 @@
 
 ## Usage
 ```jsx
-import { Button, Text, Image, Window } from 'lvlgjs-ui'
+import { Button, Text, Image } from 'lvlgjs-ui'
 import { useRef, useState } from 'react'
 
 function Component () {
@@ -30,7 +30,7 @@ function Component () {
     }, [])
 
     return (
-        <Window>
+        <React.Fragment>
             {imageShow && <Image
                 alignTo={{
                     parent: ref.current,
@@ -49,7 +49,7 @@ function Component () {
           >
               <Text>test</Text>
           </Button>
-        </Window>
+        </React.Fragment>
     )
 }
 

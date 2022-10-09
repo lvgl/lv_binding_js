@@ -17,19 +17,17 @@
 
 ## Usage
 ```jsx
-import { ProgressBar, Window } from 'lvlgjs-ui'
+import { ProgressBar } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
-            <ProgressBar
-              style={style.progressBar}
-              range={[0, 50]}
-              value={30}
-            />
-        </Window>
+        <ProgressBar
+          style={style.progressBar}
+          range={[0, 50]}
+          value={30}
+        />
     )
 }
 

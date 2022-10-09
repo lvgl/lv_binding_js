@@ -16,6 +16,8 @@ fs module with following function
 - unlinkSync(path: string): void
 - mkdir (path: string): Promise<void>
 - mkdirSync (path: string): void
+- rmdir (path: string): Promise<void>
+- rmdirSync (path: string): void
 
 <br />
 

@@ -18,20 +18,18 @@ onLongPressed callback with the following type
 
 ## Usage
 ```jsx
-import { View, Window, Button, Text } from 'lvlgjs-ui'
+import { View, Button, Text } from 'lvlgjs-ui'
 
 function Component () {
     return (
-        <Window>
-             <View
-                onScrollbarScrollingStyle={style.view}
-                onLongPressed={[e => console.log(e.target), e => console.log(e.currentTarget)]}
-            >
-                <Button onLongPressed={e => e.stopPropagation()}>
-                    <Text>2222</Text>
-                </Button>
-            </View>
-        </Window>
+         <View
+            onScrollbarScrollingStyle={style.view}
+            onLongPressed={[e => console.log(e.target), e => console.log(e.currentTarget)]}
+        >
+            <Button onLongPressed={e => e.stopPropagation()}>
+                <Text>2222</Text>
+            </Button>
+        </View>
     )
 }
 

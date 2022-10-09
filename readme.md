@@ -75,6 +75,7 @@ make dev-x86 or make build-x86
 - [Roller](./doc/component/Roller.md)
 - [Keyboard](./doc/component/Keyboard.md)
 - [Calendar](./doc/component/Calendar.md)
+- [Chart](./doc/component/Chart.md)
 
 ## Font
 [Buitin-Symbol](./doc/Symbol/symbol.md)

@@ -26,7 +26,7 @@ Component Checkbox support [controlled mode](https://krasimir.gitbooks.io/react-
 
 ## Usage
 ```jsx
-import { Roller, Window } from 'lvlgjs-ui'
+import { Roller } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 const items = [
@@ -43,18 +43,16 @@ const items = [
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
-            <Roller
-              style={style.roller}
-              options={items}
-              selectIndex={2}
-              visibleRowCount={4}
-              onChange={(e) => {
-                  console.log(e.value)
-              }}
-              infinity={true}
-            />
-        </Window>
+      <Roller
+        style={style.roller}
+        options={items}
+        selectIndex={2}
+        visibleRowCount={4}
+        onChange={(e) => {
+            console.log(e.value)
+        }}
+        infinity={true}
+      />
     )
 }
 

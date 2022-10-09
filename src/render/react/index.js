@@ -18,6 +18,7 @@ import CalendarConfig from './components/Calendar/config';
 import GIFConfig from './components/GIF/config'
 import TabsConfig from './components/Tabs/config';
 import ChartConfig from './components/Chart/config';
+import MaskConfig from './components/Mask/config';
 
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
@@ -41,6 +42,7 @@ export const Calendar = registerComponent(new CalendarConfig());
 export const GIF = registerComponent(new GIFConfig());
 export const Tabs = registerComponent(new TabsConfig());
 export const Chart = registerComponent(new ChartConfig());
+export const Mask = registerComponent(new MaskConfig());
 
 export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
 export { EAnimateEasingFunc, Animate } from './core/animate'

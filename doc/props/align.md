@@ -38,19 +38,17 @@ EAlignType with the following type
 
 ## Usage
 ```jsx
-import { View, Window, EAlignType, Text } from 'lvlgjs-ui'
+import { View, EAlignType, Text } from 'lvlgjs-ui'
 
 function Component () {
     return (
-        <Window>
-             <View
-                align={{
-                  type: EAlignType.ALIGN_CENTER,
-                  pos: [10, 0]
-              }}
-            >
-            </View>
-        </Window>
+       <View
+          align={{
+            type: EAlignType.ALIGN_CENTER,
+            pos: [10, 0]
+        }}
+      >
+      </View>
     )
 }
 ```

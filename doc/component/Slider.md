@@ -28,13 +28,13 @@ Component Slider support [controlled mode](https://krasimir.gitbooks.io/react-in
 
 ## Usage
 ```jsx
-import { Slider, Window } from 'lvlgjs-ui'
+import { Slider } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState()
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Slider
               style={style.slider}
@@ -48,7 +48,7 @@ function Component () {
               onChange={(e) => console.log(e)}
               range={[0, 100]}
             />
-        </Window>
+        </React.Fragment>
     )
 }
 

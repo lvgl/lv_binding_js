@@ -37,14 +37,25 @@
     - minorNum
     - drawSize
 - leftAxisData, [add left series to the charts](https://docs.lvgl.io/master/widgets/chart.html#data-series)
-    - type number[]
-- bottomAxisData, 
+    - type {color: string; data: number[]}[]
+- bottomAxisData
+    - type {color: string; data: number[]}[]
 - rightAxisData
+    - type {color: string; data: number[]}[]
 - topAxisData
+    - type {color: string; data: number[]}[]
+- scatterData, set data when type is scatter
+    - type {color: string; data: [number, number][]}[]
+- leftAxisLabels, rightAxisLabels, topAxisLabels, bottomAxisLabels, add axis labels
+    - type string[]
+- leftAxisRange, rightAxisRange, topAxisRange, bottomAxisRange, set axis range
+    - type [number, number]
 
 ## Props
 - [style](../props/style.md)
 - [onPressedStyle](../props/onPressedStyle.md)
+- [indicatorStyle](../props/indicatorStyle.md)
+- [itemStyle](../props/itemStyle.md)
 - [onClick](../props/onClick.md)
 - [onPressed](../props/onPressed.md)
 - [onLongPressed](../props/onLongPressed.md)
@@ -54,39 +65,105 @@
 
 ## Usage
 ```jsx
-import { Button, Text, Image, Window } from 'lvlgjs-ui'
+import { Button, Text, Image } from 'lvlgjs-ui'
 import { useRef, useState } from 'react'
 
-function Component () {
-    const ref = useRef()
-    const [imageShow, setImageShow] = useState(false)
-    useEffect(() => {
-        console.log(ref.current.moveToFront())
-    }, [])
+function App () {
 
     return (
-        <Window>
-            {imageShow && <Image
-                alignTo={{
-                    parent: ref.current,
-                    type: EAlignType.ALIGN_CENTER,
-                    pos: [10, 0]
-                }}
-            />}
-            <Button
-                ref={ref}
-                style={style.button}
-                onPressedStyle={style.onPressedStyle}
-                onClick={() => setImageShow(true)}
-                onPressed={() => console.log('button onPressed')}
-                onLongPressed={() => console.log('button onPressed')}
-                onLongPressRepeat={() => console.log('button onLongPressRepeat')}
-          >
-              <Text>test</Text>
-          </Button>
-        </Window>
+        <Chart
+            style={style.chart}
+            type={"bar"}
+            pointNum={12}
+            leftAxisRange={[0, 100]}
+            rightAxisRange={[0, 400]}
+            bottomAxisLabels={[
+                'Jan',
+                'Febr',
+                'March',
+                'Apr',
+                'May',
+                'Jun',
+                'July',
+                'Aug',
+                'Sept',
+                'Oct',
+                'Nov',
+                'Dec'
+            ]}
+            leftAxisOption={{
+                majorLen: 10,
+                minorLen: 5,
+                majorNum: 6,
+                minorNum: 2,
+                drawSize: 50
+            }}
+            bottomAxisOption={{
+                majorLen: 10,
+                minorLen: 5,
+                majorNum: 12,
+                minorNum: 3,
+                drawSize: 40
+            }}
+            rightAxisOption={{
+                majorLen: 10,
+                minorLen: 5,
+                majorNum: 3,
+                minorNum: 4,
+                drawSize: 50
+            }}
+            leftAxisData={[
+                {
+                    color: '#00FA9A',
+                    data: [
+                        31,
+                        66,
+                        10,
+                        89,
+                        63,
+                        56,
+                        32,
+                        35,
+                        57,
+                        85,
+                        22,
+                        58
+                    ]
+                },
+            ]}
+            rightAxisData={[
+                {
+                    color: '#008080',
+                    data: [
+                        92,
+                        71,
+                        61,
+                        15,
+                        21,
+                        35,
+                        35,
+                        58,
+                        31,
+                        53,
+                        33,
+                        73
+                    ]
+                }
+            ]}
+            align={{
+                type: EAlignType.ALIGN_CENTER,
+            }}
+        />
     )
-}
+};
+
+const style = {
+    chart: {
+        'width': 200,
+        'height': 150,
+        'transform': 'scaleX(3)'
+    }
+};
 
 const style = {
     onPressedStyle: {},

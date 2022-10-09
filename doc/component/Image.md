@@ -20,16 +20,16 @@
 
 ## Usage
 ```jsx
-import { Window, Image } from 'lvlgjs-ui'
+import { Image } from 'lvlgjs-ui'
 
 const path = require('path')
 function Component () {
     return (
-        <Window>
+        <React.Fragment>
             <Image src={path.resolve(__dirname, './assets/images/1.png')} />
             <Image src={'https://somewebsite/images/1.png'} />
             <Image src="audio" />
-        </Window>
+        </React.Fragment>
     )
 }
 ```

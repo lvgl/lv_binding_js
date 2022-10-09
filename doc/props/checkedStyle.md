@@ -7,13 +7,13 @@ support JS Object or JS Array
 
 ## Usage
 ```jsx
-import { Switch, Window } from 'lvlgjs-ui'
+import { Switch } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState()
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Switch
               style={style.switch}
@@ -27,7 +27,7 @@ function Component () {
               checkedStyle={style.checkedStyle}
               onChange={(e) => console.log(e)}
             />
-        </Window>
+        </React.Fragment>
     )
 }
 

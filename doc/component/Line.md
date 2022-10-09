@@ -15,7 +15,7 @@
   - value type: [number, number][]
 ## Usage
 ```jsx
-import { Line, Window } from 'lvlgjs-ui'
+import { Line } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 const points = [[5, 5], [70, 70], [120, 10], [180, 60], [240, 10]]
@@ -23,12 +23,10 @@ const points = [[5, 5], [70, 70], [120, 10], [180, 60], [240, 10]]
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
-            <Line
-              style={style.line}
-              points={points}
-            />
-        </Window>
+          <Line
+            style={style.line}
+            points={points}
+          />
     )
 }
 

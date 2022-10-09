@@ -46,7 +46,7 @@ void BasicComponent::insertChildBefore(void *child) {
 };
 
 void BasicComponent::removeChild(void* child) {
-    lv_obj_del((static_cast<BasicComponent*>(child))->instance);
+    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
 };
 
 void BasicComponent::appendChild (void* child) {

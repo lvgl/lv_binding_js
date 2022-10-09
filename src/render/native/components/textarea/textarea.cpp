@@ -78,7 +78,7 @@ void Textarea::setMode (int32_t mode) {
     lv_keyboard_set_mode(this->instance, static_cast<lv_keyboard_mode_t>(mode));
 };
 
-void Textarea::setAutoRaiseKeyboard (bool payload) {
+void Textarea::setAutoRaiseKeyboard (int32_t payload) {
     this->auto_raise_keyboard = payload;
 };
 

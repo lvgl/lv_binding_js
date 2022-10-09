@@ -1,4 +1,4 @@
-import { View, Switch, Slider, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL, EAlignType } from 'lvgljs-ui';
+import { View, Switch, Slider, Text, Image, Input, Dropdownlist, Button, Dimensions, BUILT_IN_SYMBOL, EAlignType, Mask, Calendar } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const { width, height } = Dimensions.window
@@ -11,6 +11,8 @@ const items = [
 
 export default function App () {
     const ref = useRef()
+    const [birthday, setBirthday] = useState('')
+    const [showCalendar, setCalendarShow] = useState(false)
 
     return (
         <View style={style.profileWrapper}>
@@ -54,8 +56,26 @@ export default function App () {
                 <Text style={style.panel2_birthday}>Birthday</Text>
                 <Input
                     style={style.panel2_birthday_input}
-                    onFocus={() => {}}
+                    onFocus={() => {
+                        setCalendarShow(true)
+                    }}
+                    value={birthday}
+                    autoKeyBoard={false}
                 />
+                {showCalendar && <Mask
+                    onClick={() => {
+                        setCalendarShow(false)
+                    }}
+                >
+                    <Calendar
+                        today={"2022-10-1"}
+                        style={style.calendar}
+                        onChange={(e) => {
+                            setBirthday(e.value)
+                            setCalendarShow(false)
+                        }}
+                    />
+                </Mask>}
             </View>
             <View style={style.panel3}>
                 <Text style={style.panel3_title}>
@@ -363,5 +383,9 @@ const style = {
         'align-self': 'center',
         'grid-row-pos': 6,
         'grid-row-span': 1,
+    },
+    calendar: {
+        'width': 300,
+        'height': 300
     }
 }

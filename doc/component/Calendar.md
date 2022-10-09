@@ -23,27 +23,25 @@ It's used to realize a virtual keyboard to write texts into a Text area.
 
 ## Usage
 ```jsx
-import { Calendar, Render, Window, EAlignType } from 'lvgljs-ui';
+import { Calendar, Render, EAlignType } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 function App () {
 
     return (
-        <Window style={style.window}>
-            <Calendar
-                today={"2022-10-1"}
-                shownMonth={"2022-10"}
-                highLightDates={[
-                    "2022-10-10",
-                    "2022-10-11",
-                ]}
-                align={{
-                    type: EAlignType.ALIGN_CENTER,
-                    pos: [0, 27]
-                }}
-                onChange={(e) => { console.log(e.value) }}
-            />
-        </Window>
+        <Calendar
+            today={"2022-10-1"}
+            shownMonth={"2022-10"}
+            highLightDates={[
+                "2022-10-10",
+                "2022-10-11",
+            ]}
+            align={{
+                type: EAlignType.ALIGN_CENTER,
+                pos: [0, 27]
+            }}
+            onChange={(e) => { console.log(e.value) }}
+        />
     )
 };
 

@@ -28,7 +28,7 @@ Component Checkbox support [controlled mode](https://krasimir.gitbooks.io/react-
 
 ## Usage
 ```jsx
-import { Dropdownlist, Window, EDropdownListArrowDirection, EDropdownlistDirection } from 'lvlgjs-ui'
+import { Dropdownlist, EDropdownListArrowDirection, EDropdownlistDirection } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 const items1 = [
@@ -47,18 +47,16 @@ const items1 = [
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
-            <Dropdownlist
-              style={style.dropdownlist}
-              onChange={(e) => setValue(e.value)}
-              items={items1}
-              selectIndex={2}
-              direction={EDropdownlistDirection.bottom}
-              text={"Menu"}
-              highlightSelect={false}
-              arrow={EDropdownListArrowDirection.down}
-            />
-        </Window>
+      <Dropdownlist
+        style={style.dropdownlist}
+        onChange={(e) => setValue(e.value)}
+        items={items1}
+        selectIndex={2}
+        direction={EDropdownlistDirection.bottom}
+        text={"Menu"}
+        highlightSelect={false}
+        arrow={EDropdownListArrowDirection.down}
+      />
     )
 }
 

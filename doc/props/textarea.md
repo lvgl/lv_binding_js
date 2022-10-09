@@ -7,7 +7,7 @@ some textarea、input's componentInstance
 
 ## Usage
 ```jsx
-import { Keyboard, Window, Input } from 'lvlgjs-ui'
+import { Keyboard, Input } from 'lvlgjs-ui'
 import { useState, useRef } from 'react'
 
 function Component () {
@@ -19,7 +19,7 @@ function Component () {
     }, [])
 
     return (
-        <Window>
+        <React.Fragment>
             <Input
                 ref={ref}  
             />
@@ -28,7 +28,7 @@ function Component () {
                 textarea={ref.current}
                 mode={"number"}
             />}
-        </Window>
+        </React.Fragment>
     )
 }
 

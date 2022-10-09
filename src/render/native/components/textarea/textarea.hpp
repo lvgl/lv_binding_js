@@ -25,7 +25,7 @@ class Textarea : public BasicComponent {
 
   void setMode (int32_t mode);
 
-  void setAutoRaiseKeyboard (bool payload);
+  void setAutoRaiseKeyboard (int32_t payload);
 
   static void raiseKeyboard (lv_event_t * event);
   static void hideKeyboard (lv_event_t * event);

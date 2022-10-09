@@ -41,7 +41,11 @@ function setInputProps(comp, newProps, oldProps) {
                 comp.setText(str)
             }
         },
-
+        autoKeyBoard (payload) {
+            if (payload !== oldProps?.autoKeyBoard) {
+                comp.setAutoKeyboard(payload)
+            }
+        }
     }
     Object.keys(setter).forEach(key => {
         if (newProps[key]) {

@@ -21,19 +21,20 @@
 
 ## Note
 - Input Component is One line mode lv_textarea
+- virtual keyboard will auto raise up when focus on Input component 
 
 ## Controlled Mode
 Component Input support [controlled mode](https://krasimir.gitbooks.io/react-in-patterns/content/chapter-05/), achieve by onChange and value props  
 
 ## Usage
 ```jsx
-import { Input, Window } from 'lvlgjs-ui'
+import { Input } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState()
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Input
               style={style.input}
@@ -50,7 +51,7 @@ function Component () {
               onFocusStyle={style.onFocusStyle}
               mode="password"
             />
-        </Window>
+        </React.Fragment>
     )
 }
 

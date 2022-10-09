@@ -7,11 +7,10 @@ support JS Object or JS Array
 
 ## Usage
 ```jsx
-import { View, Window, Button, Text } from 'lvlgjs-ui'
+import { View, Button, Text } from 'lvlgjs-ui'
 
 function Component () {
     return (
-        <Window>
              <View
                 style={style.view}
             >
@@ -19,7 +18,6 @@ function Component () {
                     <Text>2222</Text>
                 </Button>
             </View>
-        </Window>
     )
 }
 

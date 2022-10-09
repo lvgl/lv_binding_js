@@ -79,7 +79,6 @@ function App () {
     }, [])
 
     return (
-        <Window style={style.window}>
             <View
                 style={style.ball}
                 align={{
@@ -87,15 +86,10 @@ function App () {
                 }}
                 ref={ref}
             />
-        </Window>
     )
 };
 
 const style = {
-    window: {
-        'width': '480px',
-        'height': '320px',
-    },
     ball: {
         'background-color': 'red',
         'border-radius': 0x7FFF,

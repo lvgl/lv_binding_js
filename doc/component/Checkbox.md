@@ -11,6 +11,7 @@
 - [style](../props/style.md)
 - [align](../props/align.md)
 - [alignTo](../props/alignTo.md)
+- [checked](../props/checked.md)
 - [checkedStyle](../props/checkedStyle.md)
 - [indicatorStyle](../props/indicatorStyle.md)
 - [indicatorCheckedStyle](../props/onIndicatorPressedStyle.md)
@@ -24,13 +25,13 @@ Component Checkbox support [controlled mode](https://krasimir.gitbooks.io/react-
 
 ## Usage
 ```jsx
-import { Checkbox, Window } from 'lvlgjs-ui'
+import { Checkbox } from 'lvlgjs-ui'
 import { useState } from 'react'
 
 function Component () {
     const [value, setValue] = useState(false)
     return (
-        <Window>
+        <React.Fragment>
             {/* controlled */}
             <Checkbox
               style={style.checkbox}
@@ -46,7 +47,7 @@ function Component () {
               disabled={true}
               checked={true}
             />
-        </Window>
+        </React.Fragment>
     )
 }
 
