@@ -2,17 +2,34 @@
 
 Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virtual DOM concept to manipulate lvgl UI components, providing a familiar experience to users.
 
-在这里放一张代码图和效果图
+**Code**
+
+<img src="./demo/screenshoot/code.png">
+
+<br />
+
+**Code Runing on Real Device**
+
+<br />
 
 ## Table of Contents
-- [Features](#Features)
-- [Demo](#Demo)
-- [Build](#Build)
-- [Components](#Components)
-- [Style](#Style)
-- [Animation](#Animation)
-- [Font](#Font)
-- [JSAPI](#JSAPI)
+  - [lvgljs](#lvgljs)
+  - [Table of Contents](#table-of-contents)
+  - [Features](#features)
+  - [Demo](#demo)
+    - [Widgets](#widgets)
+    - [Calculator](#calculator)
+  - [Usage](#usage)
+    - [use sdl simulate](#use-sdl-simulate)
+    - [Real Device](#real-device)
+  - [Components](#components)
+  - [Font](#font)
+  - [Animation](#animation)
+  - [Style](#style)
+  - [JSAPI](#jsapi)
+  - [Thanks](#thanks)
+
+<br />
 
 ## Features
 - Support all lvgl built-in components
@@ -24,40 +41,37 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 ## Demo
 
 ### Widgets
-#### sdl_simulator
-222
-<br/>
-#### real-device
+
 <br />
 
 ### Calculator
-#### sdl_simulator
 ![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
 
-#### real-device
+<br />
 
+## Usage
+- lvgl configuration file lv_conf.h and lv_drv_conf are located in src/deps
+- project support x86 and arm platform currently, if you want to build on other platform, please configure Makefile
+### SDL Simulate
 
-## Build
-project support x86 and arm platform currently, if you want to build on other platform, please configure Makefile
-### use sdl simulate
-
-Once you have installed openssl、sdl2、curl，you can run follwing script compile lvgljs with sdl simulator
+- Once you have installed openssl、sdl2、curl，you can run follwing script compile and run
 
 ```shell
 make dev-x86
 
-./dev_x86/Main ./demo/calculator/index.js
+./dev_x86/Main ./demo/widgets/index.js
 ```
 
-### Real Device
+### Real Device like MCU
 - Edit src/engine/hal/release/release.cpp based on your device, please check [lvgl document](https://docs.lvgl.io/latest/en/html/porting/index.html) for more detal
 - You have to download openssl、curl source code and compile with divece arch
 - Fill in CMAKE_BUILD_PLATFORM、CMAKE_C_COMPILER、CMAKE_CXX_COMPILER、CMAKE_CURL_LIB、CMAKE_CURL_INCLUDE_DIRS、CMAKE_SSL_LIB、CMAKE_CRYPTO_LIB in Makefile
 - You can run follwing script compile lvgljs with device arch (default arm)
-- Copy executable file ./some_dir/Main and ./some_dir/lib in divece file-system, make sure file Main and dir lib in same dir
+- Copy executable file ./build_output_dir/Main and ./build_output_dir/lib and user JS file in divece file-system, make sure file Main and dir lib in same dir
+- turn on the mcu, and run the script just like in simualtor
 
 ```shell
-make dev-x86 or make build-x86
+make dev-arm or make build-arm
 ```
 
 ## Components
@@ -101,6 +115,16 @@ make dev-x86 or make build-x86
 - [transform](./doc/style/transform.md)
 
 ## JSAPI
-[network](./doc/jsapi/network.md)
-[filesystem](./doc/jsapi/fs.md)
-[dimension](./doc/jsapi/dimension.md)
+- [network](./doc/jsapi/network.md)
+- [filesystem](./doc/jsapi/fs.md)
+- [dimension](./doc/jsapi/dimension.md)
+
+## Thanks
+lvgljs depends on following excellent work
+
+[lvgl](https://github.com/lvgl/lvgl): Create beautiful UIs for any MCU, MPU and display type
+[QuickJS](https://bellard.org/quickjs/): JavaScript engine
+[libuv](https://github.com/libuv/libuv): platform abstraction layer
+[curl](https://github.com/curl/curl): HTTP client
+[txiki.js](https://github.com/saghul/txiki.js): Tiny JavaScript runtime
+

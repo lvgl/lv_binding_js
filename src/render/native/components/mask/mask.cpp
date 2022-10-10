@@ -27,4 +27,5 @@ void Mask::initCompStyle (int32_t type) {
     lv_obj_set_style_height(this->instance, height, 0);
     lv_obj_set_style_width(this->instance, width, 0);
     lv_obj_set_style_opa(this->instance, LV_OPA_70, 0);
-}
+    lv_obj_set_style_bg_color(this->instance, lv_color_hex(0), 0);
+};

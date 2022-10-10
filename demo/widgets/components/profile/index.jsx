@@ -74,6 +74,9 @@ export default function App () {
                             setBirthday(e.value)
                             setCalendarShow(false)
                         }}
+                        align={{ 
+                            type: EAlignType.ALIGN_CENTER
+                        }}
                     />
                 </Mask>}
             </View>

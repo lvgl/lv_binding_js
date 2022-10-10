@@ -1,5 +1,5 @@
-import { View, Render, Text, Animate, Dimensions, EAlignType, Button, Tabs, Theme } from 'lvgljs-ui';
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { View, Render, Animate, Dimensions, EAlignType, Button, Tabs, Theme } from 'lvgljs-ui';
+import React, { useState, useRef } from 'react';
 import Profile from './components/profile'
 import Analytics from './components/analytics';
 import Shop from './components/shop'
