@@ -1404,7 +1404,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useRef(initialValue);
         }
-        function useEffect5(create, deps) {
+        function useEffect4(create, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useEffect(create, deps);
         }
@@ -1412,7 +1412,7 @@ var require_react_development = __commonJS({
           var dispatcher = resolveDispatcher();
           return dispatcher.useLayoutEffect(create, deps);
         }
-        function useCallback5(callback, deps) {
+        function useCallback4(callback, deps) {
           var dispatcher = resolveDispatcher();
           return dispatcher.useCallback(callback, deps);
         }
@@ -1674,10 +1674,10 @@ var require_react_development = __commonJS({
         exports.isValidElement = isValidElement;
         exports.lazy = lazy;
         exports.memo = memo;
-        exports.useCallback = useCallback5;
+        exports.useCallback = useCallback4;
         exports.useContext = useContext;
         exports.useDebugValue = useDebugValue;
-        exports.useEffect = useEffect5;
+        exports.useEffect = useEffect4;
         exports.useImperativeHandle = useImperativeHandle;
         exports.useLayoutEffect = useLayoutEffect;
         exports.useMemo = useMemo;
@@ -18422,12 +18422,12 @@ function ProcessBoolean(key, value, result) {
 }
 
 // src/render/react/core/style/pipe/misc.js
-function MiscStyle(style3, result, compName) {
-  if (style3["recolor"] && compName === "Image") {
-    ProcessColor("recolor", style3["recolor"], result);
+function MiscStyle(style5, result, compName) {
+  if (style5["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style5["recolor"], result);
   }
-  if (style3["style-transition-time"]) {
-    const value = style3["style-transition-time"];
+  if (style5["style-transition-time"]) {
+    const value = style5["style-transition-time"];
     if (!isNaN(value)) {
       result["style-transition-time"] = value;
     }
@@ -18528,18 +18528,18 @@ var transitionProperty = {
   "transform-pivot-y": 111
 };
 var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "scaleX", "scaleY", "rotate", "transform-width", "transform-height"];
-function TransStyle(style3, result, compName) {
-  if (style3["transition-property"]) {
-    let properties = style3["transition-property"];
+function TransStyle(style5, result, compName) {
+  if (style5["transition-property"]) {
+    let properties = style5["transition-property"];
     properties = properties.split(",").map((item) => item.replace(/\s/, "")).map((item) => transitionProperty[item]).filter((item) => !!item);
-    const duration = style3["transition-duration"] || 0;
-    const func = style3["transition-timing-function"] || "linear";
-    const delay = style3["transition-delay"] || 0;
+    const duration = style5["transition-duration"] || 0;
+    const func = style5["transition-timing-function"] || "linear";
+    const delay = style5["transition-delay"] || 0;
     const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
-  if (style3["transform"]) {
-    let value = style3["transform"];
+  if (style5["transform"]) {
+    let value = style5["transform"];
     value = value.match(/[a-zA-Z\-]+\([^\(]+\)/g);
     const reg = /^([a-zA-Z\-]+)\((.+)\)$/;
     value && value.forEach((item) => {
@@ -18570,8 +18570,8 @@ function TransStyle(style3, result, compName) {
       }
     });
   }
-  if (style3["transform-origin"] && compName === "Image") {
-    const [x, y] = style3["transform-origin"].trim()?.split(" ");
+  if (style5["transform-origin"] && compName === "Image") {
+    const [x, y] = style5["transform-origin"].trim()?.split(" ");
     result["img-origin"] = [NormalizePx(+x), NormalizePx(+y)];
   }
   return result;
@@ -18579,14 +18579,14 @@ function TransStyle(style3, result, compName) {
 
 // src/render/react/core/style/pipe/padding.js
 var keys = ["padding-left", "padding-top", "padding-right", "padding-bottom"];
-function PaddingStyle(style3, result, compName) {
+function PaddingStyle(style5, result, compName) {
   keys.forEach((key) => {
-    if (style3[key] !== void 0) {
-      ProcessPx(key, style3[key], result);
+    if (style5[key] !== void 0) {
+      ProcessPx(key, style5[key], result);
     }
   });
-  if (style3["padding"] !== void 0) {
-    const value = style3["padding"];
+  if (style5["padding"] !== void 0) {
+    const value = style5["padding"];
     if (typeof value == "number") {
       keys.forEach((styleKey) => {
         result[styleKey] = value;
@@ -18636,10 +18636,10 @@ var obj = {
   })
 };
 var keys2 = Object.keys(obj);
-function BackgroundStyle(style3, result, compName) {
+function BackgroundStyle(style5, result, compName) {
   keys2.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj[key](key, style5[key], result);
     }
   });
 }
@@ -18662,10 +18662,10 @@ var obj2 = {
   })
 };
 var keys3 = Object.keys(obj2);
-function PosStyle(style3, result, compName) {
+function PosStyle(style5, result, compName) {
   keys3.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj2[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj2[key](key, style5[key], result);
     }
   });
 }
@@ -18690,10 +18690,10 @@ var obj3 = {
   })
 };
 var keys4 = Object.keys(obj3);
-function BorderStyle(style3, result, compName) {
+function BorderStyle(style5, result, compName) {
   keys4.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj3[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj3[key](key, style5[key], result);
     }
   });
 }
@@ -18705,10 +18705,10 @@ var obj4 = {
   "outline-padding": ProcessPxOrPercent
 };
 var keys5 = Object.keys(obj4);
-function OutlineStyle(style3, result, compName) {
+function OutlineStyle(style5, result, compName) {
   keys5.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj4[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj4[key](key, style5[key], result);
     }
   });
 }
@@ -18740,14 +18740,14 @@ var obj5 = {
   "font-size": ProcessPx
 };
 var keys6 = Object.keys(obj5);
-function TextStyle(style3, result, compName) {
+function TextStyle(style5, result, compName) {
   keys6.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj5[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj5[key](key, style5[key], result);
     }
   });
-  if (style3["font-size"]) {
-    let size = style3["font-size"];
+  if (style5["font-size"]) {
+    let size = style5["font-size"];
     if (typeof size == "string") {
       const reg = /(\d+\.?\d*)(px)?$/;
       size = size.replace(/(^\s*)|(\s*$)/g, "").match(reg)?.[1];
@@ -18785,12 +18785,12 @@ var flexAlignObj = {
   "space-around": 4,
   "space-between": 5
 };
-function FlexStyle(style3, result) {
-  if (style3.display !== "flex")
+function FlexStyle(style5, result) {
+  if (style5.display !== "flex")
     return result;
   let flexFlow = 0;
-  const flexDirection = style3["flex-direction"] || "row";
-  const flexWrap = style3["flex-wrap"] || "nowrap";
+  const flexDirection = style5["flex-direction"] || "row";
+  const flexWrap = style5["flex-wrap"] || "nowrap";
   if (flexFlowObj[`${flexDirection}_${flexWrap}`]) {
     flexFlow = flexFlowObj[`${flexDirection}_${flexWrap}`];
   }
@@ -18798,9 +18798,9 @@ function FlexStyle(style3, result) {
   let mainPlace = 0;
   let crossPlace = 0;
   let trackCrossPlace = 0;
-  const justifyContent = style3["justify-content"];
-  const alignItems = style3["align-items"];
-  const alignContent = style3["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
+  const justifyContent = style5["justify-content"];
+  const alignItems = style5["align-items"];
+  const alignContent = style5["align-content"] || (flexWrap === "nowrap" ? alignItems : "flex-start");
   if (flexAlignObj[justifyContent]) {
     mainPlace = flexAlignObj[justifyContent];
   }
@@ -18817,8 +18817,8 @@ function FlexStyle(style3, result) {
   if (alignContent) {
     result["align-content"] = trackCrossPlace;
   }
-  if (!isNaN(style3["flex-grow"])) {
-    result["flex-grow"] = style3["flex-grow"];
+  if (!isNaN(style5["flex-grow"])) {
+    result["flex-grow"] = style5["flex-grow"];
   }
   return result;
 }
@@ -18856,10 +18856,10 @@ var gridAlignItemsObj = {
   "space-between": 6,
   "stretch": 3
 };
-function GridStyle(style3, result) {
-  if (style3.display == "grid") {
-    let columns = style3["grid-template-columns"]?.split(/\s/).filter(Boolean);
-    let rows = style3["grid-template-rows"]?.split(/\s/).filter(Boolean);
+function GridStyle(style5, result) {
+  if (style5.display == "grid") {
+    let columns = style5["grid-template-columns"]?.split(/\s/).filter(Boolean);
+    let rows = style5["grid-template-rows"]?.split(/\s/).filter(Boolean);
     if (!columns || !rows)
       return;
     columns = columns.map((column) => {
@@ -18886,17 +18886,17 @@ function GridStyle(style3, result) {
     rows = rows.filter(Boolean);
     result["display"] = "grid";
     result["grid-template"] = [columns, rows];
-    const justifyContent = gridJustifyContentObj[style3["justify-content"]] || gridJustifyContentObj.start;
-    const alignContent = gridAlignItemsObj[style3["align-items"]] || gridAlignItemsObj.start;
+    const justifyContent = gridJustifyContentObj[style5["justify-content"]] || gridJustifyContentObj.start;
+    const alignContent = gridAlignItemsObj[style5["align-items"]] || gridAlignItemsObj.start;
     result["grid-align"] = [justifyContent, alignContent];
   }
-  if (style3["grid-child"]) {
-    const justifySelf = style3["justify-self"];
-    const alignSelf = style3["align-self"];
-    const gridColumnPos = style3["grid-column-pos"];
-    const gridRowPos = style3["grid-row-pos"];
-    const gridColumnSpan = style3["grid-column-span"] || 1;
-    const gridRowSpan = style3["grid-row-span"] || 1;
+  if (style5["grid-child"]) {
+    const justifySelf = style5["justify-self"];
+    const alignSelf = style5["align-self"];
+    const gridColumnPos = style5["grid-column-pos"];
+    const gridRowPos = style5["grid-row-pos"];
+    const gridColumnSpan = style5["grid-column-span"] || 1;
+    const gridRowSpan = style5["grid-row-span"] || 1;
     if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan))
       return;
     let column_align, row_align;
@@ -18942,10 +18942,10 @@ var obj6 = {
   "scroll-enable-snap": ProcessBoolean
 };
 var keys7 = Object.keys(obj6);
-function ScrollStyle(style3, result, compName) {
+function ScrollStyle(style5, result, compName) {
   keys7.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj6[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj6[key](key, style5[key], result);
     }
   });
 }
@@ -18958,28 +18958,28 @@ function NormalizeOpacity(value) {
     return 0;
   return Math.floor(value * 255);
 }
-function OpacityStyle(style3, result, compName) {
-  if (style3["opacity"] !== void 0) {
+function OpacityStyle(style5, result, compName) {
+  if (style5["opacity"] !== void 0) {
     if (compName === "Image") {
-      result["img-opacity"] = NormalizeOpacity(style3["opacity"]);
+      result["img-opacity"] = NormalizeOpacity(style5["opacity"]);
     } else {
-      result["opacity"] = NormalizeOpacity(style3["opacity"]);
+      result["opacity"] = NormalizeOpacity(style5["opacity"]);
     }
   }
-  if (style3["background-opacity"] !== void 0) {
-    result["background-opacity"] = NormalizeOpacity(style3["background-opacity"]);
+  if (style5["background-opacity"] !== void 0) {
+    result["background-opacity"] = NormalizeOpacity(style5["background-opacity"]);
   }
-  if (style3["border-opacity"] !== void 0) {
-    result["border-opacity"] = NormalizeOpacity(style3["border-opacity"]);
+  if (style5["border-opacity"] !== void 0) {
+    result["border-opacity"] = NormalizeOpacity(style5["border-opacity"]);
   }
-  if (style3["outline-opacity"] !== void 0) {
-    result["outline-opacity"] = NormalizeOpacity(style3["outline-opacity"]);
+  if (style5["outline-opacity"] !== void 0) {
+    result["outline-opacity"] = NormalizeOpacity(style5["outline-opacity"]);
   }
-  if (style3["recolor-opacity"] !== void 0 && compName === "Image") {
-    result["recolor-opacity"] = NormalizeOpacity(style3["recolor-opacity"]);
+  if (style5["recolor-opacity"] !== void 0 && compName === "Image") {
+    result["recolor-opacity"] = NormalizeOpacity(style5["recolor-opacity"]);
   }
-  if (style3["shadow-opacity"] !== void 0) {
-    result["shadow-opacity"] = NormalizeOpacity(style3["shadow-opacity"]);
+  if (style5["shadow-opacity"] !== void 0) {
+    result["shadow-opacity"] = NormalizeOpacity(style5["shadow-opacity"]);
   }
   return result;
 }
@@ -18990,14 +18990,14 @@ var obj7 = {
   "line-color": ProcessColor
 };
 var keys8 = Object.keys(obj7);
-function LineStyle(style3, result, compName) {
+function LineStyle(style5, result, compName) {
   keys8.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj7[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj7[key](key, style5[key], result);
     }
   });
-  if (style3["line-rounded"]) {
-    result["line-rounded"] = Boolean(style3["line-rounded"]);
+  if (style5["line-rounded"]) {
+    result["line-rounded"] = Boolean(style5["line-rounded"]);
   }
 }
 
@@ -19010,17 +19010,17 @@ var obj8 = {
   "shadow-spread": ProcessPx
 };
 var keys9 = Object.keys(obj8);
-function ShadowStyle(style3, result, compName) {
+function ShadowStyle(style5, result, compName) {
   keys9.forEach((key) => {
-    if (style3[key] !== void 0) {
-      obj8[key](key, style3[key], result);
+    if (style5[key] !== void 0) {
+      obj8[key](key, style5[key], result);
     }
   });
 }
 
 // src/render/react/core/style/pipe/display.js
-function DisplayStyle(style3, result, compName) {
-  result["display"] = style3["display"];
+function DisplayStyle(style5, result, compName) {
+  result["display"] = style5["display"];
 }
 
 // src/render/react/utils/helpers.ts
@@ -19134,14 +19134,14 @@ function PostProcessStyle({ comp, styleSheet, styleType }) {
 // src/render/react/core/style/index.js
 var _StyleSheet = class {
   static pipeline(args) {
-    _StyleSheet.transformStyle = (style3, compName) => {
+    _StyleSheet.transformStyle = (style5, compName) => {
       const result = {};
-      args.reduce((_, func) => func(style3, result, compName), null);
+      args.reduce((_, func) => func(style5, result, compName), null);
       return result;
     };
   }
-  static transform(style3, compName) {
-    const result = _StyleSheet.transformStyle(style3, compName);
+  static transform(style5, compName) {
+    const result = _StyleSheet.transformStyle(style5, compName);
     return result;
   }
   static create() {
@@ -19342,12 +19342,12 @@ var ViewComp = class extends NativeView {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19370,8 +19370,8 @@ var ViewComp = class extends NativeView {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19449,12 +19449,12 @@ var TextComp = class extends NativeText {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19473,8 +19473,8 @@ var TextComp = class extends NativeText {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19575,12 +19575,12 @@ var ImageComp = class extends NativeImage {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19599,8 +19599,8 @@ var ImageComp = class extends NativeImage {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19682,12 +19682,12 @@ var ButtonComp = class extends NativeButton {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19708,8 +19708,8 @@ var ButtonComp = class extends NativeButton {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19811,12 +19811,12 @@ var SliderComp = class extends NativeSlider {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19837,8 +19837,8 @@ var SliderComp = class extends NativeSlider {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -19923,12 +19923,12 @@ var SwitchComp = class extends NativeComp {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -19951,8 +19951,8 @@ var SwitchComp = class extends NativeComp {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20051,12 +20051,12 @@ var TextareaComp = class extends NativeView2 {
     super({ uid: uid2 });
     this.uid = uid2;
     super.setOneLine(false);
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20074,8 +20074,8 @@ var TextareaComp = class extends NativeView2 {
   }
   close() {
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Textarea", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20184,12 +20184,12 @@ var InputComp = class extends NativeView3 {
     super({ uid: uid2 });
     this.uid = uid2;
     super.setOneLine(true);
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20208,8 +20208,8 @@ var InputComp = class extends NativeView3 {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20298,12 +20298,12 @@ var KeyboardComp = class extends NativeView4 {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20322,8 +20322,8 @@ var KeyboardComp = class extends NativeView4 {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20417,12 +20417,12 @@ var CheckboxComp = class extends NativeView5 {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20445,8 +20445,8 @@ var CheckboxComp = class extends NativeView5 {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20546,12 +20546,12 @@ var DropdownlistComp = class extends NativeDropdownlist {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20570,8 +20570,8 @@ var DropdownlistComp = class extends NativeDropdownlist {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20657,12 +20657,12 @@ var ProgressBarComp = class extends NativeProgressBar {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20681,8 +20681,8 @@ var ProgressBarComp = class extends NativeProgressBar {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20770,12 +20770,12 @@ var RollerComp = class extends NativeRoller {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20794,8 +20794,8 @@ var RollerComp = class extends NativeRoller {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20867,12 +20867,12 @@ var LineComp = class extends NativeLine {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -20893,8 +20893,8 @@ var LineComp = class extends NativeLine {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -20985,12 +20985,12 @@ var CalendarComp = class extends NativeCalendar {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -21011,8 +21011,8 @@ var CalendarComp = class extends NativeCalendar {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21113,12 +21113,12 @@ var GIFComp = class extends NativeGIF {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -21137,8 +21137,8 @@ var GIFComp = class extends NativeGIF {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21224,12 +21224,12 @@ var TabsComp = class extends NativeTabs {
     tabPosition = tabPositionObj[tabPosition] || tabPositionObj.top;
     super({ uid: uid2, tabPosition, tabSize });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -21253,8 +21253,8 @@ var TabsComp = class extends NativeTabs {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21476,12 +21476,12 @@ var ChartComp = class extends NativeChart {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -21502,8 +21502,8 @@ var ChartComp = class extends NativeChart {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21585,12 +21585,12 @@ var MaskComp = class extends NativeMask {
   constructor({ uid: uid2 }) {
     super({ uid: uid2 });
     this.uid = uid2;
-    const style3 = super.style;
+    const style5 = super.style;
     const that = this;
     this.style = new Proxy(this, {
       get(obj9, prop) {
         if (styleGetterProp.includes(prop)) {
-          return style3[prop].call(that);
+          return style5[prop].call(that);
         }
       }
     });
@@ -21611,8 +21611,8 @@ var MaskComp = class extends NativeMask {
   close() {
     super.close();
   }
-  setStyle(style3, type = 0) {
-    setStyle({ comp: this, styleSheet: style3, compName: "Mask", styleType: type, oldStyleSheet: null, isInit: false });
+  setStyle(style5, type = 0) {
+    setStyle({ comp: this, styleSheet: style5, compName: "Mask", styleType: type, oldStyleSheet: null, isInit: false });
   }
   moveToFront() {
     super.moveToFront();
@@ -21931,6 +21931,9 @@ function App() {
     onChange: (e) => {
       setBirthday(e.value);
       setCalendarShow(false);
+    },
+    align: {
+      type: EAlignType.ALIGN_CENTER
     }
   }))), /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.panel3
@@ -22239,10 +22242,440 @@ var style = {
 
 // demo/widgets/components/analytics/index.jsx
 var import_react2 = __toESM(require_react());
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+function Analytics() {
+  return /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.analyticsWrapper
+  }, /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.wrapper1
+  }, /* @__PURE__ */ import_react2.default.createElement(Text, {
+    style: style2.title1
+  }, "Unique visitors"), /* @__PURE__ */ import_react2.default.createElement(Chart, {
+    style: style2.chart1,
+    pointNum: 12,
+    divLineCount: [0, 12],
+    leftAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 5,
+      minorNum: 1,
+      drawSize: 80
+    },
+    bottomAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 12,
+      minorNum: 1,
+      drawSize: 50
+    },
+    leftAxisData: [
+      {
+        data: [
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80)
+        ]
+      }
+    ]
+  })), /* @__PURE__ */ import_react2.default.createElement(View, {
+    style: style2.wrapper2
+  }, /* @__PURE__ */ import_react2.default.createElement(Text, {
+    style: style2.title2
+  }, "Monthly revenue"), /* @__PURE__ */ import_react2.default.createElement(Chart, {
+    style: style2.chart2,
+    type: "bar",
+    pointNum: 12,
+    divLineCount: [6, 0],
+    leftAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 5,
+      minorNum: 1,
+      drawSize: 80
+    },
+    bottomAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 12,
+      minorNum: 1,
+      drawSize: 50
+    },
+    leftAxisData: [
+      {
+        data: [
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80)
+        ]
+      },
+      {
+        color: "grey",
+        data: [
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80),
+          getRandomInt(80)
+        ]
+      }
+    ]
+  })));
+}
+var style2 = {
+  analyticsWrapper: {
+    "display": "flex",
+    "flex-direction": "column",
+    "width": "100%",
+    "height": "100%"
+  },
+  wrapper1: {
+    "display": "grid",
+    "grid-template-columns": "20 1fr",
+    "grid-template-rows": "auto 1fr 10",
+    "height": 300,
+    "width": "100%"
+  },
+  title1: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  chart1: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 1,
+    "grid-row-span": 1,
+    "border-radius": 0,
+    "border-side": "bottom-left"
+  },
+  wrapper2: {
+    "display": "grid",
+    "grid-template-columns": "20 1fr",
+    "grid-template-rows": "auto 1fr 10",
+    "height": 300,
+    "width": "100%"
+  },
+  title2: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 2,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  chart2: {
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 1,
+    "grid-row-span": 1,
+    "border-radius": 0,
+    "border-side": "bottom-left",
+    "padding": 16
+  }
+};
 
 // demo/widgets/components/shop/index.jsx
 var import_react3 = __toESM(require_react());
 var { width: width2, height: height2 } = Dimensions.window;
+function getRandom(n, m) {
+  var num = Math.floor(Math.random() * (m - n + 1) + n);
+  return num;
+}
+function App2() {
+  const [list, setList] = (0, import_react3.useState)([
+    {
+      name: "Blue jeans",
+      category: "Clothes",
+      price: "$722"
+    },
+    {
+      name: "Blue jeans",
+      category: "Clothes",
+      price: "$411"
+    },
+    {
+      name: "Blue jeans",
+      category: "Clothes",
+      price: "$917"
+    },
+    {
+      name: "Blue jeans",
+      category: "Clothes",
+      price: "$64"
+    },
+    {
+      name: "Blue jeans",
+      category: "Clothes",
+      price: "$805"
+    }
+  ]);
+  return /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.shopWrapper
+  }, /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.panel1
+  }, /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.panel_text1
+  }, "Monthly Summary"), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.panel_text2
+  }, "8-15 July, 2021"), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.panel_text3
+  }, "$27,123.25"), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.panel_text4
+  }, BUILT_IN_SYMBOL["up"], " 17% growth this week"), /* @__PURE__ */ import_react3.default.createElement(Chart, {
+    style: style3.panel1_chart,
+    type: "bar",
+    divLineCount: [6, 0],
+    pointNum: 12,
+    leftAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 6,
+      minorNum: 1,
+      drawSize: 80
+    },
+    bottomAxisOption: {
+      majorLen: 0,
+      minorLen: 0,
+      majorNum: 7,
+      minorNum: 1,
+      drawSize: 50
+    },
+    leftAxisData: [
+      {
+        data: [
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90),
+          getRandom(60, 90)
+        ]
+      }
+    ]
+  })), /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.subWrapper
+  }, /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.list
+  }, /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.list_text1
+  }, "Top products"), list.map((item) => /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.list_item_wrapper
+  }, /* @__PURE__ */ import_react3.default.createElement(Image, {
+    style: style3.list_item_image1,
+    src: "./assets/clothes.png"
+  }), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.list_item_text1
+  }, item.name), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.list_item_text2
+  }, item.category), /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.list_item_text3
+  }, item.price)))), /* @__PURE__ */ import_react3.default.createElement(View, {
+    style: style3.notify
+  }, /* @__PURE__ */ import_react3.default.createElement(Text, {
+    style: style3.notift_text1
+  }, "Notification"), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "Item purchased"
+  }), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "New connection"
+  }), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "New subscriber",
+    checked: true
+  }), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "New message",
+    disabled: true
+  }), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "New message",
+    disabled: true,
+    checked: true
+  }), /* @__PURE__ */ import_react3.default.createElement(Checkbox, {
+    text: "Out of stock"
+  }))));
+}
+var style3 = {
+  shopWrapper: {
+    "height": "100%",
+    "width": "100%",
+    "display": "flex",
+    "flex-direction": "column"
+  },
+  panel1: {
+    "width": "100%",
+    "height": "auto",
+    "display": "grid",
+    "padding-bottom": "30px",
+    "grid-template-columns": "1fr 1fr",
+    "grid-template-rows": "auto auto 20 auto auto"
+  },
+  panel_text1: {
+    "font-size": "24px",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  panel_text2: {
+    "opacity": "0.5",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 1,
+    "grid-row-span": 1
+  },
+  panel_text3: {
+    "font-size": "24px",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 3,
+    "grid-row-span": 1
+  },
+  panel_text4: {
+    "text-color": "green",
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 4,
+    "grid-row-span": 1
+  },
+  panel1_chart: {
+    "width": "100%",
+    "height": "100%",
+    "column-spacing": "30%",
+    "grid-child": true,
+    "grid-column-pos": 1,
+    "grid-column-span": 1,
+    "justify-self": "stretch",
+    "align-self": "stretch",
+    "grid-row-pos": 0,
+    "grid-row-span": 5
+  },
+  subWrapper: {
+    "display": "flex",
+    "flex-direction": "row",
+    "width": "100%",
+    "height": "auto",
+    "border-width": 0,
+    "outline-width": 0,
+    "padding": 0
+  },
+  list: {
+    "height": "auto",
+    "max-height": "300px",
+    "display": "flex",
+    "flex-direction": "column",
+    "flex-grow": 1
+  },
+  list_text1: {
+    "font-size": "24px"
+  },
+  list_item_wrapper: {
+    "width": "100%",
+    "height": "auto",
+    "display": "grid",
+    "grid-template-columns": "auto 5 1fr 1fr",
+    "grid-template-rows": "1fr 1fr"
+  },
+  list_item_image1: {
+    "grid-child": true,
+    "grid-column-pos": 0,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 0,
+    "grid-row-span": 2
+  },
+  list_item_text1: {
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "end",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  list_item_text2: {
+    "opacity": "0.5",
+    "grid-child": true,
+    "grid-column-pos": 2,
+    "grid-column-span": 1,
+    "justify-self": "start",
+    "align-self": "start",
+    "grid-row-pos": 1,
+    "grid-row-span": 1
+  },
+  list_item_text3: {
+    "grid-child": true,
+    "grid-column-pos": 3,
+    "grid-column-span": 1,
+    "justify-self": "end",
+    "align-self": "end",
+    "grid-row-pos": 0,
+    "grid-row-span": 1
+  },
+  notify: {
+    "height": "auto",
+    "max-height": "300px",
+    "display": "flex",
+    "flex-direction": "column",
+    "flex-grow": 1
+  },
+  notift_text1: {
+    "font-size": "24px"
+  }
+};
 
 // demo/widgets/index.jsx
 var { width: width3, height: height3 } = Dimensions.window;
@@ -22273,13 +22706,13 @@ function App3() {
   const colorListRef = (0, import_react4.useRef)();
   return /* @__PURE__ */ import_react4.default.createElement(View, {
     ref: wrapperRef,
-    style: style2.window
+    style: style4.window
   }, /* @__PURE__ */ import_react4.default.createElement(Tabs, {
     tabs: ["Profile", "Analytics", "Shop"],
     tabSize: 70,
-    style: style2.tabs
-  }, /* @__PURE__ */ import_react4.default.createElement(App, null)), /* @__PURE__ */ import_react4.default.createElement(View, {
-    style: style2.colorList,
+    style: style4.tabs
+  }, /* @__PURE__ */ import_react4.default.createElement(App, null), /* @__PURE__ */ import_react4.default.createElement(Analytics, null), /* @__PURE__ */ import_react4.default.createElement(App2, null)), /* @__PURE__ */ import_react4.default.createElement(View, {
+    style: style4.colorList,
     align: {
       type: EAlignType.ALIGN_BOTTOM_RIGHT,
       pos: [-10, -10]
@@ -22287,7 +22720,7 @@ function App3() {
     ref: colorListRef
   }, colorsStyle.map((color, i) => /* @__PURE__ */ import_react4.default.createElement(Button, {
     ref: (ins) => colorListItemsRef.current[i] = ins,
-    style: [style2.colorListButton, color],
+    style: [style4.colorListButton, color],
     "data-color": colorList[i],
     onClick: (e) => {
       const { dataset } = e.target;
@@ -22297,7 +22730,7 @@ function App3() {
       });
     }
   }))), /* @__PURE__ */ import_react4.default.createElement(Button, {
-    style: style2.colorButton,
+    style: style4.colorButton,
     align: {
       type: EAlignType.ALIGN_BOTTOM_RIGHT,
       pos: [-15, -15]
@@ -22343,7 +22776,7 @@ function App3() {
     }
   }));
 }
-var style2 = {
+var style4 = {
   window: {
     "height": height3,
     "width": width3,
