@@ -8,7 +8,7 @@
  */
 
 /* clang-format off */
-#if IS_DEV /*Set it to "1" to enable the content*/
+#if IS_SIM /*Set it to "1" to enable the content*/
 
 #ifndef LV_DRV_CONF_H
 #define LV_DRV_CONF_H
@@ -493,7 +493,7 @@
 
 #endif /*End of "Content enable"*/
 
-#if IS_RELEASE
+#if IS_DEVICE
 #ifndef LV_DRV_CONF_H
 #define LV_DRV_CONF_H
 

@@ -12,7 +12,7 @@
  */
 
 /* clang-format off */
-#if IS_DEV /*Set it to "1" to enable content*/
+#if IS_SIM /*Set it to "1" to enable content*/
 
 #ifndef LV_CONF_H
 #define LV_CONF_H
@@ -699,7 +699,7 @@
 
 #endif /*End of "Content enable"*/
 
-#if IS_RELEASE /*Set it to "1" to enable content*/
+#if IS_DEVICE /*Set it to "1" to enable content*/
 #ifndef LV_CONF_H
 #define LV_CONF_H
 

@@ -13,15 +13,12 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 <br />
 
 ## Table of Contents
+---------------------
   - [lvgljs](#lvgljs)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Demo](#demo)
-    - [Widgets](#widgets)
-    - [Calculator](#calculator)
-  - [Usage](#usage)
-    - [use sdl simulate](#use-sdl-simulate)
-    - [Real Device](#real-device)
+  - [Building](#building)
   - [Components](#components)
   - [Font](#font)
   - [Animation](#animation)
@@ -32,6 +29,7 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 <br />
 
 ## Features
+---------------------
 - Support all lvgl built-in components
 - Fully suport lvgl flex and grid style
 - support most lvgl style，just write like html5 css
@@ -39,7 +37,7 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 - Fully support lvgl animation
 
 ## Demo
-
+---------------------
 ### Widgets
 
 <br />
@@ -49,32 +47,15 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 <br />
 
-## Usage
-- lvgl configuration file lv_conf.h and lv_drv_conf are located in src/deps
-- project support x86 and arm platform currently, if you want to build on other platform, please configure Makefile
-### SDL Simulate
+## building
+---------------------
+The following are developer notes on how to build lvgljs on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
-- Once you have installed openssl、sdl2、curl，you can run follwing script compile and run
-
-```shell
-make dev-x86
-
-./dev_x86/Main ./demo/widgets/index.js
-```
-
-### Real Device like MCU
-- Edit src/engine/hal/release/release.cpp based on your device, please check [lvgl document](https://docs.lvgl.io/latest/en/html/porting/index.html) for more detal
-- You have to download openssl、curl source code and compile with divece arch
-- Fill in CMAKE_BUILD_PLATFORM、CMAKE_C_COMPILER、CMAKE_CXX_COMPILER、CMAKE_CURL_LIB、CMAKE_CURL_INCLUDE_DIRS、CMAKE_SSL_LIB、CMAKE_CRYPTO_LIB in Makefile
-- You can run follwing script compile lvgljs with device arch (default arm)
-- Copy executable file ./build_output_dir/Main and ./build_output_dir/lib and user JS file in divece file-system, make sure file Main and dir lib in same dir
-- turn on the mcu, and run the script just like in simualtor
-
-```shell
-make dev-arm or make build-arm
-```
+- [ubuntu build Notes for sdl simulator](./doc/build/build-ubuntu-arm.md)
+- [ubuntu build Notes for platform arm](./doc/build/build-ubuntu-x86-simualtor.md)
 
 ## Components
+---------------------
 - [View](./doc/component/View.md)
 - [Image](./doc/component/Image.md)
 - [Button](./doc/component/Button.md)
@@ -92,12 +73,15 @@ make dev-arm or make build-arm
 - [Chart](./doc/component/Chart.md)
 
 ## Font
+---------------------
 [Buitin-Symbol](./doc/Symbol/symbol.md)
 
 ## Animation
+---------------------
 [Animation](./doc/animate/animate.md)
 
 ## Style
+---------------------
 - [position-size-layout](./doc/style/position-size-layout.md)
 - [boxing-model](./doc/style/boxing-model.md)
 - [color](./doc/style/color.md)
@@ -115,11 +99,13 @@ make dev-arm or make build-arm
 - [transform](./doc/style/transform.md)
 
 ## JSAPI
+---------------------
 - [network](./doc/jsapi/network.md)
 - [filesystem](./doc/jsapi/fs.md)
 - [dimension](./doc/jsapi/dimension.md)
 
 ## Thanks
+---------------------
 lvgljs depends on following excellent work
 
 [lvgl](https://github.com/lvgl/lvgl): Create beautiful UIs for any MCU, MPU and display type

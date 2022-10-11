@@ -8,9 +8,9 @@ set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
 set(CMAKE_C_FLAGS "-O0 -Wall -g -ggdb -std=gnu99")
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
-add_definitions(-DIS_DEV)
+add_definitions(-DIS_SIM)
 elseif(${CMAKE_BUILD_PLATFORM} MATCHES arm)
-add_definitions(-DIS_RELEASE)
+add_definitions(-DIS_DEVICE)
 endif()
 
 # add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
@@ -40,14 +40,14 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
     string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
     find_package(CURL REQUIRED)
     string(STRIP ${CURL_LIBRARIES} CURL_LIBRARIES)
-    add_executable(Main
+    add_executable(lvgljs
         ./src/utils/utils.c
-        ./src/engine/hal/dev/mouse_cursor_icon.c
-        ./src/engine/hal/dev/dev.cpp
+        ./src/engine/hal/simulator/mouse_cursor_icon.c
+        ./src/engine/hal/simulator/simulator.cpp
         ./src/engine/engine.cpp
     )
     include_directories(${SDL2_INCLUDE_DIRS})
-    target_link_libraries(Main
+    target_link_libraries(lvgljs
         jsruntime
         ${CURL_LIBRARIES}
         crypto 
@@ -61,12 +61,12 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ${SDL2_LIBRARIES}
     )
 elseif (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES arm)
-    add_executable(Main
+    add_executable(lvgljs
         ./src/utils/utils.c
-        ./src/engine/hal/release/release.cpp
+        ./src/engine/hal/device/device.cpp
         ./src/engine/engine.cpp
     )
-    target_link_libraries(Main
+    target_link_libraries(lvgljs
         jsruntime
         ${CMAKE_CURL_LIB}
         ${CMAKE_CRYPTO_LIB}
