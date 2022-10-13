@@ -52,6 +52,7 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 The following are developer notes on how to build lvgljs on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
 - [ubuntu build Notes for sdl simulator](./doc/build/build-ubuntu-arm.md)
+- [macos x86 build Notes for sdl simulator](./doc/build/build-macos-x86-simulator.md)
 - [ubuntu build Notes for platform arm](./doc/build/build-ubuntu-x86-simualtor.md)
 
 ## Components
