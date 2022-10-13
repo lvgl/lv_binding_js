@@ -12,10 +12,15 @@ target_compile_definitions(jsruntime PUBLIC SJSPLATFORM="${SJSPLATFORM}")
 
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 
+find_library(LIBRT rt)
+
 target_link_libraries(jsruntime PUBLIC
     qjs
-    -lrt
 )
+
+if(UNIX AND NOT APPLE)
+    target_link_libraries(jsruntime PUBLIC rt)
+endif()
 
 execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 add_custom_command(OUTPUT bundle.js

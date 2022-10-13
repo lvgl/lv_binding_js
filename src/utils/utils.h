@@ -5,6 +5,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <limits.h>
+
+#ifdef __APPLE__ 
+    #include <mach-o/dyld.h>
+#endif
 #include <unistd.h>
 
 #if defined(_WIN32)

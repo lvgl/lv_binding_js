@@ -1,11 +1,12 @@
 DEV_X86=dev_x86
 DEV_ARM=dev_arm
+BUILD_ARM=build_arm
 
 dev-x86:
 	@mkdir -p $(DEV_X86)
 	cmake -B "$(DEV_X86)" \
 		-DCMAKE_BUILD_TYPE=Debug \
-		-DCMAKE_BUILD_PLATFORM=x86 
+		-DCMAKE_BUILD_PLATFORM=x86
 	cmake --build $(DEV_X86)
 
 dev-arm:
@@ -23,4 +24,4 @@ dev-arm:
 
 build-arm:
 	@mkdir -p build-arm
-	cmake -B build-arm
+	cmake -B "$(BUILD_ARM)"

@@ -1,4 +1,4 @@
-#include "dev.hpp"
+#include "./simulator.hpp"
 
 void hal_init(void) {
     hor_res = SDL_HOR_RES;

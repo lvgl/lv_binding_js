@@ -1,4 +1,4 @@
-#include "./release.hpp"
+#include "./device.hpp"
 
 #define DISP_BUF_SIZE (1024 * 600)
 

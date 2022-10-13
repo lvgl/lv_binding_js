@@ -13,7 +13,6 @@ elseif(${CMAKE_BUILD_PLATFORM} MATCHES arm)
 add_definitions(-DIS_DEVICE)
 endif()
 
-# add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
 add_subdirectory(./src/jsruntime)
 add_subdirectory(./src/deps/lvgl EXCLUDE_FROM_ALL)
@@ -37,6 +36,8 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
     find_package(SDL2 REQUIRED 
         SDL2
     )
+    find_package(OpenSSL REQUIRED)
+    message(OPENSSL_SSL_LIBRARIES is ${OPENSSL_SSL_LIBRARIES})
     string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
     find_package(CURL REQUIRED)
     string(STRIP ${CURL_LIBRARIES} CURL_LIBRARIES)
@@ -46,12 +47,14 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ./src/engine/hal/simulator/simulator.cpp
         ./src/engine/engine.cpp
     )
-    include_directories(${SDL2_INCLUDE_DIRS})
+    target_include_directories(lv_drivers PUBLIC ${SDL2_INCLUDE_DIRS}/../)
+
+    target_link_libraries(lvgljs INTERFACE OpenSSL::Crypto)
+    target_link_libraries(lvgljs INTERFACE OpenSSL::SSL)
+
     target_link_libraries(lvgljs
         jsruntime
         ${CURL_LIBRARIES}
-        crypto 
-        ssl
         uv_a
         dl
         pthread

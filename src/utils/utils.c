@@ -1,11 +1,25 @@
 #include "utils.h"
 
 void GetProgramDir (char* buf) {
-    char str[1000];
+    char str[PATH_MAX];
+	char* dir;
 
-    snprintf(str, sizeof(str), "/proc/self/exe");
-    readlink(str, buf, sizeof(str));
-    dirname(buf);
+	#ifdef __APPLE__
+		unsigned size = PATH_MAX;
+		_NSGetExecutablePath(str, &size);
+		str[size] = '\0';
+		printf("The path is: %s\n", str);
+	#else
+    	snprintf(str, sizeof(str), "/proc/self/exe");
+	#endif
+
+    #ifdef __APPLE__
+    	dir = dirname(str);
+		strcpy(buf, dir);
+	#else
+		readlink(str, buf, sizeof(str));
+		dirname(buf);
+	#endif
 };
 
 #ifndef WIN32

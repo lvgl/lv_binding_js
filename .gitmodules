@@ -10,6 +10,3 @@
 [submodule "src/deps/lv_drivers"]
 	path = src/deps/lv_drivers
 	url = https://github.com/lvgl/lv_drivers.git
-[submodule "src/deps/curl"]
-	path = src/deps/curl
-	url = https://github.com/curl/curl.git

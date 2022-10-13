@@ -25,12 +25,13 @@ Engine::Engine (char* file_path) {
     WindowInit();
 
     char* path = (char*)malloc(PATH_MAX);
-    if (!access(path, 0)) {
+    
+    GetBundlePath(path);
+    if (access(path, F_OK) == -1) {
         printf("bundle.js miss, engine will stop \n");
         JSRuntimeFree(0);
         exit(0);
     }
-    GetBundlePath(path);
 
     SJSBootStrapGlobals(qrt->ctx, path);
     free(path);
@@ -92,7 +93,7 @@ void Engine::GetBundlePath (char* buf) {
 };
 
 std::string Engine::SetJSEntryPath (char* file_path) {
-    char buf[1000]; 
+    char buf[PATH_MAX]; 
     realpath(file_path, buf);
     js_entry_path = buf;
 
