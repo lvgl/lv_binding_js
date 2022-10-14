@@ -1,11 +1,11 @@
-import { View, Render, Window, Text, Image, Button, Dimensions } from 'lvgljs-ui';
+import { View, Render, Text, Image, Button, Dimensions } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 const { width, height } = Dimensions.window
 
 function App () {
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Button style={style.button} onPressedStyle={style.buttonPress}>
                 <Text>Button1</Text>
             </Button>
@@ -13,7 +13,7 @@ function App () {
                 <Text>Button2</Text>
             </Button>
 
-        </Window>
+        </View>
     )
 };
 
@@ -44,7 +44,10 @@ const style = {
         'border-width': '6px',
         'border-color': '#DC143C',
         'background-color': 'red',
-        'transition': 'border-width 500ms linear 0, background-color 500ms linear 0',
+        'transition-property': 'border-width, background-color',
+        'transition-duration': '500ms',
+        'transition-timing-function': 'linear',
+        'transition-delay': '0',
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'center'

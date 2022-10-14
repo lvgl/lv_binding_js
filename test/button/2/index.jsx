@@ -1,39 +1,48 @@
-import { View, Render, Window, Text, Image, Button } from 'lvgljs-ui';
+import { View, Render, Text, Image, Button, Dimensions } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Button style={style.button} onPressedStyle={style.buttonPress}>
                 <Text>Gum</Text>
             </Button>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        'width': width,
+        'height': height,
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'center'
     },
     button: {
-        'width': '60px',
-        'height': '50px',
         'text-color': 'white',
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'center',
         'background-color': 'blue',
-        'font-size': '16px',
-        'transition': 'transform-width 250ms ease-in-out 0ms, transform-height 250ms, letter-spacing 250ms'
+
+        'transition-property': 'transform-width, transform-height',
+        'transition-duration': '250ms',
+        'transition-timing-function': 'ease-in-out',
+        'transition-delay': '250ms',
     },
     buttonPress: {
         'transform': 'transform-width(10), transform-height(-10)',
         'letter-spacing': 10,
-        'transition': 'transform-width 250ms overshoot 0, transform-height 250ms, letter-spacing 250ms'
+
+        'transition-property': 'transform-width, transform-height',
+        'transition-duration': '250ms',
+        'transition-timing-function': 'overshoot',
+        'transition-delay': '250ms',
+
+        'width': 'auto'
     }
 };
 

@@ -6,7 +6,9 @@ dev-x86:
 	@mkdir -p $(DEV_X86)
 	cmake -B "$(DEV_X86)" \
 		-DCMAKE_BUILD_TYPE=Debug \
-		-DCMAKE_BUILD_PLATFORM=x86
+		-DCMAKE_BUILD_PLATFORM=x86 \
+		-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@3 \
+		-DOPENSSL_LIBRARIES=/usr/local/opt/openssl@3/lib
 	cmake --build $(DEV_X86)
 
 dev-arm:

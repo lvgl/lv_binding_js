@@ -226,7 +226,7 @@ export function TransStyle (style, result, compName) {
         const func = style['transition-timing-function'] || 'linear'
         const delay = style['transition-delay'] || 0
 
-        const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay]
+        const trans = [properties.length, properties, NormalizeTime(duration), func, delay]
         result['transition'] = trans
     }
 

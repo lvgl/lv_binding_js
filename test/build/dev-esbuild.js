@@ -1,7 +1,7 @@
 const path = require('path');
 const alias = require('esbuild-plugin-alias');
 
-const entry = path.resolve(__dirname, '../../demo/widgets/index.jsx')
+const entry = path.resolve(__dirname, '../../test/button/2/index.jsx')
 
 require('esbuild').build({
     entryPoints: [entry],

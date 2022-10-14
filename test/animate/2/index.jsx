@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, Image, Switch, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
+import { View, Render, Text, Dimensions, Switch, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
 import React, { useRef, useEffect, useCallback } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const ref = useRef()
@@ -9,7 +11,7 @@ function App () {
             const animate = Animate.timing({
                 duration: 500,
                 startValue: ref.current.style.left,
-                endValue: 180,
+                endValue: width / 2 - ref.current.style.width / 2,
                 easing: 'overshoot',
                 execCallback: (value) => {
                     ref.current.setStyle({
@@ -41,7 +43,7 @@ function App () {
     }, [])
 
     return (
-        <Window style={style.window}>
+        <React.Fragment>
             <Text
                 style={style.text}
                 ref={ref}
@@ -53,18 +55,13 @@ function App () {
                 onChange={onChange}
                 checked={true}
             />
-        </Window>
+        </React.Fragment>
     )
 };
-
 const style = {
-    window: {
-        'width': '480px',
-        'height': '320px',
-    },
     text: {
-        'left': '180px',
-        'top': '10px'
+        'top': '10px',
+        'left': width / 2
     }
 };
 
