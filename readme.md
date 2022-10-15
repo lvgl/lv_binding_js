@@ -6,11 +6,9 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 <img src="./demo/screenshoot/code.png">
 
-<br />
 
 **Code Runing on Real Device**
-
-<br />
+<img src="./demo/screenshoot/real_device.jpg" style="transform: rotate(270deg)">
 
 ## Table of Contents
 ---------------------
@@ -26,7 +24,6 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
   - [JSAPI](#jsapi)
   - [Thanks](#thanks)
 
-<br />
 
 ## Features
 ---------------------
@@ -39,13 +36,11 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 ## Demo
 ---------------------
 ### Widgets
-
-<br />
+![sdl_simulator](./demo/widgets/screenshoot/sdl_simulator.gif)
 
 ### Calculator
 ![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
 
-<br />
 
 ## building
 ---------------------

@@ -1,7 +1,11 @@
 cmake_minimum_required(VERSION 2.8)
 
-ADD_DEFINITIONS(-DDEBUG)
-set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++14")
+if (${CMAKE_BUILD_TYPE} MATCHES Debug)
+    ADD_DEFINITIONS(-DDEBUG)
+    set(CMAKE_CXX_FLAGS "-O0 -Wall -g3 -ggdb -std=c++14")
+elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
+    set(CMAKE_CXX_FLAGS "-O0 -Wall -std=c++14")
+endif()
 
 set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)

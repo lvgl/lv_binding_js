@@ -4,8 +4,13 @@ set(QUICKJS_PATH ./src/jsruntime/deps/quickjs)
 set(LIBUV_PATH ./src/deps/libuv)
 set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
 
-set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
-set(CMAKE_C_FLAGS "-O0 -Wall -g -ggdb -std=gnu99")
+if (${CMAKE_BUILD_TYPE} MATCHES Debug)
+    set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
+    set(CMAKE_C_FLAGS "-O0 -Wall -g -ggdb -std=gnu99")
+elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
+    set(CMAKE_CXX_FLAGS "-O0 -Wall -std=c++11")
+    set(CMAKE_C_FLAGS "-O0 -Wall -std=gnu99")
+endif()
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
 add_definitions(-DIS_SIM)
@@ -63,7 +68,7 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         lv_drivers
         ${SDL2_LIBRARIES}
     )
-elseif (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES arm)
+elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
     add_executable(lvgljs
         ./src/utils/utils.c
         ./src/engine/hal/device/device.cpp
