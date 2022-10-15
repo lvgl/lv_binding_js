@@ -24,6 +24,12 @@ brew install sdl2
 brew install cmake
 ```
 
+### 5. Git SubModules
+run following code in lvgljs project
+```bash
+git submodule update --init --recursive
+```
+
 ## Build lvgljs
 cmake can not find openssl install by homebrew, so we have to specify openssl path to cmake
 

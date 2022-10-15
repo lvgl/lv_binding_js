@@ -38,6 +38,12 @@ make install
 sudo apt install cmake
 ```
 
+### 5. Git SubModules
+run following code in lvgljs project
+```bash
+git submodule update --init --recursive
+```
+
 ## Build lvgljs
 1. change the CMAKE_CXX_COMPILER && CMAKE_C_COMPILER path in Makefile
 2. change the CMAKE_CURL_LIB, CMAKE_CURL_INCLUDE_DIRS, CMAKE_SSL_LIB, CMAKE_CRYPTO_LIB in Makefile

@@ -28,6 +28,12 @@ sudo apt-get install libsdl2-dev
 sudo apt install cmake
 ```
 
+### 5. Git SubModules
+run following code in lvgljs project
+```bash
+git submodule update --init --recursive
+```
+
 ## Build lvgljs
 After preparation, you are ready to compile. Run the following in your terminal to compile Bitcoin Core
 ```bash
