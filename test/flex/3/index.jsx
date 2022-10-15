@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, Animate, Button } from 'lvgljs-ui';
+import { View, Render, Text, Animate, Dimensions } from 'lvgljs-ui';
 import React, { useRef, useEffect } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const ref = useRef()
@@ -36,7 +38,7 @@ function App () {
     }, [])
 
     return (
-        <Window style={style.window} ref={ref}>
+        <View style={style.window} ref={ref}>
             {
                 Array(9).fill(0).map((_, i) => (
                     <View
@@ -46,14 +48,14 @@ function App () {
                     </View>
                 ))
             }
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '250px',
-        'height': '220px',
+        width,
+        height,
         'display': 'flex',
         'flex-wrap': 'wrap',
         'background-color': 'white',

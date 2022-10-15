@@ -1,5 +1,7 @@
-import { Text, Render, Window, Roller, EAlignType, Button } from 'lvgljs-ui';
+import { View, Render, Dimensions, Roller, EAlignType, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 const items = [
     "1",
@@ -18,7 +20,7 @@ function App () {
     const [list, setList] = useState(items)
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Roller
                 align={{
                     type: EAlignType.ALIGN_LEFT_MID,
@@ -64,14 +66,14 @@ function App () {
                 style={style.roller3}
                 selectedStyle={style.selected}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     roller1: {
         'width': '100px',
@@ -85,7 +87,7 @@ const style = {
         'text-align': 'right'
     },
     selected: {
-        'font-size': '22px'
+        'font-size': '20px'
     }
 };
 

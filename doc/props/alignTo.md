@@ -10,6 +10,9 @@ alignTo value object with the following type
 - pos, x、y position
 - parent, componentInstance get by react ref
 
+## Note
+alignTo has higher priority than style x or y, please do not use them together
+
 <br/>
 
 EAlignType with the following type

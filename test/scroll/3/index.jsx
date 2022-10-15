@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, EAlignType, Image, Button } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, EAlignType, Image, Button } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [list, setlist] = useState(Array(2).fill(1))
@@ -11,7 +13,7 @@ function App () {
     }, [list])
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <View 
                 style={style.view1}
                 align={{
@@ -47,14 +49,14 @@ function App () {
                 >
                 </Button>
             </View>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     view1: {
         'width': 280,

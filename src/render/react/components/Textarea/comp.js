@@ -6,7 +6,7 @@ const NativeView = bridge.NativeRender.NativeComponents.Textarea
 
 function setTextareaProps(comp, newProps, oldProps) {
     const setter = {
-        ...CommonComponentApi({ compName: 'Text', comp, newProps, oldProps }),
+        ...CommonComponentApi({ compName: 'Textarea', comp, newProps, oldProps }),
         placeholder (str) {
             if (str !== oldProps.placeholder) {
                 comp.setPlaceHolder(str)  

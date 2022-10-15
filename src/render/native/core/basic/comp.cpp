@@ -180,8 +180,7 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
         lv_obj_add_style(this->instance, style, type);
     }
 
-    lv_obj_invalidate(this->instance);
-    lv_obj_refresh_style(this->instance, type, LV_STYLE_PROP_ANY);
+    lv_obj_refresh_style(this->instance, LV_PART_ANY, LV_STYLE_PROP_ANY);
 };
 
 void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t style_type, std::string& symbol) {
@@ -230,6 +229,7 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 
         lv_style_set_bg_img_src(style, this->symbol_map[style_type].c_str());
     }
+
     lv_obj_invalidate(this->instance);
 };
 

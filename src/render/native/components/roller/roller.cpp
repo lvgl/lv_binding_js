@@ -12,7 +12,7 @@ Roller::Roller(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_obj_set_user_data(this->instance, this);
 };
 
-void Roller::setOptions (std::vector<std::string> options, uint32_t mode) {
+void Roller::setOptions (std::vector<std::string>& options, uint32_t mode) {
     if (options.size() == 0) {
         lv_roller_set_options(this->instance, "\0", mode);
     } else {

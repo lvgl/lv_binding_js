@@ -1,7 +1,7 @@
 const path = require('path');
 const alias = require('esbuild-plugin-alias');
 
-const entry = path.resolve(__dirname, '../../test/button/2/index.jsx')
+const entry = path.resolve(__dirname, './test/animate/2/index.jsx')
 
 require('esbuild').build({
     entryPoints: [entry],
@@ -11,7 +11,7 @@ require('esbuild').build({
     outfile: path.resolve(path.dirname(entry), 'index.js'),
     plugins: [
       alias({
-        'lvgljs-ui': path.resolve(__dirname, '../../src/render/react/index.js'),
+        'lvgljs-ui': path.resolve(__dirname, './src/render/react/index.js'),
       }),
     ],
 }).catch(() => process.exit(1))

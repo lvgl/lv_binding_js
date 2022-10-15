@@ -52,9 +52,6 @@ function App () {
     return (
         <View
             style={style.ball}
-            align={{
-                type: EAlignType.ALIGN_LEFT_MID
-            }}
             ref={ref}
         />
     )

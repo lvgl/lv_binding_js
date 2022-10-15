@@ -1,5 +1,7 @@
-import { Text, Render, Window, Roller, EAlignType, Button } from 'lvgljs-ui';
+import { View, Text, Render, Dimensions, Roller, EAlignType, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 const items1 = [
     "Apple",
@@ -30,7 +32,7 @@ function App () {
     const [list, setList] = useState(items1)
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Button 
                 style={style.button1}
                 onClick={() => setList(items1)}>
@@ -54,14 +56,14 @@ function App () {
                 }}
                 infinity={true}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     button1: {
         left: 5,

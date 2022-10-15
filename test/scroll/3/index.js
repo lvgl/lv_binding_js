@@ -18179,7 +18179,6 @@ var HostConfig = {
   },
   removeChild(parent, child) {
     parent?.removeChild(child);
-    child?.close();
     unRegistEvent(child.uid);
     delete instanceMap[child.uid];
   },
@@ -18453,7 +18452,7 @@ var transitionProperty = {
   "top": 8,
   "align": 9,
   "display": 10,
-  "radius": 11,
+  "border-radius": 11,
   "padding-top": 16,
   "padding-bottom": 17,
   "padding-left": 18,
@@ -18528,20 +18527,15 @@ var transitionProperty = {
   "transform-pivot-x": 110,
   "transform-pivot-y": 111
 };
-var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "rotate", "transform-width", "transform-height"];
+var transformSupportKeys = ["translate", "translate-x", "translate-y", "scale", "scaleX", "scaleY", "rotate", "transform-width", "transform-height"];
 function TransStyle(style2, result, compName) {
-  if (style2["transition"]) {
-    let value = style2["transition"];
-    const transProps = [];
-    value = value.split(",").filter((item) => !!item).map((item) => item.split(/\s/)).map((item) => item.filter((a) => !!a));
-    value.forEach((item) => {
-      let [property2, duration2, func2 = "linear", delay2 = 0] = item;
-      if (property2 && NormalizeTime(duration2) != null && transitionProperty[property2]) {
-        transProps.push(transitionProperty[property2]);
-      }
-    });
-    let [property, duration, func = "linear", delay = 0] = value[0];
-    const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
+  if (style2["transition-property"]) {
+    let properties = style2["transition-property"];
+    properties = properties.split(",").map((item) => item.replace(/\s/, "")).map((item) => transitionProperty[item]).filter((item) => !!item);
+    const duration = style2["transition-duration"] || 0;
+    const func = style2["transition-timing-function"] || "linear";
+    const delay = style2["transition-delay"] || 0;
+    const trans = [properties.length, properties, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
   if (style2["transform"]) {
@@ -18565,6 +18559,8 @@ function TransStyle(style2, result, compName) {
             prop = `img-${prop}`;
           }
           ProcessDeg(prop, val, result);
+        } else if ((prop == "scaleX" || prop == "scaleY") && compName == "Chart") {
+          ProcessScale(`chart-${prop}`, val, result);
         } else {
           if (compName === "Image") {
             prop = `img-${prop}`;
@@ -18589,14 +18585,14 @@ function PaddingStyle(style2, result, compName) {
       ProcessPx(key, style2[key], result);
     }
   });
-  if (style2["padding"]) {
+  if (style2["padding"] !== void 0) {
     const value = style2["padding"];
     if (typeof value == "number") {
       keys.forEach((styleKey) => {
         result[styleKey] = value;
       });
     } else if (typeof value == "string") {
-      const values = value.split(/\s/);
+      const values = value.split(/\s/).filter(Boolean);
       const len = values.length;
       switch (len) {
         case 1:
@@ -18651,13 +18647,18 @@ function BackgroundStyle(style2, result, compName) {
 // src/render/react/core/style/pipe/pos.js
 var obj2 = {
   "height": ProcessPxOrPercent,
+  "max-height": ProcessPxOrPercent,
+  "min-height": ProcessPxOrPercent,
   "width": ProcessPxOrPercent,
+  "max-width": ProcessPxOrPercent,
+  "min-width": ProcessPxOrPercent,
   "left": ProcessPxOrPercent,
   "top": ProcessPxOrPercent,
-  "row-spacing": ProcessPx,
-  "column-spacing": ProcessPx,
+  "row-spacing": ProcessPxOrPercent,
+  "column-spacing": ProcessPxOrPercent,
   "position": ProcessEnum({
-    "absolute": "absolute"
+    "absolute": "absolute",
+    "fixed": "fixed"
   })
 };
 var keys3 = Object.keys(obj2);
@@ -18822,6 +18823,89 @@ function FlexStyle(style2, result) {
   return result;
 }
 
+// src/render/react/core/style/pipe/grid.js
+var GRID_CONTENT = (1 << 13) - 1 - 101;
+var FR_REG = /([\d]+)fr$/;
+var gridChildJustifySelfObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "stretch": 3
+};
+var gridChildAlignSelfObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "stretch": 3
+};
+var gridJustifyContentObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "space-evenly": 4,
+  "space-around": 5,
+  "space-between": 6,
+  "stretch": 3
+};
+var gridAlignItemsObj = {
+  "start": 0,
+  "end": 2,
+  "center": 1,
+  "space-evenly": 4,
+  "space-around": 5,
+  "space-between": 6,
+  "stretch": 3
+};
+function GridStyle(style2, result) {
+  if (style2.display == "grid") {
+    let columns = style2["grid-template-columns"]?.split(/\s/).filter(Boolean);
+    let rows = style2["grid-template-rows"]?.split(/\s/).filter(Boolean);
+    if (!columns || !rows)
+      return;
+    columns = columns.map((column) => {
+      if (column === "auto") {
+        return GRID_CONTENT;
+      }
+      const arr = column?.match(FR_REG);
+      if (!isNaN(arr?.[1])) {
+        return (1 << 13) - 1 - 100 + Number(arr[1]);
+      }
+      return NormalizePx(column);
+    });
+    rows = rows.map((row) => {
+      if (row === "auto") {
+        return GRID_CONTENT;
+      }
+      const arr = row?.match(FR_REG);
+      if (!isNaN(arr?.[1])) {
+        return (1 << 13) - 1 - 100 + Number(arr[1]);
+      }
+      return NormalizePx(row);
+    });
+    columns = columns.filter(Boolean);
+    rows = rows.filter(Boolean);
+    result["display"] = "grid";
+    result["grid-template"] = [columns, rows];
+    const justifyContent = gridJustifyContentObj[style2["justify-content"]] || gridJustifyContentObj.start;
+    const alignContent = gridAlignItemsObj[style2["align-items"]] || gridAlignItemsObj.start;
+    result["grid-align"] = [justifyContent, alignContent];
+  }
+  if (style2["grid-child"]) {
+    const justifySelf = style2["justify-self"];
+    const alignSelf = style2["align-self"];
+    const gridColumnPos = style2["grid-column-pos"];
+    const gridRowPos = style2["grid-row-pos"];
+    const gridColumnSpan = style2["grid-column-span"] || 1;
+    const gridRowSpan = style2["grid-row-span"] || 1;
+    if (isNaN(gridColumnPos + gridColumnSpan + gridRowPos + gridRowSpan))
+      return;
+    let column_align, row_align;
+    column_align = gridChildJustifySelfObj[justifySelf] || gridChildJustifySelfObj.start;
+    row_align = gridChildAlignSelfObj[alignSelf] || gridChildAlignSelfObj.start;
+    result["grid-child"] = [column_align, gridColumnPos, gridColumnSpan, row_align, gridRowPos, gridRowSpan];
+  }
+}
+
 // src/render/react/core/style/pipe/scoll.js
 var obj6 = {
   "overflow": ProcessEnum({
@@ -18870,31 +18954,31 @@ function ScrollStyle(style2, result, compName) {
 function NormalizeOpacity(value) {
   if (isNaN(value) || value > 1)
     return 255;
-  if (value < 0)
+  if (value <= 0)
     return 0;
   return Math.floor(value * 255);
 }
 function OpacityStyle(style2, result, compName) {
-  if (style2["opacity"]) {
+  if (style2["opacity"] !== void 0) {
     if (compName === "Image") {
       result["img-opacity"] = NormalizeOpacity(style2["opacity"]);
     } else {
       result["opacity"] = NormalizeOpacity(style2["opacity"]);
     }
   }
-  if (style2["background-opacity"]) {
+  if (style2["background-opacity"] !== void 0) {
     result["background-opacity"] = NormalizeOpacity(style2["background-opacity"]);
   }
-  if (style2["border-opacity"]) {
+  if (style2["border-opacity"] !== void 0) {
     result["border-opacity"] = NormalizeOpacity(style2["border-opacity"]);
   }
-  if (style2["outline-opacity"]) {
+  if (style2["outline-opacity"] !== void 0) {
     result["outline-opacity"] = NormalizeOpacity(style2["outline-opacity"]);
   }
-  if (style2["recolor-opacity"] && compName === "Image") {
+  if (style2["recolor-opacity"] !== void 0 && compName === "Image") {
     result["recolor-opacity"] = NormalizeOpacity(style2["recolor-opacity"]);
   }
-  if (style2["shadow-opacity"]) {
+  if (style2["shadow-opacity"] !== void 0) {
     result["shadow-opacity"] = NormalizeOpacity(style2["shadow-opacity"]);
   }
   return result;
@@ -18936,7 +19020,9 @@ function ShadowStyle(style2, result, compName) {
 
 // src/render/react/core/style/pipe/display.js
 function DisplayStyle(style2, result, compName) {
-  result["display"] = style2["display"];
+  if (style2["display"]) {
+    result["display"] = style2["display"];
+  }
 }
 
 // src/render/react/utils/helpers.ts
@@ -18952,68 +19038,67 @@ function isValidUrl(str) {
 }
 
 // src/render/react/core/style/symbol.js
-var builtInSymbol = {
+var BUILT_IN_SYMBOL = {
   "audio": "\uF001",
   "video": "\uF008",
   "list": "\uF00B",
-  "ok": "0xF00C",
-  "close": "0xF00D",
-  "power": "0xF011",
-  "settings": "0xF013",
-  "home": "0xF015",
-  "download": "0xF019",
-  "drive": "0xF01C",
-  "refresh": "0xF021",
-  "mute": "",
-  "volume_mid": "",
-  "volume_max": "",
-  "image": "",
-  "tint": "",
-  "prev": "",
-  "play": "",
-  "pause": "",
-  "stop": "",
-  "next": "",
-  "eject": "",
-  "left": "",
-  "right": "",
+  "ok": "\uF00C",
+  "close": "\uF00D",
+  "power": "\uF011",
+  "settings": "\uF013",
+  "home": "\uF015",
+  "download": "\uF019",
+  "drive": "\uF01C",
+  "refresh": "\uF021",
+  "mute": "\uF026",
+  "volume_mid": "\uF027",
+  "volume_max": "\uF028",
+  "image": "\uF03E",
+  "tint": "\uF043",
+  "prev": "\uF048",
+  "play": "\uF04B",
+  "pause": "\uF04C",
+  "stop": "\uF04D",
+  "next": "\uF051",
+  "eject": "\uF052",
+  "left": "\uF053",
+  "right": "\uF054",
   "plus": "\uF067",
-  "minus": "",
-  "eye_open": "",
-  "eye_close": "",
-  "warning": "",
-  "shuffle": "",
-  "up": "",
-  "down": "",
-  "loop": "",
-  "directory": "",
-  "upload": "",
-  "call": "",
-  "cut": "",
-  "copy": "",
-  "save": "",
-  "bars": "",
-  "envelope": "",
-  "charge": "",
-  "paste": "",
-  "bell": "",
-  "keyboard": "",
-  "gps": "",
-  "file": "",
-  "wifi": "",
-  "battery_full": "",
-  "battery_3": "",
-  "battery_2": "",
-  "battery_1": "",
-  "battery_empty": "",
-  "usb": "",
-  "bluetooth": "",
-  "trash": "",
-  "edit": "",
-  "backspace": "",
-  "sd_card": "",
-  "new_line": "",
-  "dummy": ""
+  "minus": "\uF068",
+  "eye_open": "\uF06E",
+  "eye_close": "\uF070",
+  "warning": "\uF071",
+  "shuffle": "\uF074",
+  "up": "\uF077",
+  "down": "\uF078",
+  "loop": "\uF079",
+  "directory": "\uF07B",
+  "upload": "\uF093",
+  "call": "\uF095",
+  "cut": "\uF0C4",
+  "copy": "\uF0C5",
+  "save": "\uF0C7",
+  "bars": "\uF0C9",
+  "envelope": "\uF0E0",
+  "charge": "\uF0E7",
+  "paste": "\uF0EA",
+  "bell": "\uF0F3",
+  "keyboard": "\uF11C",
+  "gps": "\uF124",
+  "file": "\uF158",
+  "wifi": "\uF1EB",
+  "battery_full": "\uF240",
+  "battery_3": "\uF241",
+  "battery_2": "\uF242",
+  "battery_1": "\uF243",
+  "battery_empty": "\uF244",
+  "usb": "\uF287",
+  "bluetooth": "\uF293",
+  "trash": "\uF2ED",
+  "edit": "\uF304",
+  "backspace": "\uF55A",
+  "sd_card": "\uF7C2",
+  "new_line": "\uF8A2"
 };
 
 // src/render/react/core/style/post.js
@@ -19027,8 +19112,8 @@ async function getImageBinary(url) {
 function PostProcessStyle({ comp, styleSheet, styleType }) {
   if (styleSheet["background-image"] !== void 0) {
     let url = styleSheet["background-image"];
-    if (builtInSymbol[url]) {
-      comp.setBackgroundImage(null, styleType, builtInSymbol[url]);
+    if (BUILT_IN_SYMBOL[url]) {
+      comp.setBackgroundImage(null, styleType, BUILT_IN_SYMBOL[url]);
       return;
     }
     if (url === null) {
@@ -19078,6 +19163,7 @@ var StyleSheet = _StyleSheet;
 __publicField(StyleSheet, "transformStyle");
 StyleSheet.pipeline([
   FlexStyle,
+  GridStyle,
   TextStyle,
   OutlineStyle,
   BorderStyle,
@@ -19224,6 +19310,12 @@ var CommonComponentApi = function({ compName, comp, newProps, oldProps }) {
     },
     onLongPressRepeat(fn) {
       handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    },
+    onPressLost(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_PRESS_LOST);
+    },
+    onReleased(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_RELEASED);
     }
   };
 };
@@ -19236,7 +19328,7 @@ function setViewProps(comp, newProps, oldProps) {
     ...CommonComponentApi({ compName: "View", comp, newProps, oldProps })
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19278,6 +19370,7 @@ var ViewComp = class extends NativeView {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "View", styleType: type, oldStyleSheet: {}, isInit: false });
@@ -19323,97 +19416,9 @@ var ViewConfig = class {
   }
 };
 
-// src/render/react/components/Window/comp.js
-var bridge2 = globalThis.SJSJSBridge;
-var NativeComp = bridge2.NativeRender.NativeComponents.Window;
-function setWindowProps(comp, newProps, oldProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Window", comp, newProps, oldProps }),
-    title(title) {
-      if (oldProps.title != title) {
-        comp.setTitle(title);
-      }
-    }
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
-var Window = class extends NativeComp {
-  constructor({ uid }) {
-    super({ uid });
-    this.uid = uid;
-    const style2 = super.style;
-    const that = this;
-    this.style = new Proxy(this, {
-      get(obj9, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style2[prop].call(that);
-        }
-      }
-    });
-  }
-  setProps(newProps, oldProps) {
-    setWindowProps(this, newProps, oldProps);
-  }
-  insertBefore(child, beforeChild) {
-  }
-  appendInitialChild(child) {
-    this.appendChild(child);
-  }
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
-  close() {
-  }
-  setStyle(style2, type = 0) {
-    setStyle({ comp: this, styleSheet: style2, compName: "Window", styleType: type, oldStyleSheet: {}, isInit: false });
-  }
-};
-
-// src/render/react/components/Window/config.js
-var WindowConfig = class {
-  tagName = "Window";
-  shouldSetTextContent() {
-    return false;
-  }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
-    const instance = new Window({ uid });
-    instance.setProps(newProps, {});
-    return instance;
-  }
-  commitMount(instance, props, internalInstanceHandle) {
-  }
-  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
-  }
-  setProps(newProps, oldProps) {
-  }
-  insertBefore(child, beforeChild) {
-  }
-  appendInitialChild(child) {
-  }
-  appendChild(child) {
-  }
-  removeChild(child) {
-  }
-};
-
 // src/render/react/components/Text/comp.js
-var bridge3 = globalThis.SJSJSBridge;
-var NativeText = bridge3.NativeRender.NativeComponents.Text;
+var bridge2 = globalThis.SJSJSBridge;
+var NativeText = bridge2.NativeRender.NativeComponents.Text;
 function setTextProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
@@ -19427,15 +19432,10 @@ function setTextProps(comp, newProps, oldProps) {
           comp.setText(str.join(""));
         }
       }
-    },
-    placeholder(str) {
-      if (str !== oldProps.placeholder) {
-        comp.setPlaceHolder(str);
-      }
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19473,6 +19473,7 @@ var TextComp = class extends NativeText {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Text", styleType: type, oldStyleSheet: {}, isInit: false });
@@ -19521,8 +19522,8 @@ var TextConfig = class {
 // src/render/react/components/Image/comp.js
 var fs2 = __require("fs");
 var path2 = __require("path");
-var bridge4 = globalThis.SJSJSBridge;
-var NativeImage = bridge4.NativeRender.NativeComponents.Image;
+var bridge3 = globalThis.SJSJSBridge;
+var NativeImage = bridge3.NativeRender.NativeComponents.Image;
 async function getImageBinary2(url) {
   const resp = await fetch(url, {
     headers: {
@@ -19540,8 +19541,8 @@ function setImageProps(comp, newProps, oldProps) {
     },
     src(url) {
       if (url && url !== oldProps.src) {
-        if (builtInSymbol[url]) {
-          comp.setSymbol(builtInSymbol[url]);
+        if (BUILT_IN_SYMBOL[url]) {
+          comp.setSymbol(BUILT_IN_SYMBOL[url]);
           return;
         }
         if (!isValidUrl(url)) {
@@ -19560,7 +19561,7 @@ function setImageProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19598,6 +19599,7 @@ var ImageComp = class extends NativeImage {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Image", styleType: type, oldStyleSheet: null, isInit: false });
@@ -19644,8 +19646,8 @@ var ImageConfig = class {
 };
 
 // src/render/react/components/Button/comp.js
-var bridge5 = globalThis.SJSJSBridge;
-var NativeButton = bridge5.NativeRender.NativeComponents.Button;
+var bridge4 = globalThis.SJSJSBridge;
+var NativeButton = bridge4.NativeRender.NativeComponents.Button;
 function setButtonProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Button", comp, newProps, oldProps }),
@@ -19666,7 +19668,7 @@ function setButtonProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19706,6 +19708,7 @@ var ButtonComp = class extends NativeButton {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Button", styleType: type, oldStyleSheet: null, isInit: false });
@@ -19752,8 +19755,8 @@ var ButtonConfig = class {
 };
 
 // src/render/react/components/Slider/comp.js
-var bridge6 = globalThis.SJSJSBridge;
-var NativeSlider = bridge6.NativeRender.NativeComponents.Slider;
+var bridge5 = globalThis.SJSJSBridge;
+var NativeSlider = bridge5.NativeRender.NativeComponents.Slider;
 function setSliderProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Slider", comp, newProps, oldProps }),
@@ -19794,7 +19797,7 @@ function setSliderProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19834,6 +19837,7 @@ var SliderComp = class extends NativeSlider {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Slider", styleType: type, oldStyleSheet: null, isInit: false });
@@ -19880,8 +19884,8 @@ var SliderConfig = class {
 };
 
 // src/render/react/components/Switch/comp.js
-var bridge7 = globalThis.SJSJSBridge;
-var NativeComp2 = bridge7.NativeRender.NativeComponents.Switch;
+var bridge6 = globalThis.SJSJSBridge;
+var NativeComp = bridge6.NativeRender.NativeComponents.Switch;
 function setSwitchProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Switch", comp, newProps, oldProps }),
@@ -19905,7 +19909,7 @@ function setSwitchProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -19917,7 +19921,7 @@ function setSwitchProps(comp, newProps, oldProps) {
     }
   });
 }
-var SwitchComp = class extends NativeComp2 {
+var SwitchComp = class extends NativeComp {
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -19947,6 +19951,7 @@ var SwitchComp = class extends NativeComp2 {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Switch", styleType: type, oldStyleSheet: {}, isInit: false });
@@ -19993,8 +19998,8 @@ var SwitchConfig = class {
 };
 
 // src/render/react/components/Textarea/comp.js
-var bridge8 = globalThis.SJSJSBridge;
-var NativeView2 = bridge8.NativeRender.NativeComponents.Textarea;
+var bridge7 = globalThis.SJSJSBridge;
+var NativeView2 = bridge7.NativeRender.NativeComponents.Textarea;
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
@@ -20023,10 +20028,15 @@ function setTextareaProps(comp, newProps, oldProps) {
       if (str !== oldProps.value) {
         comp.setText(str);
       }
+    },
+    autoKeyBoard(payload) {
+      if (payload !== oldProps?.autoKeyBoard) {
+        comp.setAutoKeyboard(payload);
+      }
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20111,8 +20121,8 @@ var TextareaConfig = class {
 };
 
 // src/render/react/components/Input/comp.js
-var bridge9 = globalThis.SJSJSBridge;
-var NativeView3 = bridge9.NativeRender.NativeComponents.Textarea;
+var bridge8 = globalThis.SJSJSBridge;
+var NativeView3 = bridge8.NativeRender.NativeComponents.Textarea;
 function setInputProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Input", comp, newProps, oldProps }),
@@ -20151,10 +20161,15 @@ function setInputProps(comp, newProps, oldProps) {
       if (str !== oldProps.value) {
         comp.setText(str);
       }
+    },
+    autoKeyBoard(payload) {
+      if (payload !== oldProps?.autoKeyBoard) {
+        comp.setAutoKeyboard(payload);
+      }
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20193,6 +20208,7 @@ var InputComp = class extends NativeView3 {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Input", styleType: type, oldStyleSheet: null, isInit: false });
@@ -20239,8 +20255,8 @@ var InputConfig = class {
 };
 
 // src/render/react/components/Keyboard/comp.js
-var bridge10 = globalThis.SJSJSBridge;
-var NativeView4 = bridge10.NativeRender.NativeComponents.Keyboard;
+var bridge9 = globalThis.SJSJSBridge;
+var NativeView4 = bridge9.NativeRender.NativeComponents.Keyboard;
 var modes = {
   "lower": 0,
   "upper": 1,
@@ -20260,12 +20276,15 @@ function setKeyboardProps(comp, newProps, oldProps) {
         comp.setTextarea(textarea);
       }
     },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+    onClose(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CANCEL);
+    },
+    onOk(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_READY);
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20303,6 +20322,7 @@ var KeyboardComp = class extends NativeView4 {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Keyboard", styleType: type, oldStyleSheet: {}, isInit: false });
@@ -20349,8 +20369,8 @@ var KeyboardConfig = class {
 };
 
 // src/render/react/components/Checkbox/comp.js
-var bridge11 = globalThis.SJSJSBridge;
-var NativeView5 = bridge11.NativeRender.NativeComponents.Checkbox;
+var bridge10 = globalThis.SJSJSBridge;
+var NativeView5 = bridge10.NativeRender.NativeComponents.Checkbox;
 function setCheckboxProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Checkbox", comp, newProps, oldProps }),
@@ -20383,7 +20403,7 @@ function setCheckboxProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20425,6 +20445,7 @@ var CheckboxComp = class extends NativeView5 {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Checkbox", styleType: type, oldStyleSheet: {}, isInit: false });
@@ -20471,8 +20492,8 @@ var CheckboxConfig = class {
 };
 
 // src/render/react/components/Dropdownlist/comp.js
-var bridge12 = globalThis.SJSJSBridge;
-var NativeDropdownlist = bridge12.NativeRender.NativeComponents.Dropdownlist;
+var bridge11 = globalThis.SJSJSBridge;
+var NativeDropdownlist = bridge11.NativeRender.NativeComponents.Dropdownlist;
 function setListProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Dropdownlist", comp, newProps, oldProps }),
@@ -20511,7 +20532,7 @@ function setListProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20549,6 +20570,7 @@ var DropdownlistComp = class extends NativeDropdownlist {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Dropdownlist", styleType: type, oldStyleSheet: null, isInit: false });
@@ -20595,8 +20617,8 @@ var DropdownlistConfig = class {
 };
 
 // src/render/react/components/ProgressBar/comp.js
-var bridge13 = globalThis.SJSJSBridge;
-var NativeProgressBar = bridge13.NativeRender.NativeComponents.ProgressBar;
+var bridge12 = globalThis.SJSJSBridge;
+var NativeProgressBar = bridge12.NativeRender.NativeComponents.ProgressBar;
 function setProgressBarProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "ProgressBar", comp, newProps, oldProps }),
@@ -20621,7 +20643,7 @@ function setProgressBarProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20659,6 +20681,7 @@ var ProgressBarComp = class extends NativeProgressBar {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "ProgressBar", styleType: type, oldStyleSheet: null, isInit: false });
@@ -20705,8 +20728,8 @@ var ProgressBarConfig = class {
 };
 
 // src/render/react/components/Roller/comp.js
-var bridge14 = globalThis.SJSJSBridge;
-var NativeRoller = bridge14.NativeRender.NativeComponents.Roller;
+var bridge13 = globalThis.SJSJSBridge;
+var NativeRoller = bridge13.NativeRender.NativeComponents.Roller;
 function setRollerProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Roller", comp, newProps, oldProps }),
@@ -20733,7 +20756,7 @@ function setRollerProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20771,6 +20794,7 @@ var RollerComp = class extends NativeRoller {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Roller", styleType: type, oldStyleSheet: null, isInit: false });
@@ -20817,8 +20841,8 @@ var RollerConfig = class {
 };
 
 // src/render/react/components/Line/comp.js
-var bridge15 = globalThis.SJSJSBridge;
-var NativeLine = bridge15.NativeRender.NativeComponents.Line;
+var bridge14 = globalThis.SJSJSBridge;
+var NativeLine = bridge14.NativeRender.NativeComponents.Line;
 function setLineProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
@@ -20829,7 +20853,7 @@ function setLineProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20869,6 +20893,7 @@ var LineComp = class extends NativeLine {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Line", styleType: type, oldStyleSheet: null, isInit: false });
@@ -20915,8 +20940,8 @@ var LineConfig = class {
 };
 
 // src/render/react/components/Calendar/comp.js
-var bridge16 = globalThis.SJSJSBridge;
-var NativeCalendar = bridge16.NativeRender.NativeComponents.Calendar;
+var bridge15 = globalThis.SJSJSBridge;
+var NativeCalendar = bridge15.NativeRender.NativeComponents.Calendar;
 function setCalendarProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Calendar", comp, newProps, oldProps }),
@@ -20946,7 +20971,7 @@ function setCalendarProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -20986,6 +21011,7 @@ var CalendarComp = class extends NativeCalendar {
     super.removeChild(child);
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "Calendar", styleType: type, oldStyleSheet: null, isInit: false });
@@ -21034,8 +21060,8 @@ var CalendarConfig = class {
 // src/render/react/components/GIF/comp.js
 var fs3 = __require("fs");
 var path3 = __require("path");
-var bridge17 = globalThis.SJSJSBridge;
-var NativeGIF = bridge17.NativeRender.NativeComponents.GIF;
+var bridge16 = globalThis.SJSJSBridge;
+var NativeGIF = bridge16.NativeRender.NativeComponents.GIF;
 async function getGIFBinary(url) {
   const resp = await fetch(url, {
     headers: {
@@ -21053,8 +21079,8 @@ function setGIFProps(comp, newProps, oldProps) {
     },
     src(url) {
       if (url && url !== oldProps.src) {
-        if (builtInSymbol[url]) {
-          comp.setSymbol(builtInSymbol[url]);
+        if (BUILT_IN_SYMBOL[url]) {
+          comp.setSymbol(BUILT_IN_SYMBOL[url]);
           return;
         }
         if (!isValidUrl(url)) {
@@ -21073,7 +21099,7 @@ function setGIFProps(comp, newProps, oldProps) {
     }
   };
   Object.keys(setter).forEach((key) => {
-    if (newProps[key]) {
+    if (newProps.hasOwnProperty(key)) {
       setter[key](newProps[key]);
     }
   });
@@ -21111,6 +21137,7 @@ var GIFComp = class extends NativeGIF {
   removeChild(child) {
   }
   close() {
+    super.close();
   }
   setStyle(style2, type = 0) {
     setStyle({ comp: this, styleSheet: style2, compName: "GIF", styleType: type, oldStyleSheet: null, isInit: false });
@@ -21156,7 +21183,482 @@ var GIFConfig = class {
   }
 };
 
+// src/render/react/components/Tabs/comp.js
+var bridge17 = globalThis.SJSJSBridge;
+var NativeTabs = bridge17.NativeRender.NativeComponents.TabView;
+function setTabsProps(comp, newProps, oldProps) {
+  const setter = {
+    ...CommonComponentApi({ compName: "Tabs", comp, newProps, oldProps }),
+    onClick(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+    },
+    onPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+    },
+    onLongPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+    },
+    onLongPressRepeat(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    }
+  };
+  Object.keys(setter).forEach((key) => {
+    if (newProps.hasOwnProperty(key)) {
+      setter[key](newProps[key]);
+    }
+  });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var tabPositionObj = {
+  "left": 1 << 0,
+  "top": 1 << 2,
+  "right": 1 << 1,
+  "bottom": 1 << 3
+};
+var TabsComp = class extends NativeTabs {
+  constructor({ uid, tabPosition, tabSize = 0 }) {
+    tabPosition = tabPositionObj[tabPosition] || tabPositionObj.top;
+    super({ uid, tabPosition, tabSize });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj9, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+    this.currentAppendIndex = 0;
+  }
+  setProps(newProps, oldProps) {
+    this.tabs = newProps.tabs;
+    setTabsProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+    this.appendChild(child);
+  }
+  appendChild(child) {
+    this.setTab(this.tabs[this.currentAppendIndex] || "", child);
+    this.currentAppendIndex++;
+  }
+  removeChild(child) {
+  }
+  close() {
+    super.close();
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Tabs", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
+};
+__publicField(TabsComp, "tagName", "Tabs");
+
+// src/render/react/components/Tabs/config.js
+var TabsConfig = class {
+  tagName = "Tabs";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new TabsComp({ uid, ...newProps });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Chart/comp.js
+var bridge18 = globalThis.SJSJSBridge;
+var NativeChart = bridge18.NativeRender.NativeComponents.Chart;
+var chartType = {
+  "none": 0,
+  "line": 1,
+  "bar": 2,
+  "scatter": 3
+};
+function setChartProps(comp, newProps, oldProps) {
+  const setter = {
+    ...CommonComponentApi({ compName: "Chart", comp, newProps, oldProps }),
+    onPressedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
+    },
+    indicatorStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.PART_INDICATOR, oldStyleSheet: oldProps.pointStyle });
+    },
+    itemStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Chart", styleType: STYLE_TYPE.PART_ITEMS, oldStyleSheet: oldProps.pointStyle });
+    },
+    type(type) {
+      if (chartType[type] !== void 0) {
+        comp.setType(chartType[type]);
+      }
+    },
+    divLineCount(arr) {
+      if (arr?.[0] !== oldProps?.divLineCount?.[0] || arr?.[1] !== oldProps?.divLineCount?.[1]) {
+        comp.setDivLineCount(arr);
+      }
+    },
+    pointNum(num) {
+      if (num !== oldProps?.pointNum) {
+        comp.setPointNum(num);
+      }
+    },
+    scatterData(data) {
+      if (data !== oldProps?.scatterData) {
+        data = data.map((item) => {
+          const arr = [];
+          item.data.forEach((item1) => {
+            arr.push(item1[0]);
+            arr.push(item1[1]);
+          });
+          return {
+            color: item.color === void 0 ? -1 : colorTransform(item.color),
+            data: arr
+          };
+        });
+        comp.setScatterData(data);
+      }
+    },
+    leftAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.leftAxisOption) {
+        comp.setLeftAxisOption(options);
+      }
+    },
+    leftAxisData(data) {
+      if (data !== oldProps?.leftAxisData) {
+        data = data.map((item) => ({
+          ...item,
+          color: item.color === void 0 ? -1 : colorTransform(item.color)
+        }));
+        comp.setLeftAxisData(data);
+      }
+    },
+    bottomAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.bottomAxisOption) {
+        comp.setBottomAxisOption(options);
+      }
+    },
+    bottomAxisData(data) {
+      if (data !== oldProps?.bottomAxisData) {
+        data = data.map((item) => ({
+          ...item,
+          color: item.color === void 0 ? -1 : colorTransform(item.color)
+        }));
+        comp.setBottomAxisData(data);
+      }
+    },
+    rightAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.rightAxisOption) {
+        comp.setRightAxisOption(options);
+      }
+    },
+    rightAxisData(data) {
+      if (data !== oldProps?.rightAxisData) {
+        data = data.map((item) => ({
+          ...item,
+          color: item.color === void 0 ? -1 : colorTransform(item.color)
+        }));
+        comp.setRightAxisData(data);
+      }
+    },
+    topAxisOption(options) {
+      if (options.majorLen == void 0 || options.minorLen == void 0 || options.majorNum == void 0 || options.minorNum == void 0 || !options.drawSize) {
+        return;
+      }
+      if (options != oldProps?.topAxisOption) {
+        comp.setTopAxisOption(options);
+      }
+    },
+    topAxisData(data) {
+      if (data !== oldProps?.topAxisData) {
+        data = data.map((item) => ({
+          ...item,
+          color: item.color === void 0 ? -1 : colorTransform(item.color)
+        }));
+        comp.setTopAxisData(data);
+      }
+    },
+    leftAxisLabels(arr) {
+      if (arr !== oldProps?.leftAxisLabels) {
+        comp.setLeftAxisLabels(arr);
+      }
+    },
+    rightAxisLabels(arr) {
+      if (arr !== oldProps?.rightAxisLabels) {
+        comp.setRightAxisLabels(arr);
+      }
+    },
+    topAxisLabels(arr) {
+      if (arr !== oldProps?.topAxisLabels) {
+        comp.setTopAxisLabels(arr);
+      }
+    },
+    bottomAxisLabels(arr) {
+      if (arr !== oldProps?.bottomAxisLabels) {
+        comp.setBottomAxisLabels(arr);
+      }
+    },
+    leftAxisRange(arr) {
+      if (arr?.[0] !== oldProps?.leftAxisRange?.[0] || arr?.[1] !== oldProps?.leftAxisRange?.[1]) {
+        comp.setLeftAxisRange(arr);
+      }
+    },
+    rightAxisRange(arr) {
+      if (arr?.[0] !== oldProps?.rightAxisRange?.[0] || arr?.[1] !== oldProps?.rightAxisRange?.[1]) {
+        comp.setRightAxisRange(arr);
+      }
+    },
+    topAxisRange(arr) {
+      if (arr?.[0] !== oldProps?.topAxisRange?.[0] || arr?.[1] !== oldProps?.topAxisRange?.[1]) {
+        comp.setTopAxisRange(arr);
+      }
+    },
+    bottomAxisRange(arr) {
+      if (arr?.[0] !== oldProps?.bottomAxisRange?.[0] || arr?.[1] !== oldProps?.bottomAxisRange?.[1]) {
+        comp.setBottomAxisRange(arr);
+      }
+    }
+  };
+  Object.keys(setter).forEach((key) => {
+    if (newProps.hasOwnProperty(key)) {
+      setter[key](newProps[key]);
+    }
+  });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+  comp.refresh();
+}
+var ChartComp = class extends NativeChart {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj9, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setChartProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+    super.close();
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Chart", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
+};
+__publicField(ChartComp, "tagName", "Chart");
+
+// src/render/react/components/Chart/config.js
+var ChartConfig = class {
+  tagName = "Chart";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new ChartComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
+// src/render/react/components/Mask/comp.js
+var bridge19 = globalThis.SJSJSBridge;
+var NativeMask = bridge19.NativeRender.NativeComponents.Mask;
+function setMaskProps(comp, newProps, oldProps) {
+  const setter = {
+    ...CommonComponentApi({ compName: "Mask", comp, newProps, oldProps }),
+    onPressedStyle(styleSheet) {
+      setStyle({ comp, styleSheet, compName: "Mask", styleType: STYLE_TYPE.STATE_PRESSED, oldStyleSheet: oldProps.onPressedStyle });
+    },
+    onClick(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+    },
+    onPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_PRESSED);
+    },
+    onLongPressed(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED);
+    },
+    onLongPressRepeat(fn) {
+      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_LONG_PRESSED_REPEAT);
+    }
+  };
+  Object.keys(setter).forEach((key) => {
+    if (newProps.hasOwnProperty(key)) {
+      setter[key](newProps[key]);
+    }
+  });
+  comp.dataset = {};
+  Object.keys(newProps).forEach((prop) => {
+    const index = prop.indexOf("data-");
+    if (index === 0) {
+      comp.dataset[prop.substring(5)] = newProps[prop];
+    }
+  });
+}
+var MaskComp = class extends NativeMask {
+  constructor({ uid }) {
+    super({ uid });
+    this.uid = uid;
+    const style2 = super.style;
+    const that = this;
+    this.style = new Proxy(this, {
+      get(obj9, prop) {
+        if (styleGetterProp.includes(prop)) {
+          return style2[prop].call(that);
+        }
+      }
+    });
+  }
+  setProps(newProps, oldProps) {
+    setMaskProps(this, newProps, oldProps);
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+    super.appendChild(child);
+  }
+  removeChild(child) {
+    super.removeChild(child);
+  }
+  close() {
+    super.close();
+  }
+  setStyle(style2, type = 0) {
+    setStyle({ comp: this, styleSheet: style2, compName: "Mask", styleType: type, oldStyleSheet: null, isInit: false });
+  }
+  moveToFront() {
+    super.moveToFront();
+  }
+  moveToBackground() {
+    super.moveToBackground();
+  }
+  scrollIntoView() {
+    super.scrollIntoView();
+  }
+};
+__publicField(MaskComp, "tagName", "Mask");
+
+// src/render/react/components/Mask/config.js
+var MaskConfig = class {
+  tagName = "Mask";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new MaskComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {
+  }
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {
+  }
+  insertBefore(child, beforeChild) {
+  }
+  appendInitialChild(child) {
+  }
+  appendChild(child) {
+  }
+  removeChild(child) {
+  }
+};
+
 // src/render/react/core/renderer/index.js
+var bridge20 = globalThis.SJSJSBridge;
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
   static render(element, options) {
@@ -21169,10 +21671,11 @@ var _Renderer = class {
 };
 var Renderer = _Renderer;
 __publicField(Renderer, "container");
+__publicField(Renderer, "portalContainer");
 
 // src/render/react/core/animate/index.js
-var bridge18 = globalThis.SJSJSBridge;
-var NativeAnimate = bridge18.NativeRender.Animate;
+var bridge21 = globalThis.SJSJSBridge;
+var NativeAnimate = bridge21.NativeRender.Animate;
 var callbackObj = {};
 globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
   if (typeof callbackObj[uid] === "function") {
@@ -21185,12 +21688,16 @@ globalThis.ANIMIATE_CALLBACK = function(uid, ...args) {
 };
 
 // src/render/react/core/dimensions/index.js
-var bridge19 = globalThis.SJSJSBridge;
-var dimensions = bridge19.NativeRender.dimensions;
+var bridge22 = globalThis.SJSJSBridge;
+var dimensions = bridge22.NativeRender.dimensions;
+var Dimensions = dimensions;
+
+// src/render/react/core/theme/index.js
+var bridge23 = globalThis.SJSJSBridge;
+var nativeTheme = bridge23.NativeRender.theme;
 
 // src/render/react/index.js
 var View = registerComponent(new ViewConfig());
-var Window2 = registerComponent(new WindowConfig());
 var Text = registerComponent(new TextConfig());
 var Image = registerComponent(new ImageConfig());
 var Button = registerComponent(new ButtonConfig());
@@ -21206,10 +21713,14 @@ var Roller = registerComponent(new RollerConfig());
 var Line = registerComponent(new LineConfig());
 var Calendar = registerComponent(new CalendarConfig());
 var GIF = registerComponent(new GIFConfig());
+var Tabs = registerComponent(new TabsConfig());
+var Chart = registerComponent(new ChartConfig());
+var Mask = registerComponent(new MaskConfig());
 var Render = Renderer;
 
 // test/scroll/3/index.jsx
 var import_react = __toESM(require_react());
+var { width, height } = Dimensions.window;
 function App() {
   const [list, setlist] = (0, import_react.useState)(Array(2).fill(1));
   const button = (0, import_react.useRef)();
@@ -21217,7 +21728,7 @@ function App() {
   (0, import_react.useEffect)(() => {
     lastItem.current?.scrollIntoView();
   }, [list]);
-  return /* @__PURE__ */ import_react.default.createElement(Window2, {
+  return /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.window
   }, /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.view1,
@@ -21248,8 +21759,8 @@ function App() {
 }
 var style = {
   window: {
-    "width": "480px",
-    "height": "320px"
+    width,
+    height
   },
   view1: {
     "width": 280,

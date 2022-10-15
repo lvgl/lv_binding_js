@@ -9,6 +9,9 @@ align value object with the following type
 - type, enum EAlignType
 - pos, x、y position
 
+## Note
+align has higher priority than style x or y, please do not use them together
+
 <br/>
 
 EAlignType with the following type

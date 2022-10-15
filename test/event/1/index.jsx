@@ -1,11 +1,13 @@
-import { View, Render, Window, Text, Image, Button } from 'lvgljs-ui';
+import { View, Render, Text, Dimensions, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [num, setNum] = useState('Click me!')
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Button 
                 onClick={() => {
                     let value
@@ -20,14 +22,14 @@ function App () {
             >
                 <Text>{num}</Text>
             </Button>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'center'

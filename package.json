@@ -7,9 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "bundle": "esbuild src/jsruntime/bundle/index.js --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
-    "install": "npm install --no-bin-links",
-    "test-bundle": "node ./test/build/dev-esbuild.js"
+    "runtime-bundle": "esbuild src/jsruntime/bundle/index.js --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
+    "bundle": "node ./build.js",
+    "install": "npm install --no-bin-links"
   },
   "dependencies": {
     "buffer": "^6.0.3",

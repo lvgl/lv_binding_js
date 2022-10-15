@@ -63,6 +63,7 @@ static JSValue NativeCompSeText(JSContext *ctx, JSValueConst this_val, int argc,
 
         ((Dropdownlist*)(ref->comp))->setText(s);
         LV_LOG_USER("Dropdownlist %s setText", ref->uid);
+        JS_FreeCString(ctx, str);
     }
     return JS_UNDEFINED;
 };

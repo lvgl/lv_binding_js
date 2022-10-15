@@ -1,5 +1,7 @@
-import { View, Render, Window, EAlignType, Image, Animate } from 'lvgljs-ui';
+import { View, Render, Dimensions, EAlignType, Image, Animate } from 'lvgljs-ui';
 import React, { useEffect, useRef } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const ref = useRef()
@@ -35,7 +37,7 @@ function App () {
     }, [])
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Image 
                 src={'./3.png'} 
                 style={style.image} 
@@ -44,14 +46,14 @@ function App () {
                     type: EAlignType.ALIGN_CENTER
                 }}    
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
     },
     image: {
         'width': 'auto',

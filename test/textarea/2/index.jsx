@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, EAlignType, Keyboard, Input } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, EAlignType, Keyboard, Input } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [value1, setValue1] = useState('')
@@ -13,15 +15,9 @@ function App () {
     useEffect(() => {
         setDidMount(true)
     }, [])
+    
     return (
-        <Window style={style.window}>
-            {didMount && <Text 
-                style={style.text1}
-                alignTo={{
-                    type: EAlignType.ALIGN_OUT_TOP_LEFT,
-                    parent: ref1.current
-                }}
-            >Password</Text>}
+        <View style={style.window}>
             <Input
                 mode="password"
                 onChange={e => {
@@ -36,6 +32,7 @@ function App () {
                     setFocus(1)
                 }}
                 placeholder={"enter plz"}
+                autoKeyBoard={false}
             />
             <Input
                 onChange={e => {
@@ -54,26 +51,21 @@ function App () {
                     setFocus(2)
                 }}
                 placeholder={"enter plz"}
+                autoKeyBoard={false}
             />
-            {didMount && <Text 
-                alignTo={{
-                    type: EAlignType.ALIGN_OUT_TOP_LEFT,
-                    parent: ref2.current
-                }}
-            >Text</Text>}
             {didMount && <Keyboard
                 style={style.keyboard}
                 textarea={focus == 1 ? ref1.current : focus == 2 ? ref2.current : null}
                 mode={"number"}
             />}
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     text1: {
         

@@ -18535,7 +18535,7 @@ function TransStyle(style2, result, compName) {
     const duration = style2["transition-duration"] || 0;
     const func = style2["transition-timing-function"] || "linear";
     const delay = style2["transition-delay"] || 0;
-    const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
+    const trans = [properties.length, properties, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
   if (style2["transform"]) {
@@ -19209,30 +19209,6 @@ function registerComponent(config) {
   components.set(config.tagName, config);
   return config.tagName;
 }
-var EAlignType = {
-  "ALIGN_DEFAULT": 0,
-  "ALIGN_TOP_LEFT": 1,
-  "ALIGN_TOP_MID": 2,
-  "ALIGN_TOP_RIGHT": 3,
-  "ALIGN_BOTTOM_LEFT": 4,
-  "ALIGN_BOTTOM_MID": 5,
-  "ALIGN_BOTTOM_RIGHT": 6,
-  "ALIGN_LEFT_MID": 7,
-  "ALIGN_RIGHT_MID": 8,
-  "ALIGN_CENTER": 9,
-  "ALIGN_OUT_TOP_LEFT": 10,
-  "ALIGN_OUT_TOP_MID": 11,
-  "ALIGN_OUT_TOP_RIGHT": 12,
-  "ALIGN_OUT_BOTTOM_LEFT": 13,
-  "ALIGN_OUT_BOTTOM_MID": 14,
-  "ALIGN_OUT_BOTTOM_RIGHT": 15,
-  "ALIGN_OUT_LEFT_TOP": 16,
-  "ALIGN_OUT_LEFT_MID": 17,
-  "ALIGN_OUT_LEFT_BOTTOM": 18,
-  "ALIGN_OUT_RIGHT_TOP": 19,
-  "ALIGN_OUT_RIGHT_MID": 20,
-  "ALIGN_OUT_RIGHT_BOTTOM": 21
-};
 var STYLE_TYPE = {
   PART_MAIN: 0,
   PART_SCROLLBAR: 65536,
@@ -20002,7 +19978,7 @@ var bridge7 = globalThis.SJSJSBridge;
 var NativeView2 = bridge7.NativeRender.NativeComponents.Textarea;
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
-    ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
+    ...CommonComponentApi({ compName: "Textarea", comp, newProps, oldProps }),
     placeholder(str) {
       if (str !== oldProps.placeholder) {
         comp.setPlaceHolder(str);
@@ -21880,9 +21856,6 @@ function App() {
   }, []);
   return /* @__PURE__ */ import_react.default.createElement(View, {
     style: style.ball,
-    align: {
-      type: EAlignType.ALIGN_LEFT_MID
-    },
     ref
   });
 }

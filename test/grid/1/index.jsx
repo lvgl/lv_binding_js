@@ -1,11 +1,13 @@
-import { View, Render, Window, Text, EAlignType, Button } from 'lvgljs-ui';
+import { View, Render, Text, Dimensions, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 const arr = Array(9).fill(1)
 
+const { width, height } = Dimensions.window
+
 function App () {
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
         {
             arr.map((item, index) => (
                 <Button
@@ -17,14 +19,14 @@ function App () {
                 </Button>
             ))
         }
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '300px',
-        'height': '220px',
+        'width': width,
+        'height': height,
         'display': 'grid',
         'grid-template-columns': '70 70 70',
         'grid-template-rows': '50 50 50'

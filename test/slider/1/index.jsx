@@ -1,11 +1,13 @@
-import { Text, Render, Window, Slider } from 'lvgljs-ui';
+import { View, Text, Render, Dimensions, Slider } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [progress, setProgress] = useState(0)
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Slider
                 onChange={(e) => {
                     const { value } = e
@@ -18,14 +20,14 @@ function App () {
                 onKnobPressedStyle={style.knobPressed0Style}
             />
             <Text>{progress}%</Text>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
         'display': 'flex',
         'flex-direction': 'column',
         'justify-content': 'center',

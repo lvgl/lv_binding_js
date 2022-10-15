@@ -1,11 +1,13 @@
-import { View, Render, Window, Text, EAlignType, Checkbox } from 'lvgljs-ui';
+import { View, Render, Text, Dimensions, Checkbox } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [line1Checked, setLine1Checked] = useState()
     const [line2Checked, setLine2Checked] = useState()
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <View style={style.view1}
                 onClick={(e) => {
                     const { target } = e
@@ -100,14 +102,14 @@ function App () {
                     onChange={e => console.log('checkbox3 checked: ', e.checked)}
                 />
             </View>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
         'background-color': 'grey',
         'opacity': 0.4
     },

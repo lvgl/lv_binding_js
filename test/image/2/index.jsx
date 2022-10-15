@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, Image, Slider, EAlignType } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, Image, Slider, EAlignType } from 'lvgljs-ui';
 import React, { useRef, useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [color1, setColor1] = useState(51)
@@ -8,7 +10,7 @@ function App () {
     const [opacity, setOpacity] = useState(50)
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Slider
                 range={[0, 255]}
                 value={51}
@@ -57,14 +59,14 @@ function App () {
                     pos: [0, 0]
                 }}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
     },
     slider1: {
         'left': '25px',

@@ -24,7 +24,7 @@ endif()
 
 execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 add_custom_command(OUTPUT bundle.js
-    COMMAND npm run bundle -- --outfile=${PROJECT_BINARY_DIR}/lib/bundle.js
+    COMMAND npm run runtime-bundle -- --outfile=${PROJECT_BINARY_DIR}/lib/bundle.js
 )
 
 if (${CMAKE_BUILD_PLATFORM} MATCHES x86)

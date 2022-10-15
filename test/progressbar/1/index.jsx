@@ -1,9 +1,11 @@
-import { View, Render, Window, Text, ProgressBar, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, ProgressBar, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
 import React, { useRef, useEffect } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <ProgressBar
                 style={style.bar}
                 align={{
@@ -12,14 +14,14 @@ function App () {
                 value={70}
                 useAnimation={false}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     bar: {
         'width': 200,

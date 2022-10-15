@@ -18535,7 +18535,7 @@ function TransStyle(style2, result, compName) {
     const duration = style2["transition-duration"] || 0;
     const func = style2["transition-timing-function"] || "linear";
     const delay = style2["transition-delay"] || 0;
-    const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
+    const trans = [properties.length, properties, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
   if (style2["transform"]) {
@@ -19189,7 +19189,6 @@ function setStyle({ comp, styleSheet, compName, styleType, oldStyleSheet, isInit
   styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
   const result = StyleSheet.transform(styleSheet, compName);
   const keys10 = Object.keys(result);
-  console.log(result);
   comp.nativeSetStyle(result, keys10, keys10.length, styleType, isInit);
   PostProcessStyle({ comp, styleSheet, styleType });
 }
@@ -20003,7 +20002,7 @@ var bridge7 = globalThis.SJSJSBridge;
 var NativeView2 = bridge7.NativeRender.NativeComponents.Textarea;
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
-    ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
+    ...CommonComponentApi({ compName: "Textarea", comp, newProps, oldProps }),
     placeholder(str) {
       if (str !== oldProps.placeholder) {
         comp.setPlaceHolder(str);

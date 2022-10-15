@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, Image, EAlignType, Animate, ProgressBar } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, Image, EAlignType, Animate, ProgressBar } from 'lvgljs-ui';
 import React, { useState, useEffect } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [value, setValue] = useState(-20)
@@ -29,7 +31,7 @@ function App () {
     }, [])
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <ProgressBar
                 style={style.bar}
                 align={{
@@ -41,14 +43,14 @@ function App () {
                 animationTime={1000}
                 indicatorStyle={style.indicator}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     indicator: {
         'background-color': 'red',

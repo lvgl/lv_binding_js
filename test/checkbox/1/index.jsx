@@ -1,9 +1,11 @@
-import { View, Render, Window, Text, EAlignType, Checkbox } from 'lvgljs-ui';
+import { View, Render, Text, Dimensions, Checkbox } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Checkbox
                 checked={false}
                 text="Apple"
@@ -25,14 +27,14 @@ function App () {
                 text={`Melon\nand a new line`}
                 onChange={e => console.log('checkbox4 checked: ', e.checked)}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height,
         'display': 'flex',
         'justify-content': 'center',
         'align-items': 'flex-start',

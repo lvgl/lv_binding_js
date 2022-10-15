@@ -1,5 +1,7 @@
-import { View, Render, Window, Text, EAlignType, Button, Input } from 'lvgljs-ui';
+import { View, Render, Dimensions, Text, EAlignType, Button, Input } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 const arr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "del", "0", "enter"]
 
@@ -7,7 +9,7 @@ function App () {
     const [value, setValue] = useState('')
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Input
                 align={{
                     type: EAlignType.ALIGN_TOP_MID,
@@ -16,6 +18,7 @@ function App () {
                 onChange={e => setValue(e.value)}
                 value={value}
                 onFocus={e => console.log('input focus')}
+                autoKeyBoard={false}
             />
             <View
                 style={style.view1}
@@ -51,14 +54,14 @@ function App () {
                     ))
                 }
             </View>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     view1: {
         'width': '270px',

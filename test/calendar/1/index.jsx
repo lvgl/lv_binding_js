@@ -5,6 +5,7 @@ function App () {
 
     return (
         <Calendar
+            style={style.calendar}
             today={"2022-10-1"}
             shownMonth={"2022-10"}
             highLightDates={[
@@ -22,8 +23,8 @@ function App () {
 
 const style = {
     calendar: {
-        'width': 185,
-        'height': 185,
+        'width': 285,
+        'height': 285,
     }
 };
 

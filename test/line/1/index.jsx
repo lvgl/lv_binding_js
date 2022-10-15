@@ -1,24 +1,26 @@
-import { Text, Render, Window, Line, EAlignType, Button } from 'lvgljs-ui';
+import { View, Render, Dimensions, Line, EAlignType, Button } from 'lvgljs-ui';
 import React, { useState } from 'react';
 
 const points = [[5, 5], [70, 70], [120, 10], [180, 60], [240, 10]]
 
+const { width, height } = Dimensions.window
+
 function App () {
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Line
                 points={points}
                 style={style.line}
             />
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     line: {
         'line-width': 8,

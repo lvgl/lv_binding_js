@@ -8,7 +8,7 @@ class Roller : public BasicComponent {
  public:
   Roller(std::string uid, lv_obj_t* parent = nullptr);
 
-  void setOptions (std::vector<std::string> options, uint32_t mode);
+  void setOptions (std::vector<std::string>& options, uint32_t mode);
 
   void setSelectIndex (uint32_t index);
 

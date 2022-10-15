@@ -1,21 +1,23 @@
-import { View, Render, Window, Text, EAlignType, Button } from 'lvgljs-ui';
+import { View, Render, Text, EAlignType, Dimensions } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
 
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Text align={{
                 type: EAlignType.ALIGN_CENTER
             }} style={style.text}>{`Text of a label`}</Text>
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '480px',
-        'height': '320px',
+        width,
+        height
     },
     text: {
         'text-color': 'blue',

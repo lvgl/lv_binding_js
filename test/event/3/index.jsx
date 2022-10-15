@@ -1,11 +1,13 @@
-import { Render, Window, Text, Button } from 'lvgljs-ui';
+import { Render, Dimensions, Text, Button, View } from 'lvgljs-ui';
 import React, { useState } from 'react';
+
+const { width, height } = Dimensions.window
 
 function App () {
     const [backgroungColors, setBackgroundColors] = useState(Array(30).fill(false))
 
     return (
-        <Window style={style.window} 
+        <View style={style.window} 
             onClick={(e) => {
                 const { target } = e
                 const { dataset } = target
@@ -28,14 +30,14 @@ function App () {
                     )
                 })
             }
-        </Window>
+        </View>
     )
 };
 
 const style = {
     window: {
-        'width': '290px',
-        'height': '200px',
+        width,
+        height,
         'display': 'flex',
         'flex-direction': 'row',
         'flex-wrap': 'wrap',
