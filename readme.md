@@ -11,9 +11,6 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 <img src="./demo/screenshoot/real_device.jpg" style="transform: rotate(270deg)">
 
 ## Table of Contents
----------------------
-  - [lvgljs](#lvgljs)
-  - [Table of Contents](#table-of-contents)
   - [Features](#features)
   - [Demo](#demo)
   - [Building](#building)
@@ -26,7 +23,6 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 
 ## Features
----------------------
 - Support all lvgl built-in components
 - Fully suport lvgl flex and grid style
 - support most lvgl style，just write like html5 css
@@ -34,7 +30,6 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 - Fully support lvgl animation
 
 ## Demo
----------------------
 ### Widgets
 ![sdl_simulator](./demo/widgets/screenshoot/sdl_simulator.gif)
 
@@ -43,7 +38,6 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 
 
 ## building
----------------------
 The following are developer notes on how to build lvgljs on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
 ### lvgljs
@@ -56,7 +50,6 @@ The following are developer notes on how to build lvgljs on your native platform
 - [JS Bundle build Notes](./doc/build/js-bundle.md)
 
 ## Components
----------------------
 - [View](./doc/component/View.md)
 - [Image](./doc/component/Image.md)
 - [Button](./doc/component/Button.md)
@@ -74,15 +67,12 @@ The following are developer notes on how to build lvgljs on your native platform
 - [Chart](./doc/component/Chart.md)
 
 ## Font
----------------------
 [Buitin-Symbol](./doc/Symbol/symbol.md)
 
 ## Animation
----------------------
 [Animation](./doc/animate/animate.md)
 
 ## Style
----------------------
 - [position-size-layout](./doc/style/position-size-layout.md)
 - [boxing-model](./doc/style/boxing-model.md)
 - [color](./doc/style/color.md)
@@ -100,13 +90,11 @@ The following are developer notes on how to build lvgljs on your native platform
 - [transform](./doc/style/transform.md)
 
 ## JSAPI
----------------------
 - [network](./doc/jsapi/network.md)
 - [filesystem](./doc/jsapi/fs.md)
 - [dimension](./doc/jsapi/dimension.md)
 
 ## Thanks
----------------------
 lvgljs depends on following excellent work
 
 [lvgl](https://github.com/lvgl/lvgl): Create beautiful UIs for any MCU, MPU and display type
