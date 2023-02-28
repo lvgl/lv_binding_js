@@ -140,18 +140,7 @@ static void SJSUVIdleCallback(uv_idle_t *handle) {
     SJSRuntime *qrt = handle->data;
 
     if (qrt->ui_handler) {
-        struct timeval tstart,tcur,tsub;
-        gettimeofday(&tstart, NULL);
-
-        while (1) {
-            qrt->ui_handler();
-            usleep(5 * 1000);
-            gettimeofday(&tcur, NULL);
-            timersub(&tcur, &tstart, &tsub);
-            if ((tsub.tv_sec * 1000 + (1.0 * tsub.tv_usec) / 1000) > UI_TIME) {
-                break;
-            }
-        }
+        qrt->ui_handler();
     }
 
     SJSExecuteJobs(qrt->ctx);
