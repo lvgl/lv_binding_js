@@ -42,9 +42,9 @@ The following are developer notes on how to build lvgljs on your native platform
 
 ### lvgljs
 
-- [ubuntu build Notes for sdl simulator](./doc/build/build-ubuntu-arm.md)
+- [ubuntu build Notes for sdl simulator](./doc/build/build-ubuntu-x86-simualtor.md)
 - [macos x86 build Notes for sdl simulator](./doc/build/build-macos-x86-simulator.md)
-- [ubuntu build Notes for platform arm](./doc/build/build-ubuntu-x86-simualtor.md)
+- [ubuntu build Notes for platform arm](./doc/build/build-ubuntu-arm.md)
 
 ### JS Bundle
 - [JS Bundle build Notes](./doc/build/js-bundle.md)
