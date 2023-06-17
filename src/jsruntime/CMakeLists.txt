@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
 
-find_package(CURL REQUIRED)
 
 add_subdirectory(./deps/quickjs EXCLUDE_FROM_ALL)
 
@@ -12,15 +11,20 @@ target_compile_definitions(jsruntime PUBLIC SJSPLATFORM="${SJSPLATFORM}")
 
 add_custom_target(jsbundle ALL DEPENDS bundle.js)
 
-find_library(LIBRT rt)
+if (NOT ${CMAKE_BUILD_PLATFORM} MATCHES dji)
+
+    find_library(LIBRT rt)
+    find_package(CURL REQUIRED)
+
+    if(UNIX AND NOT APPLE)
+        target_link_libraries(jsruntime PUBLIC rt)
+    endif()
+
+endif()
 
 target_link_libraries(jsruntime PUBLIC
     qjs
 )
-
-if(UNIX AND NOT APPLE)
-    target_link_libraries(jsruntime PUBLIC rt)
-endif()
 
 execute_process(COMMAND cp -r ${CMAKE_CURRENT_SOURCE_DIR}/lib ${PROJECT_BINARY_DIR})
 add_custom_command(OUTPUT bundle.js
@@ -44,5 +48,13 @@ elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
         ./
         ../utils
         ${CMAKE_CURL_INCLUDE_DIRS}
+    )
+elseif (${CMAKE_BUILD_PLATFORM} MATCHES dji)
+    include_directories(
+        ../deps/libuv/include
+        ./deps/quickjs/include
+        ./
+        ../utils
+        ../deps/curl/include
     )
 endif()

@@ -109,7 +109,26 @@ elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
         ./native/core
         ./native/deps
     )
+elseif (${CMAKE_BUILD_PLATFORM} MATCHES dji)
+    include_directories(
+        ../jsruntime/deps/quickjs/include
+        ../deps/libuv/include
+        ../deps/curl/include
+        ${RUNTIME_PATH}
+        ${ENGINE_PATH}
+        ${LVJL_PATH}
+        ../../src
+        ../../src/deps
+        ../render
+        ./native
+        ./core
+        ./native/components
+        ./native/core
+        ./native/deps
+    )
 endif()
+
+
 
 # target_link_libraries(render
 # lv_png

@@ -18535,7 +18535,7 @@ function TransStyle(style5, result, compName) {
     const duration = style5["transition-duration"] || 0;
     const func = style5["transition-timing-function"] || "linear";
     const delay = style5["transition-delay"] || 0;
-    const trans = [transProps.length, transProps, NormalizeTime(duration), func, delay];
+    const trans = [properties.length, properties, NormalizeTime(duration), func, delay];
     result["transition"] = trans;
   }
   if (style5["transform"]) {
@@ -19020,7 +19020,9 @@ function ShadowStyle(style5, result, compName) {
 
 // src/render/react/core/style/pipe/display.js
 function DisplayStyle(style5, result, compName) {
-  result["display"] = style5["display"];
+  if (style5["display"]) {
+    result["display"] = style5["display"];
+  }
 }
 
 // src/render/react/utils/helpers.ts
@@ -20000,7 +20002,7 @@ var bridge7 = globalThis.SJSJSBridge;
 var NativeView2 = bridge7.NativeRender.NativeComponents.Textarea;
 function setTextareaProps(comp, newProps, oldProps) {
   const setter = {
-    ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
+    ...CommonComponentApi({ compName: "Textarea", comp, newProps, oldProps }),
     placeholder(str) {
       if (str !== oldProps.placeholder) {
         comp.setPlaceHolder(str);
@@ -21657,7 +21659,6 @@ var MaskConfig = class {
 
 // src/render/react/core/renderer/index.js
 var bridge20 = globalThis.SJSJSBridge;
-var NativeRenderUtil = bridge20.NativeRender.RenderUtil;
 var containerInfo = /* @__PURE__ */ new Set();
 var _Renderer = class {
   static render(element, options) {

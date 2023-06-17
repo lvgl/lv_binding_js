@@ -18,7 +18,8 @@ void GetProgramDir (char* buf) {
 		strcpy(buf, dir);
 	#else
 		readlink(str, buf, sizeof(str));
-		dirname(buf);
+		dir = dirname(buf);
+		strcpy(buf, dir);
 	#endif
 };
 
@@ -31,7 +32,7 @@ static void _split_whole_name(const char *whole_name, char *fname, char *ext) {
         return;
     }
  
-	p_ext = rindex(whole_name, '.');
+	p_ext = strrchr(whole_name, '.');
 	if (NULL != p_ext)
 	{
 		if (ext != NULL) {
@@ -84,7 +85,7 @@ void _splitpath(const char *path, char *drive, char *dir, char *fname, char *ext
 		return;
 	}
  
-	p_whole_name = rindex(path, '/');
+	p_whole_name = strrchr(path, '/');
 	if (NULL != p_whole_name)
 	{
 		p_whole_name++;

@@ -2,20 +2,29 @@ cmake_minimum_required(VERSION 2.8)
 
 set(QUICKJS_PATH ./src/jsruntime/deps/quickjs)
 set(LIBUV_PATH ./src/deps/libuv)
-set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
+if (${CMAKE_BUILD_PLATFORM} MATCHES dji)
+    set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/hal/device/dji/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
+else()
+    set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
+endif()
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug)
     set(CMAKE_CXX_FLAGS "-O0 -Wall -g -ggdb -std=c++11")
     set(CMAKE_C_FLAGS "-O0 -Wall -g -ggdb -std=gnu99")
 elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
-    set(CMAKE_CXX_FLAGS "-O0 -Wall -std=c++11")
-    set(CMAKE_C_FLAGS "-O0 -Wall -std=gnu99")
+    set(CMAKE_CXX_FLAGS "-O3 -Wall -std=c++11")
+    set(CMAKE_C_FLAGS "-O3 -Wall -std=gnu99")
 endif()
 
 if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
 add_definitions(-DIS_SIM)
-elseif(${CMAKE_BUILD_PLATFORM} MATCHES arm)
+else()
 add_definitions(-DIS_DEVICE)
+endif()
+
+if (${CMAKE_BUILD_PLATFORM} MATCHES dji)
+    set(CURL_ENABLE_SSL OFF)
+    add_subdirectory(./src/deps/curl EXCLUDE_FROM_ALL)
 endif()
 
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
@@ -85,5 +94,26 @@ elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
         render
         lvgl
         lv_drivers
+    )
+elseif (${CMAKE_BUILD_PLATFORM} MATCHES dji)
+
+    add_executable(lvgljs
+        ./src/utils/utils.c
+        ./src/engine/hal/device/dji/dji_display.c 
+        ./src/engine/hal/device/dji/dji_services.c 
+        ./src/engine/hal/device/dji/evdev.c 
+        ./src/engine/hal/device/dji/dji.cpp
+        ./src/engine/engine.cpp
+
+    )
+    add_library(duml_hal SHARED "src/engine/hal/device/dji/duml_hal.c")
+    target_link_libraries(lvgljs
+        jsruntime
+        libcurl
+        uv_a
+        dl
+        render
+        lvgl
+        duml_hal
     )
 endif()

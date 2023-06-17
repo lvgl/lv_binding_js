@@ -1,7 +1,7 @@
 const path = require('path');
 const alias = require('esbuild-plugin-alias');
 
-const entry = path.resolve(__dirname, './test/animate/2/index.jsx')
+const entry = path.resolve(__dirname, './demo/widgets/index.jsx')
 
 require('esbuild').build({
     entryPoints: [entry],

@@ -6,3 +6,5 @@ src/render/deps
 dev_arm/
 dev_x86/
 build_arm/
+dev_dji/
+rel_dji/
