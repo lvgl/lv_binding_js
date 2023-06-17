@@ -63,7 +63,6 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
         if (argc >= 1 && JS_IsObject(argv[0])) {                                                                            \
             COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);                                                            \
             COMP_REF* parent = (COMP_REF*)JS_GetOpaque3(this_val);                                                          \
-                                                                                                                            \
             ((COMPONENT*)(parent->comp))->appendChild((void*)(child->comp));                                                \
             LV_LOG_USER("%s %s append child %s", COMPONENT_NAME, parent->uid, child->uid);                                  \
         }                                                                                                                   \
@@ -154,7 +153,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
             isinit = JS_ToBool(ctx, argv[4]);                                                                               \
                                                                                                                             \
             static_cast<COMPONENT*>(ref->comp)->BasicComponent::setStyle(ctx, argv[0], keys, type, isinit);                 \
-            LV_LOG_USER("%s %s setStyle type %d", COMPONENT_NAME, ref->uid, type);                                                        \
+            LV_LOG_USER("%s %s setStyle type %d", COMPONENT_NAME, ref->uid, type);                                          \
         }                                                                                                                   \
         return JS_UNDEFINED;                                                                                                \
     }                                                                                                                       \
@@ -169,7 +168,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
             ((COMPONENT*)(s->comp))->addEventListener(event_type);                                                          \
             return JS_NewBool(ctx, 1);                                                                                      \
         }                                                                                                                   \
-        return JS_NewBool(ctx, 0);                                                                                          \    
+        return JS_NewBool(ctx, 0);                                                                                          \
     }                                                                                                                       \
                                                                                                                             \
 
@@ -192,7 +191,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
             JS_FreeValue(ctx, y_value);                                                                                     \
             return JS_NewBool(ctx, 1);                                                                                      \
         }                                                                                                                   \
-        return JS_NewBool(ctx, 0);                                                                                          \   
+        return JS_NewBool(ctx, 0);                                                                                          \
     }                                                                                                                       \
                                                                                                                             \
 
@@ -239,13 +238,13 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
             if (JS_IsString(argv[2])) {                                                                                     \
                 size_t len;                                                                                                 \
                 const char* str = JS_ToCStringLen(ctx, &len, argv[2]);                                                      \
-                image_symbol = str;                                                                                         \        
+                image_symbol = str;                                                                                         \
                 image_symbol.resize(len);                                                                                   \
                 JS_FreeCString(ctx, str);                                                                                   \
             }                                                                                                               \
             JS_ToInt32(ctx, &type, argv[1]);                                                                                \
                                                                                                                             \
-            ((COMPONENT*)(s->comp))->setBackgroundImage(buf, static_cast<size_t>(image_bytelength), type, image_symbol);    \ 
+            ((COMPONENT*)(s->comp))->setBackgroundImage(buf, static_cast<size_t>(image_bytelength), type, image_symbol);    \
             LV_LOG_USER("%s %s setBackgroundImage type %d", COMPONENT_NAME, s->uid, type);                                  \
             return JS_NewBool(ctx, 1);                                                                                      \
         }                                                                                                                   \
@@ -257,13 +256,15 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
     static JSValue NativeCompRefreshComponent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {        \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
         lv_obj_invalidate(((BasicComponent*)(s->comp))->instance);                                                          \
+        return JS_NewBool(ctx, 1);                                                                                          \
     }                                                                                                                       \
                                                                                                                             \
 
 #define WRAPPED_JS_CLOSE_COMPONENT(COMPONENT,COMPONENT_NAME)                                                                \
     static JSValue NativeCompCloseComponent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {          \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);                                                                   \
-        lv_obj_del_async(((BasicComponent*)(s->comp))->instance);                                                                 \
+        lv_obj_del_async(((BasicComponent*)(s->comp))->instance);                                                           \
+        return JS_NewBool(ctx, 1);                                                                                          \
     }                                                                                                                       \
                                                                                                                             \
 
