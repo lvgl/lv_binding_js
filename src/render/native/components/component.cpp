@@ -18,6 +18,7 @@ void NativeComponentInit (JSContext* ctx, JSValue ns) {
     NativeComponentCheckboxInit(ctx, component_obj);
     NativeComponentKeyboardInit(ctx, component_obj);
     NativeComponentTextareaInit(ctx, component_obj);
+    NativeComponentArcInit(ctx, component_obj);
     NativeComponentSliderInit(ctx, component_obj);
     NativeComponentButtonInit(ctx, component_obj);
     NativeComponentImageInit(ctx, component_obj);

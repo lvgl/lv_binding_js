@@ -30,6 +30,8 @@ add_library(render STATIC
     ./native/core/img/img.cpp
     ./native/core/utils/utils.hpp
     ./native/core/animate/animate.cpp
+    ./native/components/arc/arc.cpp
+    ./native/components/arc/arc_wrap.cpp
     ./native/components/mask/mask.cpp
     ./native/components/mask/mask_wrap.cpp
     ./native/components/gif/gif.cpp

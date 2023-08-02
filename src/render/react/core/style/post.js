@@ -41,4 +41,35 @@ export function PostProcessStyle({ comp, styleSheet, styleType }) {
         .catch(console.warn);
     }
   }
+
+  if (styleSheet["arc-image"] !== void 0) {
+    let url = styleSheet["arc-image"];
+
+    if (BUILT_IN_SYMBOL[url]) {
+      comp.setArcImage(null, styleType, BUILT_IN_SYMBOL[url]);
+      return;
+    }
+
+    if (url === null) {
+      comp.setArcImage(null, styleType);
+    } else if (!isValidUrl(url)) {
+      if (!path.isAbsolute(url)) {
+        url = path.resolve(__dirname, url);
+      }
+      fs.readFile(url, { encoding: "binary" })
+        .then((data) => {
+          comp.setArcImage(data.buffer, styleType);
+        })
+        .catch((e) => {
+          console.log("setArcImage error", e);
+        });
+    } else {
+      getImageBinary(url)
+        .then(
+          (buffer) => comp.setArcImage(Buffer.from(buffer).buffer),
+          styleType,
+        )
+        .catch(console.warn);
+    }
+  }
 }
