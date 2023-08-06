@@ -30,6 +30,8 @@ void NativeComponentImageInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentButtonInit (JSContext* ctx, JSValue ns);
 
+void NativeComponentArcInit (JSContext* ctx, JSValue ns);
+
 void NativeComponentSliderInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentSwitchInit (JSContext* ctx, JSValue ns);
@@ -57,6 +59,20 @@ void NativeComponentTabViewInit (JSContext* ctx, JSValue ns);
 void NativeComponentChartInit (JSContext* ctx, JSValue ns);
 
 void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
+
+#define WRAPPED_INT32_VALUE(COMPONENT,COMPONENT_NAME,PROPERTY_NAME) \
+    static JSValue NativeCompSet##PROPERTY_NAME(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) { \
+        if (argc >= 1 && JS_IsNumber(argv[0])) { \
+            COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val); \
+            int32_t value; \
+            JS_ToInt32(ctx, &value, argv[0]); \
+            \
+            ((COMPONENT *)(ref->comp))->set##PROPERTY_NAME(value); \
+            LV_LOG_USER(COMPONENT_NAME "%s set" #PROPERTY_NAME, ref->uid); \
+        } \
+        return JS_UNDEFINED; \
+    }; \
+    \
 
 #define WRAPPED_APPEND_CHILD(COMPONENT,COMPONENT_NAME)                                                                      \
     static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {             \

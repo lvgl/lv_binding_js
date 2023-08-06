@@ -51,6 +51,11 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             return JS_NewInt32(ctx, value_num);
             break;
 
+        case COMP_TYPE_ARC:
+            value_num = lv_arc_get_value(comp->instance);
+            return JS_NewInt32(ctx, value_num);
+            break;
+
         case COMP_TYPE_TEXTAREA:
             value_str = lv_textarea_get_text(comp->instance);
             return JS_NewString(ctx, value_str);

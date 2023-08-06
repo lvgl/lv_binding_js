@@ -20,7 +20,7 @@ function setKeyboardProps(comp, newProps, oldProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
     mode(mode) {
-      if (mode !== oldProps.mode && modes[mode]) {
+      if (mode !== oldProps.mode && typeof modes[mode] !== "undefined") {
         comp.setMode(modes[mode]);
       }
     },

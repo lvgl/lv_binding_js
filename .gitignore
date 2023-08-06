@@ -5,7 +5,7 @@ src/deps
 src/render/deps
 dev_arm/
 dev_x86/
-build_arm/
+build_arm/test
 CMakeCache.txt
 CMakeFiles
 src/.cache

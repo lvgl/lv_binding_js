@@ -1,3 +1,4 @@
+import ArcConfig from "./components/Arc/config";
 import ButtonConfig from "./components/Button/config";
 import CalendarConfig from "./components/Calendar/config";
 import ChartConfig from "./components/Chart/config";
@@ -20,7 +21,7 @@ import TextareaConfig from "./components/Textarea/config";
 import ViewConfig from "./components/View/config";
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
-import * as react from "react";
+import * as React from "react";
 
 export const View = registerComponent(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
@@ -28,6 +29,7 @@ export const Text = registerComponent(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
 export const Button = registerComponent(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
+export const Arc = registerComponent(new ArcConfig());
 export const Switch = registerComponent(new SwitchConfig());
 export const Textarea = registerComponent(new TextareaConfig());
 export const Input = registerComponent(new InputConfig());

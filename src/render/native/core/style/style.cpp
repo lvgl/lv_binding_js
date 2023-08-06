@@ -1,4 +1,5 @@
 #include "style.hpp"
+#include "sjs.h"
 
 static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
     { "linear", &lv_anim_path_linear },
@@ -132,6 +133,29 @@ static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JS
     JS_ToInt32(ctx, &y, obj);
 
     lv_style_set_bg_grad_dir(style, y);
+};
+
+static void CompSetArcWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int width;
+    JS_ToInt32(ctx, &width, obj);
+    lv_style_set_arc_width(style, static_cast<int16_t>(width));
+};
+
+static void CompSetArcRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    bool rounded = JS_ToBool(ctx, obj);
+    lv_style_set_arc_rounded(style, static_cast<bool>(rounded));
+};
+
+static void CompSetArcColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int color;
+    JS_ToInt32(ctx, &color, obj);
+    lv_style_set_arc_color(style, lv_color_hex(color));
+};
+
+static void CompSetArcOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+    int opacity;
+    JS_ToInt32(ctx, &opacity, obj);
+    lv_style_set_arc_opa(style, static_cast<int16_t>(opacity));
 };
 
 static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -804,6 +828,12 @@ std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
 
     /* border-radius */
     {"border-radius", &CompSetBorderRadius},
+
+    /* arc */
+    {"arc-width", &CompSetArcWidth},
+    {"arc-rounded", &CompSetArcRounded},
+    {"arc-color", &CompSetArcColor},
+    {"arc-opacity", &CompSetArcOpacity},
 
     /* layout */
     {"display", &CompSetDisplay},

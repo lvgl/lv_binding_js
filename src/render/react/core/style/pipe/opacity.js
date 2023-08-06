@@ -29,6 +29,9 @@ export function OpacityStyle(style, result, compName) {
   if (style["shadow-opacity"] !== void 0) {
     result["shadow-opacity"] = NormalizeOpacity(style["shadow-opacity"]);
   }
+  if (style["arc-opacity"] !== void 0 && compName === "Arc") {
+    result["arc-opacity"] = NormalizeOpacity(style["arc-opacity"]);
+  }
 
   return result;
 }

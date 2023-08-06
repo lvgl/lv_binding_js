@@ -85,6 +85,12 @@ export function NormalizeTime(value) {
   return null;
 }
 
+export function NormalizeOpacity(value) {
+  if (isNaN(value) || value > 1) return 255;
+  if (value <= 0) return 0;
+  return Math.floor(value * 255);
+}
+
 export function ProcessScale(key, value, result) {
   if (!value && isNaN(value)) return null;
   result[key] = Math.floor(value * 256);
