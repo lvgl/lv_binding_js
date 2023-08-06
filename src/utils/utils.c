@@ -1,7 +1,7 @@
 #include "utils.h"
 
 void GetProgramDir (char* buf) {
-    char str[PATH_MAX];
+  char str[PATH_MAX + 1];
 	char* dir;
 
 	#ifdef __APPLE__
