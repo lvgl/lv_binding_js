@@ -1,15 +1,15 @@
-import { ProcessColor } from '../util'
+import { ProcessColor } from "../util";
 
-export function MiscStyle (style, result, compName) {
-    if (style['recolor'] && compName === 'Image') {
-        ProcessColor('recolor', style['recolor'], result)
+export function MiscStyle(style, result, compName) {
+  if (style["recolor"] && compName === "Image") {
+    ProcessColor("recolor", style["recolor"], result);
+  }
+  if (style["style-transition-time"]) {
+    const value = style["style-transition-time"];
+    if (!isNaN(value)) {
+      result["style-transition-time"] = value;
     }
-    if (style['style-transition-time']) {
-        const value = style['style-transition-time']
-        if (!isNaN(value)) {
-            result['style-transition-time'] = value
-        }
-    }
+  }
 
-    return result
+  return result;
 }

@@ -1,30 +1,28 @@
+import { getComponentByTagName } from "../../components/config";
+import { unRegistEvent } from "../event";
 import Reconciler from "react-reconciler";
-import {
-  getComponentByTagName,
-} from "../../components/config";
-import { unRegistEvent } from '../event'
 
 let id = 1;
 
 export const getUid = () => {
-    return String(id++);
-}
+  return String(id++);
+};
 
-const instanceMap = new Map;
+const instanceMap = new Map();
 
 export const getInstance = (uid) => {
-  return instanceMap[uid]
-} 
+  return instanceMap[uid];
+};
 
 const HostConfig = {
   now: Date.now,
-  getPublicInstance: instance => {
+  getPublicInstance: (instance) => {
     //for supporting refs
     return instance;
   },
   getRootHostContext: () => {
     let context = {
-      name: "rootnode"
+      name: "rootnode",
     };
     return context;
   },
@@ -33,30 +31,38 @@ const HostConfig = {
   getChildHostContext: () => {
     return {};
   },
-  shouldSetTextContent: function(type, props) {
-    return false
-    return typeof props.children === 'string' || typeof props.children === 'number';
+  shouldSetTextContent: function (type, props) {
+    return false;
+    return (
+      typeof props.children === "string" || typeof props.children === "number"
+    );
   },
-  createInstance: (type, newProps, rootContainerInstance, _currentHostContext, workInProgress) => {
+  createInstance: (
+    type,
+    newProps,
+    rootContainerInstance,
+    _currentHostContext,
+    workInProgress,
+  ) => {
     const { createInstance } = getComponentByTagName(type);
-    const uid = getUid()
+    const uid = getUid();
     const instance = createInstance(
       newProps,
       rootContainerInstance,
       _currentHostContext,
       workInProgress,
-      uid
+      uid,
     );
-    instanceMap[uid] = instance
-    return instance
+    instanceMap[uid] = instance;
+    return instance;
   },
   createTextInstance: (
     text,
     rootContainerInstance,
     context,
-    workInProgress
+    workInProgress,
   ) => {
-    return null
+    return null;
     // const { createInstance } = getComponentByTagName('Text');
     // const uid = getUid()
 
@@ -77,13 +83,13 @@ const HostConfig = {
     parent.appendChild(child);
   },
   finalizeInitialChildren: (yueElement, type, props) => {
-    return true
+    return true;
   },
   insertBefore: (parent, child, beforeChild) => {
     parent.insertBefore(child, beforeChild);
   },
   supportsMutation: true,
-  appendChildToContainer: function(container, child) {
+  appendChildToContainer: function (container, child) {
     container.add(child);
   },
   insertInContainerBefore: (container, child, beforeChild) => {
@@ -98,13 +104,13 @@ const HostConfig = {
   prepareUpdate(instance, oldProps, newProps) {
     return true;
   },
-  commitUpdate: function(
+  commitUpdate: function (
     instance,
     updatePayload,
     type,
     oldProps,
     newProps,
-    finishedWork
+    finishedWork,
   ) {
     const { commitUpdate } = getComponentByTagName(type);
     return commitUpdate(
@@ -112,21 +118,21 @@ const HostConfig = {
       updatePayload,
       oldProps,
       newProps,
-      finishedWork
+      finishedWork,
     );
   },
   commitTextUpdate(textInstance, oldText, newText) {
-    textInstance.setText(newText)
+    textInstance.setText(newText);
   },
   removeChild(parent, child) {
     parent?.removeChild(child);
     unRegistEvent(child.uid);
-    delete instanceMap[child.uid]
+    delete instanceMap[child.uid];
   },
-  commitMount: function(instance, type, newProps, internalInstanceHandle) {
+  commitMount: function (instance, type, newProps, internalInstanceHandle) {
     const { commitMount } = getComponentByTagName(type);
     return commitMount(instance, newProps, internalInstanceHandle);
-  }
+  },
 };
 
 export default Reconciler(HostConfig);

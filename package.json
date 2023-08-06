@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "directories": {
     "test": "test"
   },
   "scripts": {
     "runtime-bundle": "./node_modules/esbuild/bin/esbuild src/jsruntime/bundle/index.js --bundle --define:process.env.NODE_ENV=\\\"development\\\"",
-    "bundle": "node ./build.js"
+    "bundle": "node ./build.js",
+    "fmt": "prettier -w src/render/react"
   },
   "dependencies": {
     "buffer": "^6.0.3",
@@ -30,6 +32,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "esbuild-plugin-alias": "^0.2.1"
+    "@trivago/prettier-plugin-sort-imports": "^4.2.0",
+    "esbuild-plugin-alias": "^0.2.1",
+    "prettier": "^3.0.1"
   }
 }
