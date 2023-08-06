@@ -1,8 +1,11 @@
 node_modules
 debug
 .vscode
-src/deps/lv_png
+src/deps
 src/render/deps
 dev_arm/
 dev_x86/
 build_arm/
+CMakeCache.txt
+CMakeFiles
+src/.cache
