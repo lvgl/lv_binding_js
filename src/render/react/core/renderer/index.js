@@ -1,8 +1,8 @@
-import reconciler from '../reconciler'
+import reconciler from "../reconciler";
 
-const bridge = globalThis.SJSJSBridge
+const bridge = globalThis.SJSJSBridge;
 
-const containerInfo = new Set()
+const containerInfo = new Set();
 
 export class Renderer {
   static container;
@@ -15,14 +15,10 @@ export class Renderer {
     Renderer.container = reconciler.createContainer(
       containerInfo,
       isConcurrent,
-      hydrate
+      hydrate,
     );
 
     const parentComponent = null;
-    reconciler.updateContainer(
-      element,
-      Renderer.container,
-      parentComponent
-    )
+    reconciler.updateContainer(element, Renderer.container, parentComponent);
   }
-};
+}

@@ -1,47 +1,23 @@
-import { CanvasComp } from './comp'
+import { CanvasComp } from "./comp";
 
 export default class CanvasConfig {
-    tagName = 'Canvas';
-    native = null;
-    shouldSetTextContent() {
-        return false;
-    }
-    createInstance(
-        newProps,
-        rootInstance,
-        context,
-        workInProgress,
-        uid
-    ) {
-        const instance = new CanvasComp({ uid });
-        instance.setProps(newProps, {});
-        return instance;
-    }
-    commitMount(
-        instance,
-        newProps,
-        internalInstanceHandle
-    ) {
-    }
-    commitUpdate(
-        instance,
-        updatePayload,
-        oldProps,
-        newProps,
-        finishedWork
-    ) {
-        instance.setProps(newProps, oldProps);
-    }
-    setProps(newProps, oldProps) {
-    }
-    insertBefore(child, beforeChild) {
-
-    }
-    appendInitialChild(child) {
-    }
-    appendChild(child) {
-        
-    }
-    removeChild(child) {
-    }
+  tagName = "Canvas";
+  native = null;
+  shouldSetTextContent() {
+    return false;
+  }
+  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+    const instance = new CanvasComp({ uid });
+    instance.setProps(newProps, {});
+    return instance;
+  }
+  commitMount(instance, newProps, internalInstanceHandle) {}
+  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+    instance.setProps(newProps, oldProps);
+  }
+  setProps(newProps, oldProps) {}
+  insertBefore(child, beforeChild) {}
+  appendInitialChild(child) {}
+  appendChild(child) {}
+  removeChild(child) {}
 }

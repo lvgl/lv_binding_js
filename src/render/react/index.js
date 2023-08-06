@@ -1,27 +1,26 @@
-import * as react from 'react'
-import ViewConfig from "./components/View/config";
+import ButtonConfig from "./components/Button/config";
+import CalendarConfig from "./components/Calendar/config";
+import ChartConfig from "./components/Chart/config";
+import CheckboxConfig from "./components/Checkbox/config";
+import DropdownlistConfig from "./components/Dropdownlist/config";
+import GIFConfig from "./components/GIF/config";
+import ImageConfig from "./components/Image/config";
+import InputConfig from "./components/Input/config";
+import KeyboardConfig from "./components/Keyboard/config";
+import LineConfig from "./components/Line/config";
+import MaskConfig from "./components/Mask/config";
+import ProgressBarConfig from "./components/ProgressBar/config";
+import RollerConfig from "./components/Roller/config";
+import SliderConfig from "./components/Slider/config";
+import SwitchConfig from "./components/Switch/config";
+import TabsConfig from "./components/Tabs/config";
 // import WindowConfig from "./components/Window/config";
 import TextConfig from "./components/Text/config";
-import ImageConfig from "./components/Image/config";
-import ButtonConfig from "./components/Button/config";
-import SliderConfig from './components/Slider/config';
-import SwitchConfig from './components/Switch/config';
-import TextareaConfig from './components/Textarea/config';
-import InputConfig from './components/Input/config';
-import KeyboardConfig from './components/Keyboard/config';
-import CheckboxConfig from './components/Checkbox/config';
-import DropdownlistConfig from './components/Dropdownlist/config';
-import ProgressBarConfig from './components/ProgressBar/config';
-import RollerConfig from './components/Roller/config';
-import LineConfig from './components/Line/config';
-import CalendarConfig from './components/Calendar/config';
-import GIFConfig from './components/GIF/config'
-import TabsConfig from './components/Tabs/config';
-import ChartConfig from './components/Chart/config';
-import MaskConfig from './components/Mask/config';
-
+import TextareaConfig from "./components/Textarea/config";
+import ViewConfig from "./components/View/config";
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
+import * as react from "react";
 
 export const View = registerComponent(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
@@ -44,10 +43,14 @@ export const Tabs = registerComponent(new TabsConfig());
 export const Chart = registerComponent(new ChartConfig());
 export const Mask = registerComponent(new MaskConfig());
 
-export { EAlignType, EDropdownlistDirection, EDropdownListArrowDirection } from './components/config'
-export { EAnimateEasingFunc, Animate } from './core/animate'
-export { Dimensions } from './core/dimensions'
-export { BUILT_IN_SYMBOL } from './core/style/symbol'
-export { Theme } from './core/theme'
+export {
+  EAlignType,
+  EDropdownlistDirection,
+  EDropdownListArrowDirection,
+} from "./components/config";
+export { EAnimateEasingFunc, Animate } from "./core/animate";
+export { Dimensions } from "./core/dimensions";
+export { BUILT_IN_SYMBOL } from "./core/style/symbol";
+export { Theme } from "./core/theme";
 
 export const Render = Renderer;

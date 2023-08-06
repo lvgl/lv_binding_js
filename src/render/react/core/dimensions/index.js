@@ -1,4 +1,4 @@
-const bridge = globalThis.SJSJSBridge
-const dimensions = bridge.NativeRender.dimensions
+const bridge = globalThis.SJSJSBridge;
+const dimensions = bridge.NativeRender.dimensions;
 
-export const Dimensions = dimensions
+export const Dimensions = dimensions;
