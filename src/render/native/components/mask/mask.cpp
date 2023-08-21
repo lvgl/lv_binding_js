@@ -1,5 +1,6 @@
 
 #include "./mask.hpp"
+#include "src/core/lv_disp.h"
 
 Mask::Mask(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_MASK;
@@ -21,8 +22,8 @@ void Mask::initCompStyle (int32_t type) {
 
     uint32_t width, height;
     lv_disp_t* disp_default = lv_disp_get_default();
-    width = disp_default->driver->hor_res;
-    height = disp_default->driver->ver_res;
+    width = lv_disp_get_hor_res(disp_default);
+    height = lv_disp_get_ver_res(disp_default);
 
     lv_obj_set_style_height(this->instance, height, 0);
     lv_obj_set_style_width(this->instance, width, 0);

@@ -13,7 +13,7 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 
-    lv_obj_add_event_cb(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
+    lv_obj_add_event(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
 };
 
 void Chart::setType (int32_t type) {

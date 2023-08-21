@@ -9,7 +9,7 @@ endif()
 
 set(ENGINE_PATH ../engine)
 set(RUNTIME_PATH ../jsruntime)
-set(LVJL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
+set(LVGL_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../deps/lvgl)
 
 add_library(render STATIC
     ./native/core/style/style.cpp
@@ -84,7 +84,7 @@ if (${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ${CURL_INCLUDE_DIRS}
         ${RUNTIME_PATH}
         ${ENGINE_PATH}
-        ${LVJL_PATH}
+        ${LVGL_PATH}
         ../../src
         ../../src/deps
         ../render
@@ -101,7 +101,7 @@ elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
         ${CMAKE_CURL_INCLUDE_DIRS}
         ${RUNTIME_PATH}
         ${ENGINE_PATH}
-        ${LVJL_PATH}
+        ${LVGL_PATH}
         ../../src
         ../../src/deps
         ../render

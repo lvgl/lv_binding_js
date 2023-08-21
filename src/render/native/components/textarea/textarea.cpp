@@ -1,5 +1,6 @@
 
 #include "textarea.hpp"
+#include "src/core/lv_disp.h"
 
 Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_TEXTAREA;
@@ -13,8 +14,8 @@ Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->initStyle(LV_PART_MAIN);
     this->initStyle(LV_STATE_FOCUSED);
 
-    lv_obj_add_event_cb(this->instance, &Textarea::raiseKeyboard, LV_EVENT_FOCUSED, this);
-    lv_obj_add_event_cb(this->instance, &Textarea::hideKeyboard, LV_EVENT_DEFOCUSED, this);
+    lv_obj_add_event(this->instance, &Textarea::raiseKeyboard, LV_EVENT_FOCUSED, this);
+    lv_obj_add_event(this->instance, &Textarea::hideKeyboard, LV_EVENT_DEFOCUSED, this);
 };
 
 void Textarea::raiseKeyboard (lv_event_t* event) {
@@ -23,10 +24,9 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
     lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
     comp->keyboard = keyboard;
 
-    uint32_t width, height;
+    uint32_t height;
     lv_disp_t* disp_default = lv_disp_get_default();
-    width = disp_default->driver->hor_res;
-    height = disp_default->driver->ver_res;
+    height = lv_disp_get_ver_res(disp_default);
 
     lv_keyboard_set_textarea(keyboard, comp->instance);
     lv_obj_set_style_height(keyboard, height * 2 / 3, 0);
@@ -35,8 +35,8 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
     lv_obj_set_style_height(GetWindowInstance(), height - lv_obj_get_height(keyboard), 0);
     lv_obj_scroll_to_view_recursive(comp->instance, LV_ANIM_ON);
 
-    lv_obj_add_event_cb(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_CANCEL, comp);
-    lv_obj_add_event_cb(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_READY, comp);
+    lv_obj_add_event(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_CANCEL, comp);
+    lv_obj_add_event(comp->keyboard, &Textarea::hideKeyboard, LV_EVENT_READY, comp);
 };
 
 void Textarea::hideKeyboard (lv_event_t * event) {
@@ -47,7 +47,7 @@ void Textarea::hideKeyboard (lv_event_t * event) {
     lv_obj_del_async(comp->keyboard);
 
     lv_disp_t* disp_default = lv_disp_get_default();
-    lv_obj_set_style_height(GetWindowInstance(), disp_default->driver->ver_res, 0);
+    lv_obj_set_style_height(GetWindowInstance(), lv_disp_get_ver_res(disp_default), 0);
     lv_obj_update_layout(lv_scr_act());
     lv_obj_clear_state(comp->instance, LV_STATE_FOCUSED);
     lv_indev_reset(NULL, comp->instance);

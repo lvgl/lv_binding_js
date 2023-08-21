@@ -1,17 +1,18 @@
 #include "event.hpp"
+#include "src/core/lv_obj.h"
 
 void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType) {
     SJSRuntime* qrt;
     JSValue argv[4];
     JSContext* ctx;
     int argc = 4;
-    
+
     qrt = Engine::GetSJSInstance();
     ctx = qrt->ctx;
     std::map<lv_event_code_t, EventWrapFunc>::iterator iter = WrapEventDict.find(eventType);
 
-    struct _lv_obj_t *target = event->target;
-    struct _lv_obj_t *current_target = event->current_target;
+    struct _lv_obj_t *target = (struct _lv_obj_t*) event->original_target;
+    struct _lv_obj_t *current_target = (struct _lv_obj_t*) event->current_target;
     BasicComponent* target_instance = static_cast<BasicComponent*>(target->user_data);
     BasicComponent* current_target_instance = static_cast<BasicComponent*>(current_target->user_data);
     std::string target_uid;

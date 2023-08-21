@@ -1,4 +1,5 @@
 #include "./img.hpp"
+#include "src/misc/lv_color.h"
 
 uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc) {
     uint8_t* img_data = NULL;
@@ -35,8 +36,8 @@ uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc) {
     image_desc->header.always_zero = 0;
     image_desc->header.w = width;
     image_desc->header.h = height;
-    image_desc->header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA;
-    image_desc->data_size = width * height * LV_IMG_PX_SIZE_ALPHA_BYTE;
+    image_desc->header.cf = LV_COLOR_FORMAT_NATIVE_ALPHA;
+    image_desc->data_size = width * height * LV_COLOR_FORMAT_NATIVE_ALPHA_SIZE;
     image_desc->data = img_data;
 
     return img_data;

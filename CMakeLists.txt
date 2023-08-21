@@ -21,7 +21,6 @@ endif()
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
 add_subdirectory(./src/jsruntime)
 add_subdirectory(./src/deps/lvgl EXCLUDE_FROM_ALL)
-add_subdirectory(./src/deps/lv_drivers EXCLUDE_FROM_ALL)
 add_subdirectory(./src/render)
 
 include_directories(
@@ -52,7 +51,7 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ./src/engine/hal/simulator/simulator.cpp
         ./src/engine/engine.cpp
     )
-    target_include_directories(lv_drivers PUBLIC ${SDL2_INCLUDE_DIRS}/../)
+  target_include_directories(lvgl PUBLIC ${SDL2_INCLUDE_DIRS}/../)
 
     target_link_libraries(lvgljs INTERFACE OpenSSL::Crypto)
     target_link_libraries(lvgljs INTERFACE OpenSSL::SSL)
@@ -65,7 +64,6 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         pthread
         render
         lvgl
-        lv_drivers
         ${SDL2_LIBRARIES}
     )
 elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
@@ -84,6 +82,5 @@ elseif (${CMAKE_BUILD_PLATFORM} MATCHES arm)
         pthread
         render
         lvgl
-        lv_drivers
     )
 endif()

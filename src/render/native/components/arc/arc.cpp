@@ -1,5 +1,4 @@
 #include "arc.hpp"
-#include "src/widgets/lv_arc.h"
 
 Arc::Arc(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_ARC;

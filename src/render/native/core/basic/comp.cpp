@@ -1,6 +1,7 @@
 #include "./comp.hpp"
 
 #include "native/core/utils/utils.hpp"
+#include <iterator>
 
 std::unordered_map<std::string, BasicComponent*> comp_map;
 
@@ -12,7 +13,7 @@ void BasicComponent::addEventListener (int eventType) {
     }
     if (!this->listening) {
         this->listening = true;
-        lv_obj_add_event_cb(this->instance, &BasicComponent::EventCallback, LV_EVENT_ALL, this);
+        lv_obj_add_event(this->instance, &BasicComponent::EventCallback, LV_EVENT_ALL, this);
     }
 };
 
@@ -28,7 +29,8 @@ void BasicComponent::EventCallback (lv_event_t * event) {
 void BasicComponent::removeEventListener (int eventType) {
     this->registeEvents.erase(eventType);
 
-    lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
+    int index = std::distance(this->registeEvents.begin(), this->registeEvents.find(eventType));
+    lv_obj_remove_event(this->instance, index);
 };
 
 bool BasicComponent::isEventRegist(int eventType) {
@@ -127,15 +129,12 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
 
 bool BasicComponent::ensureStyle (int32_t type) {
     lv_style_t* style;
-    bool is_new;
     if (this->style_map.find(type) != this->style_map.end()) {
-        
-    } else {
-        style = static_cast<lv_style_t*>(style_pool.allocate());
-        style_map[type] = style;
-        is_new = true;
+        return false;
     }
-    return is_new;
+    style = static_cast<lv_style_t*>(style_pool.allocate());
+    style_map[type] = style;
+    return true;
 };
 
 void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::string>& keys, int32_t type, bool isinit) {

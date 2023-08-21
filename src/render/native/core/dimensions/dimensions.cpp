@@ -1,11 +1,12 @@
 #include "./dimensions.hpp"
+#include "src/core/lv_disp.h"
 
 static JSValue NativeCompGetDimensions(JSContext* ctx, JSValueConst this_val) {
     uint32_t width, height;
     lv_disp_t* disp_default = lv_disp_get_default();
 
-    width = disp_default->driver->hor_res;
-    height = disp_default->driver->ver_res;
+    width = lv_disp_get_hor_res(disp_default);
+    height = lv_disp_get_hor_res(disp_default);
 
     JSValue obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, obj, "width", JS_NewInt32(ctx, width));
