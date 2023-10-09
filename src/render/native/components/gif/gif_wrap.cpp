@@ -1,4 +1,4 @@
-#include "GIF.hpp"
+#include "gif.hpp"
 
 static JSClassID GIFClassID;
 

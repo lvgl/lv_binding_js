@@ -13,7 +13,7 @@ sudo apt-get install libssl-dev
 
 ### 2. Curl
 ```bash
-sudo apt install curl
+sudo apt install curl libcurl4-openssl-dev
 ```
 
 ### 3. SDL2
@@ -37,6 +37,7 @@ git submodule update --init --recursive
 ## Build lvgljs
 After preparation, you are ready to compile. Run the following in your terminal to compile Bitcoin Core
 ```bash
+npm install
 make dev-x86
 ```
 

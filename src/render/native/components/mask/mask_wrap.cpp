@@ -1,4 +1,4 @@
-#include "Mask.hpp"
+#include "mask.hpp"
 
 static JSClassID MaskClassID;
 
