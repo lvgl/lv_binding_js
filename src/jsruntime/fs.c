@@ -32,6 +32,13 @@ typedef struct {
     JSValue path;
 } SJSFile;
 
+typedef struct {
+    JSContext *ctx;
+    uv_fs_event_t event;
+    JSValue event_func;
+    char *filename;
+} SJSFsWatch;
+
 static void SJSFileFinalizer(JSRuntime *rt, JSValue val) {
     SJSFile *f = JS_GetOpaque(val, SJSFileClassID);
     if (f) {
@@ -396,7 +403,7 @@ skip:
     JS_FreeValue(ctx, fr->rw.tarray);
 
     uv_fs_req_cleanup(&fr->req);
-    
+
     if (!fr->is_sync) {
         js_free(ctx, fr);
     }
@@ -1236,7 +1243,7 @@ static JSValue SJSFSWriteFile(JSContext* ctx, JSValueConst this_val, int argc, J
         return SJSInitPromise(ctx, &fr->result);
     }
 };
- 
+
 static JSValue SJSFSReadFile(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv, int magic) {
     const char* path = JS_ToCString(ctx, argv[0]);
     const char* encoding = JS_ToCString(ctx, argv[1]);
@@ -1427,7 +1434,7 @@ static JSValue SJSReadFileSync(JSContext* ctx, JSValueConst this_val, int argc, 
     const char *filename;
     JSValue ret;
     size_t buf_len;
-    
+
     filename = JS_ToCString(ctx, argv[0]);
     if (!filename)
         return JS_EXCEPTION;
@@ -1458,6 +1465,66 @@ static JSValue SJSRealPathSync(JSContext* ctx, JSValueConst this_val, int argc, 
         err = 0;
     }
     return MakeStringError(ctx, buf, err);
+};
+
+void SJSFsWatchCb(uv_fs_event_t* handle, const char* filename, int events, int status)
+{
+    SJSFsWatch *fw = handle->data;
+    JSContext *ctx = fw->ctx;
+    JSValueConst args[2];
+
+    if (status < 0) {
+        args[0] = JS_UNDEFINED;
+        args[1] = SJSNewError(ctx, status);
+    } else {
+        args[0] = JS_NewInt32(ctx, events);
+        args[1] = JS_NewString(ctx, fw->filename);
+    }
+
+    JSValue func = JS_DupValue(ctx, fw->event_func);
+    JSValue ret = JS_Call(ctx, func, JS_UNDEFINED, 2, args);
+    JS_FreeValue(ctx, func);
+    if (JS_IsException(ret)) {
+        SJSDumpError(ctx);
+    }
+
+    JS_FreeValue(ctx, ret);
+    JS_FreeValue(ctx, args[0]);
+    JS_FreeValue(ctx, args[1]);
+}
+
+static JSValue SJSFSWatch(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst *argv)
+{
+    if (!JS_IsFunction(ctx, argv[1]))
+        return JS_EXCEPTION;
+
+    const char* path = JS_ToCString(ctx, argv[0]);
+    if (!path)
+        return JS_EXCEPTION;
+
+    SJSFsWatch *fw = js_malloc(ctx, sizeof(*fw));
+    if (!fw) {
+        JS_FreeCString(ctx, path);
+        return JS_EXCEPTION;
+    }
+
+    fw->ctx = ctx;
+    fw->event.data = fw;
+    fw->event_func = JS_DupValue(ctx, argv[1]);
+    fw->filename = js_strdup(ctx, path);
+    JS_FreeCString(ctx, path);
+
+    uv_fs_event_init(SJSGetLoop(ctx), &fw->event);
+    int r = uv_fs_event_start(&fw->event, SJSFsWatchCb, fw->filename, 0);
+    if (r != 0) {
+        JS_FreeValue(ctx, fw->event_func);
+        js_free(ctx, fw->filename);
+        js_free(ctx, fw);
+        return SJSThrowErrno(ctx, r);
+    }
+
+    uv_unref((uv_handle_t *)&fw->event);
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry SJSFileProtoFuncs[] = {
@@ -1520,6 +1587,8 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     OS_FLAG(S_ISGID),
     OS_FLAG(S_ISUID),
 #endif
+    SJS_CONST2("fsWatchChange", UV_RENAME),
+    SJS_CONST2("fsWatchRename", UV_CHANGE),
     SJS_CONST2("COPYFILE_EXCL", UV_FS_COPYFILE_EXCL),
     SJS_CONST2("COPYFILE_FICLONE", UV_FS_COPYFILE_FICLONE),
     SJS_CONST2("COPYFILE_FICLONE_FORCE", UV_FS_COPYFILE_FICLONE_FORCE),
@@ -1548,6 +1617,7 @@ static const JSCFunctionListEntry SJSFSFuncs[] = {
     SJS_CFUNC_MAGIC_DEF("readFileSync", 2, SJSFSReadFile, 1),
     SJS_CFUNC_MAGIC_DEF("writeFile", 2, SJSFSWriteFile, 0),
     SJS_CFUNC_MAGIC_DEF("writeFileSync", 2, SJSFSWriteFile, 1),
+    SJS_CFUNC_DEF("watch", 2, SJSFSWatch),
 };
 
 static const JSCFunctionListEntry fs[] = {
