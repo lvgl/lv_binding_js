@@ -6,7 +6,7 @@ export function NormalizePx(value) {
     return value;
   }
   value = value.replace(/(^\s*)|(\s*$)/g, "");
-  const reg = /(\d+\.?\d*)(px)?$/;
+  const reg = /(-?\d+\.?\d*)(px)?$/;
   value = value.match(reg)?.[1];
 
   if (!isNaN(value)) {
