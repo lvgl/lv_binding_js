@@ -24,6 +24,15 @@ dev-arm:
 		-DCMAKE_CRYPTO_LIB=/home/sxs/openssl-master/openssl-master/build_arm/lib/libcrypto.so.3
 	cmake --build $(DEV_ARM)
 
+dev-macos-arm:
+	@mkdir -p $(DEV_ARM)
+	cmake -B "$(DEV_ARM)" \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_PLATFORM=arm64 \
+		-DOPENSSL_ROOT_DIR=/opt/homebrew/opt/openssl@3 \
+		-DOPENSSL_LIBRARIES=/opt/homebrew/opt/openssl@3/lib
+	cmake --build $(DEV_ARM)
+
 build-arm:
 	@mkdir -p $(BUILD_ARM)
 	cmake -B "$(BUILD_ARM)" \
