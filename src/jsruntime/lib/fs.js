@@ -114,7 +114,7 @@ function realpath (path) {
 
 function readFileSync (path, { encoding = 'utf-8' } = {}) {
     const data = nativefs.readFileSync(path, encoding)
-    
+
     if (encoding !== 'utf-8') {
         return Buffer.from(data)
     }
@@ -123,6 +123,7 @@ function readFileSync (path, { encoding = 'utf-8' } = {}) {
 }
 
 async function readFile (path, { encoding = 'utf-8' } = {}) {
+    console.log('readFile', path, encoding)
     const data = await nativefs.readFile(path, encoding)
 
     if (encoding !== 'utf-8') {
@@ -166,6 +167,10 @@ function rmdirSync (path) {
     return nativefs.rmdirSync (path)
 }
 
+function watch (path, callback) {
+    return nativefs.watch(path, callback)
+}
+
 module.exports = {
     statSync,
     stat: statAsync,
@@ -180,5 +185,6 @@ module.exports = {
     mkdirSync,
     mkdir,
     rmdir,
-    rmdirSync
+    rmdirSync,
+    watch
 }
