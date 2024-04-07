@@ -9,8 +9,10 @@
 
 static char* BuiltInModuleNames[] = { "internal", "path" };
 
-char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name)
+char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name, void *opaque)
 {
+    (void)opaque;
+
     char basedir[PATH_MAX] = {0};
     char filePath[PATH_MAX] = {0};
     char newName[PATH_MAX] = {0};

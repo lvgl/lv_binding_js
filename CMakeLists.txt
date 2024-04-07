@@ -12,10 +12,10 @@ elseif (${CMAKE_BUILD_TYPE} MATCHES Release)
     set(CMAKE_C_FLAGS "-O0 -Wall -std=gnu99")
 endif()
 
-if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
-add_definitions(-DIS_SIM)
+if (${CMAKE_BUILD_TYPE} MATCHES Debug AND (${CMAKE_BUILD_PLATFORM} MATCHES x86 OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
+    add_definitions(-DIS_SIM)
 elseif(${CMAKE_BUILD_PLATFORM} MATCHES arm)
-add_definitions(-DIS_DEVICE)
+    add_definitions(-DIS_DEVICE)
 endif()
 
 add_subdirectory(./src/deps/libuv EXCLUDE_FROM_ALL)
@@ -37,10 +37,8 @@ include_directories(
     ${CMAKE_CURL_INCLUDE_DIRS}
 )
 
-if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
-    find_package(SDL2 REQUIRED 
-        SDL2
-    )
+if (${CMAKE_BUILD_TYPE} MATCHES Debug AND (${CMAKE_BUILD_PLATFORM} MATCHES x86 OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"))
+    find_package(SDL2 REQUIRED)
     find_package(OpenSSL REQUIRED)
     message(OPENSSL_SSL_LIBRARIES is ${OPENSSL_SSL_LIBRARIES})
     string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
@@ -52,7 +50,7 @@ if (${CMAKE_BUILD_TYPE} MATCHES Debug AND ${CMAKE_BUILD_PLATFORM} MATCHES x86)
         ./src/engine/hal/simulator/simulator.cpp
         ./src/engine/engine.cpp
     )
-    target_include_directories(lv_drivers PUBLIC ${SDL2_INCLUDE_DIRS}/../)
+    target_include_directories(lv_drivers PUBLIC ${SDL2_INCLUDE_DIRS})
 
     target_link_libraries(lvgljs INTERFACE OpenSSL::Crypto)
     target_link_libraries(lvgljs INTERFACE OpenSSL::SSL)

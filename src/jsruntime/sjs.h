@@ -73,7 +73,7 @@ int JSModuleSetImportMeta(JSContext *ctx, JSValueConst func_val, JS_BOOL is_main
 
 JSModuleDef *SJSModuleLoader(JSContext *ctx, const char *module_name, void *opaque);
 
-char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name);
+char *JSModuleNormalizeName(JSContext *ctx, const char *base_name, const char *name, void *opaque);
 
 JSValue SJSThrowErrno(JSContext *ctx, int err);
 
