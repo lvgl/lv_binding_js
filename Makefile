@@ -20,15 +20,14 @@ dev-x86:
 
 dev-macos:
 	BREW_PREFIX=$(shell brew --prefix)
-	CMAKE_BUILD_PLATFORM=$(shell uname -m | sed -e 's/x86_64/x86/' -e 's/arm64/arm/')
 
 	@mkdir -p $(DEV_MACOS)
 	cmake -B "$(DEV_MACOS)" \
 		-DCMAKE_BUILD_TYPE=Debug \
-		-DCMAKE_BUILD_PLATFORM="$(CMAKE_BUILD_PLATFORM)" \
+		-DCMAKE_BUILD_PLATFORM=x86 \
 		-DOPENSSL_ROOT_DIR="$(BREW_PREFIX)/opt/openssl@3" \
 		-DOPENSSL_LIBRARIES="$(BREW_PREFIX)/opt/openssl@3/lib"
-	cmake --build $(DEV_ARM)
+	cmake --build $(DEV_MACOS)
 
 dev-arm:
 	@mkdir -p $(DEV_ARM)
