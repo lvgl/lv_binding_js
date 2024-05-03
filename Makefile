@@ -1,6 +1,13 @@
 DEV_X86=dev_x86
 DEV_ARM=dev_arm
+DEV_MACOS=dev_macos
 BUILD_ARM=build_arm
+
+clean:
+	rm -rf $(DEV_X86)
+	rm -rf $(DEV_ARM)
+	rm -rf $(DEV_MACOS)
+	rm -rf $(BUILD_ARM)
 
 dev-x86:
 	@mkdir -p $(DEV_X86)
@@ -10,6 +17,17 @@ dev-x86:
 		-DOPENSSL_ROOT_DIR=/usr/local/opt/openssl@3 \
 		-DOPENSSL_LIBRARIES=/usr/local/opt/openssl@3/lib
 	cmake --build $(DEV_X86)
+
+dev-macos:
+	BREW_PREFIX=$(shell brew --prefix)
+
+	@mkdir -p $(DEV_MACOS)
+	cmake -B "$(DEV_MACOS)" \
+		-DCMAKE_BUILD_TYPE=Debug \
+		-DCMAKE_BUILD_PLATFORM=x86 \
+		-DOPENSSL_ROOT_DIR="$(BREW_PREFIX)/opt/openssl@3" \
+		-DOPENSSL_LIBRARIES="$(BREW_PREFIX)/opt/openssl@3/lib"
+	cmake --build $(DEV_MACOS)
 
 dev-arm:
 	@mkdir -p $(DEV_ARM)

@@ -1330,7 +1330,7 @@ static int64_t TimeSpecToMS(const struct timespec *tv)
 #endif
 
 static JSValue SJSFSStatsSync(JSContext* ctx, JSValueConst this_val,
-                          int argc, JSValueConst *argv, int is_lstat)
+                          int argc, JSValueConst *argv)
 {
     const char *path;
     int err, res;
@@ -1343,10 +1343,7 @@ static JSValue SJSFSStatsSync(JSContext* ctx, JSValueConst this_val,
 #if defined(_WIN32)
     res = stat(path, &st);
 #else
-    if (is_lstat)
-        res = lstat(path, &st);
-    else
-        res = stat(path, &st);
+    res = stat(path, &st);
 #endif
     JS_FreeCString(ctx, path);
     if (res < 0) {

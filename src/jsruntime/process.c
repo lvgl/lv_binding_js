@@ -11,7 +11,8 @@ void SJSSetupArgs (int a, char **b) {
     SJSArgv = b;
 };
 
-JSValue SJSGetArgs(JSContext *ctx) {
+JSValue SJSGetArgs(JSContext *ctx, JSValueConst this_val) {
+    (void)this_val;
     int i;
     JSValue args = JS_NewArray(ctx);
     for (i = 0; i < SJSArgc; i++) {
@@ -28,7 +29,7 @@ static JSValue SJSGetPwd(JSContext *ctx, JSValueConst this_val, int argc, JSValu
     return result;
 };
 
-static JSValue SJSGetEnv(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSGetEnv(JSContext *ctx, JSValueConst this_val) {
     uv_env_item_t *env;
     int envcount, r, i;
 
@@ -47,7 +48,7 @@ static JSValue SJSGetEnv(JSContext *ctx, JSValueConst this_val, int argc, JSValu
     return obj;
 };
 
-static JSValue SJSGetExecPath (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+static JSValue SJSGetExecPath (JSContext *ctx, JSValueConst this_val) {
     char buf[PATH_MAX];
     GetProgramDir(buf);
 
