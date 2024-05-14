@@ -1,15 +1,9 @@
 [submodule "src/deps/lvgl"]
-	path = src/deps/lvgl
+	path = deps/lvgl
 	url = https://github.com/lvgl/lvgl.git
-[submodule "src/render/deps/lv_png"]
-	path = src/deps/lv_png
-	url = https://github.com/lvgl/lv_lib_png.git
-[submodule "src/deps/libuv"]
-	path = src/deps/libuv
-	url = https://github.com/libuv/libuv.git
 [submodule "src/deps/lv_drivers"]
-	path = src/deps/lv_drivers
+	path = deps/lv_drivers
 	url = https://github.com/lvgl/lv_drivers.git
-[submodule "src/deps/curl"]
-	path = src/deps/curl
-	url = https://github.com/curl/curl.git
+[submodule "deps/txiki"]
+	path = deps/txiki
+	url = https://github.com/saghul/txiki.js.git
