@@ -101,9 +101,9 @@ JSValue WrapValueChangeEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CGETSET_DEF("value", GetValue, NULL),
-    SJS_CGETSET_DEF("checked", GetChecked, NULL),
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CGETSET_DEF("value", GetValue, NULL),
+    TJS_CGETSET_DEF("checked", GetChecked, NULL),
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeValueChangeEventWrapInit (JSContext* ctx) {

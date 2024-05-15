@@ -48,8 +48,8 @@ JSValue WrapSelectEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CGETSET_DEF("value", GetValue, NULL),
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CGETSET_DEF("value", GetValue, NULL),
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeSelectEventWrapInit (JSContext* ctx) {

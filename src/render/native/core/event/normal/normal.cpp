@@ -30,7 +30,7 @@ JSValue WrapNormalEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeNormalEventWrapInit (JSContext* ctx) {

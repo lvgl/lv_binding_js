@@ -234,7 +234,7 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("start", 0, NativeAnimateStart),
+    TJS_CFUNC_DEF("start", 0, NativeAnimateStart),
 };
 
 static JSValue AnimateConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {

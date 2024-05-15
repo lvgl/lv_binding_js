@@ -27,7 +27,7 @@ static JSValue NativeRenderRefreshScreen(JSContext *ctx, JSValueConst this_val, 
 };
 
 static const JSCFunctionListEntry util_funcs[] = {
-    SJS_CFUNC_DEF("refreshWindow", 0, NativeRenderRefreshScreen),
+    TJS_CFUNC_DEF("refreshWindow", 0, NativeRenderRefreshScreen),
 };
 
 void NativeRenderUtilInit (JSContext* ctx, JSValue& ns) {
