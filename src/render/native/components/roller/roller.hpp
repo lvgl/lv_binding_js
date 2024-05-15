@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Roller : public BasicComponent {
+class Roller final : public BasicComponent {
  public:
   Roller(std::string uid, lv_obj_t* parent = nullptr);
 
