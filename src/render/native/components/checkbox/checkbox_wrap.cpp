@@ -127,7 +127,7 @@ static void CheckboxFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef CheckboxClass = {
-    "Checkbox",
+    .class_name = "Checkbox",
     .finalizer = CheckboxFinalizer,
 };
 

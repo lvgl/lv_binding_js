@@ -135,7 +135,7 @@ static void ViewFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ViewClass = {
-    "Switch",
+    .class_name = "Switch",
     .finalizer = ViewFinalizer,
 };
 

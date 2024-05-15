@@ -118,7 +118,7 @@ static void SliderFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef SliderClass = {
-    "Slider",
+    .class_name = "Slider",
     .finalizer = SliderFinalizer,
 };
 

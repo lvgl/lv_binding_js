@@ -163,7 +163,7 @@ static void TabViewFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef TabViewClass = {
-    "TabView",
+    .class_name = "TabView",
     .finalizer = TabViewFinalizer,
 };
 

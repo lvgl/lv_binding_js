@@ -81,7 +81,7 @@ static void WindowFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef WindowClass = {
-    "Window",
+    .class_name = "Window",
     .finalizer = WindowFinalizer,
 };
 

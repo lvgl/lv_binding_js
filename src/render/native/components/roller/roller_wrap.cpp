@@ -143,7 +143,7 @@ static void RollerFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef RollerClass = {
-    "Roller",
+    .class_name = "Roller",
     .finalizer = RollerFinalizer,
 };
 

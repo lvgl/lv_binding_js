@@ -110,7 +110,7 @@ static void KeyboardFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef KeyboardClass = {
-    "Keyboard",
+    .class_name = "Keyboard",
     .finalizer = KeyboardFinalizer,
 };
 

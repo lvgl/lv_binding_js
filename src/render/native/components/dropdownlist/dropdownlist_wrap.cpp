@@ -182,7 +182,7 @@ static void DropdownlistFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef DropdownlistClass = {
-    "Dropdownlist",
+    .class_name = "Dropdownlist",
     .finalizer = DropdownlistFinalizer,
 };
 

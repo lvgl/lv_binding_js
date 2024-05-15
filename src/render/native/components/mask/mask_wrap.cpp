@@ -81,7 +81,7 @@ static void MaskFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef MaskClass = {
-    "Mask",
+    .class_name = "Mask",
     .finalizer = MaskFinalizer,
 };
 

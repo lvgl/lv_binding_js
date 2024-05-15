@@ -162,7 +162,7 @@ static void ArcFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ArcClass = {
-    "Arc",
+    .class_name = "Arc",
     .finalizer = ArcFinalizer,
 };
 

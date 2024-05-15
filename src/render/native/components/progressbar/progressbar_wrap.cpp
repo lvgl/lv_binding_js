@@ -116,7 +116,7 @@ static void ProgressBarFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ProgressBarClass = {
-    "ProgressBar",
+    .class_name = "ProgressBar",
     .finalizer = ProgressBarFinalizer,
 };
 

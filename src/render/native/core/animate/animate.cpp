@@ -278,7 +278,7 @@ static void AnimateFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef AnimateClass = {
-    "Animate",
+    .class_name = "Animate",
     .finalizer = AnimateFinalizer,
 };
 

@@ -125,7 +125,7 @@ static void ImageFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ImageClass = {
-    "Image",
+    .class_name = "Image",
     .finalizer = ImageFinalizer,
 };
 

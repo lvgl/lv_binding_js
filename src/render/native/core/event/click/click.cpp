@@ -8,7 +8,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static JSClassDef ClickEventWrapClass = {
-    "click",
+    .class_name = "click",
     .finalizer = EventFinalizer,
 };
 

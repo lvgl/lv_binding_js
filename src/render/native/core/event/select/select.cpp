@@ -8,7 +8,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef SelectEventWrapClass = {
-    "Select",
+    .class_name = "Select",
     .finalizer = EventFinalizer,
 };
 

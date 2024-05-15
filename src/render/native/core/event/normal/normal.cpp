@@ -8,7 +8,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static JSClassDef NormalEventWrapClass = {
-    "normal",
+    .class_name = "normal",
     .finalizer = EventFinalizer,
 };
 

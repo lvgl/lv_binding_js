@@ -93,7 +93,7 @@ static void ButtonFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ButtonClass = {
-    "Button",
+    .class_name = "Button",
     .finalizer = ButtonFinalizer,
 };
 

@@ -101,7 +101,7 @@ static void TextFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ViewClass = {
-    "Text",
+    .class_name = "Text",
     .finalizer = TextFinalizer,
 };
 

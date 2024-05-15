@@ -162,7 +162,7 @@ static void CalendarFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef CalendarClass = {
-    "Calendar",
+    .class_name = "Calendar",
     .finalizer = CalendarFinalizer,
 };
 

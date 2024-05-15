@@ -672,7 +672,7 @@ static void ChartFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ChartClass = {
-    "Chart",
+    .class_name = "Chart",
     .finalizer = ChartFinalizer,
 };
 

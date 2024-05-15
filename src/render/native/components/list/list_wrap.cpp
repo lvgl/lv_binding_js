@@ -109,7 +109,7 @@ static void ListFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ListClass = {
-    "List",
+    .class_name = "List",
     .finalizer = ListFinalizer,
 };
 

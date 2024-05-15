@@ -93,7 +93,7 @@ static void ViewFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ViewClass = {
-    "View",
+    .class_name = "View",
     .finalizer = ViewFinalizer,
 };
 

@@ -105,7 +105,7 @@ static void GIFFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef GIFClass = {
-    "GIF",
+    .class_name = "GIF",
     .finalizer = GIFFinalizer,
 };
 

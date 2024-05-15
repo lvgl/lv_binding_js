@@ -126,7 +126,7 @@ static void LineFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef LineClass = {
-    "Line",
+    .class_name = "Line",
     .finalizer = LineFinalizer,
 };
 

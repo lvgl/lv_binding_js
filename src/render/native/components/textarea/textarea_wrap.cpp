@@ -167,7 +167,7 @@ static void TextareaFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef TextareaClass = {
-    "Textarea",
+    .class_name = "Textarea",
     .finalizer = TextareaFinalizer,
 };
 

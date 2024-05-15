@@ -8,7 +8,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ValueChangeEventWrapClass = {
-    "ValueChange",
+    .class_name = "ValueChange",
     .finalizer = EventFinalizer,
 };
 
