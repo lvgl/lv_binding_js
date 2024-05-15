@@ -1,5 +1,7 @@
 #include "./select.hpp"
 
+#include "engine.hpp"
+
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapSelectEventID;
@@ -31,12 +33,12 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
 };
 
 JSValue WrapSelectEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapSelectEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapSelectEventID);

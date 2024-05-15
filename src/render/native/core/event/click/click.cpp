@@ -1,5 +1,7 @@
 #include "./click.hpp"
 
+#include "engine.hpp"
+
 static JSClassID WrapClickEventID;
 
 WRAPPED_STOPPROPAGATION
@@ -67,12 +69,12 @@ static JSValue GetPressedPointPos (JSContext* ctx, JSValueConst this_val) {
 };
 
 JSValue WrapClickEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapClickEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapClickEventID);

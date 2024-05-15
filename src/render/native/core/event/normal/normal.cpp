@@ -1,5 +1,7 @@
 #include "normal.hpp"
 
+#include "engine.hpp"
+
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapNormalEventID;
@@ -13,12 +15,12 @@ static JSClassDef NormalEventWrapClass = {
 };
 
 JSValue WrapNormalEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapNormalEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapNormalEventID);

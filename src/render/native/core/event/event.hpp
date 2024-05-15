@@ -1,19 +1,15 @@
 #pragma once
 
 extern "C" {
-    #include "quickjs-libc.h"
-    #include "sjs.h"
+    #include "lvgl.h"
+    #include "private.h"
+    #include "utils.h"
 };
 
 #include <map>
 #include <stdlib.h>
 
-#include "engine.hpp"
 #include "native/core/basic/comp.hpp"
-
-extern "C" {
-    #include "lvgl.h"
-}
 
 void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType);
 
