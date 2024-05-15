@@ -172,7 +172,7 @@ static JSClassDef TextareaClass = {
 };
 
 void NativeComponentTextareaInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&TextareaClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &TextareaClassID);
     JS_NewClass(JS_GetRuntime(ctx), TextareaClassID, &TextareaClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

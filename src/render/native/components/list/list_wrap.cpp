@@ -114,7 +114,7 @@ static JSClassDef ListClass = {
 };
 
 void NativeComponentListInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ListClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ListClassID);
     JS_NewClass(JS_GetRuntime(ctx), ListClassID, &ListClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

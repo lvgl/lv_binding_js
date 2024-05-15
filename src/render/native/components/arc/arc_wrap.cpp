@@ -167,7 +167,7 @@ static JSClassDef ArcClass = {
 };
 
 void NativeComponentArcInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ArcClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ArcClassID);
     JS_NewClass(JS_GetRuntime(ctx), ArcClassID, &ArcClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

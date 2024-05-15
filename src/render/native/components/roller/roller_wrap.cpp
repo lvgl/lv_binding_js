@@ -148,7 +148,7 @@ static JSClassDef RollerClass = {
 };
 
 void NativeComponentRollerInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&RollerClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &RollerClassID);
     JS_NewClass(JS_GetRuntime(ctx), RollerClassID, &RollerClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

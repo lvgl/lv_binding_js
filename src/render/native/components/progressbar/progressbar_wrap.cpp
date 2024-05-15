@@ -121,7 +121,7 @@ static JSClassDef ProgressBarClass = {
 };
 
 void NativeComponentProgressBarInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ProgressBarClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ProgressBarClassID);
     JS_NewClass(JS_GetRuntime(ctx), ProgressBarClassID, &ProgressBarClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

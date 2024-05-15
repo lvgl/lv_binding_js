@@ -115,7 +115,7 @@ static JSClassDef KeyboardClass = {
 };
 
 void NativeComponentKeyboardInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&KeyboardClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &KeyboardClassID);
     JS_NewClass(JS_GetRuntime(ctx), KeyboardClassID, &KeyboardClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

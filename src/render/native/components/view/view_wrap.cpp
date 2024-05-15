@@ -98,7 +98,7 @@ static JSClassDef ViewClass = {
 };
 
 void NativeComponentViewInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ViewClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ViewClassID);
     JS_NewClass(JS_GetRuntime(ctx), ViewClassID, &ViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

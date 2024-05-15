@@ -187,7 +187,7 @@ static JSClassDef DropdownlistClass = {
 };
 
 void NativeComponentDropdownlistInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&DropdownlistClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &DropdownlistClassID);
     JS_NewClass(JS_GetRuntime(ctx), DropdownlistClassID, &DropdownlistClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

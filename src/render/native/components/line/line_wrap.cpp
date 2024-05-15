@@ -131,7 +131,7 @@ static JSClassDef LineClass = {
 };
 
 void NativeComponentLineInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&LineClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &LineClassID);
     JS_NewClass(JS_GetRuntime(ctx), LineClassID, &LineClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

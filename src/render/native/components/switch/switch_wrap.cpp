@@ -140,7 +140,7 @@ static JSClassDef ViewClass = {
 };
 
 void NativeComponentSwitchInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&SwitchClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &SwitchClassID);
     JS_NewClass(JS_GetRuntime(ctx), SwitchClassID, &ViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

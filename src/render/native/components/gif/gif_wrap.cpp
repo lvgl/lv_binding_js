@@ -110,7 +110,7 @@ static JSClassDef GIFClass = {
 };
 
 void NativeComponentGIFInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&GIFClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &GIFClassID);
     JS_NewClass(JS_GetRuntime(ctx), GIFClassID, &GIFClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

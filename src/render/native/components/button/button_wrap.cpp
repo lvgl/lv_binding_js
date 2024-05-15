@@ -98,7 +98,7 @@ static JSClassDef ButtonClass = {
 };
 
 void NativeComponentButtonInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ButtonClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ButtonClassID);
     JS_NewClass(JS_GetRuntime(ctx), ButtonClassID, &ButtonClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

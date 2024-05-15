@@ -107,7 +107,7 @@ static const JSCFunctionListEntry component_proto_funcs[] = {
 };
 
 void NativeValueChangeEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapValueChangeEventID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WrapValueChangeEventID);
     JS_NewClass(JS_GetRuntime(ctx), WrapValueChangeEventID, &ValueChangeEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));

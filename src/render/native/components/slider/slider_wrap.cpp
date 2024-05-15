@@ -123,7 +123,7 @@ static JSClassDef SliderClass = {
 };
 
 void NativeComponentSliderInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&SliderClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &SliderClassID);
     JS_NewClass(JS_GetRuntime(ctx), SliderClassID, &SliderClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

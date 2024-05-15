@@ -168,7 +168,7 @@ static JSClassDef TabViewClass = {
 };
 
 void NativeComponentTabViewInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&TabViewClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &TabViewClassID);
     JS_NewClass(JS_GetRuntime(ctx), TabViewClassID, &TabViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

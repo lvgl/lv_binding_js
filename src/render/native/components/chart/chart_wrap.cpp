@@ -677,7 +677,7 @@ static JSClassDef ChartClass = {
 };
 
 void NativeComponentChartInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ChartClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ChartClassID);
     JS_NewClass(JS_GetRuntime(ctx), ChartClassID, &ChartClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

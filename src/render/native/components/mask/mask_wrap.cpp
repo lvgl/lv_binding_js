@@ -86,7 +86,7 @@ static JSClassDef MaskClass = {
 };
 
 void NativeComponentMaskInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&MaskClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &MaskClassID);
     JS_NewClass(JS_GetRuntime(ctx), MaskClassID, &MaskClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));
