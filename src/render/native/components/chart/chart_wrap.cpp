@@ -667,7 +667,7 @@ static void ChartFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Chart %s release", th->uid);
     if (th) {
         delete static_cast<Chart*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

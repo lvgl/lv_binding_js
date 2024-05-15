@@ -100,7 +100,7 @@ static void GIFFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("GIF %s release", th->uid);
     if (th) {
         delete static_cast<GIF*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

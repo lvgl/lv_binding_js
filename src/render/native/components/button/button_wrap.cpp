@@ -88,7 +88,7 @@ static void ButtonFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Button %s release", th->uid);
     if (th) {
         delete static_cast<Button*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

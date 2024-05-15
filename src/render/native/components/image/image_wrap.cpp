@@ -120,7 +120,7 @@ static void ImageFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Image %s release", th->uid);
     if (th) {
         delete static_cast<Image*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

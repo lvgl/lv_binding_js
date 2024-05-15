@@ -138,7 +138,7 @@ static void RollerFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Roller %s release", th->uid);
     if (th) {
         delete static_cast<Roller*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

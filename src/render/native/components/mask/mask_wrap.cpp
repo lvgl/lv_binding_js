@@ -76,7 +76,7 @@ static void MaskFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Mask %s release", th->uid);
     if (th) {
         delete static_cast<Mask*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

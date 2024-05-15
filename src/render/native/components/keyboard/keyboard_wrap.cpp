@@ -105,7 +105,7 @@ static void KeyboardFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Keyboard %s release", th->uid);
     if (th) {
         delete static_cast<Keyboard*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

@@ -273,7 +273,7 @@ static void AnimateFinalizer(JSRuntime *rt, JSValue val) {
             animate_pool.deallocate(static_cast<void*>(animate));
             animate_map.erase(ref->uid);
         }
-        free(ref);
+        js_free_rt(rt, ref);
     }
 };
 

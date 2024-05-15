@@ -113,7 +113,7 @@ static void SliderFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Slider %s release", th->uid);
     if (th) {
         delete static_cast<Slider*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

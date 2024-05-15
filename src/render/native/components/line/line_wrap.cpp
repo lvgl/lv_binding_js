@@ -121,7 +121,7 @@ static void LineFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Line %s release", th->uid);
     if (th) {
         delete static_cast<Line*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

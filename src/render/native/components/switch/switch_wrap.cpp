@@ -130,7 +130,7 @@ static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Switch %s release", th->uid);
     if (th) {
         delete static_cast<Switch*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

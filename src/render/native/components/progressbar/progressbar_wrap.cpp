@@ -111,7 +111,7 @@ static void ProgressBarFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("ProgressBar %s release", th->uid);
     if (th) {
         delete static_cast<ProgressBar*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

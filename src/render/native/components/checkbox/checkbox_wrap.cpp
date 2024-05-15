@@ -122,7 +122,7 @@ static void CheckboxFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Checkbox %s release", th->uid);
     if (th) {
         delete static_cast<Checkbox*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

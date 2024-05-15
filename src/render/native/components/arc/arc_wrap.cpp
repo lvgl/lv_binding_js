@@ -157,7 +157,7 @@ static void ArcFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Arc %s release", th->uid);
     if (th) {
         delete static_cast<Arc*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

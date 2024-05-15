@@ -104,7 +104,7 @@ static void ListFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("List %s release", th->uid);
     if (th) {
         delete static_cast<List*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

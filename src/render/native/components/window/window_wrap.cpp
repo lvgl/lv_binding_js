@@ -76,7 +76,7 @@ static void WindowFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Window %s release", th->uid);
     if (th) {
         delete static_cast<Window*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 

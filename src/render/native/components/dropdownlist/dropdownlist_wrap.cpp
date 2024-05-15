@@ -177,7 +177,7 @@ static void DropdownlistFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Dropdownlist %s release", th->uid);
     if (th) {
         delete static_cast<Dropdownlist*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
