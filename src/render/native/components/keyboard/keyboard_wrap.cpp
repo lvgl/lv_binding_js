@@ -14,7 +14,8 @@ WRAPPED_JS_CLOSE_COMPONENT(Keyboard, "Keyboard")
 
 static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
         
         ((Keyboard*)(parent->comp))->setTextarea(static_cast<BasicComponent*>(child->comp));

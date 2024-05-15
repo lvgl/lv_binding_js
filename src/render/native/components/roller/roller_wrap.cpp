@@ -14,7 +14,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         std::vector<std::string> items;
 
         int32_t item_len;
@@ -45,7 +45,7 @@ static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int a
 
 static JSValue NativeCompSetSelectIndex(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         int32_t index;
         JS_ToInt32(ctx, &index, argv[0]);
 
@@ -57,7 +57,7 @@ static JSValue NativeCompSetSelectIndex(JSContext *ctx, JSValueConst this_val, i
 
 static JSValue NativeCompSetVisibleRowCount(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         int32_t count;
         JS_ToInt32(ctx, &count, argv[0]);
 

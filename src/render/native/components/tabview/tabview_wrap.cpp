@@ -54,13 +54,12 @@ WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 
 static JSValue NativeCompSetTab(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 2 && JS_IsString(argv[0]) && JS_IsObject(argv[1])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
-        
-        COMP_REF* ref_content;
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TabViewClassID);
+
+        JSClassID _class_id;
+        COMP_REF* ref_content = (COMP_REF*)JS_GetAnyOpaque(argv[1], &_class_id);
+
         size_t str_len;
-
-        ref_content = (COMP_REF*)JS_GetOpaque3(argv[1]);
-
         const char* str_ori = JS_ToCStringLen(ctx, &str_len, argv[0]);
         std::string str = str_ori;
         str.resize(str_len);

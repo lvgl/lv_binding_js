@@ -15,7 +15,8 @@ WRAPPED_JS_CLOSE_COMPONENT(Switch, "Switch")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         
         ((Switch*)(parent->comp))->removeChild((void*)(child->comp));
@@ -26,7 +27,8 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         
         ((Switch*)(parent->comp))->appendChild((void*)(child->comp));
@@ -37,7 +39,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
         
@@ -49,7 +51,7 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
 
 static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
         

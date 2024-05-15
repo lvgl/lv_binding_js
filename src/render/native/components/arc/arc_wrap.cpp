@@ -22,7 +22,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Arc, "Arc")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t min;
         int32_t max;
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -39,7 +39,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t value;
         JS_ToInt32(ctx, &value, argv[0]);
 
@@ -51,7 +51,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
   if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {
-    COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);
+    COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
     size_t size;
     int32_t type;
     int32_t image_bytelength = 0;

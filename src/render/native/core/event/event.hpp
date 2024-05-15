@@ -55,7 +55,8 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
 
 #define WRAPPED_STOPPROPAGATION                                                                                                       \
     static JSValue NativeEventStopPropagation(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                  \
-        lv_event_t* ref = static_cast<lv_event_t*>(JS_GetOpaque3(this_val));                                                          \
+        JSClassID _class_id;                                                                                                          \
+        lv_event_t* ref = static_cast<lv_event_t*>(JS_GetAnyOpaque(this_val, &_class_id));                                            \
         if (ref) {                                                                                                                    \
             ref->stop_bubbling = 1;                                                                                                   \
         }                                                                                                                             \

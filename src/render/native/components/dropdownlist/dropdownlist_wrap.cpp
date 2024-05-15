@@ -14,7 +14,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Dropdownlist, "Dropdownlist")
 
 static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         std::vector<std::string> items;
 
         int32_t item_len;
@@ -43,7 +43,7 @@ static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         int32_t index;
         JS_ToInt32(ctx, &index, argv[0]);
 
@@ -55,7 +55,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSeText(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsString(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         size_t len;
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
@@ -70,7 +70,7 @@ static JSValue NativeCompSeText(JSContext *ctx, JSValueConst this_val, int argc,
 
 static JSValue NativeCompSetDir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         int32_t dir;
         JS_ToInt32(ctx, &dir, argv[0]);
 
@@ -82,7 +82,7 @@ static JSValue NativeCompSetDir(JSContext *ctx, JSValueConst this_val, int argc,
 
 static JSValue NativeCompSetArrowDir(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         int32_t dir;
         JS_ToInt32(ctx, &dir, argv[0]);
 
@@ -94,7 +94,7 @@ static JSValue NativeCompSetArrowDir(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompSetHighLightSelect(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Dropdownlist*)(ref->comp))->setHighLightSelect(payload);

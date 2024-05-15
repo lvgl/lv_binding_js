@@ -14,7 +14,8 @@ WRAPPED_JS_CLOSE_COMPONENT(List, "List")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
         
         ((List*)(parent->comp))->removeChild((void*)(child->comp));
@@ -25,7 +26,8 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
         
         ((List*)(parent->comp))->appendChild((void*)(child->comp));
