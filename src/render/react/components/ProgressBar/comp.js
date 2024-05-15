@@ -1,7 +1,7 @@
 import { CommonComponentApi } from "../common/index";
 import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar;
 
 function setProgressBarProps(comp, newProps, oldProps) {

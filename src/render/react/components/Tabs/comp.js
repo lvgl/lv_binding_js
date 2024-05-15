@@ -7,7 +7,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeTabs = bridge.NativeRender.NativeComponents.TabView;
 
 function setTabsProps(comp, newProps, oldProps) {
