@@ -20,7 +20,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
         s.resize(len);
-        
+
         ((Checkbox*)(ref->comp))->setText(s);
         LV_LOG_USER("Checkbox %s setText", ref->uid);
         JS_FreeCString(ctx, str);
@@ -32,7 +32,7 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
     if (argc >= 1 && JS_IsBool(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CheckboxClassID);
         bool payload = JS_ToBool(ctx, argv[0]);
-        
+
         ((Checkbox*)(ref->comp))->setChecked(payload);
         LV_LOG_USER("Checkbox %s setChecked %d", ref->uid, payload);
     }
@@ -43,7 +43,7 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
     if (argc >= 1 && JS_IsBool(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CheckboxClassID);
         bool payload = JS_ToBool(ctx, argv[0]);
-        
+
         ((Checkbox*)(ref->comp))->setDisabled(payload);
         LV_LOG_USER("Checkbox %s setDisabled", ref->uid);
     }

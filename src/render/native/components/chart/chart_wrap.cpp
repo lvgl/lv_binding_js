@@ -151,7 +151,7 @@ static JSValue NativeCompSetDivLine(JSContext *ctx, JSValueConst this_val, int a
 
         JS_FreeValue(ctx, hdiv_value);
         JS_FreeValue(ctx, vdiv_value);
-        
+
         ((Chart*)(ref->comp))->setDivLineCount(hdiv, vdiv);
         LV_LOG_USER("Chart %s setDivLineCount %d %d", ref->uid, hdiv, vdiv);
     }
@@ -163,7 +163,7 @@ static JSValue NativeCompSetPointNum(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
         int32_t pointNUm;
         JS_ToInt32(ctx, &pointNUm, argv[0]);
-        
+
         ((Chart*)(ref->comp))->setPointNum(pointNUm);
         LV_LOG_USER("Chart %s setPointNum %d", ref->uid, pointNUm);
     }
@@ -175,7 +175,7 @@ static JSValue NativeCompSetType(JSContext *ctx, JSValueConst this_val, int argc
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
         int32_t type;
         JS_ToInt32(ctx, &type, argv[0]);
-        
+
         ((Chart*)(ref->comp))->setType(type);
         LV_LOG_USER("Chart %s setType %d", ref->uid, type);
     }
@@ -203,7 +203,7 @@ static JSValue NativeCompSetLeftAxisOption(JSContext *ctx, JSValueConst this_val
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setLeftAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setLeftAxisOption", ref->uid);
     }
@@ -231,7 +231,7 @@ static JSValue NativeCompSetRightAxisOption(JSContext *ctx, JSValueConst this_va
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setRightAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setRightAxisOption", ref->uid);
     }
@@ -259,7 +259,7 @@ static JSValue NativeCompSetTopAxisOption(JSContext *ctx, JSValueConst this_val,
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setTopAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setTopAxisOption", ref->uid);
     }
@@ -287,7 +287,7 @@ static JSValue NativeCompSetBottomAxisOption(JSContext *ctx, JSValueConst this_v
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setBottomAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setBottomAxisOption", ref->uid);
     }
@@ -368,12 +368,12 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -384,7 +384,7 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setLeftAxisData(data);
         LV_LOG_USER("Chart %s setLeftAxisData", ref->uid);
     }
@@ -417,12 +417,12 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -433,7 +433,7 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setRightAxisData(data);
         LV_LOG_USER("Chart %s setRightAxisData", ref->uid);
     }
@@ -466,12 +466,12 @@ static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, 
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -482,7 +482,7 @@ static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, 
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setScatterData(data);
         LV_LOG_USER("Chart %s setScatterData", ref->uid);
     }

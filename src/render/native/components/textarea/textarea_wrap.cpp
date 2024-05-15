@@ -16,7 +16,7 @@ static JSValue NativeCompSetOneLine(JSContext *ctx, JSValueConst this_val, int a
     if (argc >= 1 && JS_IsBool(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
         bool payload = JS_ToBool(ctx, argv[0]);
-        
+
         ((Textarea*)(ref->comp))->setOneLine(payload);
         LV_LOG_USER("Textarea %s setOneLine %d", ref->uid, payload);
     }
@@ -30,7 +30,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
         s.resize(len);
-        
+
         ((Textarea*)(ref->comp))->setText(s);
         LV_LOG_USER("Textarea %s setText", ref->uid);
         JS_FreeCString(ctx, str);
@@ -45,7 +45,7 @@ static JSValue NativeCompPlaceHolder(JSContext *ctx, JSValueConst this_val, int 
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
         s.resize(len);
-        
+
         ((Textarea*)(ref->comp))->setPlaceHolder(s);
         LV_LOG_USER("Textarea %s setPlaceHolder", ref->uid);
         JS_FreeCString(ctx, str);

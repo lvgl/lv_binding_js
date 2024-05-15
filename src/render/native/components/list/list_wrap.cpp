@@ -17,7 +17,7 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
         JSClassID _class_id;
         COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
-        
+
         ((List*)(parent->comp))->removeChild((void*)(child->comp));
         LV_LOG_USER("List %s remove child %s", parent->uid, child->uid);
     }
@@ -29,7 +29,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
         JSClassID _class_id;
         COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
-        
+
         ((List*)(parent->comp))->appendChild((void*)(child->comp));
         LV_LOG_USER("List %s append child %s", parent->uid, child->uid);
     }

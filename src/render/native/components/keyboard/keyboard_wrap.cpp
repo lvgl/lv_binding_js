@@ -17,7 +17,7 @@ static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int 
         JSClassID _class_id;
         COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
-        
+
         ((Keyboard*)(parent->comp))->setTextarea(static_cast<BasicComponent*>(child->comp));
         LV_LOG_USER("Keyboard %s setTextarea %s", parent->uid, child->uid);
     }
@@ -29,7 +29,7 @@ static JSValue NativeCompSetMode(JSContext *ctx, JSValueConst this_val, int argc
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
         int32_t mode;
         JS_ToInt32(ctx, &mode, argv[0]);
-        
+
         ((Keyboard*)(ref->comp))->setMode(mode);
         LV_LOG_USER("Keyboard %s setMode %d", ref->uid, mode);
     }

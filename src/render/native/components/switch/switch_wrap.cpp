@@ -18,7 +18,7 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
         JSClassID _class_id;
         COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-        
+
         ((Switch*)(parent->comp))->removeChild((void*)(child->comp));
         LV_LOG_USER("Switch %s remove child %s", parent->uid, child->uid);
     }
@@ -30,7 +30,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
         JSClassID _class_id;
         COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-        
+
         ((Switch*)(parent->comp))->appendChild((void*)(child->comp));
         LV_LOG_USER("Switch %s append child %s", parent->uid, child->uid);
     }
@@ -42,7 +42,7 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
-        
+
         ((Switch*)(ref->comp))->setValue(value);
         LV_LOG_USER("Switch %s set value", ref->uid);
     }
@@ -54,7 +54,7 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
-        
+
         ((Switch*)(ref->comp))->setDisabled(value);
         LV_LOG_USER("Switch %s setDisabled", ref->uid);
     }

@@ -19,7 +19,7 @@ WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 // static JSValue NativeCompSetTabs(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
 //     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
 //         COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
-        
+
 //         COMP_REF* ref_content;
 //         int len, i;
 //         size_t str_len;
@@ -46,7 +46,7 @@ WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 //         }
 
 //         JS_FreeValue(ctx, len_value);
-        
+
 //         LV_LOG_USER("TabView %s setTab", ref->uid);
 //     };
 //     return JS_UNDEFINED;
@@ -65,7 +65,7 @@ static JSValue NativeCompSetTab(JSContext *ctx, JSValueConst this_val, int argc,
         str.resize(str_len);
         static_cast<TabView*>(ref->comp)->setTab(str, static_cast<BasicComponent*>(ref_content->comp));
         JS_FreeCString(ctx, str_ori);
-        
+
         LV_LOG_USER("TabView %s setTab child %s", ref->uid, ref_content->uid);
     };
     return JS_UNDEFINED;
@@ -100,7 +100,7 @@ static JSValue TabViewConstructor(JSContext *ctx, JSValueConst new_target, int a
     const char* uid;
     JSValue pos_value;
     JSValue size_value;
-    int32_t pos = LV_DIR_TOP; 
+    int32_t pos = LV_DIR_TOP;
     int32_t size;
 
     COMP_REF *s;

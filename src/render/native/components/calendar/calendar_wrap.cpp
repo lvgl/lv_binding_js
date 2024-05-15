@@ -28,7 +28,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
         int32_t day;
         std::vector<lv_calendar_date_t> dates;
 
-        for (int i=0; i<len; i++) {                                                                                     
+        for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
             if (JS_IsArray(ctx, item)) {
                 year_value = JS_GetPropertyUint32(ctx, item, 0);
@@ -43,13 +43,13 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
                     dates.push_back({ .year = static_cast<uint16_t>(year), .month = static_cast<int8_t>(month), .day = static_cast<int8_t>(day) });
                 }
 
-                JS_FreeValue(ctx, year_value);                                                                                   
-                JS_FreeValue(ctx, month_value);   
-                JS_FreeValue(ctx, day_value);                                                                                
-            }                                                         
-            JS_FreeValue(ctx, item);                                                                                   
+                JS_FreeValue(ctx, year_value);
+                JS_FreeValue(ctx, month_value);
+                JS_FreeValue(ctx, day_value);
+            }
+            JS_FreeValue(ctx, item);
         }
-        
+
         ((Calendar*)(ref->comp))->setHighlightDates(dates, num);
         LV_LOG_USER("Calendar %s setHighlightDates", ref->uid);
     }

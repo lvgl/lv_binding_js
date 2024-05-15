@@ -23,7 +23,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
 
         JS_ToInt32(ctx, &min, min_value);
         JS_ToInt32(ctx, &max, max_value);
-        
+
         ((Slider*)(ref->comp))->setRange(min, max);
         LV_LOG_USER("Slider %s set range", ref->uid);
     }
@@ -35,7 +35,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SliderClassID);
         int32_t value;
         JS_ToInt32(ctx, &value, argv[0]);
-        
+
         ((Slider*)(ref->comp))->setValue(value);
         LV_LOG_USER("Slider %s set value", ref->uid);
     }

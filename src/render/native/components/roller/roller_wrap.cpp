@@ -25,16 +25,16 @@ static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int a
         JS_ToInt32(ctx, &item_len, argv[1]);
         bool mode = JS_ToBool(ctx, argv[2]);
 
-        for (int i=0; i<item_len; i++) {                                                                                     
+        for (int i=0; i<item_len; i++) {
             value = JS_GetPropertyUint32(ctx, argv[0], i);
             if (JS_IsString(value)) {
-                ori_str = JS_ToCStringLen(ctx, &key_len, value);                                                             
-                key = ori_str;                                                                                              
-                JS_FreeCString(ctx, ori_str);                                                                               
-                key.resize(key_len);                                                                                         
+                ori_str = JS_ToCStringLen(ctx, &key_len, value);
+                key = ori_str;
+                JS_FreeCString(ctx, ori_str);
+                key.resize(key_len);
                 items.push_back(key);
-            }                                                         
-            JS_FreeValue(ctx, value);                                                                                   
+            }
+            JS_FreeValue(ctx, value);
         }
 
         ((Roller*)(ref->comp))->setOptions(items, mode);
