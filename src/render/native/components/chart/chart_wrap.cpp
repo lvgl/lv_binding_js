@@ -70,8 +70,6 @@ static JSValue NativeCompSetRightAxisLabels(JSContext *ctx, JSValueConst this_va
             JS_FreeCString(ctx, str_ori);
         }
 
-        JS_FreeValue(ctx, len_value);
-
         ((Chart*)(ref->comp))->setRightAxisLabels(result);
         LV_LOG_USER("Chart %s setRightAxisLabels", ref->uid);
     }
@@ -510,6 +508,7 @@ static JSValue NativeCompSetLeftAxisRange(JSContext *ctx, JSValueConst this_val,
 
         LV_LOG_USER("Chart %s setLeftAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -531,6 +530,7 @@ static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val
 
         LV_LOG_USER("Chart %s setRightAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -552,6 +552,7 @@ static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, 
 
         LV_LOG_USER("Chart %s setTopAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -573,6 +574,7 @@ static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_va
 
         LV_LOG_USER("Chart %s setBottomAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
