@@ -1,4 +1,4 @@
-import { View, Render, Window, Text, Image, Dimensions, EAlignType, Button, Textarea } from 'lvgljs-ui';
+import { View, Render, Text, Image, Dimensions, EAlignType, Button, Textarea } from 'lvgljs-ui';
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const { width, height } = Dimensions.window
@@ -269,7 +269,7 @@ function App () {
         historyStr += "\n"
     })
     return (
-        <Window style={style.window}>
+        <View style={style.window}>
             <Textarea 
                 style={style.textarea}
                 value={`${historyStr}\n${formula.join("")}${input}`}
@@ -427,7 +427,7 @@ function App () {
                     <Text style={style.buttonText}>{"+"}</Text>
                 </Button>
             </View> 
-        </Window>
+        </View>
     )
 };
 
