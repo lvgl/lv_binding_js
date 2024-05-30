@@ -7,6 +7,10 @@ build*/
 dev_*/
 **/.cache/
 
+# Generated JS files
+/test/**/*.js
+/demo/**/*.js
+
 # MacOS
 .DS_Store
 
