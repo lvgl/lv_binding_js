@@ -3,8 +3,8 @@
 #include <stdlib.h>
 
 extern "C" {
-    #include "quickjs-libc.h"
-    #include "sjs.h"
+
+    #include "private.h"
 }
 
 #include "native/core/event/event.hpp"

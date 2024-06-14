@@ -7,7 +7,7 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->instance = lv_chart_create(parent != nullptr ? parent : GetWindowInstance());
 
     lv_group_add_obj(lv_group_get_default(), this->instance);
-    
+
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
     lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_set_user_data(this->instance, this);
@@ -25,40 +25,40 @@ void Chart::setDivLineCount (int32_t hdiv, int32_t vdiv) {
 };
 
 void Chart::setLeftAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   ) {
     lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setRightAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   ) {
     lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setTopAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   ) {
     lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setBottomAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   ) {
     lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
@@ -87,7 +87,7 @@ void Chart::setLeftAxisData (std::vector<axis_data>& data) {
         for (j=0; j<item.data.size(); j++) {
             this->left_axis[i]->y_points[j] = (lv_coord_t)item.data[j];
         }
-    } 
+    }
 };
 
 void Chart::setRightAxisData (std::vector<axis_data>& data) {

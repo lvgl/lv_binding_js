@@ -7,7 +7,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeMask = bridge.NativeRender.NativeComponents.Mask;
 
 function setMaskProps(comp, newProps, oldProps) {

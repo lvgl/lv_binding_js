@@ -1,7 +1,5 @@
 import reconciler from "../reconciler";
 
-const bridge = globalThis.SJSJSBridge;
-
 const containerInfo = new Set();
 
 export class Renderer {

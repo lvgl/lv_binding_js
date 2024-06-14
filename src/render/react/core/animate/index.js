@@ -1,4 +1,4 @@
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeAnimate = bridge.NativeRender.Animate;
 
 export const EAnimateEasingFunc = {

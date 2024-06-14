@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Slider : public BasicComponent {
+class Slider final : public BasicComponent {
  public:
   Slider(std::string uid, lv_obj_t* parent = nullptr);
 

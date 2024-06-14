@@ -5,7 +5,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
 function setCanvasProps(comp, newProps, oldProps) {

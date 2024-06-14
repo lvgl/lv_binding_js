@@ -15,7 +15,7 @@ WRAPPED_JS_CLOSE_COMPONENT(ProgressBar, "ProgressBar")
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsBool(argv[1])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ProgressBarClassID);
         int32_t value;
         JS_ToInt32(ctx, &value, argv[0]);
         bool use_animation = JS_ToBool(ctx, argv[1]);
@@ -28,7 +28,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ProgressBarClassID);
         int32_t start;
         JS_ToInt32(ctx, &start, argv[0]);
         int32_t end;
@@ -41,19 +41,19 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
-    SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
-    SJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    TJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
+    TJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -111,17 +111,17 @@ static void ProgressBarFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("ProgressBar %s release", th->uid);
     if (th) {
         delete static_cast<ProgressBar*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef ProgressBarClass = {
-    "ProgressBar",
+    .class_name = "ProgressBar",
     .finalizer = ProgressBarFinalizer,
 };
 
 void NativeComponentProgressBarInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ProgressBarClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ProgressBarClassID);
     JS_NewClass(JS_GetRuntime(ctx), ProgressBarClassID, &ProgressBarClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

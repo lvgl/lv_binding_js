@@ -1,5 +1,7 @@
 #include "normal.hpp"
 
+#include "engine.hpp"
+
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapNormalEventID;
@@ -8,17 +10,17 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static JSClassDef NormalEventWrapClass = {
-    "normal",
+    .class_name = "normal",
     .finalizer = EventFinalizer,
 };
 
 JSValue WrapNormalEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapNormalEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapNormalEventID);
@@ -30,11 +32,11 @@ JSValue WrapNormalEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeNormalEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapNormalEventID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WrapNormalEventID);
     JS_NewClass(JS_GetRuntime(ctx), WrapNormalEventID, &NormalEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));

@@ -5,7 +5,7 @@
 #include "native/core/basic/comp.hpp"
 #include "native/components/window/window.hpp"
 
-class Textarea : public BasicComponent {
+class Textarea final : public BasicComponent {
  public:
   bool auto_raise_keyboard = true;
 

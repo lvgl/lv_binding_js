@@ -4,8 +4,8 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Checkbox : public BasicComponent {
- public:
+class Checkbox final : public BasicComponent {
+public:
   Checkbox(std::string uid, lv_obj_t* parent = nullptr);
 
   void setText (std::string text);

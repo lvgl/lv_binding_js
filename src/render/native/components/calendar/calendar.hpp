@@ -4,9 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-
-
-class Calendar : public BasicComponent {
+class Calendar final : public BasicComponent {
  public:
   Calendar(std::string uid, lv_obj_t* parent = nullptr);
 

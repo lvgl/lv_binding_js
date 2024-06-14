@@ -7,7 +7,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeRoller = bridge.NativeRender.NativeComponents.Roller;
 
 function setRollerProps(comp, newProps, oldProps) {

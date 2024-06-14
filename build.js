@@ -1,17 +1,35 @@
 const path = require('path');
 const alias = require('esbuild-plugin-alias');
+const glob = require('glob')
 
-const entry = path.resolve(__dirname, './test/animate/2/index.jsx')
+function build(pattern){
+  const jsxfiles = new glob.Glob(pattern, {})
 
-require('esbuild').build({
-    entryPoints: [entry],
-    bundle: true,
-    platform: 'neutral',
-    external: ['path', 'fs'],
-    outfile: path.resolve(path.dirname(entry), 'index.js'),
-    plugins: [
-      alias({
-        'lvgljs-ui': path.resolve(__dirname, './src/render/react/index.js'),
-      }),
-    ],
-}).catch(() => process.exit(1))
+  for (const file of jsxfiles) {
+    const entry = path.resolve(__dirname, file)
+
+    require('esbuild')
+      .build({
+        entryPoints: [entry],
+        bundle: true,
+        platform: 'neutral',
+        external: ['path', 'fs'],
+        outfile: path.resolve(path.dirname(entry), 'index.js'),
+        plugins: [
+          alias({
+            'lvgljs-ui': path.resolve(__dirname, './src/render/react/index.js'),
+          }),
+        ],
+        define: {
+          'process.env.NODE_ENV': '"development"',
+        }
+      })
+      .then(() => console.log('Build %s complete', file))
+      .catch(() => {
+        process.exit(1);
+      });
+  }
+}
+
+build('demo/*/*.jsx')
+build('test/**/*.jsx')

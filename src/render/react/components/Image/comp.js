@@ -8,10 +8,8 @@ import {
   styleGetterProp,
 } from "../config";
 
-const fs = require("fs");
-const path = require("path");
-
-const bridge = globalThis.SJSJSBridge;
+const path = globalThis[Symbol.for('tjs.internal.modules.path')];
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeImage = bridge.NativeRender.NativeComponents.Image;
 
 async function getImageBinary(url) {
@@ -38,9 +36,9 @@ function setImageProps(comp, newProps, oldProps) {
         }
         if (!isValidUrl(url)) {
           if (!path.isAbsolute(url)) {
-            url = path.resolve(__dirname, url);
+            url = path.resolve(url);
           }
-          fs.readFile(url, { encoding: "binary" })
+          tjs.readFile(url, { encoding: "binary" })
             .then((data) => {
               comp.setImageBinary(data.buffer);
             })

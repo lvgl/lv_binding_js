@@ -6,7 +6,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeComp = bridge.NativeRender.NativeComponents.Window;
 
 function setWindowProps(comp, newProps, oldProps) {

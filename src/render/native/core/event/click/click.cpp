@@ -1,5 +1,7 @@
 #include "./click.hpp"
 
+#include "engine.hpp"
+
 static JSClassID WrapClickEventID;
 
 WRAPPED_STOPPROPAGATION
@@ -8,7 +10,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 }
 
 static JSClassDef ClickEventWrapClass = {
-    "click",
+    .class_name = "click",
     .finalizer = EventFinalizer,
 };
 
@@ -67,12 +69,12 @@ static JSValue GetPressedPointPos (JSContext* ctx, JSValueConst this_val) {
 };
 
 JSValue WrapClickEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapClickEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapClickEventID);
@@ -84,13 +86,13 @@ JSValue WrapClickEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CGETSET_DEF("pressedPoint", GetPressedPoint, NULL),
-    SJS_CGETSET_DEF("pressedPointPos", GetPressedPointPos, NULL),
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CGETSET_DEF("pressedPoint", GetPressedPoint, NULL),
+    TJS_CGETSET_DEF("pressedPointPos", GetPressedPointPos, NULL),
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeClickEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapClickEventID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WrapClickEventID);
     JS_NewClass(JS_GetRuntime(ctx), WrapClickEventID, &ClickEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));

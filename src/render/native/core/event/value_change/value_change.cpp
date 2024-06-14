@@ -1,5 +1,7 @@
 #include "value_change.hpp"
 
+#include "engine.hpp"
+
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapValueChangeEventID;
@@ -8,7 +10,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef ValueChangeEventWrapClass = {
-    "ValueChange",
+    .class_name = "ValueChange",
     .finalizer = EventFinalizer,
 };
 
@@ -84,12 +86,12 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
 };
 
 JSValue WrapValueChangeEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapValueChangeEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapValueChangeEventID);
@@ -101,13 +103,13 @@ JSValue WrapValueChangeEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CGETSET_DEF("value", GetValue, NULL),
-    SJS_CGETSET_DEF("checked", GetChecked, NULL),
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CGETSET_DEF("value", GetValue, NULL),
+    TJS_CGETSET_DEF("checked", GetChecked, NULL),
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeValueChangeEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapValueChangeEventID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WrapValueChangeEventID);
     JS_NewClass(JS_GetRuntime(ctx), WrapValueChangeEventID, &ValueChangeEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));

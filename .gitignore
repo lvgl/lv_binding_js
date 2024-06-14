@@ -1,11 +1,18 @@
-node_modules
-debug
-.vscode
-src/deps
-src/render/deps
-dev_arm/
-dev_x86/
-build_arm/test
-CMakeCache.txt
-CMakeFiles
-src/.cache
+# Editor configuration
+.vscode/
+
+# Build folders
+debug/
+build*/
+dev_*/
+**/.cache/
+
+# Generated JS files
+/test/**/*.js
+/demo/**/*.js
+
+# MacOS
+.DS_Store
+
+# NPM
+node_modules/

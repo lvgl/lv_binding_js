@@ -1,9 +1,6 @@
 import { isValidUrl } from "../../utils/helpers";
 import { BUILT_IN_SYMBOL } from "../style/symbol";
 
-const path = require("path");
-const fs = require("fs");
-
 async function getImageBinary(url) {
   const resp = await fetch(url, {});
   const imageBuffer = await resp.arrayBuffer();

@@ -15,7 +15,7 @@ static JSValue NativeCompGetDimensions(JSContext* ctx, JSValueConst this_val) {
 };
 
 static const JSCFunctionListEntry dimensions_funcs[] = {
-    SJS_CGETSET_DEF("window", NativeCompGetDimensions, NULL),
+    TJS_CGETSET_DEF("window", NativeCompGetDimensions, NULL),
 };
 
 void NativeDimensionsInit (JSContext* ctx, JSValue& ns) {

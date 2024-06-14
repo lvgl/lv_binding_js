@@ -16,7 +16,7 @@ static JSValue NativeCompSetOneLine(JSContext *ctx, JSValueConst this_val, int a
     if (argc >= 1 && JS_IsBool(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, TextareaClassID);
         bool payload = JS_ToBool(ctx, argv[0]);
-        
+
         ((Textarea*)(ref->comp))->setOneLine(payload);
         LV_LOG_USER("Textarea %s setOneLine %d", ref->uid, payload);
     }
@@ -30,7 +30,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
         s.resize(len);
-        
+
         ((Textarea*)(ref->comp))->setText(s);
         LV_LOG_USER("Textarea %s setText", ref->uid);
         JS_FreeCString(ctx, str);
@@ -45,7 +45,7 @@ static JSValue NativeCompPlaceHolder(JSContext *ctx, JSValueConst this_val, int 
         const char* str = JS_ToCStringLen(ctx, &len, argv[0]);
         std::string s = str;
         s.resize(len);
-        
+
         ((Textarea*)(ref->comp))->setPlaceHolder(s);
         LV_LOG_USER("Textarea %s setPlaceHolder", ref->uid);
         JS_FreeCString(ctx, str);
@@ -89,22 +89,22 @@ static JSValue NativeCompSetAutoKeyboard (JSContext *ctx, JSValueConst this_val,
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("setAutoKeyboard", 0, NativeCompSetAutoKeyboard),
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("setOneLine", 0, NativeCompSetOneLine),
-    SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
-    SJS_CFUNC_DEF("setPlaceHolder", 0, NativeCompPlaceHolder),
-    SJS_CFUNC_DEF("setPasswordMode", 0, NativeCompPasswordMode),
-    SJS_CFUNC_DEF("setMaxLength", 0, NativeCompSetMaxLength),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("setAutoKeyboard", 0, NativeCompSetAutoKeyboard),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("setOneLine", 0, NativeCompSetOneLine),
+    TJS_CFUNC_DEF("setText", 0, NativeCompSetText),
+    TJS_CFUNC_DEF("setPlaceHolder", 0, NativeCompPlaceHolder),
+    TJS_CFUNC_DEF("setPasswordMode", 0, NativeCompPasswordMode),
+    TJS_CFUNC_DEF("setMaxLength", 0, NativeCompSetMaxLength),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -162,17 +162,17 @@ static void TextareaFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Textarea %s release", th->uid);
     if (th) {
         delete static_cast<Textarea*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef TextareaClass = {
-    "Textarea",
+    .class_name = "Textarea",
     .finalizer = TextareaFinalizer,
 };
 
 void NativeComponentTextareaInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&TextareaClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &TextareaClassID);
     JS_NewClass(JS_GetRuntime(ctx), TextareaClassID, &TextareaClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

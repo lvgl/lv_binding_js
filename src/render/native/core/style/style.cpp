@@ -1,5 +1,5 @@
 #include "style.hpp"
-#include "sjs.h"
+#include "private.h"
 
 static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
     { "linear", &lv_anim_path_linear },

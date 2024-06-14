@@ -8,10 +8,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const fs = require("fs");
-const path = require("path");
-
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeGIF = bridge.NativeRender.NativeComponents.GIF;
 
 async function getGIFBinary(url) {

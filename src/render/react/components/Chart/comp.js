@@ -8,7 +8,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeChart = bridge.NativeRender.NativeComponents.Chart;
 
 const chartType = {
@@ -243,7 +243,8 @@ function setChartProps(comp, newProps, oldProps) {
       comp.dataset[prop.substring(5)] = newProps[prop];
     }
   });
-  comp.refresh();
+  // This gives issues: invalid call to setPointNum?
+  // comp.refresh();
 }
 
 export class ChartComp extends NativeChart {

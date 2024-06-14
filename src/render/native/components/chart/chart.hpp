@@ -10,7 +10,7 @@ typedef struct axis_data {
   std::vector<int32_t> data;
 } axis_data;
 
-class Chart : public BasicComponent {
+class Chart final : public BasicComponent {
  public:
   Chart(std::string uid, lv_obj_t* parent = nullptr);
 
@@ -39,34 +39,34 @@ class Chart : public BasicComponent {
   void setType (int32_t type);
 
   void setLeftAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   );
-  
+
   void setRightAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   );
 
   void setTopAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   );
 
   void setBottomAxisOption (
-    int32_t major_len, 
-    int32_t minor_len, 
-    int32_t major_num, 
-    int32_t minor_num, 
+    int32_t major_len,
+    int32_t minor_len,
+    int32_t major_num,
+    int32_t minor_num,
     int32_t draw_size
   );
 

@@ -27,17 +27,17 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("setText", 0, NativeCompSetText),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("setText", 0, NativeCompSetText),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -96,17 +96,17 @@ static void TextFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Text %s release", th->uid);
     if (th) {
         delete static_cast<Text*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef ViewClass = {
-    "Text",
+    .class_name = "Text",
     .finalizer = TextFinalizer,
 };
 
 void NativeComponentTextInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&TextClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &TextClassID);
     JS_NewClass(JS_GetRuntime(ctx), TextClassID, &ViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

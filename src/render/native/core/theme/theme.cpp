@@ -64,8 +64,8 @@ static JSValue ResetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSVal
 };
 
 static const JSCFunctionListEntry theme_funcs[] = {
-    SJS_CFUNC_DEF("setTheme", 1, SetTheme),
-    SJS_CFUNC_DEF("resetTheme", 0, ResetTheme),
+    TJS_CFUNC_DEF("setTheme", 1, SetTheme),
+    TJS_CFUNC_DEF("resetTheme", 0, ResetTheme),
 };
 
 void NativeThemeInit (JSContext* ctx, JSValue& ns) {

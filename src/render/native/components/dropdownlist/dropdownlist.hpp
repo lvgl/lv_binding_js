@@ -11,7 +11,7 @@ enum EArrowType {
   DROPDOWNLIST_LEFT,
 };
 
-class Dropdownlist : public BasicComponent {
+class Dropdownlist final : public BasicComponent {
  public:
   Dropdownlist(std::string uid, lv_obj_t* parent = nullptr);
 

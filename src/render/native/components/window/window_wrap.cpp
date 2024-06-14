@@ -11,14 +11,14 @@ WRAPPED_INSERT_CHILD(Window,"Window")
 WRAPPED_JS_CLOSE_COMPONENT(Window, "Window")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
-    SJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
-    SJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
+    TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -76,17 +76,17 @@ static void WindowFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Window %s release", th->uid);
     if (th) {
         delete static_cast<Window*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef WindowClass = {
-    "Window",
+    .class_name = "Window",
     .finalizer = WindowFinalizer,
 };
 
 void NativeComponentWindowInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&WindowClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WindowClassID);
     JS_NewClass(JS_GetRuntime(ctx), WindowClassID, &WindowClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

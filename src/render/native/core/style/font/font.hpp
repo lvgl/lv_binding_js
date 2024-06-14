@@ -4,8 +4,7 @@
 
 extern "C" {
     #include "lvgl.h"
-    #include "quickjs-libc.h"
-    #include "sjs.h"
+    #include "private.h"
 };
 
 static const lv_font_t builtin_font_list[] = {

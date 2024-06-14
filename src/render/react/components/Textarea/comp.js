@@ -6,7 +6,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
 function setTextareaProps(comp, newProps, oldProps) {

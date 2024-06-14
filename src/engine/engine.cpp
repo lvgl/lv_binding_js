@@ -1,121 +1,55 @@
 #include "engine.hpp"
 
-static Engine* LVEngine;
+#include <stdlib.h>
 
-SJSRuntime* Engine::qrt = nullptr;
+#include "hal/hal.hpp"
+#include "native/bootstrap/render_bootstrap.hpp"
+#include "native/components/component.hpp"
 
-static void JSRuntimeFree (int signal) {
-    if (Engine::qrt != nullptr) {
-        SJSDisableForeverLoop(Engine::qrt);
-        uv_stop(&Engine::qrt->loop);
-    }
-};
+static TJSRuntime* qrt;
 
-Engine::Engine (char* file_path) {
-    SJSRuntime* qrt = Engine::GetSJSInstance();
-    
-    qrt->foreverLoop = 1;
+static void timer_cb(uv_timer_t *handle) {
+    lv_timer_handler();
+}
 
-    qrt->ui_handler = &lv_timer_handler;
+int main(int argc, char **argv) {
+    TJS_Initialize(argc, argv);
 
-    NativeRenderInit(qrt->ctx);
+    qrt = TJS_NewRuntime();
+    CHECK_NOT_NULL(qrt);
+
+    JSValue global_obj = JS_GetGlobalObject(qrt->ctx);
+    JSValue render_sym = JS_NewSymbol(qrt->ctx, "lvgljs", TRUE);
+    JSAtom render_atom = JS_ValueToAtom(qrt->ctx, render_sym);
+    JSValue render = JS_NewObjectProto(qrt->ctx, JS_NULL);
+
+    CHECK_EQ(JS_DefinePropertyValue(qrt->ctx, global_obj, render_atom, render, JS_PROP_C_W_E), TRUE);
+
+    NativeRenderInit(qrt->ctx, render);
+
+    JS_FreeAtom(qrt->ctx, render_atom);
+    JS_FreeValue(qrt->ctx, render_sym);
+    JS_FreeValue(qrt->ctx, global_obj);
 
     hal_init();
-
     WindowInit();
 
-    char* path = (char*)malloc(PATH_MAX);
-    
-    GetBundlePath(path);
-    if (access(path, F_OK) == -1) {
-        printf("bundle.js miss, engine will stop \n");
-        JSRuntimeFree(0);
-        exit(0);
+    // create timer for rendering
+    static uv_timer_t handle;
+    handle.data = qrt;
+    if (uv_timer_init(&qrt->loop, &handle) != 0) {
+        printf("uv_timer_init failed\n");
+    } else if (uv_timer_start(&handle, timer_cb, 30, 30) != 0) {
+        printf("uv_timer_start failed\n");
     }
 
-    SJSBootStrapGlobals(qrt->ctx, path);
-    free(path);
+    int exit_code = TJS_Run(qrt);
 
-    signal(SIGINT, JSRuntimeFree);
+    TJS_FreeRuntime(qrt);
 
-    SetJSEntryPath(file_path);
-};
+    return exit_code;
+}
 
-Engine::~Engine () {
-    lv_obj_clean(lv_scr_act());
-    SJSFreeRuntime(Engine::qrt);
-    SJSClearJSApi();
-};
-
-void Engine::close () {
-    
-};
-
-void Engine::Start () {
-    SJSRunMain(Engine::qrt);
-    SJSRunLoop(Engine::qrt);
-};
-
-SJSRuntime* Engine::GetSJSInstance () {
-    if (Engine::qrt == nullptr) {
-        SJSRunOptions options;
-        SJSDefaultOptions(&options);
-        Engine::qrt = SJSNewRuntimeOptions(&options);
-    }
-    
-    return Engine::qrt;
-};
-
-void Engine::GetEngineDir (char* buf) {
-    GetProgramDir(buf);
-};
-
-void Engine::GetBuiltInLibPath (char* result) {
-    char path[1000];
-    GetEngineDir(path);
-    strcat(path, SJSPATHSEP);
-    strcat(path, "lib");
-    realpath(path, result);
-};
-
-void Engine::GetEngineAssetPath (char* buf, char* relative_path) {
-    GetEngineDir(buf);
-    strcat(buf, SJSPATHSEP);
-    strcat(buf, relative_path);
-};
-
-void Engine::GetBundlePath (char* buf) {
-    GetEngineDir(buf);
-    strcat(buf, SJSPATHSEP);
-    strcat(buf, "lib");
-    strcat(buf, SJSPATHSEP);
-    strcat(buf, "bundle.js");
-};
-
-std::string Engine::SetJSEntryPath (char* file_path) {
-    char buf[PATH_MAX]; 
-    realpath(file_path, buf);
-    js_entry_path = buf;
-
-    return js_entry_path;
-};
-
-void Engine::GetJSAssetsPath (char* buf, const char* url) {
-    strcpy(buf, js_entry_path.c_str());
-    dirname(buf);
-    strcat(buf, url);
-};
-
-int main (int argc, char *argv[]) {
-    SJSSetupArgs (argc, argv);
-    char* filePath = argv[1];
-
-    printf("engine start \n");
-
-    LVEngine = new Engine(filePath);
-    LVEngine->Start();
-    delete LVEngine;
-
-    exit(0);
-    printf("engine end \n");
-};
+TJSRuntime* GetRuntime() {
+    return qrt;
+}
