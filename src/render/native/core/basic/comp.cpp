@@ -86,7 +86,7 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     lv_style_prop_t* old_transProps = this->trans_props_map[type];
 
     this->trans_props_map[type] = (lv_style_prop_t*)malloc((len + 1) * sizeof(lv_style_prop_t));
-    
+
     JSValue props = JS_GetPropertyUint32(ctx, obj, 1);
     int32_t prop_key;
     for(int i=0; i < len; i++) {
@@ -255,6 +255,11 @@ BasicComponent::~BasicComponent () {
     if (ptr2) {
         free((lv_coord_t*)(ptr2));
     }
+
+    for(auto &style : style_map) {
+        lv_style_reset(style.second);
+    }
+
     // do not del here, remove child will do the action
     // lv_obj_del(this->instance);
 };
