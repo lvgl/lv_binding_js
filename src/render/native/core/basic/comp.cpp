@@ -234,11 +234,13 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 };
 
 BasicComponent::~BasicComponent () {
+    removeEventListener(0);
+
     comp_map.erase(this->uid);
 
     const lv_coord_t* ptr1 = this->grid_row_desc;
     const lv_coord_t* ptr2 = this->grid_column_desc;
-    
+
     for(auto& desc : this->image_desc_map) {
         if (desc.second != nullptr) {
             const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;
