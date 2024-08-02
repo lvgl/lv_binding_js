@@ -1,5 +1,4 @@
 #include "arc.hpp"
-#include "src/widgets/lv_arc.h"
 
 Arc::Arc(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_ARC;
@@ -8,7 +7,7 @@ Arc::Arc(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->instance = lv_arc_create(parent != nullptr ? parent : GetWindowInstance());
     lv_group_add_obj(lv_group_get_default(), this->instance);
 
-    lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_remove_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
@@ -74,10 +73,10 @@ void Arc::setArcImage (uint8_t* buf, size_t buf_len, int32_t style_type, std::st
             uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
             if (img_data != nullptr) {
                 img_desc->data = img_data;
-                lv_style_set_arc_img_src(style, img_desc);
+                lv_style_set_arc_image_src(style, img_desc);
             }
         } else {
-            lv_style_set_arc_img_src(style, NULL);
+            lv_style_set_arc_image_src(style, NULL);
         }
 
         this->image_desc_map[style_type] = img_desc;
@@ -94,7 +93,7 @@ void Arc::setArcImage (uint8_t* buf, size_t buf_len, int32_t style_type, std::st
         }
         this->symbol_map[style_type] = symbol;
 
-        lv_style_set_arc_img_src(style, this->symbol_map[style_type].c_str());
+        lv_style_set_arc_image_src(style, this->symbol_map[style_type].c_str());
     }
 
     lv_obj_invalidate(this->instance);

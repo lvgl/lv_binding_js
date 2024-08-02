@@ -9,7 +9,7 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_group_add_obj(lv_group_get_default(), this->instance);
 
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
-    lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_remove_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 
@@ -85,7 +85,7 @@ void Chart::setLeftAxisData (std::vector<axis_data>& data) {
     for (i=0; i<data.size(); i++) {
         item = data[i];
         for (j=0; j<item.data.size(); j++) {
-            this->left_axis[i]->y_points[j] = (lv_coord_t)item.data[j];
+            lv_chart_set_value_by_id(this->instance, this->left_axis[i], j, item.data[j]);
         }
     }
 };
@@ -111,7 +111,7 @@ void Chart::setRightAxisData (std::vector<axis_data>& data) {
     for (i=0; i<data.size(); i++) {
         item = data[i];
         for (j=0; j<item.data.size(); j++) {
-            this->right_axis[i]->y_points[j] = (lv_coord_t)item.data[j];
+            lv_chart_set_value_by_id(this->instance, this->right_axis[i], j, item.data[j]);
         }
     }
 };
@@ -209,12 +209,8 @@ void Chart::setScatterData (std::vector<axis_data>& data) {
 
     for (i=0; i<data.size(); i++) {
         item = data[i];
-        for (j=0; j<item.data.size(); j++) {
-            if (j % 2 == 0) {
-                this->left_axis[i]->x_points[j / 2] = (lv_coord_t)item.data[j];
-            } else {
-                this->left_axis[i]->y_points[(j - 1) / 2] = (lv_coord_t)item.data[j];
-            }
+        for (j=0; j<item.data.size(); j+=2) {
+            lv_chart_set_value_by_id2(this->instance, this->left_axis[i], j / 2, item.data[j], item.data[j + 1]);
         }
     }
 };

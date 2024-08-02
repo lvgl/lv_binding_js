@@ -14,11 +14,11 @@ void hal_init(void) {
     lv_indev_set_group(keyboard, lv_group_get_default());
 
     lv_theme_t * th = lv_theme_default_init(disp, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED), LV_THEME_DEFAULT_DARK, LV_FONT_DEFAULT);
-    lv_disp_set_theme(disp, th);
+    lv_display_set_theme(disp, th);
 
     /*Set a cursor for the mouse*/
-    LV_IMG_DECLARE(mouse_cursor_icon); /*Declare the image file.*/
-    lv_obj_t * cursor_obj = lv_img_create(lv_scr_act()); /*Create an image object for the cursor */
-    lv_img_set_src(cursor_obj, &mouse_cursor_icon);           /*Set the image source*/
+    LV_IMAGE_DECLARE(mouse_cursor_icon); /*Declare the image file.*/
+    lv_obj_t * cursor_obj = lv_image_create(lv_screen_active()); /*Create an image object for the cursor */
+    lv_image_set_src(cursor_obj, &mouse_cursor_icon);           /*Set the image source*/
     lv_indev_set_cursor(mouse, cursor_obj);             /*Connect the image  object to the driver*/
 }

@@ -12,10 +12,10 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
     ctx = qrt->ctx;
     std::map<lv_event_code_t, EventWrapFunc>::iterator iter = WrapEventDict.find(eventType);
 
-    struct _lv_obj_t *target = event->target;
-    struct _lv_obj_t *current_target = event->current_target;
-    BasicComponent* target_instance = static_cast<BasicComponent*>(target->user_data);
-    BasicComponent* current_target_instance = static_cast<BasicComponent*>(current_target->user_data);
+    lv_obj_t *target = (lv_obj_t*) lv_event_get_target(event);
+    lv_obj_t *current_target = (lv_obj_t*) lv_event_get_current_target(event);
+    BasicComponent* target_instance = static_cast<BasicComponent*>(lv_obj_get_user_data(target));
+    BasicComponent* current_target_instance = static_cast<BasicComponent*>(lv_obj_get_user_data(current_target));
     std::string target_uid;
     std::string current_target_uid;
     if (target_instance) {

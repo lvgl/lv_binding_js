@@ -25,7 +25,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
         JSValue second_value;
         int32_t first;
         int32_t second;
-        std::vector<lv_point_t> points;
+        std::vector<lv_point_precise_t> points;
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
@@ -37,7 +37,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
                     JS_ToInt32(ctx, &second, second_value);
 
                     num += 1;
-                    points.push_back({ .x = static_cast<lv_coord_t>(first), .y = static_cast<lv_coord_t>(second) });
+                    points.push_back({ .x = static_cast<lv_value_precise_t>(first), .y = static_cast<lv_value_precise_t>(second) });
                 }
 
                 JS_FreeValue(ctx, first_value);

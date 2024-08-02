@@ -15,9 +15,9 @@ void hal_init () {
 
 #ifdef SHOW_CURSOR
     /* Set a cursor for the mouse */
-    LV_IMG_DECLARE(mouse_cursor_icon);                  /* Declare the image file */
-    lv_obj_t *cursor_obj = lv_img_create(lv_scr_act()); /* Create an image object for the cursor */
-    lv_img_set_src(cursor_obj, &mouse_cursor_icon);     /* Set the image source */
+    LV_IMAGE_DECLARE(mouse_cursor_icon);                  /* Declare the image file */
+    lv_obj_t *cursor_obj = lv_image_create(lv_screen_active()); /* Create an image object for the cursor */
+    lv_image_set_src(cursor_obj, &mouse_cursor_icon);     /* Set the image source */
     lv_indev_set_cursor(mouse, cursor_obj);          /* Connect the image  object to the driver */
 #endif
 };
