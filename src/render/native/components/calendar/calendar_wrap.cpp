@@ -70,6 +70,7 @@ static JSValue NativeCompSetToday (JSContext *ctx, JSValueConst this_val, int ar
         ((Calendar*)(ref->comp))->setToday(year, month, day);
         LV_LOG_USER("Calendar %s setToday", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -84,6 +85,7 @@ static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, i
         ((Calendar*)(ref->comp))->setShownMonth(year, month);
         LV_LOG_USER("Calendar %s setShownMonth", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {

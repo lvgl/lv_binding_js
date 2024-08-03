@@ -233,6 +233,7 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
 
         lv_anim_start(animate);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
