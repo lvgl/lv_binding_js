@@ -1,49 +1,25 @@
-# Ubuntu Build Guide
+# Simulator Build Guide
+This guide gives an overview on how to build lvgljs running with SDL simulator.
+This should work the same for both Linux and macOS.
 
-This guide describes how to build lvgljs in Ubuntu System and running with SDL simulator, target architectures is x86
+Take a look at the [txiki readme](https://github.com/saghul/txiki.js#building)
+for the required dependencies.
+You will need to install them, since we depend on txiki for the JavaScript runtime.
 
-## Preparation
+Besides that you will need to install sdl2 and [Node.js](https://nodejs.org/en/download/package-manager)
 
-### 1. OpenSSL
-```bash
-sudo apt-get install openssl
+> [!TIP]
+> On some distributions, like Ubuntu, you might need to install the `libsdl2-dev` package as well
 
-sudo apt-get install libssl-dev
+The [`Makefile`](../../Makefile) of this repository contains some useful shortcuts:
+- `make setup` will initialize the git submodules and install the necessary npm packages
+- `make demo` will build the simulator and run the widgets demo
+
+## Manual approach
+You can build the simulator with `make simulator`, which will then be available in the `build/` directory.
+
+Run `node build.js` to create `*.js` files from the `*.jsx` files in the `test/` and `demo/` directories.
+You can then run any of them with:
+```sh
+./build/lvgljs run test/button/2/index.js
 ```
-
-### 2. Curl
-```bash
-sudo apt install curl
-```
-
-### 3. SDL2
-```bash
-sudo apt-get install libsdl2-2.0
-
-sudo apt-get install libsdl2-dev
-```
-
-### 4. CMAKE
-```bash
-sudo apt install cmake
-```
-
-### 5. Git SubModules
-run following code in lvgljs project
-```bash
-git submodule update --init --recursive
-```
-
-## Build lvgljs
-After preparation, you are ready to compile. Run the following in your terminal to compile Bitcoin Core
-```bash
-make dev-x86
-```
-
-## Running lvgljs
-should now be available at ./dev_x86/lvgljs and ./dev_x86/lib, run the following in your terminal to run demo in sdl2 simulator
-
-```bash
-./dev_x86/lvgljs ./demo/widgets/index.js
-```
-

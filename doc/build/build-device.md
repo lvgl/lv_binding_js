@@ -1,62 +1,37 @@
-# Ubuntu Build Guide
+# Target Build Guide
+This guide gives an overview on how to build lvgljs for an embedded Linux target.
 
-This guide describes how to build lvgljs in Ubuntu System and running with arm MCU
+This is not too different from building for a regular Linux target,
+besides that you will probably need to cross-compile and won't want to use the sdl2 simulator.
 
-## Preparation
+When building for a target device, the [*device HAL*](../../src/engine/hal/device) is selected.\
+Currently it is not possible to configure the properties of the device and
+it will by default use a screen size of 1024x600 together with the framebuffer device.
 
-### 1. Arm Cross Compiler
-The first step is to make sure you have arm cross compiler tools like arm-linux-gnueabihf-
+You will most likely need to tweak the screen size for your device,
+and can also opt to use a different LVGL display like DRM or
+[wayland](https://github.com/lvgl/lv_drivers/blob/master/wayland/README.md).
 
-### 2. OpenSSL
-After run following script, you will see libcrypto.so, libssl.so, libssl.so.3, libcrypto.so.3 in ./build_arm, make sure copy them in your device file system
+The way you cross-compile applications for your target will depend on your use-case,
+which is out-of-scope for this guide.
 
-```bash
-git clone https://github.com/openssl/openssl
+You will have to make sure that:
+- your sysroot has all the necessary dependencies.\
+Take a look at the [txiki readme](https://github.com/saghul/txiki.js#building) for a list of the dependencies
+- you provide your own libffi library, since building it together with txiki doesn't work when cross-compiling at this moment.\
+Do this by passing `-DUSE_EXTERNAL_FFI=ON` to cmake.
 
-make clean
+You can now cross-compile like normal.
+For instance, if you're using Yocto, you source your SDK environment and then do
 
-./Configure linux-armv4 --cross-compile-prefix=arm-linux-gnueabihf- --prefix=$(pwd)/build_arm
-
-make install
+```sh
+cmake -B build -DUSE_EXTERNAL_FFI=ON
+cmake --build build
 ```
 
-### 3. Curl
-After run following script, you will see libcurl.so libcurl.so.4 libcurl.so.4.8.0 in ./build_arm, make sure copy them in your device file system
+You can then copy `build/lvgljs` to your target device together with one of the demo's
+like `demo/widgets` and try to run it there:
 
-```bash
-autoreconf
-
-./configure --prefix=$PWD/build_arm/ --host=arm --enable-shared --enable-static --with-openssl=openssl_path/build_arm/ CC=arm-linux-gnueabihf-gcc CXX=arm-linux-gnueabihf-g++
-
-make
-
-make install
+```sh
+./lvgljs run demo/widgets/index.js
 ```
-
-### 4. CMAKE
-```bash
-sudo apt install cmake
-```
-
-### 5. Git SubModules
-run following code in lvgljs project
-```bash
-git submodule update --init --recursive
-```
-
-## Build lvgljs
-1. change the CMAKE_CXX_COMPILER && CMAKE_C_COMPILER path in Makefile
-2. change the CMAKE_CURL_LIB, CMAKE_CURL_INCLUDE_DIRS, CMAKE_SSL_LIB, CMAKE_CRYPTO_LIB in Makefile
-3. lvgl configuration file lv_conf.h and lv_drv_conf are located in src/deps, edit them to suit your device
-4. modify displays, device, custom_tick in ./src/engine/hal/device
-```bash
-make dev-arm
-```
-
-## Running lvgljs
-should now be available at ./dev_arm/lvgljs and ./dev_arm/lib, run the following script in your device
-
-```bash
-./dev_x86/lvgljs ./demo/widgets/index.js
-```
-
