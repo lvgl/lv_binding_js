@@ -7,8 +7,8 @@ import {
   setStyle,
   styleGetterProp,
 } from "../config";
+import path from 'tjs:path';
 
-const path = globalThis[Symbol.for('tjs.internal.modules.path')];
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeImage = bridge.NativeRender.NativeComponents.Image;
 

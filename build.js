@@ -13,7 +13,7 @@ function build(pattern){
         entryPoints: [entry],
         bundle: true,
         platform: 'neutral',
-        external: ['path', 'fs'],
+        external: ['tjs:path'],
         outfile: path.resolve(path.dirname(entry), 'index.js'),
         plugins: [
           alias({
