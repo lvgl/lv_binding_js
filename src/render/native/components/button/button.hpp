@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Button : public BasicComponent {
+class Button final : public BasicComponent {
  public:
   Button(std::string uid, lv_obj_t* parent = nullptr);
 };

@@ -15,9 +15,10 @@ WRAPPED_JS_CLOSE_COMPONENT(Switch, "Switch")
 
 static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-        
+
         ((Switch*)(parent->comp))->removeChild((void*)(child->comp));
         LV_LOG_USER("Switch %s remove child %s", parent->uid, child->uid);
     }
@@ -26,9 +27,10 @@ static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
-        COMP_REF* child = (COMP_REF*)JS_GetOpaque3(argv[0]);
+        JSClassID _class_id;
+        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-        
+
         ((Switch*)(parent->comp))->appendChild((void*)(child->comp));
         LV_LOG_USER("Switch %s append child %s", parent->uid, child->uid);
     }
@@ -37,10 +39,10 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
 
 static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
-        
+
         ((Switch*)(ref->comp))->setValue(value);
         LV_LOG_USER("Switch %s set value", ref->uid);
     }
@@ -49,10 +51,10 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
 
 static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
         bool value;
         value = JS_ToBool(ctx, argv[0]);
-        
+
         ((Switch*)(ref->comp))->setDisabled(value);
         LV_LOG_USER("Switch %s setDisabled", ref->uid);
     }
@@ -60,19 +62,19 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_CFUNC_DEF("setChecked", 0, NativeCompSetChecked),
-    SJS_CFUNC_DEF("setDisabled", 0, NativeCompSetDisabled),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    TJS_CFUNC_DEF("setChecked", 0, NativeCompSetChecked),
+    TJS_CFUNC_DEF("setDisabled", 0, NativeCompSetDisabled),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -130,17 +132,17 @@ static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Switch %s release", th->uid);
     if (th) {
         delete static_cast<Switch*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef ViewClass = {
-    "Switch",
+    .class_name = "Switch",
     .finalizer = ViewFinalizer,
 };
 
 void NativeComponentSwitchInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&SwitchClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &SwitchClassID);
     JS_NewClass(JS_GetRuntime(ctx), SwitchClassID, &ViewClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

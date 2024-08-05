@@ -15,7 +15,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Line, "Line")
 
 static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, LineClassID);
 
         int32_t len;
         int32_t num = 0;
@@ -27,7 +27,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
         int32_t second;
         std::vector<lv_point_t> points;
 
-        for (int i=0; i<len; i++) {                                                                                     
+        for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
             if (JS_IsArray(ctx, item)) {
                 first_value = JS_GetPropertyUint32(ctx, item, 0);
@@ -40,12 +40,12 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
                     points.push_back({ .x = static_cast<lv_coord_t>(first), .y = static_cast<lv_coord_t>(second) });
                 }
 
-                JS_FreeValue(ctx, first_value);                                                                                   
-                JS_FreeValue(ctx, second_value);                                                                                   
-            }                                                         
-            JS_FreeValue(ctx, item);                                                                                   
+                JS_FreeValue(ctx, first_value);
+                JS_FreeValue(ctx, second_value);
+            }
+            JS_FreeValue(ctx, item);
         }
-        
+
         ((Line*)(ref->comp))->setPoints(points, num);
         LV_LOG_USER("Line %s setPoints", ref->uid);
     }
@@ -53,17 +53,17 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("setPoints", 0, NativeCompSetPoints),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("setPoints", 0, NativeCompSetPoints),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -121,17 +121,17 @@ static void LineFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Line %s release", th->uid);
     if (th) {
         delete static_cast<Line*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef LineClass = {
-    "Line",
+    .class_name = "Line",
     .finalizer = LineFinalizer,
 };
 
 void NativeComponentLineInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&LineClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &LineClassID);
     JS_NewClass(JS_GetRuntime(ctx), LineClassID, &LineClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

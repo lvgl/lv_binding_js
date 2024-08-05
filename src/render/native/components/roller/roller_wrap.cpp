@@ -14,7 +14,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         std::vector<std::string> items;
 
         int32_t item_len;
@@ -25,16 +25,16 @@ static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int a
         JS_ToInt32(ctx, &item_len, argv[1]);
         bool mode = JS_ToBool(ctx, argv[2]);
 
-        for (int i=0; i<item_len; i++) {                                                                                     
+        for (int i=0; i<item_len; i++) {
             value = JS_GetPropertyUint32(ctx, argv[0], i);
             if (JS_IsString(value)) {
-                ori_str = JS_ToCStringLen(ctx, &key_len, value);                                                             
-                key = ori_str;                                                                                              
-                JS_FreeCString(ctx, ori_str);                                                                               
-                key.resize(key_len);                                                                                         
+                ori_str = JS_ToCStringLen(ctx, &key_len, value);
+                key = ori_str;
+                JS_FreeCString(ctx, ori_str);
+                key.resize(key_len);
                 items.push_back(key);
-            }                                                         
-            JS_FreeValue(ctx, value);                                                                                   
+            }
+            JS_FreeValue(ctx, value);
         }
 
         ((Roller*)(ref->comp))->setOptions(items, mode);
@@ -45,7 +45,7 @@ static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int a
 
 static JSValue NativeCompSetSelectIndex(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         int32_t index;
         JS_ToInt32(ctx, &index, argv[0]);
 
@@ -57,7 +57,7 @@ static JSValue NativeCompSetSelectIndex(JSContext *ctx, JSValueConst this_val, i
 
 static JSValue NativeCompSetVisibleRowCount(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         int32_t count;
         JS_ToInt32(ctx, &count, argv[0]);
 
@@ -68,19 +68,19 @@ static JSValue NativeCompSetVisibleRowCount(JSContext *ctx, JSValueConst this_va
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("setOptions", 0, NativeCompSetOptions),
-    SJS_CFUNC_DEF("setSelectIndex", 0, NativeCompSetSelectIndex),
-    SJS_CFUNC_DEF("setVisibleRowCount", 0, NativeCompSetVisibleRowCount),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("setOptions", 0, NativeCompSetOptions),
+    TJS_CFUNC_DEF("setSelectIndex", 0, NativeCompSetSelectIndex),
+    TJS_CFUNC_DEF("setVisibleRowCount", 0, NativeCompSetVisibleRowCount),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -138,17 +138,17 @@ static void RollerFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Roller %s release", th->uid);
     if (th) {
         delete static_cast<Roller*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef RollerClass = {
-    "Roller",
+    .class_name = "Roller",
     .finalizer = RollerFinalizer,
 };
 
 void NativeComponentRollerInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&RollerClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &RollerClassID);
     JS_NewClass(JS_GetRuntime(ctx), RollerClassID, &RollerClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

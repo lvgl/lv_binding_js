@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Text : public BasicComponent {
+class Text final : public BasicComponent {
  public:
   Text(std::string uid, lv_obj_t* parent = nullptr);
 

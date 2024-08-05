@@ -6,7 +6,7 @@
 
 extern "C" {
     #include "lvgl.h"
-    #include "quickjs.h"
+    #include "private.h"
 };
 
 enum ECOMP_TYPE {

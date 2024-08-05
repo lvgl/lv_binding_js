@@ -7,7 +7,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeSlider = bridge.NativeRender.NativeComponents.Slider;
 
 function setSliderProps(comp, newProps, oldProps) {

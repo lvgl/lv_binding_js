@@ -1,12 +1,14 @@
 #include "event.hpp"
 
+#include "engine.hpp"
+
 void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSValue argv[4];
     JSContext* ctx;
     int argc = 4;
-    
-    qrt = Engine::GetSJSInstance();
+
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     std::map<lv_event_code_t, EventWrapFunc>::iterator iter = WrapEventDict.find(eventType);
 
@@ -40,7 +42,7 @@ void FireEventToJS(lv_event_t* event, std::string uid, lv_event_code_t eventType
         JSValue fire = JS_GetPropertyStr(ctx, globalObj, "FIRE_QEVENT_CALLBACK");
         JSValue ret = JS_Call(ctx, fire, JS_NULL, argc, argv);
         if (JS_IsException(ret))
-            SJSDumpError(ctx);
+            tjs_dump_error(ctx);
         JS_FreeValue(ctx, globalObj);
         JS_FreeValue(ctx, fire);
         JS_FreeValue(ctx, ret);

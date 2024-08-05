@@ -91,7 +91,7 @@ export default function App () {
                             <View style={style.list_item_wrapper}>
                                 <Image
                                     style={style.list_item_image1}
-                                    src="./assets/clothes.png"
+                                    src="./demo/widgets/assets/clothes.png"
                                 />
                                 <Text style={style.list_item_text1}>{item.name}</Text>
                                 <Text style={style.list_item_text2}>{item.category}</Text>

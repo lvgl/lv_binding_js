@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Mask : public BasicComponent {
+class Mask final : public BasicComponent {
  public:
   Mask(std::string uid, lv_obj_t* parent = nullptr);
 

@@ -22,7 +22,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Arc, "Arc")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t min;
         int32_t max;
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -39,7 +39,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsNumber(argv[0])) {
-        COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
+        COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t value;
         JS_ToInt32(ctx, &value, argv[0]);
 
@@ -51,7 +51,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 
 static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
   if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {
-    COMP_REF* s = (COMP_REF*)JS_GetOpaque3(this_val);
+    COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
     size_t size;
     int32_t type;
     int32_t image_bytelength = 0;
@@ -79,27 +79,27 @@ static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int 
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
-    SJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
-    SJS_CFUNC_DEF("setStartAngle", 0, NativeCompSetStartAngle),
-    SJS_CFUNC_DEF("setEndAngle", 0, NativeCompSetEndAngle),
-    SJS_CFUNC_DEF("setBackgroundStartAngle", 0, NativeCompSetBackgroundStartAngle),
-    SJS_CFUNC_DEF("setBackgroundEndAngle", 0, NativeCompSetBackgroundEndAngle),
-    SJS_CFUNC_DEF("setRotation", 0, NativeCompSetRotation),
-    SJS_CFUNC_DEF("setMode", 0, NativeCompSetMode),
-    SJS_CFUNC_DEF("setChangeRate", 0, NativeCompSetChangeRate),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
-    SJS_CFUNC_DEF("setArcImage", 0, NativeCompSetArcImage),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
+    TJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
+    TJS_CFUNC_DEF("setStartAngle", 0, NativeCompSetStartAngle),
+    TJS_CFUNC_DEF("setEndAngle", 0, NativeCompSetEndAngle),
+    TJS_CFUNC_DEF("setBackgroundStartAngle", 0, NativeCompSetBackgroundStartAngle),
+    TJS_CFUNC_DEF("setBackgroundEndAngle", 0, NativeCompSetBackgroundEndAngle),
+    TJS_CFUNC_DEF("setRotation", 0, NativeCompSetRotation),
+    TJS_CFUNC_DEF("setMode", 0, NativeCompSetMode),
+    TJS_CFUNC_DEF("setChangeRate", 0, NativeCompSetChangeRate),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    TJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    TJS_CFUNC_DEF("setArcImage", 0, NativeCompSetArcImage),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -157,17 +157,17 @@ static void ArcFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Arc %s release", th->uid);
     if (th) {
         delete static_cast<Arc*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef ArcClass = {
-    "Arc",
+    .class_name = "Arc",
     .finalizer = ArcFinalizer,
 };
 
 void NativeComponentArcInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ArcClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ArcClassID);
     JS_NewClass(JS_GetRuntime(ctx), ArcClassID, &ArcClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

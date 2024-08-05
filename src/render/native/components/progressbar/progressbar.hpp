@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class ProgressBar : public BasicComponent {
+class ProgressBar final : public BasicComponent {
  public:
   ProgressBar(std::string uid, lv_obj_t* parent = nullptr);
 

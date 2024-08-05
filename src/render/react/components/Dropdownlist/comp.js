@@ -7,7 +7,7 @@ import {
   styleGetterProp,
 } from "../config";
 
-const bridge = globalThis.SJSJSBridge;
+const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist;
 
 function setListProps(comp, newProps, oldProps) {

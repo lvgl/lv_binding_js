@@ -6,8 +6,8 @@
 
 extern "C" {
     #include "lvgl.h"
-    #include "quickjs-libc.h"
-    #include "sjs.h"
+
+    #include "private.h"
 };
 
 void NativeRenderUtilInit (JSContext* ctx, JSValue& ns);

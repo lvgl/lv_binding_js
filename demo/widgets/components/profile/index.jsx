@@ -17,7 +17,7 @@ export default function App () {
     return (
         <View style={style.profileWrapper}>
             <View style={style.panel1}>
-                <Image style={style.panel1_avatar} src="./assets/avatar.png" />
+                <Image style={style.panel1_avatar} src="./demo/widgets/assets/avatar.png" />
                 <Text style={style.panel1_name}>Elena Smith</Text>
                 <Text style={style.panel1_desc}>This is a short description of me. Take a look at my profile!</Text>
                 <Text style={style.panel1_email_icon}>{BUILT_IN_SYMBOL.envelope}</Text>

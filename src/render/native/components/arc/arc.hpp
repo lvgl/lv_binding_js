@@ -4,7 +4,7 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
-class Arc : public BasicComponent {
+class Arc final : public BasicComponent {
  public:
   Arc(std::string uid, lv_obj_t* parent = nullptr);
 

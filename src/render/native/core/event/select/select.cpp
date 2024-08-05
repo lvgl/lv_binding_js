@@ -1,5 +1,7 @@
 #include "./select.hpp"
 
+#include "engine.hpp"
+
 WRAPPED_STOPPROPAGATION
 
 static JSClassID WrapSelectEventID;
@@ -8,7 +10,7 @@ static void EventFinalizer(JSRuntime *rt, JSValue val) {
 };
 
 static JSClassDef SelectEventWrapClass = {
-    "Select",
+    .class_name = "Select",
     .finalizer = EventFinalizer,
 };
 
@@ -31,12 +33,12 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
 };
 
 JSValue WrapSelectEvent (lv_event_t* e, std::string uid) {
-    SJSRuntime* qrt;
+    TJSRuntime* qrt;
     JSContext* ctx;
     JSValue proto;
     JSValue obj;
 
-    qrt = Engine::GetSJSInstance();
+    qrt = GetRuntime();
     ctx = qrt->ctx;
     proto = JS_GetClassProto(ctx, WrapSelectEventID);
     obj = JS_NewObjectProtoClass(ctx, proto, WrapSelectEventID);
@@ -48,12 +50,12 @@ JSValue WrapSelectEvent (lv_event_t* e, std::string uid) {
 };
 
 static const JSCFunctionListEntry component_proto_funcs[] = {
-    SJS_CGETSET_DEF("value", GetValue, NULL),
-    SJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
+    TJS_CGETSET_DEF("value", GetValue, NULL),
+    TJS_CFUNC_DEF("stopPropagation", 0, NativeEventStopPropagation)
 };
 
 void NativeSelectEventWrapInit (JSContext* ctx) {
-    JS_NewClassID(&WrapSelectEventID);
+    JS_NewClassID(JS_GetRuntime(ctx), &WrapSelectEventID);
     JS_NewClass(JS_GetRuntime(ctx), WrapSelectEventID, &SelectEventWrapClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, component_proto_funcs, countof(component_proto_funcs));

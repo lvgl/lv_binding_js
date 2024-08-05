@@ -1,5 +1,7 @@
 #include "animate.hpp"
 
+#include "engine.hpp"
+
 static JSClassID AnimateClassID;
 
 static MemoryPool<sizeof(lv_anim_t), 30> animate_pool;
@@ -21,9 +23,9 @@ static void Animate_Exec_Callback (void* opaque, int32_t v) {
     int argc = 2;
     ANIMATE_REF* ref = static_cast<ANIMATE_REF*>(opaque);
 
-    SJSRuntime* qrt = Engine::GetSJSInstance();
+    TJSRuntime* qrt = GetRuntime();
     JSContext* ctx = qrt->ctx;
-    
+
     argv[0] = JS_NewInt32(ctx, ref->exec_uid);
     argv[1] = JS_NewInt32(ctx, v);
     JSValue globalObj = JS_GetGlobalObject(ctx);
@@ -42,9 +44,9 @@ static void Animate_Start_Callback (lv_anim_t* a) {
     int argc = 1;
     ANIMATE_REF* ref = static_cast<ANIMATE_REF*>(a->var);
 
-    SJSRuntime* qrt = Engine::GetSJSInstance();
+    TJSRuntime* qrt = GetRuntime();
     JSContext* ctx = qrt->ctx;
-    
+
     argv[0] = JS_NewInt32(ctx, ref->startcb_uid);
     JSValue globalObj = JS_GetGlobalObject(ctx);
     JSValue fire = JS_GetPropertyStr(ctx, globalObj, "ANIMIATE_CALLBACK");
@@ -61,9 +63,9 @@ static void Animate_Ready_Callback (lv_anim_t* a) {
     int argc = 1;
     ANIMATE_REF* ref = static_cast<ANIMATE_REF*>(a->var);
 
-    SJSRuntime* qrt = Engine::GetSJSInstance();
+    TJSRuntime* qrt = GetRuntime();
     JSContext* ctx = qrt->ctx;
-    
+
     argv[0] = JS_NewInt32(ctx, ref->readycb_uid);
     JSValue globalObj = JS_GetGlobalObject(ctx);
     JSValue fire = JS_GetPropertyStr(ctx, globalObj, "ANIMIATE_CALLBACK");
@@ -231,10 +233,11 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
 
         lv_anim_start(animate);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("start", 0, NativeAnimateStart),
+    TJS_CFUNC_DEF("start", 0, NativeAnimateStart),
 };
 
 static JSValue AnimateConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -256,7 +259,7 @@ static JSValue AnimateConstructor(JSContext *ctx, JSValueConst new_target, int a
         goto fail;
     s = (ANIMATE_REF*)js_mallocz(ctx, sizeof(*s));
     JS_SetOpaque(obj, s);
-    
+
     LV_LOG_USER("Animate created");
     return obj;
  fail:
@@ -273,12 +276,12 @@ static void AnimateFinalizer(JSRuntime *rt, JSValue val) {
             animate_pool.deallocate(static_cast<void*>(animate));
             animate_map.erase(ref->uid);
         }
-        free(ref);
+        js_free_rt(rt, ref);
     }
 };
 
 static JSClassDef AnimateClass = {
-    "Animate",
+    .class_name = "Animate",
     .finalizer = AnimateFinalizer,
 };
 
@@ -286,7 +289,7 @@ static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 void NativeAnimateInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&AnimateClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &AnimateClassID);
     JS_NewClass(JS_GetRuntime(ctx), AnimateClassID, &AnimateClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));

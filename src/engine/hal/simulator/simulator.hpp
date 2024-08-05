@@ -1,8 +1,8 @@
 #pragma once
 
 #include <SDL2/SDL.h>
-#include "deps/lvgl/lvgl.h"
-#include "deps/lv_drivers/sdl/sdl.h"
+#include "lvgl/lvgl.h"
+#include "lv_drivers/sdl/sdl.h"
 
 static void* buf;
 

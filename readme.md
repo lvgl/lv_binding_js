@@ -1,32 +1,29 @@
 # lvgljs
-
-Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virtual DOM concept to manipulate lvgl UI components, providing a familiar experience to users.
+Write [LVGL](https://github.com/lvgl/lvgl) with JavaScript.
+It uses React's virtual DOM concept to manipulate LVGL UI components, providing a familiar experience to users.
 
 **Code**
-
 <img src="./demo/screenshoot/code.png">
 
-
-**Code Runing on Real Device**
+**Running on a real device**
 <img src="./demo/screenshoot/real_device.jpg" style="transform: rotate(270deg)">
 
 ## Table of Contents
-  - [Features](#features)
-  - [Demo](#demo)
-  - [Building](#building)
-  - [Components](#components)
-  - [Font](#font)
-  - [Animation](#animation)
-  - [Style](#style)
-  - [JSAPI](#jsapi)
-  - [Thanks](#thanks)
-
+- [Features](#features)
+- [Demo](#demo)
+- [Building](#building)
+- [Components](#components)
+- [Font](#font)
+- [Animation](#animation)
+- [Style](#style)
+- [JSAPI](#jsapi)
+- [Thanks](#thanks)
 
 ## Features
 - Support all lvgl built-in components
 - Fully suport lvgl flex and grid style
-- support most lvgl style，just write like html5 css
-- support dynamic load image
+- Support most lvgl style，just write like html5 css
+- Support dynamic load image
 - Fully support lvgl animation
 
 ## Demo
@@ -36,18 +33,17 @@ Write [lvgl](https://github.com/lvgl/lvgl) with JavaScript. It uses React's virt
 ### Calculator
 ![sdl_simulator](./demo/calculator/screenshoot/sdl_simulator.gif)
 
-
-## building
-The following are developer notes on how to build lvgljs on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
+## Building
+The following are developer notes on how to build lvgljs.\
+It is recommended that you first work with the simulator and only then try
+to compile for a target device.
 
 ### lvgljs
-
-- [ubuntu build notes for sdl simulator](./doc/build/build-ubuntu-x86-simualtor.md)
-- [macos build notes for sdl simulator](./doc/build/build-macos-simulator.md)
-- [ubuntu build notes for platform arm](./doc/build/build-ubuntu-arm.md)
+- [Simulator build notes](./doc/build/build-simulator.md)
+- [Device build notes](./doc/build/build-device.md)
 
 ### JS Bundle
-- [JS Bundle build Notes](./doc/build/js-bundle.md)
+- [JS Bundle build notes](./doc/build/js-bundle.md)
 
 ## Components
 - [View](./doc/component/View.md)
@@ -95,11 +91,10 @@ The following are developer notes on how to build lvgljs on your native platform
 - [dimension](./doc/jsapi/dimension.md)
 
 ## Thanks
-lvgljs depends on following excellent work
+lvgljs depends on following excellent work:
 
-[lvgl](https://github.com/lvgl/lvgl): Create beautiful UIs for any MCU, MPU and display type
-[QuickJS](https://bellard.org/quickjs/): JavaScript engine
-[libuv](https://github.com/libuv/libuv): platform abstraction layer
-[curl](https://github.com/curl/curl): HTTP client
-[txiki.js](https://github.com/saghul/txiki.js): Tiny JavaScript runtime
-
+- [lvgl](https://github.com/lvgl/lvgl): Create beautiful UIs for any MCU, MPU and display type
+- [txiki.js](https://github.com/saghul/txiki.js): Tiny JavaScript runtime
+    - [QuickJS](https://github.com/quickjs-ng/quickjs/): JavaScript engine
+    - [libuv](https://github.com/libuv/libuv): platform abstraction layer
+    - [curl](https://github.com/curl/curl): HTTP client

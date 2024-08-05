@@ -70,8 +70,6 @@ static JSValue NativeCompSetRightAxisLabels(JSContext *ctx, JSValueConst this_va
             JS_FreeCString(ctx, str_ori);
         }
 
-        JS_FreeValue(ctx, len_value);
-
         ((Chart*)(ref->comp))->setRightAxisLabels(result);
         LV_LOG_USER("Chart %s setRightAxisLabels", ref->uid);
     }
@@ -153,7 +151,7 @@ static JSValue NativeCompSetDivLine(JSContext *ctx, JSValueConst this_val, int a
 
         JS_FreeValue(ctx, hdiv_value);
         JS_FreeValue(ctx, vdiv_value);
-        
+
         ((Chart*)(ref->comp))->setDivLineCount(hdiv, vdiv);
         LV_LOG_USER("Chart %s setDivLineCount %d %d", ref->uid, hdiv, vdiv);
     }
@@ -165,7 +163,7 @@ static JSValue NativeCompSetPointNum(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
         int32_t pointNUm;
         JS_ToInt32(ctx, &pointNUm, argv[0]);
-        
+
         ((Chart*)(ref->comp))->setPointNum(pointNUm);
         LV_LOG_USER("Chart %s setPointNum %d", ref->uid, pointNUm);
     }
@@ -177,7 +175,7 @@ static JSValue NativeCompSetType(JSContext *ctx, JSValueConst this_val, int argc
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
         int32_t type;
         JS_ToInt32(ctx, &type, argv[0]);
-        
+
         ((Chart*)(ref->comp))->setType(type);
         LV_LOG_USER("Chart %s setType %d", ref->uid, type);
     }
@@ -205,7 +203,7 @@ static JSValue NativeCompSetLeftAxisOption(JSContext *ctx, JSValueConst this_val
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setLeftAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setLeftAxisOption", ref->uid);
     }
@@ -233,7 +231,7 @@ static JSValue NativeCompSetRightAxisOption(JSContext *ctx, JSValueConst this_va
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setRightAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setRightAxisOption", ref->uid);
     }
@@ -261,7 +259,7 @@ static JSValue NativeCompSetTopAxisOption(JSContext *ctx, JSValueConst this_val,
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setTopAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setTopAxisOption", ref->uid);
     }
@@ -289,7 +287,7 @@ static JSValue NativeCompSetBottomAxisOption(JSContext *ctx, JSValueConst this_v
         JS_FreeValue(ctx, major_num_value);
         JS_FreeValue(ctx, minor_num_value);
         JS_FreeValue(ctx, draw_size_value);
-        
+
         ((Chart*)(ref->comp))->setBottomAxisOption(major_len, minor_len, major_num, minor_num, draw_size);
         LV_LOG_USER("Chart %s setBottomAxisOption", ref->uid);
     }
@@ -370,12 +368,12 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -386,7 +384,7 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setLeftAxisData(data);
         LV_LOG_USER("Chart %s setLeftAxisData", ref->uid);
     }
@@ -419,12 +417,12 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -435,7 +433,7 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setRightAxisData(data);
         LV_LOG_USER("Chart %s setRightAxisData", ref->uid);
     }
@@ -468,12 +466,12 @@ static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, 
             item.color = color;
 
             JS_ToInt32(ctx, &len2, len2_value);
-            
+
             for (int j=0; j<len2; j++) {
                 data_item_value = JS_GetPropertyUint32(ctx, data_value, j);
                 JS_ToInt32(ctx, &data_item, data_item_value);
                 item.data.push_back(data_item);
-                JS_FreeValue(ctx, data_item_value);   
+                JS_FreeValue(ctx, data_item_value);
             }
 
             data.push_back(item);
@@ -484,7 +482,7 @@ static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, 
             JS_FreeValue(ctx, item_value);
         }
         JS_FreeValue(ctx, len1_value);
-        
+
         ((Chart*)(ref->comp))->setScatterData(data);
         LV_LOG_USER("Chart %s setScatterData", ref->uid);
     }
@@ -510,6 +508,7 @@ static JSValue NativeCompSetLeftAxisRange(JSContext *ctx, JSValueConst this_val,
 
         LV_LOG_USER("Chart %s setLeftAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -531,6 +530,7 @@ static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val
 
         LV_LOG_USER("Chart %s setRightAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -552,6 +552,7 @@ static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, 
 
         LV_LOG_USER("Chart %s setTopAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -573,43 +574,44 @@ static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_va
 
         LV_LOG_USER("Chart %s setBottomAxisRange", ref->uid);
     }
+    return JS_UNDEFINED;
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    SJS_CFUNC_DEF("setLeftAxisRange", 0, NativeCompSetLeftAxisRange),
-    SJS_CFUNC_DEF("setRightAxisRange", 0, NativeCompSetRightAxisRange),
-    SJS_CFUNC_DEF("setBottomAxisRange", 0, NativeCompSetBottomAxisRange),
-    SJS_CFUNC_DEF("setTopAxisRange", 0, NativeCompSetTopAxisRange),
+    TJS_CFUNC_DEF("setLeftAxisRange", 0, NativeCompSetLeftAxisRange),
+    TJS_CFUNC_DEF("setRightAxisRange", 0, NativeCompSetRightAxisRange),
+    TJS_CFUNC_DEF("setBottomAxisRange", 0, NativeCompSetBottomAxisRange),
+    TJS_CFUNC_DEF("setTopAxisRange", 0, NativeCompSetTopAxisRange),
 
-    SJS_CFUNC_DEF("setLeftAxisLabels", 0, NativeCompSetLeftAxisLabels),
-    SJS_CFUNC_DEF("setRightAxisLabels", 0, NativeCompSetRightAxisLabels),
-    SJS_CFUNC_DEF("setBottomAxisLabels", 0, NativeCompSetBottomAxisLabels),
-    SJS_CFUNC_DEF("setTopAxisLabels", 0, NativeCompSetTopAxisLabels),
+    TJS_CFUNC_DEF("setLeftAxisLabels", 0, NativeCompSetLeftAxisLabels),
+    TJS_CFUNC_DEF("setRightAxisLabels", 0, NativeCompSetRightAxisLabels),
+    TJS_CFUNC_DEF("setBottomAxisLabels", 0, NativeCompSetBottomAxisLabels),
+    TJS_CFUNC_DEF("setTopAxisLabels", 0, NativeCompSetTopAxisLabels),
 
-    SJS_CFUNC_DEF("setDivLineCount", 0, NativeCompSetDivLine),
-    SJS_CFUNC_DEF("setRightAxisOption", 0, NativeCompSetRightAxisOption),
-    SJS_CFUNC_DEF("setTopAxisOption", 0, NativeCompSetTopAxisOption),
-    SJS_CFUNC_DEF("setBottomAxisOption", 0, NativeCompSetBottomAxisOption),
-    SJS_CFUNC_DEF("setLeftAxisOption", 0, NativeCompSetLeftAxisOption),
-    SJS_CFUNC_DEF("setLeftAxisData", 0, NativeCompSetLeftAxisData),
-    SJS_CFUNC_DEF("setRightAxisData", 0, NativeCompSetRightAxisData),
-    SJS_CFUNC_DEF("setScatterData", 0, NativeCompSetScatterData),
-    // SJS_CFUNC_DEF("setTopAxisData", 0, NativeCompSetTopAxisData),
-    // SJS_CFUNC_DEF("setBottomAxisData", 0, NativeCompSetBottomAxisData),
-    SJS_CFUNC_DEF("setType", 0, NativeCompSetType),
-    SJS_CFUNC_DEF("setPointNum", 0, NativeCompSetPointNum),
-    SJS_CFUNC_DEF("refresh", 0, NativeCompRefreshComponent),
-    SJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
-    SJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    SJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
-    SJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
-    SJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
-    SJS_OBJECT_DEF("style", style_funcs, countof(style_funcs)),
-    SJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
-    SJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
-    SJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
-    SJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
-    SJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
+    TJS_CFUNC_DEF("setDivLineCount", 0, NativeCompSetDivLine),
+    TJS_CFUNC_DEF("setRightAxisOption", 0, NativeCompSetRightAxisOption),
+    TJS_CFUNC_DEF("setTopAxisOption", 0, NativeCompSetTopAxisOption),
+    TJS_CFUNC_DEF("setBottomAxisOption", 0, NativeCompSetBottomAxisOption),
+    TJS_CFUNC_DEF("setLeftAxisOption", 0, NativeCompSetLeftAxisOption),
+    TJS_CFUNC_DEF("setLeftAxisData", 0, NativeCompSetLeftAxisData),
+    TJS_CFUNC_DEF("setRightAxisData", 0, NativeCompSetRightAxisData),
+    TJS_CFUNC_DEF("setScatterData", 0, NativeCompSetScatterData),
+    // TJS_CFUNC_DEF("setTopAxisData", 0, NativeCompSetTopAxisData),
+    // TJS_CFUNC_DEF("setBottomAxisData", 0, NativeCompSetBottomAxisData),
+    TJS_CFUNC_DEF("setType", 0, NativeCompSetType),
+    TJS_CFUNC_DEF("setPointNum", 0, NativeCompSetPointNum),
+    TJS_CFUNC_DEF("refresh", 0, NativeCompRefreshComponent),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
+    TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
+    TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
+    JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
+    TJS_CFUNC_DEF("setBackgroundImage", 0, NativeCompSetBackgroundImage),
+    TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
+    TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
+    TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
 static const JSCFunctionListEntry ComponentClassFuncs[] = {
@@ -667,17 +669,17 @@ static void ChartFinalizer(JSRuntime *rt, JSValue val) {
     LV_LOG_USER("Chart %s release", th->uid);
     if (th) {
         delete static_cast<Chart*>(th->comp);
-        free(th);
+        js_free_rt(rt, th);
     }
 };
 
 static JSClassDef ChartClass = {
-    "Chart",
+    .class_name = "Chart",
     .finalizer = ChartFinalizer,
 };
 
 void NativeComponentChartInit (JSContext* ctx, JSValue ns) {
-    JS_NewClassID(&ChartClassID);
+    JS_NewClassID(JS_GetRuntime(ctx), &ChartClassID);
     JS_NewClass(JS_GetRuntime(ctx), ChartClassID, &ChartClass);
     JSValue proto = JS_NewObject(ctx);
     JS_SetPropertyFunctionList(ctx, proto, ComponentProtoFuncs, countof(ComponentProtoFuncs));
