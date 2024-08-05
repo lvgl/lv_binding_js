@@ -7,6 +7,10 @@ build*/
 dev_*/
 **/.cache/
 
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+
 # Generated JS files
 /test/**/*.js
 /demo/**/*.js
