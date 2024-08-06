@@ -491,14 +491,14 @@ static void CompSetChartScaleX (lv_obj_t* comp, lv_style_t* style, JSContext* ct
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_chart_set_zoom_x(comp, x);
+    //lv_chart_set_zoom_x(comp, x);
 };
 
 static void CompSetChartScaleY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_chart_set_zoom_y(comp, x);
+    //lv_chart_set_zoom_y(comp, x);
 };
 
 static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {

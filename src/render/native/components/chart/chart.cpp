@@ -13,7 +13,7 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 
-    lv_obj_add_event_cb(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
+    //lv_obj_add_event_cb(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
 };
 
 void Chart::setType (int32_t type) {
@@ -31,7 +31,7 @@ void Chart::setLeftAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setRightAxisOption (
@@ -41,7 +41,7 @@ void Chart::setRightAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setTopAxisOption (
@@ -51,7 +51,7 @@ void Chart::setTopAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setBottomAxisOption (
@@ -61,7 +61,7 @@ void Chart::setBottomAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setLeftAxisData (std::vector<axis_data>& data) {
@@ -156,6 +156,7 @@ void Chart::setBottomAxisLabels (std::vector<std::string>& labels) {
     this->bottom_axis_labels = labels;
 };
 
+#if 0
 void Chart::draw_event_cb (lv_event_t * e) {
     lv_obj_draw_part_dsc_t * dsc = lv_event_get_draw_part_dsc(e);
     if(!lv_obj_draw_part_check_type(dsc, &lv_chart_class, LV_CHART_DRAW_PART_TICK_LABEL)) return;
@@ -172,6 +173,7 @@ void Chart::draw_event_cb (lv_event_t * e) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->top_axis_labels[dsc->value].c_str());
     }
 };
+#endif
 
 void Chart::setLeftAxisRange (int32_t min, int32_t max) {
     lv_chart_set_range(this->instance, LV_CHART_AXIS_PRIMARY_Y, min, max);
