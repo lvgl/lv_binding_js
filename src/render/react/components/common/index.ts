@@ -6,6 +6,24 @@ import {
   styleGetterProp,
 } from "../config";
 
+export type CommonProps = {
+  style?: object;
+  align?: {
+    type: number;
+    pos: [number, number];
+  };
+  alignTo?: {
+    type: number;
+    pos: [number, number];
+    parent: any;
+  };
+  scrollbarStyle?: object;
+  onScrollbarPressedStyle?: object;
+  scrollbarScrollingStyle?: object;
+  onPressedStyle?: object;
+  onReleasedStyle?: object;
+};
+
 export const CommonComponentApi = function ({
   compName,
   comp,
