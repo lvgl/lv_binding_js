@@ -18,7 +18,19 @@ const flexAlignObj = {
   "space-between": 5,
 };
 
-export function FlexStyle(style, result) {
+type IntegerGreaterThanOne = number;
+
+type FlexStyle = {
+  "display": "flex";
+  "flex-direction"?: "row" | "column";
+  "flex-wrap"?: "wrap" | "nowrap" | "reverse";
+  "justify-content"?: "flex-start" | "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
+  "align-items"?: "flex-start" | "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
+  "align-content"?: "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
+  "flex-grow"?: IntegerGreaterThanOne;
+};
+
+export function FlexStyle(style: FlexStyle, result) {
   if (style.display !== "flex") return result;
 
   let flexFlow = 0x00;
@@ -39,10 +51,10 @@ export function FlexStyle(style, result) {
     style["align-content"] ||
     (flexWrap === "nowrap" ? alignItems : "flex-start");
 
-  if (flexAlignObj[justifyContent]) {
+  if (justifyContent && flexAlignObj[justifyContent]) {
     mainPlace = flexAlignObj[justifyContent];
   }
-  if (flexAlignObj[alignItems]) {
+  if (alignItems && flexAlignObj[alignItems]) {
     crossPlace = flexAlignObj[alignItems];
   }
   trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace;
@@ -57,7 +69,7 @@ export function FlexStyle(style, result) {
   if (alignContent) {
     result["align-content"] = trackCrossPlace;
   }
-  if (!isNaN(style["flex-grow"])) {
+  if (style["flex-grow"] && !isNaN(style["flex-grow"])) {
     result["flex-grow"] = style["flex-grow"];
   }
   return result;

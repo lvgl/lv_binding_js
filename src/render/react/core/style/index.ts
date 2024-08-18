@@ -17,9 +17,9 @@ import { TransStyle } from "./pipe/trans";
 import { PostProcessStyle } from "./post";
 
 class StyleSheet {
-  static transformStyle;
+  static transformStyle: (style, compName) => {};
 
-  static pipeline(args) {
+  static pipeline(args: any[]) {
     StyleSheet.transformStyle = (style, compName) => {
       const result = {};
       args.reduce((_, func) => func(style, result, compName), null);
@@ -77,7 +77,7 @@ export function setStyle({
   oldStyleSheet,
   isInit = true,
   defaultStyle = {},
-} = {}) {
+}) {
   if (!styleSheet) return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
   oldStyleSheet = Array.isArray(oldStyleSheet)
@@ -93,3 +93,7 @@ export function setStyle({
   comp.nativeSetStyle(result, keys, keys.length, styleType, isInit);
   PostProcessStyle({ comp, styleSheet, styleType });
 }
+
+export type StyleProps = Parameters<typeof FlexStyle>[0] &
+// Remove once every style is defined in TS
+{[key: string]: any};
