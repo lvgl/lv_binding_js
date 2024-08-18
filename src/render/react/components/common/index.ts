@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -5,9 +6,10 @@ import {
   setStyle,
   styleGetterProp,
 } from "../config";
+import { StyleProps } from "../../core/style";
 
 export type CommonProps = {
-  style?: object;
+  style?: StyleProps;
   align?: {
     type: number;
     pos: [number, number];
@@ -22,6 +24,7 @@ export type CommonProps = {
   scrollbarScrollingStyle?: object;
   onPressedStyle?: object;
   onReleasedStyle?: object;
+  children?: React.ReactNode;
 };
 
 export const CommonComponentApi = function ({
@@ -29,7 +32,7 @@ export const CommonComponentApi = function ({
   comp,
   newProps,
   oldProps,
-}) {
+}: {compName: any, comp: any, newProps: CommonProps, oldProps: CommonProps}) {
   return {
     style(styleSheet) {
       setStyle({
