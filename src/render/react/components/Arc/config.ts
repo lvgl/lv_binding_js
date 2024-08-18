@@ -1,6 +1,8 @@
+import { HostConfig } from "react-reconciler";
 import { ArcComp } from "./comp";
+import { LvgljsComponentConfig } from "../config";
 
-export default class ArcConfig {
+export default class ArcConfig implements LvgljsComponentConfig {
   tagName = "Arc";
   native = null;
   shouldSetTextContent() {
