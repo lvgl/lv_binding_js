@@ -1,8 +1,11 @@
+import { HostConfig } from "react-reconciler";
+
 export { handleEvent } from "../core/event";
 export { unRegistEvent, EVENTTYPE_MAP } from "../core/event";
 export { setStyle } from "../core/style";
+import * as React from 'react';
 
-const components = new Map();
+const components = new Map<LvgljsComponentConfig['tagName'], LvgljsComponentConfig>();
 
 export const getComponentByTagName = (tagName) => {
   const config = components.get(tagName);
@@ -12,7 +15,8 @@ export const getComponentByTagName = (tagName) => {
   return config;
 };
 
-export function registerComponent(config) {
+export function registerComponent<Props>(
+  config: LvgljsComponentConfig): React.ComponentType<Props> | string {
   if (components.has(config.tagName)) {
     throw `A component with tagName: ${config.tagName} already exists. This base component will be ignored`;
   }
@@ -20,7 +24,7 @@ export function registerComponent(config) {
   return config.tagName;
 }
 
-export function registerComponents(configs) {
+export function registerComponents(configs: LvgljsComponentConfig[]) {
   configs.forEach((config) => {
     if (components.has(config.tagName)) {
       throw `A component with tagName: ${config.tagName} already exists. This base component will be ignored`;
@@ -95,3 +99,16 @@ export const EDropdownListArrowDirection = {
 };
 
 export const styleGetterProp = ["height", "width", "left", "top"];
+
+export type LvgljsComponentConfig = Pick<
+  HostConfig<any, any, any, any, any, any, any, any, any, any, any, any>,
+  | "shouldSetTextContent"
+  | "createInstance"
+  | "commitMount"
+  | "commitUpdate"
+  | "commitUpdate"
+  | "insertBefore"
+  | "appendInitialChild"
+  | "appendChild"
+  | "removeChild"
+> & { tagName: string };
