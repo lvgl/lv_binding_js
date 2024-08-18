@@ -15,6 +15,7 @@
     "core-js": "^3.23.2",
     "esbuild": "^0.14.43",
     "fetch-blob": "^3.2.0",
+    "lvgljs-ui": "file:src/render/react",
     "react": "^16.13.1",
     "react-proxy": "^2.0.8",
     "react-reconciler": "^0.25.1",
