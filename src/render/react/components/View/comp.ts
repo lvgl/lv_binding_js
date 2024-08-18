@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,9 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeView = bridge.NativeRender.NativeComponents.View;
 
-function setViewProps(comp, newProps, oldProps) {
+export type ViewProps = CommonProps
+
+function setViewProps(comp, newProps: ViewProps, oldProps: ViewProps) {
   const setter = {
     ...CommonComponentApi({ compName: "View", comp, newProps, oldProps }),
   };
@@ -43,7 +45,7 @@ export class ViewComp extends NativeView {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ViewProps, oldProps: ViewProps) {
     setViewProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {
