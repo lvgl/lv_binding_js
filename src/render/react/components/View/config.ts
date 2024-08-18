@@ -1,6 +1,7 @@
+import { LvgljsComponentConfig } from "../config";
 import { ViewComp } from "./comp";
 
-export default class ViewConfig {
+export default class ViewConfig implements LvgljsComponentConfig {
   tagName = "View";
   shouldSetTextContent() {
     return false;

@@ -19,11 +19,12 @@ import TabsConfig from "./components/Tabs/config";
 // import WindowConfig from "./components/Window/config";
 import TextConfig from "./components/Text/config";
 import TextareaConfig from "./components/Textarea/config";
+import { ViewProps } from "./components/View/comp";
 import ViewConfig from "./components/View/config";
 import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
 
-export const View = registerComponent(new ViewConfig());
+export const View = registerComponent<ViewProps>(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
 export const Text = registerComponent(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
