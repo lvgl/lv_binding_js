@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -16,7 +16,7 @@ const modes = {
   reverse: 2,
 };
 
-function setArcProps(comp, newProps, oldProps) {
+function setArcProps(comp, newProps: ArcProps, oldProps: ArcProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Arc", comp, newProps, oldProps }),
     indicatorStyle(styleSheet) {
@@ -129,6 +129,24 @@ function setArcProps(comp, newProps, oldProps) {
   });
 }
 
+export type ArcProps = CommonProps & {
+  indicatorStyle?: object;
+  onIndicatorPressedStyle?: object;
+  onPressedStyle?: object;
+  knobStyle?: object;
+  onKnobPressedStyle?: object;
+  onChange?: (value: number) => void;
+  range?: [number, number];
+  value?: number;
+  startAngle?: number;
+  endAngle?: number;
+  backgroundStartAngle?: number;
+  backgroundEndAngle?: number;
+  rotation?: number;
+  mode?: "normal" | "symmetrical" | "reverse";
+  changeRate?: number;
+};
+
 export class ArcComp extends NativeArc {
   constructor({ uid }) {
     super({ uid });
@@ -144,7 +162,7 @@ export class ArcComp extends NativeArc {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ArcProps, oldProps: ArcProps) {
     setArcProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
