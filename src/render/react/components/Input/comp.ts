@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -9,7 +9,19 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
-function setInputProps(comp, newProps, oldProps) {
+export type InputProps = CommonProps & {
+  placeholder: string;
+  mode: "password" | "text";
+  maxlength: number;
+  onChange: (e: Event) => void;
+  onFocus: (e: Event) => void;
+  onBlur: (e: Event) => void;
+  onFocusStyle: any;
+  value: string;
+  autoKeyBoard: boolean;
+};
+
+function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Input", comp, newProps, oldProps }),
     placeholder(str) {
@@ -89,7 +101,7 @@ export class InputComp extends NativeView {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: InputProps, oldProps: InputProps) {
     setInputProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
