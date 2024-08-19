@@ -20,6 +20,7 @@ import { KeyboardComp, KeyboardProps } from "./components/Keyboard/comp";
 import KeyboardConfig from "./components/Keyboard/config";
 import { LineComp, LineProps } from "./components/Line/comp";
 import LineConfig from "./components/Line/config";
+import { MaskComp, MaskProps } from "./components/Mask/comp";
 import MaskConfig from "./components/Mask/config";
 import ProgressBarConfig from "./components/ProgressBar/config";
 import RollerConfig from "./components/Roller/config";
@@ -55,7 +56,7 @@ export const Calendar = registerComponent<CalendarProps, CalendarComp>(new Calen
 export const GIF = registerComponent<GIFProps, GIFComp>(new GIFConfig());
 export const Tabs = registerComponent(new TabsConfig());
 export const Chart = registerComponent<ChartProps, ChartComp>(new ChartConfig());
-export const Mask = registerComponent(new MaskConfig());
+export const Mask = registerComponent<MaskProps, MaskComp>(new MaskConfig());
 
 export {
   EAlignType,
