@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,16 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeRoller = bridge.NativeRender.NativeComponents.Roller;
 
-function setRollerProps(comp, newProps, oldProps) {
+export type RollerProps = CommonProps & {
+  selectedStyle?: any;
+  options: string[];
+  selectIndex: number;
+  visibleRowCount: number;
+  infinity: boolean;
+  onChange: (e: Event) => void;
+};
+
+function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Roller", comp, newProps, oldProps }),
     selectedStyle(styleSheet) {
@@ -70,7 +79,7 @@ export class RollerComp extends NativeRoller {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: RollerProps, oldProps: RollerProps) {
     setRollerProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}

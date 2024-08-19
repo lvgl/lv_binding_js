@@ -24,6 +24,7 @@ import { MaskComp, MaskProps } from "./components/Mask/comp";
 import MaskConfig from "./components/Mask/config";
 import { ProgressBarComp, ProgressBarProps } from "./components/ProgressBar/comp";
 import ProgressBarConfig from "./components/ProgressBar/config";
+import { RollerComp, RollerProps } from "./components/Roller/comp";
 import RollerConfig from "./components/Roller/config";
 import SliderConfig from "./components/Slider/config";
 import SwitchConfig from "./components/Switch/config";
@@ -51,7 +52,7 @@ export const Keyboard = registerComponent<KeyboardProps, KeyboardComp>(new Keybo
 export const Checkbox = registerComponent<CheckboxProps, CheckboxComp>(new CheckboxConfig());
 export const Dropdownlist = registerComponent<DropdownListProps, DropdownlistComp>(new DropdownlistConfig());
 export const ProgressBar = registerComponent<ProgressBarProps, ProgressBarComp>(new ProgressBarConfig());
-export const Roller = registerComponent(new RollerConfig());
+export const Roller = registerComponent<RollerProps, RollerComp>(new RollerConfig());
 export const Line = registerComponent<LineProps, LineComp>(new LineConfig());
 export const Calendar = registerComponent<CalendarProps, CalendarComp>(new CalendarConfig());
 export const GIF = registerComponent<GIFProps, GIFComp>(new GIFConfig());
