@@ -1,10 +1,17 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp } from "../config";
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar;
 
-function setProgressBarProps(comp, newProps, oldProps) {
+export type ProgressBarProps = CommonProps & {
+  value: number;
+  range: number[];
+  animationTime?: number;
+  useAnimation?: boolean;
+};
+
+function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: ProgressBarProps) {
   const setter = {
     ...CommonComponentApi({
       compName: "ProgressBar",
@@ -73,7 +80,7 @@ export class ProgressBarComp extends NativeProgressBar {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ProgressBarProps, oldProps: ProgressBarProps) {
     setProgressBarProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
