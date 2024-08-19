@@ -1,5 +1,6 @@
+import { StyleProps } from "../../core/style";
 import { colorTransform } from "../../core/style/color";
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -18,7 +19,34 @@ const chartType = {
   scatter: 3,
 };
 
-function setChartProps(comp, newProps, oldProps) {
+export type ChartProps = CommonProps & {
+  onPressedStyle?: StyleProps;
+  indicatorStyle?: StyleProps;
+  pointStyle?: StyleProps;
+  itemStyle?: StyleProps;
+  type?: string;
+  divLineCount?: [number, number];
+  pointNum?: number;
+  scatterData?: any[];
+  leftAxisOption?: any;
+  leftAxisData?: any[];
+  bottomAxisOption?: any;
+  bottomAxisData?: any[];
+  rightAxisOption?: any;
+  rightAxisData?: any[];
+  topAxisOption?: any;
+  topAxisData?: any[];
+  leftAxisLabels?: any[];
+  rightAxisLabels?: any[];
+  topAxisLabels?: any[];
+  bottomAxisLabels?: any[];
+  leftAxisRange?: [number, number];
+  rightAxisRange?: [number, number];
+  topAxisRange?: [number, number];
+  bottomAxisRange?: [number, number];
+};
+
+function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Chart", comp, newProps, oldProps }),
     onPressedStyle(styleSheet) {
@@ -262,7 +290,7 @@ export class ChartComp extends NativeChart {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ChartProps, oldProps: ChartProps) {
     setChartProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
