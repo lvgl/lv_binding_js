@@ -1,4 +1,5 @@
-import { CommonComponentApi } from "../common/index";
+import { StyleProps } from "../../core/style";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +11,17 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeView = bridge.NativeRender.NativeComponents.Checkbox;
 
-function setCheckboxProps(comp, newProps, oldProps) {
+export type CheckboxProps = CommonProps & {
+  checked?: boolean;
+  disabled?: boolean;
+  text?: string;
+  checkedStyle?: StyleProps;
+  indicatorStyle?: StyleProps;
+  indicatorCheckedStyle?: StyleProps;
+  onChange?: () => void;
+};
+
+function setCheckboxProps(comp, newProps: CheckboxProps, oldProps: CheckboxProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Checkbox", comp, newProps, oldProps }),
     checked(val) {
@@ -88,7 +99,7 @@ export class CheckboxComp extends NativeView {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: CheckboxProps, oldProps: CheckboxProps) {
     setCheckboxProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {
