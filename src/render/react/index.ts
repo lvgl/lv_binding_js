@@ -35,6 +35,7 @@ import TabsConfig from "./components/Tabs/config";
 import { TextComp, TextProps } from "./components/Text/comp";
 // import WindowConfig from "./components/Window/config";
 import TextConfig from "./components/Text/config";
+import { TextareaComp, TextAreaProps } from "./components/Textarea/comp";
 import TextareaConfig from "./components/Textarea/config";
 import { ViewComp, ViewProps } from "./components/View/comp";
 import ViewConfig from "./components/View/config";
@@ -49,7 +50,7 @@ export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfi
 export const Slider = registerComponent<SliderProps, SliderComp>(new SliderConfig());
 export const Arc = registerComponent<ArcProps, ArcComp>(new ArcConfig());
 export const Switch = registerComponent<SwitchProps, SwitchComp>(new SwitchConfig());
-export const Textarea = registerComponent(new TextareaConfig());
+export const Textarea = registerComponent<TextAreaProps, TextareaComp>(new TextareaConfig());
 export const Input = registerComponent<InputProps, InputComp>(new InputConfig());
 export const Keyboard = registerComponent<KeyboardProps, KeyboardComp>(new KeyboardConfig());
 export const Checkbox = registerComponent<CheckboxProps, CheckboxComp>(new CheckboxConfig());
