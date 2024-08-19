@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -9,7 +9,11 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeComp = bridge.NativeRender.NativeComponents.Window;
 
-function setWindowProps(comp, newProps, oldProps) {
+export type WindowProps = CommonProps & {
+  title: string;
+};
+
+function setWindowProps(comp, newProps: WindowProps, oldProps: WindowProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Window", comp, newProps, oldProps }),
     title(title) {
@@ -47,7 +51,7 @@ export class Window extends NativeComp {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: WindowProps, oldProps: WindowProps) {
     setWindowProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
