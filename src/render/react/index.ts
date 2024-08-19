@@ -12,6 +12,7 @@ import { DropdownlistComp, DropdownListProps } from "./components/Dropdownlist/c
 import DropdownlistConfig from "./components/Dropdownlist/config";
 import { GIFComp, GIFProps } from "./components/GIF/comp";
 import GIFConfig from "./components/GIF/config";
+import { ImageComp, ImageProps } from "./components/Image/comp";
 import ImageConfig from "./components/Image/config";
 import InputConfig from "./components/Input/config";
 import KeyboardConfig from "./components/Keyboard/config";
@@ -34,7 +35,7 @@ import { Renderer } from "./core/renderer";
 export const View = registerComponent<ViewProps, ViewComp>(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
 export const Text = registerComponent<TextProps, TextComp>(new TextConfig());
-export const Image = registerComponent(new ImageConfig());
+export const Image = registerComponent<ImageProps, ImageComp>(new ImageConfig());
 export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
 export const Arc = registerComponent<ArcProps, ArcComp>(new ArcConfig());

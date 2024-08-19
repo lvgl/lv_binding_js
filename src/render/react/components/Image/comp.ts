@@ -1,6 +1,6 @@
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
 import { isValidUrl } from "../../utils/helpers";
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -22,7 +22,12 @@ async function getImageBinary(url) {
   return imageBuffer;
 }
 
-function setImageProps(comp, newProps, oldProps) {
+export type ImageProps = CommonProps & {
+  src: string;
+  onClick?: () => void,
+};
+
+function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Image", comp, newProps, oldProps }),
     onClick(fn) {
@@ -82,7 +87,7 @@ export class ImageComp extends NativeImage {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ImageProps, oldProps: ImageProps) {
     setImageProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
