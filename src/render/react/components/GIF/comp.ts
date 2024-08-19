@@ -1,6 +1,6 @@
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
 import { isValidUrl } from "../../utils/helpers";
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -21,7 +21,12 @@ async function getGIFBinary(url) {
   return GIFBuffer;
 }
 
-function setGIFProps(comp, newProps, oldProps) {
+export type GIFProps = CommonProps & {
+  src: string;
+  onClick: (e: Event) => void;
+}
+
+function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {
   const setter = {
     ...CommonComponentApi({ compName: "GIF", comp, newProps, oldProps }),
     onClick(fn) {
@@ -81,7 +86,7 @@ export class GIFComp extends NativeGIF {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: GIFProps, oldProps: GIFProps) {
     setGIFProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
