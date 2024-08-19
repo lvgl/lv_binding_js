@@ -30,6 +30,7 @@ import { SliderComp, SliderProps } from "./components/Slider/comp";
 import SliderConfig from "./components/Slider/config";
 import { SwitchComp, SwitchProps } from "./components/Switch/comp";
 import SwitchConfig from "./components/Switch/config";
+import { TabsComp, TabsProps } from "./components/Tabs/comp";
 import TabsConfig from "./components/Tabs/config";
 import { TextComp, TextProps } from "./components/Text/comp";
 // import WindowConfig from "./components/Window/config";
@@ -58,7 +59,7 @@ export const Roller = registerComponent<RollerProps, RollerComp>(new RollerConfi
 export const Line = registerComponent<LineProps, LineComp>(new LineConfig());
 export const Calendar = registerComponent<CalendarProps, CalendarComp>(new CalendarConfig());
 export const GIF = registerComponent<GIFProps, GIFComp>(new GIFConfig());
-export const Tabs = registerComponent(new TabsConfig());
+export const Tabs = registerComponent<TabsProps, TabsComp>(new TabsConfig());
 export const Chart = registerComponent<ChartProps, ChartComp>(new ChartConfig());
 export const Mask = registerComponent<MaskProps, MaskComp>(new MaskConfig());
 
