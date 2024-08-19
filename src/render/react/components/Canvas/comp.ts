@@ -1,14 +1,22 @@
+import { CommonProps } from "../common";
 import {
   EVENTTYPE_MAP,
   handleEvent,
   setStyle,
   styleGetterProp,
 } from "../config";
+import CanvasContext from "./context";
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
-function setCanvasProps(comp, newProps, oldProps) {
+export type CanvasProps = CommonProps & {
+  onClick?: () => void;
+  align?: { type: number; pos: [number, number] };
+  alignTo?: { type: number; pos: [number, number]; parent: any };
+};
+
+function setCanvasProps(comp, newProps: CanvasProps, oldProps: CanvasProps) {
   const setter = {
     set style(styleSheet) {
       setStyle({
@@ -69,7 +77,7 @@ export class CanvasComp extends NativeButton {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: CanvasProps, oldProps: CanvasProps) {
     setCanvasProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
