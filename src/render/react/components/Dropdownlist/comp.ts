@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,17 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist;
 
-function setListProps(comp, newProps, oldProps) {
+export type DropdownListProps = CommonProps & {
+  items: string[];
+  arrow: number;
+  selectIndex: number;
+  text: string;
+  direction: number;
+  highlightSelect: boolean;
+  onChange: () => void;
+};
+
+function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListProps) {
   const setter = {
     ...CommonComponentApi({
       compName: "Dropdownlist",
@@ -81,7 +91,7 @@ export class DropdownlistComp extends NativeDropdownlist {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: DropdownListProps, oldProps: DropdownListProps) {
     setListProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
