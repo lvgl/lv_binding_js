@@ -18,6 +18,7 @@ import RollerConfig from "./components/Roller/config";
 import SliderConfig from "./components/Slider/config";
 import SwitchConfig from "./components/Switch/config";
 import TabsConfig from "./components/Tabs/config";
+import { TextComp, TextProps } from "./components/Text/comp";
 // import WindowConfig from "./components/Window/config";
 import TextConfig from "./components/Text/config";
 import TextareaConfig from "./components/Textarea/config";
@@ -28,7 +29,7 @@ import { Renderer } from "./core/renderer";
 
 export const View = registerComponent<ViewProps, ViewComp>(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
-export const Text = registerComponent(new TextConfig());
+export const Text = registerComponent<TextProps, TextComp>(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
 export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
