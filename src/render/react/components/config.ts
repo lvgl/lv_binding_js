@@ -5,7 +5,7 @@ export { unRegistEvent, EVENTTYPE_MAP } from "../core/event";
 export { setStyle } from "../core/style";
 import * as React from 'react';
 
-const components = new Map<LvgljsComponentConfig['tagName'], LvgljsComponentConfig>();
+const components = new Map<LvgljsComponentConfig<any, any>['tagName'], LvgljsComponentConfig<any, any>>();
 
 export const getComponentByTagName = (tagName) => {
   const config = components.get(tagName);
@@ -24,7 +24,7 @@ export function registerComponent<Props, Comp>(
   return config.tagName;
 }
 
-export function registerComponents(configs: LvgljsComponentConfig[]) {
+export function registerComponents<Props, Comp>(configs: LvgljsComponentConfig<Props, Comp>[]) {
   configs.forEach((config) => {
     if (components.has(config.tagName)) {
       throw `A component with tagName: ${config.tagName} already exists. This base component will be ignored`;
