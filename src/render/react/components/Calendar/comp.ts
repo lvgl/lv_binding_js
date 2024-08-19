@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -9,7 +9,14 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeCalendar = bridge.NativeRender.NativeComponents.Calendar;
 
-function setCalendarProps(comp, newProps, oldProps) {
+export type CalendarProps = CommonProps & {
+  today?: string;
+  shownMonth?: string;
+  highLightDates?: string[];
+  onChange?: (value: string) => void;
+};
+
+function setCalendarProps(comp, newProps: CalendarProps, oldProps: CalendarProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Calendar", comp, newProps, oldProps }),
     onChange(fn) {
@@ -66,7 +73,7 @@ export class CalendarComp extends NativeCalendar {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: CalendarProps, oldProps: CalendarProps) {
     setCalendarProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
