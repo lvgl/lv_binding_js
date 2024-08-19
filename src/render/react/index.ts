@@ -4,6 +4,7 @@ import { ButtonComp, ButtonProps } from "./components/Button/comp";
 import ButtonConfig from "./components/Button/config";
 import { CalendarComp, CalendarProps } from "./components/Calendar/comp";
 import CalendarConfig from "./components/Calendar/config";
+import { ChartComp, ChartProps } from "./components/Chart/comp";
 import ChartConfig from "./components/Chart/config";
 import CheckboxConfig from "./components/Checkbox/config";
 import DropdownlistConfig from "./components/Dropdownlist/config";
@@ -46,7 +47,7 @@ export const Line = registerComponent(new LineConfig());
 export const Calendar = registerComponent<CalendarProps, CalendarComp>(new CalendarConfig());
 export const GIF = registerComponent(new GIFConfig());
 export const Tabs = registerComponent(new TabsConfig());
-export const Chart = registerComponent(new ChartConfig());
+export const Chart = registerComponent<ChartProps, ChartComp>(new ChartConfig());
 export const Mask = registerComponent(new MaskConfig());
 
 export {
