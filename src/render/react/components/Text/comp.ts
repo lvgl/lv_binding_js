@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,11 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeText = bridge.NativeRender.NativeComponents.Text;
 
-function setTextProps(comp, newProps, oldProps) {
+export type TextProps = CommonProps & {
+  children: string | number | (string | number)[];
+};
+
+function setTextProps(comp, newProps: TextProps, oldProps: TextProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
     children(str) {
@@ -56,7 +60,7 @@ export class TextComp extends NativeText {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: TextProps, oldProps: TextProps) {
     setTextProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
