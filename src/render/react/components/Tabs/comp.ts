@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,17 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeTabs = bridge.NativeRender.NativeComponents.TabView;
 
-function setTabsProps(comp, newProps, oldProps) {
+export type TabsProps = CommonProps & {
+  tabs: string[];
+  tabPosition: "left" | "top" | "right" | "bottom";
+  tabSize?: number;
+  onClick?: (e: Event) => void;
+  onPressed?: (e: Event) => void;
+  onLongPressed?: (e: Event) => void;
+  onLongPressRepeat?: (e: Event) => void;
+};
+
+function setTabsProps(comp, newProps: TabsProps, oldProps: TabsProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Tabs", comp, newProps, oldProps }),
     onClick(fn) {
@@ -64,7 +74,7 @@ export class TabsComp extends NativeTabs {
     });
     this.currentAppendIndex = 0;
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: TabsProps, oldProps: TabsProps) {
     this.tabs = newProps.tabs;
     setTabsProps(this, newProps, oldProps);
   }
