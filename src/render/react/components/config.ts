@@ -15,8 +15,8 @@ export const getComponentByTagName = (tagName) => {
   return config;
 };
 
-export function registerComponent<Props>(
-  config: LvgljsComponentConfig): React.ComponentType<Props> | string {
+export function registerComponent<Props, Comp>(
+  config: LvgljsComponentConfig<Props, Comp>): React.ComponentType<Props> | string {
   if (components.has(config.tagName)) {
     throw `A component with tagName: ${config.tagName} already exists. This base component will be ignored`;
   }
@@ -100,8 +100,8 @@ export const EDropdownListArrowDirection = {
 
 export const styleGetterProp = ["height", "width", "left", "top"];
 
-export type LvgljsComponentConfig = Pick<
-  HostConfig<any, any, any, any, any, any, any, any, any, any, any, any>,
+export type LvgljsComponentConfig<ComponentProps, ComponentInstance> = Pick<
+  HostConfig<any, ComponentProps, any, ComponentInstance, any, any, any, any, any, any, any, any>,
   | "shouldSetTextContent"
   | "createInstance"
   | "commitMount"

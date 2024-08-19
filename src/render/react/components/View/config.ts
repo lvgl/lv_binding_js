@@ -1,22 +1,22 @@
 import { LvgljsComponentConfig } from "../config";
-import { ViewComp } from "./comp";
+import { ViewComp, ViewProps } from "./comp";
 
-export default class ViewConfig implements LvgljsComponentConfig {
+export default class ViewConfig implements LvgljsComponentConfig<ViewProps, ViewComp> {
   tagName = "View";
   shouldSetTextContent() {
     return false;
   }
-  createInstance(newProps, rootInstance, context, workInProgress, uid) {
+  createInstance(newProps: ViewProps, rootInstance, context, workInProgress, uid) {
     const instance = new ViewComp({ uid });
     instance.setProps(newProps, {});
     return instance;
   }
-  commitMount(instance, newProps, internalInstanceHandle) {}
-  commitUpdate(instance, updatePayload, oldProps, newProps, finishedWork) {
+  commitMount(instance, newProps: ViewProps, internalInstanceHandle) {}
+  commitUpdate(instance, updatePayload, oldProps: ViewProps, newProps: ViewProps, finishedWork) {
     instance.setProps(newProps, oldProps);
   }
   commitUnmount(instance) {}
-  setProps(newProps, oldProps) {}
+  setProps(newProps: ViewProps, oldProps: ViewProps) {}
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
