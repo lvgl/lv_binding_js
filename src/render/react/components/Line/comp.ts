@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -8,6 +8,10 @@ import {
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeLine = bridge.NativeRender.NativeComponents.Line;
+
+export type LineProps = CommonProps & {
+  points: number[];
+};
 
 function setLineProps(comp, newProps, oldProps) {
   const setter = {
@@ -50,7 +54,7 @@ export class LineComp extends NativeLine {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: LineProps, oldProps: LineProps) {
     setLineProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
