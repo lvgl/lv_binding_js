@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +10,16 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeMask = bridge.NativeRender.NativeComponents.Mask;
 
-function setMaskProps(comp, newProps, oldProps) {
+export type MaskProps = CommonProps & {
+  onPressedStyle?: object;
+  onClick?: Function;
+  onPressed?: Function;
+  onLongPressed?: Function;
+  onLongPressRepeat?: Function;
+};
+}
+
+function setMaskProps(comp, newProps: MaskProps, oldProps: MaskProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Mask", comp, newProps, oldProps }),
     onPressedStyle(styleSheet) {
@@ -64,7 +73,7 @@ export class MaskComp extends NativeMask {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: MaskProps, oldProps: MaskProps) {
     setMaskProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
