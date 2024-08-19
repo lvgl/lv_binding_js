@@ -34,6 +34,7 @@ import { TabsComp, TabsProps } from "./components/Tabs/comp";
 import TabsConfig from "./components/Tabs/config";
 import { TextComp, TextProps } from "./components/Text/comp";
 // import WindowConfig from "./components/Window/config";
+// import { Window, WindowProps } from "./components/Window/comp";
 import TextConfig from "./components/Text/config";
 import { TextareaComp, TextAreaProps } from "./components/Textarea/comp";
 import TextareaConfig from "./components/Textarea/config";
@@ -43,7 +44,7 @@ import { registerComponent } from "./components/config";
 import { Renderer } from "./core/renderer";
 
 export const View = registerComponent<ViewProps, ViewComp>(new ViewConfig());
-// export const Window = registerComponent(new WindowConfig());
+// export const Window = registerComponent<WindowProps, Window>(new WindowConfig());
 export const Text = registerComponent<TextProps, TextComp>(new TextConfig());
 export const Image = registerComponent<ImageProps, ImageComp>(new ImageConfig());
 export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfig());
