@@ -26,6 +26,7 @@ import { ProgressBarComp, ProgressBarProps } from "./components/ProgressBar/comp
 import ProgressBarConfig from "./components/ProgressBar/config";
 import { RollerComp, RollerProps } from "./components/Roller/comp";
 import RollerConfig from "./components/Roller/config";
+import { SliderComp, SliderProps } from "./components/Slider/comp";
 import SliderConfig from "./components/Slider/config";
 import SwitchConfig from "./components/Switch/config";
 import TabsConfig from "./components/Tabs/config";
@@ -43,7 +44,7 @@ export const View = registerComponent<ViewProps, ViewComp>(new ViewConfig());
 export const Text = registerComponent<TextProps, TextComp>(new TextConfig());
 export const Image = registerComponent<ImageProps, ImageComp>(new ImageConfig());
 export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfig());
-export const Slider = registerComponent(new SliderConfig());
+export const Slider = registerComponent<SliderProps, SliderComp>(new SliderConfig());
 export const Arc = registerComponent<ArcProps, ArcComp>(new ArcConfig());
 export const Switch = registerComponent(new SwitchConfig());
 export const Textarea = registerComponent(new TextareaConfig());

@@ -1,4 +1,5 @@
-import { CommonComponentApi } from "../common/index";
+import { StyleProps } from "../../core/style";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +11,18 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeSlider = bridge.NativeRender.NativeComponents.Slider;
 
-function setSliderProps(comp, newProps, oldProps) {
+export type SliderProps = CommonProps & {
+  indicatorStyle?: StyleProps;
+  onIndicatorPressedStyle?: StyleProps;
+  onPressedStyle?: StyleProps;
+  knobStyle?: StyleProps;
+  onKnobPressedStyle?: StyleProps;
+  onChange: (e: Event) => void;
+  range: [number, number];
+  value: number;
+};
+
+function setSliderProps(comp, newProps: SliderProps, oldProps: SliderProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Slider", comp, newProps, oldProps }),
     indicatorStyle(styleSheet) {
@@ -103,7 +115,7 @@ export class SliderComp extends NativeSlider {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: SliderProps, oldProps: SliderProps) {
     setSliderProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
