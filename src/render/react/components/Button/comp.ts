@@ -1,4 +1,5 @@
-import { CommonComponentApi } from "../common/index";
+import { StyleProps } from "../../core/style";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +11,15 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
-function setButtonProps(comp, newProps, oldProps) {
+export type ButtonProps = CommonProps & {
+  onPressedStyle?: StyleProps;
+  onClick?: () => void;
+  onPressed?: () => void;
+  onLongPressed?: () => void;
+  onLongPressRepeat?: () => void;
+};
+
+function setButtonProps(comp, newProps: ButtonProps, oldProps: ButtonProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Button", comp, newProps, oldProps }),
     onPressedStyle(styleSheet) {
@@ -64,7 +73,7 @@ export class ButtonComp extends NativeButton {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: ButtonProps, oldProps: ButtonProps) {
     setButtonProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
