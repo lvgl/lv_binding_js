@@ -16,6 +16,24 @@ const modes = {
   reverse: 2,
 };
 
+export type ArcProps = CommonProps & {
+  indicatorStyle?: object;
+  onIndicatorPressedStyle?: object;
+  onPressedStyle?: object;
+  knobStyle?: object;
+  onKnobPressedStyle?: object;
+  onChange?: (value: number) => void;
+  range?: [number, number];
+  value?: number;
+  startAngle?: number;
+  endAngle?: number;
+  backgroundStartAngle?: number;
+  backgroundEndAngle?: number;
+  rotation?: number;
+  mode?: "normal" | "symmetrical" | "reverse";
+  changeRate?: number;
+};
+
 function setArcProps(comp, newProps: ArcProps, oldProps: ArcProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Arc", comp, newProps, oldProps }),
@@ -128,24 +146,6 @@ function setArcProps(comp, newProps: ArcProps, oldProps: ArcProps) {
     }
   });
 }
-
-export type ArcProps = CommonProps & {
-  indicatorStyle?: object;
-  onIndicatorPressedStyle?: object;
-  onPressedStyle?: object;
-  knobStyle?: object;
-  onKnobPressedStyle?: object;
-  onChange?: (value: number) => void;
-  range?: [number, number];
-  value?: number;
-  startAngle?: number;
-  endAngle?: number;
-  backgroundStartAngle?: number;
-  backgroundEndAngle?: number;
-  rotation?: number;
-  mode?: "normal" | "symmetrical" | "reverse";
-  changeRate?: number;
-};
 
 export class ArcComp extends NativeArc {
   constructor({ uid }) {

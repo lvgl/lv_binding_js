@@ -1,6 +1,7 @@
+import { LvgljsComponentConfig } from "../config";
 import { ButtonComp } from "./comp";
 
-export default class ButtonConfig {
+export default class ButtonConfig implements LvgljsComponentConfig {
   tagName = "Button";
   native = null;
   shouldSetTextContent() {

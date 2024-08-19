@@ -1,5 +1,6 @@
 import { ArcProps } from "./components/Arc/comp";
 import ArcConfig from "./components/Arc/config";
+import { ButtonProps } from "./components/Button/comp";
 import ButtonConfig from "./components/Button/config";
 import CalendarConfig from "./components/Calendar/config";
 import ChartConfig from "./components/Chart/config";
@@ -28,7 +29,7 @@ export const View = registerComponent<ViewProps>(new ViewConfig());
 // export const Window = registerComponent(new WindowConfig());
 export const Text = registerComponent(new TextConfig());
 export const Image = registerComponent(new ImageConfig());
-export const Button = registerComponent(new ButtonConfig());
+export const Button = registerComponent<ButtonProps>(new ButtonConfig());
 export const Slider = registerComponent(new SliderConfig());
 export const Arc = registerComponent<ArcProps>(new ArcConfig());
 export const Switch = registerComponent(new SwitchConfig());
