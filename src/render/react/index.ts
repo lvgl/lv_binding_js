@@ -28,6 +28,7 @@ import { RollerComp, RollerProps } from "./components/Roller/comp";
 import RollerConfig from "./components/Roller/config";
 import { SliderComp, SliderProps } from "./components/Slider/comp";
 import SliderConfig from "./components/Slider/config";
+import { SwitchComp, SwitchProps } from "./components/Switch/comp";
 import SwitchConfig from "./components/Switch/config";
 import TabsConfig from "./components/Tabs/config";
 import { TextComp, TextProps } from "./components/Text/comp";
@@ -46,7 +47,7 @@ export const Image = registerComponent<ImageProps, ImageComp>(new ImageConfig())
 export const Button = registerComponent<ButtonProps, ButtonComp>(new ButtonConfig());
 export const Slider = registerComponent<SliderProps, SliderComp>(new SliderConfig());
 export const Arc = registerComponent<ArcProps, ArcComp>(new ArcConfig());
-export const Switch = registerComponent(new SwitchConfig());
+export const Switch = registerComponent<SwitchProps, SwitchComp>(new SwitchConfig());
 export const Textarea = registerComponent(new TextareaConfig());
 export const Input = registerComponent<InputProps, InputComp>(new InputConfig());
 export const Keyboard = registerComponent<KeyboardProps, KeyboardComp>(new KeyboardConfig());

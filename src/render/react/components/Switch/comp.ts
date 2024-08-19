@@ -1,4 +1,5 @@
-import { CommonComponentApi } from "../common/index";
+import { StyleProps } from "../../core/style";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -10,7 +11,14 @@ import {
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeComp = bridge.NativeRender.NativeComponents.Switch;
 
-function setSwitchProps(comp, newProps, oldProps) {
+export type SwitchProps = CommonProps & {
+  checkedStyle?: StyleProps;
+  onChange?: (e: Event) => void;
+  checked?: boolean;
+  disabled?: boolean;
+};
+
+function setSwitchProps(comp, newProps: SwitchProps, oldProps: SwitchProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Switch", comp, newProps, oldProps }),
     checkedStyle(styleSheet) {
