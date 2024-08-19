@@ -1,4 +1,4 @@
-import { CommonComponentApi } from "../common/index";
+import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -16,7 +16,14 @@ const modes = {
   number: 3,
 };
 
-function setKeyboardProps(comp, newProps, oldProps) {
+export type KeyboardProps = CommonProps & {
+  mode: "lower" | "upper" | "special" | "number";
+  textarea: any;
+  onClose?: () => void;
+  onOk?: () => void;
+};
+
+function setKeyboardProps(comp, newProps: KeyboardProps, oldProps: KeyboardProps) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
     mode(mode) {
@@ -65,7 +72,7 @@ export class KeyboardComp extends NativeView {
       },
     });
   }
-  setProps(newProps, oldProps) {
+  setProps(newProps: KeyboardProps, oldProps: KeyboardProps) {
     setKeyboardProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
