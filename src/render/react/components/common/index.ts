@@ -13,12 +13,12 @@ export type CommonProps = {
   style?: StyleProps;
   /** Align takes priority over  */
   align?: {
-    type?: typeof EAlignType;
+    type?: typeof EAlignType[keyof typeof EAlignType];
     /** Defines the x,y position */
     pos?: [number, number];
   };
   alignTo?: {
-    type?: typeof EAlignType;
+    type?: typeof EAlignType[keyof typeof EAlignType];
     /** Defines the x,y position */
     pos?: [number, number];
     /** Pass the component instance by React ref */
