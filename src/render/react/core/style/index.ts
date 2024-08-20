@@ -103,21 +103,19 @@ export function setStyle({
 }
 
 type StyleType = 
-| ArcStyleType
-| BackgroundStyleType
-| BorderStyleType
-| DisplayStyleType
-| FlexStyleType 
-| GridStyleType
-| LineStyleType
-| MiscStyleType
-| OpacityStyleProp
-| OutlineStyleType
-| PaddingStyleType
-| PosStyleType
-| ScrollStyleType
-| ShadowStyleType
-| TextStyleType
-| TransStyleType;
+& ArcStyleType
+& BackgroundStyleType
+& BorderStyleType
+& (DisplayStyleType | FlexStyleType | GridStyleType)
+& LineStyleType
+& MiscStyleType
+& OpacityStyleProp
+& OutlineStyleType
+& PaddingStyleType
+& PosStyleType
+& ScrollStyleType
+& ShadowStyleType
+& TextStyleType
+& TransStyleType;
 
 export type StyleProps =  StyleType | StyleType[];

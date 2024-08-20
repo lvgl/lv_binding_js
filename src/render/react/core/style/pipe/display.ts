@@ -1,7 +1,7 @@
 import { ProcessColor, ProcessPx, ProcessPxOrPercent } from "../util";
 
 export type DisplayStyleType = {
-  "display"?: "flex" | "block" | "inline" | "none";
+  "display"?: "flex" | "grid" | "block" | "inline" | "none";
 }
 
 export function DisplayStyle(style: DisplayStyleType, result, compName) {
