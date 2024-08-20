@@ -1,5 +1,6 @@
+import { StyleProps } from "./index";
 import { isValidUrl } from "../../utils/helpers";
-import { BUILT_IN_SYMBOL } from "../style/symbol";
+import { BUILT_IN_SYMBOL } from "./symbol";
 
 async function getImageBinary(url) {
   const resp = await fetch(url, {});
@@ -7,7 +8,7 @@ async function getImageBinary(url) {
   return imageBuffer;
 }
 
-export function PostProcessStyle({ comp, styleSheet, styleType }) {
+export function PostProcessStyle({ comp, styleSheet, styleType }: { comp: any; styleSheet: StyleProps; styleType: any }) {
   if (styleSheet["background-image"] !== void 0) {
     let url = styleSheet["background-image"];
 

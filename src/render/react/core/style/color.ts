@@ -22,6 +22,9 @@ export const builtinColor = {
   black: 0,
 };
 
+/** Either one of the builtin colors or a hexidecimal number representing the color e.g. `0xffffff` for white */
+export type ColorType = keyof typeof builtinColor | number;
+
 export const colorTransform = (data) => {
   if (builtinColor[data]) {
     return builtinColor[data];

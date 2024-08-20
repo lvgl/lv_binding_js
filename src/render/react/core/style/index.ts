@@ -1,19 +1,19 @@
-import { ArcStyle } from "./pipe/arc";
-import { BackgroundStyle } from "./pipe/background";
-import { BorderStyle } from "./pipe/border";
-import { DisplayStyle } from "./pipe/display";
-import { FlexStyle } from "./pipe/flex";
-import { GridStyle } from "./pipe/grid";
-import { LineStyle } from "./pipe/line";
-import { MiscStyle } from "./pipe/misc";
-import { OpacityStyle } from "./pipe/opacity";
-import { OutlineStyle } from "./pipe/outline";
-import { PaddingStyle } from "./pipe/padding";
-import { PosStyle } from "./pipe/pos";
-import { ScrollStyle } from "./pipe/scoll";
-import { ShadowStyle } from "./pipe/shadow";
-import { TextStyle } from "./pipe/text";
-import { TransStyle } from "./pipe/trans";
+import { ArcStyle, ArcStyleType } from "./pipe/arc";
+import { BackgroundStyle, BackgroundStyleType } from "./pipe/background";
+import { BorderStyle, BorderStyleType } from "./pipe/border";
+import { DisplayStyle, DisplayStyleType } from "./pipe/display";
+import { FlexStyle, FlexStyleType } from "./pipe/flex";
+import { GridStyle, GridStyleType } from "./pipe/grid";
+import { LineStyle, LineStyleType } from "./pipe/line";
+import { MiscStyle, MiscStyleType } from "./pipe/misc";
+import { OpacityStyle, OpacityStyleProp } from "./pipe/opacity";
+import { OutlineStyle, OutlineStyleType } from "./pipe/outline";
+import { PaddingStyle, PaddingStyleType } from "./pipe/padding";
+import { PosStyle, PosStyleType } from "./pipe/pos";
+import { ScrollStyle, ScrollStyleType } from "./pipe/scoll";
+import { ShadowStyle, ShadowStyleType } from "./pipe/shadow";
+import { TextStyle, TextStyleType } from "./pipe/text";
+import { TransStyle, TransStyleType } from "./pipe/trans";
 import { PostProcessStyle } from "./post";
 
 class StyleSheet {
@@ -77,6 +77,14 @@ export function setStyle({
   oldStyleSheet,
   isInit = true,
   defaultStyle = {},
+}: {
+  comp: any;
+  styleSheet: StyleProps;
+  compName: string;
+  styleType: number;
+  oldStyleSheet: StyleProps| null;
+  isInit?: boolean;
+  defaultStyle?: any;
 }) {
   if (!styleSheet) return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
@@ -94,6 +102,22 @@ export function setStyle({
   PostProcessStyle({ comp, styleSheet, styleType });
 }
 
-export type StyleProps = Parameters<typeof FlexStyle>[0] &
-// Remove once every style is defined in TS
-{[key: string]: any};
+type StyleType = 
+| ArcStyleType
+| BackgroundStyleType
+| BorderStyleType
+| DisplayStyleType
+| FlexStyleType 
+| GridStyleType
+| LineStyleType
+| MiscStyleType
+| OpacityStyleProp
+| OutlineStyleType
+| PaddingStyleType
+| PosStyleType
+| ScrollStyleType
+| ShadowStyleType
+| TextStyleType
+| TransStyleType;
+
+export type StyleProps =  StyleType | StyleType[];

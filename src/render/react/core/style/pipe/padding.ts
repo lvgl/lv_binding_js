@@ -2,7 +2,15 @@ import { ProcessPx } from "../util";
 
 const keys = ["padding-left", "padding-top", "padding-right", "padding-bottom"];
 
-export function PaddingStyle(style, result, compName) {
+export type PaddingStyleType = {
+  "padding"?: number | `${number} ${number}` | `${number} ${number} ${number}` | `${number} ${number} ${number} ${number}`;
+  "padding-left"?: number;
+  "padding-top"?: number;
+  "padding-right"?: number;
+  "padding-bottom"?: number;
+};
+
+export function PaddingStyle(style: PaddingStyleType, result, compName) {
   keys.forEach((key) => {
     if (style[key] !== void 0) {
       ProcessPx(key, style[key], result);

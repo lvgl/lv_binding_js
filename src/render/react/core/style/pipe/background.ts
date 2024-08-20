@@ -1,3 +1,4 @@
+import { ColorType } from "../color";
 import { ProcessColor, ProcessEnum } from "../util";
 
 const obj = {
@@ -11,7 +12,13 @@ const obj = {
 };
 const keys = Object.keys(obj);
 
-export function BackgroundStyle(style, result, compName) {
+export type BackgroundStyleType = {
+  "background-color"?: ColorType;
+  "background-grad-color"?: ColorType;
+  "background-grad-color-dir"?: "none" | "vertical" | "horizontal";
+};
+
+export function BackgroundStyle(style: BackgroundStyleType, result, compName) {
   keys.forEach((key) => {
     if (style[key] !== void 0) {
       obj[key](key, style[key], result);

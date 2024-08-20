@@ -1,3 +1,4 @@
+import { ColorType } from "../color";
 import { ProcessColor, ProcessEnum, ProcessPx } from "../util";
 
 const builtInFontList = [
@@ -31,7 +32,17 @@ const obj = {
 };
 const keys = Object.keys(obj);
 
-export function TextStyle(style, result, compName) {
+export type TextStyleType = {
+  "text-color"?: ColorType;
+  "letter-spacing"?: number;
+  "line-spacing"?: number;
+  "text-overflow"?: "ellipsis" | "clip" | "auto" | "scroll" | "circular";
+  "text-align"?: "auto" | "left" | "center" | "right";
+  "text-decoration"?: "none" | "underline" | "strikethrough";
+  "font-size"?: number | string;
+}
+
+export function TextStyle(style: TextStyleType, result, compName) {
   keys.forEach((key) => {
     if (style[key] !== void 0) {
       obj[key](key, style[key], result);
