@@ -23,8 +23,8 @@ async function getImageBinary(url) {
 }
 
 export type ImageProps = CommonProps & {
+  /** GIF loading resource, support network url, local path, buildtin symbol */
   src: string;
-  onClick?: () => void,
 };
 
 function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {

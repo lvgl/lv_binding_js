@@ -14,10 +14,6 @@ export type TabsProps = CommonProps & {
   tabs: string[];
   tabPosition: "left" | "top" | "right" | "bottom";
   tabSize?: number;
-  onClick?: (e: Event) => void;
-  onPressed?: (e: Event) => void;
-  onLongPressed?: (e: Event) => void;
-  onLongPressRepeat?: (e: Event) => void;
 };
 
 function setTabsProps(comp, newProps: TabsProps, oldProps: TabsProps) {

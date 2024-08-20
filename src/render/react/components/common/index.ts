@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+  EAlignType,
   EVENTTYPE_MAP,
   STYLE_TYPE,
   handleEvent,
@@ -10,21 +11,55 @@ import { StyleProps } from "../../core/style";
 
 export type CommonProps = {
   style?: StyleProps;
+  /** Align takes priority over  */
   align?: {
-    type: number;
-    pos: [number, number];
+    type?: typeof EAlignType;
+    /** Defines the x,y position */
+    pos?: [number, number];
   };
   alignTo?: {
-    type: number;
-    pos: [number, number];
+    type?: typeof EAlignType;
+    /** Defines the x,y position */
+    pos?: [number, number];
+    /** Pass the component instance by React ref */
     parent: any;
   };
-  scrollbarStyle?: object;
-  onScrollbarPressedStyle?: object;
-  scrollbarScrollingStyle?: object;
-  onPressedStyle?: object;
-  onReleasedStyle?: object;
+  scrollbarStyle?: StyleProps;
+  onScrollbarPressedStyle?: StyleProps;
+  scrollbarScrollingStyle?: StyleProps;
+  onPressedStyle?: StyleProps;
+  onReleasedStyle?: StyleProps;
   children?: React.ReactNode;
+  onClick?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressRepeat?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onPressLost?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onReleased?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
 };
 
 export const CommonComponentApi = function ({

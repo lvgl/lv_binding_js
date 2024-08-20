@@ -5,6 +5,7 @@ import {
   setStyle,
   styleGetterProp,
 } from "../config";
+import { InputComp } from "../Input/comp";
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeView = bridge.NativeRender.NativeComponents.Keyboard;
@@ -17,8 +18,14 @@ const modes = {
 };
 
 export type KeyboardProps = CommonProps & {
-  mode: "lower" | "upper" | "special" | "number";
-  textarea: any;
+  /** Sets keyboard mode:
+   * - lower, Display lower case letters
+   * - upper, Display upper case letters
+   * - special, Display special characters
+   * - number, Display numbers, +/- sign, and decimal dot
+  */
+  mode: typeof modes;
+  textarea: InputComp;
   onClose?: () => void;
   onOk?: () => void;
 };

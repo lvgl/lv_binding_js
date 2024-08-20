@@ -23,7 +23,6 @@ async function getGIFBinary(url) {
 
 export type GIFProps = CommonProps & {
   src: string;
-  onClick: (e: Event) => void;
 }
 
 function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {

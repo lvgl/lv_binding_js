@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -11,11 +12,22 @@ const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
 export type TextAreaProps = CommonProps & {
   placeholder: string;
-  mode: "password";
-  onFocusStyle: Record<string, any>;
-  onChange: (e: Event) => void;
-  onFocus: (e: Event) => void;
+  /** `password` mode changes text to `*` */
+  mode?: "password" | "text";
+  onFocusStyle: StyleProps;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
+  onFocus?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
   value: string;
+  /** Virtual keyboard will auto raise up when focus on Input component */
   autoKeyBoard: boolean;
 };
 

@@ -18,7 +18,12 @@ export type CheckboxProps = CommonProps & {
   checkedStyle?: StyleProps;
   indicatorStyle?: StyleProps;
   indicatorCheckedStyle?: StyleProps;
-  onChange?: () => void;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
 };
 
 function setCheckboxProps(comp, newProps: CheckboxProps, oldProps: CheckboxProps) {

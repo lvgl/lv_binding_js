@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp } from "../config";
 
@@ -9,6 +10,7 @@ export type ProgressBarProps = CommonProps & {
   range: number[];
   animationTime?: number;
   useAnimation?: boolean;
+  indicatorStyle?: StyleProps;
 };
 
 function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: ProgressBarProps) {

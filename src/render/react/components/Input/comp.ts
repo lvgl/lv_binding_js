@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -11,13 +12,29 @@ const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
 export type InputProps = CommonProps & {
   placeholder: string;
-  mode: "password" | "text";
+  /** `password` mode changes text to `*` */
+  mode?: "password" | "text";
+  /** Maximum number of characters */
   maxlength: number;
-  onChange: (e: Event) => void;
-  onFocus: (e: Event) => void;
-  onBlur: (e: Event) => void;
-  onFocusStyle: any;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
+  onFocus?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onBlur?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onFocusStyle: StyleProps;
   value: string;
+  /** Virtual keyboard will auto raise up when focus on Input component */
   autoKeyBoard: boolean;
 };
 
@@ -84,6 +101,7 @@ function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
   });
 }
 
+/** A one line mode of Textarea */
 export class InputComp extends NativeView {
   constructor({ uid }) {
     super({ uid });
