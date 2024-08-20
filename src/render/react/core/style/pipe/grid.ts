@@ -36,7 +36,22 @@ const gridAlignItemsObj = {
   stretch: 3,
 };
 
-export function GridStyle(style, result) {
+export type GridStyleType = {
+  "display"?: "grid";
+  "grid-template-columns"?: string;
+  "grid-template-rows"?: string;
+  "justify-content"?: "start" | "end" | "center" | "space-evenly" | "space-around" | "space-between" | "stretch";
+  "align-items"?: "start" | "end" | "center" | "space-evenly" | "space-around" | "space-between" | "stretch";
+  "grid-child"?: boolean;
+  "justify-self"?: "start" | "end" | "center" | "stretch";
+  "align-self"?: "start" | "end" | "center" | "stretch";
+  "grid-column-pos"?: number;
+  "grid-row-pos"?: number;
+  "grid-column-span"?: number;
+  "grid-row-span"?: number;
+};
+
+export function GridStyle(style: GridStyleType, result) {
   if (style.display == "grid") {
     let columns = style["grid-template-columns"]?.split(/\s/).filter(Boolean);
     let rows = style["grid-template-rows"]?.split(/\s/).filter(Boolean);
@@ -65,7 +80,6 @@ export function GridStyle(style, result) {
     });
     columns = columns.filter(Boolean);
     rows = rows.filter(Boolean);
-
     result["display"] = "grid";
     result["grid-template"] = [columns, rows];
     const justifyContent =

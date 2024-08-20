@@ -1,3 +1,4 @@
+import { ColorType } from "../color";
 import { ProcessColor, ProcessEnum, ProcessPx } from "../util";
 
 const obj = {
@@ -20,7 +21,14 @@ const obj = {
 };
 const keys = Object.keys(obj);
 
-export function BorderStyle(style, result, compName) {
+export type BorderStyleType = {
+  "border-radius"?: number;
+  "border-width"?: number;
+  "border-color"?: ColorType;
+  "border-side"?: "left" | "right" | "full" | "top" | "bottom" | "top-right" | "top-bottom" | "top-left" | "right-bottom" | "right-left" | "bottom-left";
+}
+
+export function BorderStyle(style: BorderStyleType, result, compName) {
   keys.forEach((key) => {
     if (style[key] !== void 0) {
       obj[key](key, style[key], result);

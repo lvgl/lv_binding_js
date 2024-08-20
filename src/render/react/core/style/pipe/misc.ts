@@ -1,6 +1,12 @@
+import { ColorType } from "../color";
 import { ProcessColor } from "../util";
 
-export function MiscStyle(style, result, compName) {
+export type MiscStyleType = {
+  "style-transition-time"?: number;
+  recolor?: ColorType;
+};
+
+export function MiscStyle(style: MiscStyleType, result, compName) {
   if (style["recolor"] && compName === "Image") {
     ProcessColor("recolor", style["recolor"], result);
   }

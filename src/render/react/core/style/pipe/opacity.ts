@@ -4,7 +4,17 @@ function NormalizeOpacity(value) {
   return Math.floor(value * 255);
 }
 
-export function OpacityStyle(style, result, compName) {
+export type OpacityStyleProp = {
+  opacity?: number;
+  "background-opacity"?: number;
+  "border-opacity"?: number;
+  "outline-opacity"?: number;
+  "recolor-opacity"?: number;
+  "shadow-opacity"?: number;
+  "arc-opacity"?: number;
+};
+
+export function OpacityStyle(style: OpacityStyleProp, result, compName) {
   if (style["opacity"] !== void 0) {
     if (compName === "Image") {
       result["img-opacity"] = NormalizeOpacity(style["opacity"]);

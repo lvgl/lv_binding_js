@@ -241,7 +241,13 @@ const transformSupportKeys = [
   "transform-height",
 ];
 
-export function TransStyle(style, result, compName) {
+export type TransStyleType = {
+  transition?: string;
+  transform?: string;
+  "transform-origin"?: string;
+};
+
+export function TransStyle(style: TransStyleType, result, compName) {
   if (style["transition-property"]) {
     let properties = style["transition-property"];
     properties = properties

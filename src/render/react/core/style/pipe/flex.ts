@@ -20,8 +20,8 @@ const flexAlignObj = {
 
 type IntegerGreaterThanOne = number;
 
-type FlexStyle = {
-  "display": "flex";
+export type FlexStyleType = {
+  "display"?: "flex";
   "flex-direction"?: "row" | "column";
   "flex-wrap"?: "wrap" | "nowrap" | "reverse";
   "justify-content"?: "flex-start" | "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
@@ -30,7 +30,7 @@ type FlexStyle = {
   "flex-grow"?: IntegerGreaterThanOne;
 };
 
-export function FlexStyle(style: FlexStyle, result) {
+export function FlexStyle(style: FlexStyleType, result) {
   if (style.display !== "flex") return result;
 
   let flexFlow = 0x00;

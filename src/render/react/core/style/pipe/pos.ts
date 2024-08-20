@@ -1,4 +1,4 @@
-import { ProcessEnum, ProcessPx, ProcessPxOrPercent } from "../util";
+import { PixelOrPercent, ProcessEnum, ProcessPx, ProcessPxOrPercent } from "../util";
 
 const obj = {
   height: ProcessPxOrPercent,
@@ -18,7 +18,21 @@ const obj = {
 };
 const keys = Object.keys(obj);
 
-export function PosStyle(style, result, compName) {
+export type PosStyleType = {
+  height?: PixelOrPercent;
+  "max-height"?: PixelOrPercent;
+  "min-height"?: PixelOrPercent;
+  width?: PixelOrPercent;
+  "max-width"?: PixelOrPercent;
+  "min-width"?: PixelOrPercent;
+  left?: PixelOrPercent;
+  top?: PixelOrPercent;
+  "row-spacing"?: PixelOrPercent;
+  "column-spacing"?: PixelOrPercent;
+  position?: "absolute" | "fixed";
+};
+
+export function PosStyle(style: PosStyleType, result, compName) {
   keys.forEach((key) => {
     if (style[key] !== void 0) {
       obj[key](key, style[key], result);
