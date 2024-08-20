@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -17,12 +18,17 @@ const modes = {
 };
 
 export type ArcProps = CommonProps & {
-  indicatorStyle?: object;
-  onIndicatorPressedStyle?: object;
-  onPressedStyle?: object;
-  knobStyle?: object;
-  onKnobPressedStyle?: object;
-  onChange?: (value: number) => void;
+  indicatorStyle?: StyleProps;
+  onIndicatorPressedStyle?: StyleProps;
+  onPressedStyle?: StyleProps;
+  knobStyle?: StyleProps;
+  onKnobPressedStyle?: StyleProps;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: number,
+  }) => void;
   range?: [number, number];
   value?: number;
   startAngle?: number;
