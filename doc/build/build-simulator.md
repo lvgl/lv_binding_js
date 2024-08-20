@@ -2,24 +2,27 @@
 This guide gives an overview on how to build lvgljs running with SDL simulator.
 This should work the same for both Linux and macOS.
 
-Take a look at the [txiki readme](https://github.com/saghul/txiki.js#building)
-for the required dependencies.
-You will need to install them, since we depend on txiki for the JavaScript runtime.
+## Setup
+You'll need to install these dependencies:
+- [cmake](https://cmake.org/) 
+- [sdl2](https://www.libsdl.org/)
+- [Node.js](https://nodejs.org/en/download/package-manager)
 
-Besides that you will need to install sdl2 and [Node.js](https://nodejs.org/en/download/package-manager)
+| Mac | Linux |
+| ------- | ------- |
+| `brew install cmake sdl2 node` | `sudo apt install cmake nodejs libsdl2-dev` |
 
-> [!TIP]
-> On some distributions, like Ubuntu, you might need to install the `libsdl2-dev` package as well
 
-The [`Makefile`](../../Makefile) of this repository contains some useful shortcuts:
-- `make setup` will initialize the git submodules and install the necessary npm packages
-- `make demo` will build the simulator and run the widgets demo
+Then run `make setup`. This will initialize the git submodules and install the necessary npm packages
 
-## Manual approach
-You can build the simulator with `make simulator`, which will then be available in the `build/` directory.
+## Running the demo
 
-Run `node build.js` to create `*.js` files from the `*.jsx` files in the `test/` and `demo/` directories.
-You can then run any of them with:
+`make demo` will build the simulator and run the widgets demo. Optionally you can add `PROJECT=<demoName>` where `demoName` is the directory in `/demos`, if you want to run a specific project e.g. `make demo PROJECT=calculator`
+
+## Running other projects
+1. Build the simulator with `make simulator`, which will then be available in the `build/` directory.
+2. Run `node build.js` to generate `*.js` files from the `*.jsx` files in the `test/` and `demo/` directories.
+3. Run the simulator with the generated file e.g.:
 ```sh
 ./build/lvgljs run test/button/2/index.js
 ```

@@ -11,9 +11,12 @@ simulator:
 	cmake -B "$(BUILD_SIM)" -DCMAKE_BUILD_TYPE=Simulator
 	cmake --build $(BUILD_SIM)
 
+# Set default project argument to 'widgets' if no project is provided
 demo: simulator
-	node build.js
-	./${BUILD_SIM}/lvgljs run demo/widgets/index.js
+	@PROJECT=$${PROJECT:-widgets}; \
+	echo "Running demo with project: $$PROJECT"; \
+	node build.js; \
+	./${BUILD_SIM}/lvgljs run demo/$$PROJECT/index.js
 
 clean:
 	rm -rf $(BUILD_SIM)
