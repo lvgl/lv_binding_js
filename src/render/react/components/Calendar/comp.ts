@@ -13,7 +13,12 @@ export type CalendarProps = CommonProps & {
   today?: string;
   shownMonth?: string;
   highLightDates?: string[];
-  onChange?: (value: string) => void;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
 };
 
 function setCalendarProps(comp, newProps: CalendarProps, oldProps: CalendarProps) {

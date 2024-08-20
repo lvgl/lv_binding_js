@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -11,13 +12,28 @@ const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeMask = bridge.NativeRender.NativeComponents.Mask;
 
 export type MaskProps = CommonProps & {
-  onPressedStyle?: object;
-  onClick?: Function;
-  onPressed?: Function;
-  onLongPressed?: Function;
-  onLongPressRepeat?: Function;
+  onPressedStyle?: StyleProps;
+  onClick?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressRepeat?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
 };
-}
 
 function setMaskProps(comp, newProps: MaskProps, oldProps: MaskProps) {
   const setter = {

@@ -13,7 +13,12 @@ const NativeComp = bridge.NativeRender.NativeComponents.Switch;
 
 export type SwitchProps = CommonProps & {
   checkedStyle?: StyleProps;
-  onChange?: (e: Event) => void;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    checked: boolean,
+  }) => void;
   checked?: boolean;
   disabled?: boolean;
 };

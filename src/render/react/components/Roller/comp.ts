@@ -1,3 +1,4 @@
+import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -11,12 +12,18 @@ const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeRoller = bridge.NativeRender.NativeComponents.Roller;
 
 export type RollerProps = CommonProps & {
-  selectedStyle?: any;
+  selectedStyle?: StyleProps;
   options: string[];
   selectIndex: number;
   visibleRowCount: number;
-  infinity: boolean;
-  onChange: (e: Event) => void;
+  /** Makes the roller circular */
+  infinity?: boolean;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
 };
 
 function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {

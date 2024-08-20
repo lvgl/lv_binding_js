@@ -1,5 +1,6 @@
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
+  EDropdownListArrowDirection,
   EVENTTYPE_MAP,
   STYLE_TYPE,
   handleEvent,
@@ -12,12 +13,18 @@ const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist;
 
 export type DropdownListProps = CommonProps & {
   items: string[];
-  arrow: number;
+  arrow: typeof EDropdownListArrowDirection;
   selectIndex: number;
-  text: string;
-  direction: number;
+  /** If the text is null the selected option is displayed on the items */
+  text?: string;
+  direction: typeof EDropdownListArrowDirection;
   highlightSelect: boolean;
-  onChange: () => void;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
 };
 
 function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListProps) {

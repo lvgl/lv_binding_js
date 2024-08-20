@@ -10,7 +10,7 @@ const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeLine = bridge.NativeRender.NativeComponents.Line;
 
 export type LineProps = CommonProps & {
-  points: number[];
+  points: [number, number][];
 };
 
 function setLineProps(comp, newProps, oldProps) {

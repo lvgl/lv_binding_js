@@ -14,11 +14,16 @@ const NativeSlider = bridge.NativeRender.NativeComponents.Slider;
 export type SliderProps = CommonProps & {
   indicatorStyle?: StyleProps;
   onIndicatorPressedStyle?: StyleProps;
-  onPressedStyle?: StyleProps;
   knobStyle?: StyleProps;
   onKnobPressedStyle?: StyleProps;
-  onChange: (e: Event) => void;
+  onChange?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+    value: string,
+  }) => void;
   range: [number, number];
+  /** Must be within the defined range */
   value: number;
 };
 

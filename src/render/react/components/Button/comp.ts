@@ -13,10 +13,26 @@ const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
 export type ButtonProps = CommonProps & {
   onPressedStyle?: StyleProps;
-  onClick?: () => void;
-  onPressed?: () => void;
-  onLongPressed?: () => void;
-  onLongPressRepeat?: () => void;
+  onClick?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressed?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
+  onLongPressRepeat?: (event: {
+    target: any,
+    currentTarget: any,
+    stopPropogation: () => void,
+  }) => void;
 };
 
 function setButtonProps(comp, newProps: ButtonProps, oldProps: ButtonProps) {
