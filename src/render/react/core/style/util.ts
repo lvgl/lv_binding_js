@@ -33,7 +33,7 @@ export function ProcessPx(key, value, result) {
   }
 }
 
-export type PixelOrPercent = number | `${number}%`;
+export type PixelOrPercent = number | `${number}%` | "auto";
 
 export function ProcessPxOrPercent(key, value, result) {
   if (value === "auto") {
