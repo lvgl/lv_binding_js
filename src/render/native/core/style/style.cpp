@@ -132,7 +132,7 @@ static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JS
     int y;
     JS_ToInt32(ctx, &y, obj);
 
-    lv_style_set_bg_grad_dir(style, y);
+    lv_style_set_bg_grad_dir(style, static_cast<lv_grad_dir_t>(y));
 };
 
 static void CompSetArcWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -291,7 +291,7 @@ static void CompSetBorderSide (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_border_side(style, x);
+    lv_style_set_border_side(style, static_cast<lv_border_side_t>(x));
 };
 
 static void CompSetOutlineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -326,7 +326,7 @@ static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* c
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_label_set_long_mode(comp, x);
+    lv_label_set_long_mode(comp, static_cast<lv_label_long_mode_t>(x));
 };
 
 static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -347,14 +347,14 @@ static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_text_align(style, x);
+    lv_style_set_text_align(style, static_cast<lv_text_align_t>(x));
 };
 
 static void CompSetDecoration (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_text_decor(style, x);
+    lv_style_set_text_decor(style, static_cast<lv_text_decor_t>(x));
 };
 
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -383,14 +383,14 @@ static void CompSetScrollSnapX (lv_obj_t* comp, lv_style_t* style, JSContext* ct
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_obj_set_scroll_snap_x(comp, x);
+    lv_obj_set_scroll_snap_x(comp, static_cast<lv_scroll_snap_t>(x));
 };
 
 static void CompSetScrollSnapY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_obj_set_scroll_snap_y(comp, x);
+    lv_obj_set_scroll_snap_y(comp, static_cast<lv_scroll_snap_t>(x));
 };
 
 static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {

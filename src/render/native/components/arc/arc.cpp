@@ -8,7 +8,7 @@ Arc::Arc(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_group_add_obj(lv_group_get_default(), this->instance);
 
     lv_obj_remove_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
-    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
+    lv_obj_add_flag(this->instance, static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE));
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 };
@@ -42,7 +42,7 @@ void Arc::setRotation (int32_t value) {
 };
 
 void Arc::setMode (int32_t mode) {
-    lv_arc_set_mode(this->instance, mode);
+    lv_arc_set_mode(this->instance, static_cast<lv_arc_mode_t>(mode));
 };
 
 void Arc::setChangeRate (int32_t value) {
