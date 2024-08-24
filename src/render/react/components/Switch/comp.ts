@@ -1,5 +1,5 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -13,12 +13,7 @@ const NativeComp = bridge.NativeRender.NativeComponents.Switch;
 
 export type SwitchProps = CommonProps & {
   checkedStyle?: StyleProps;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    checked: boolean,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
   checked?: boolean;
   disabled?: boolean;
 };

@@ -1,5 +1,5 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -18,12 +18,7 @@ export type CheckboxProps = CommonProps & {
   checkedStyle?: StyleProps;
   indicatorStyle?: StyleProps;
   indicatorCheckedStyle?: StyleProps;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    value: string,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
 };
 
 function setCheckboxProps(comp, newProps: CheckboxProps, oldProps: CheckboxProps) {

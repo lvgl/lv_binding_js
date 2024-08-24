@@ -30,11 +30,7 @@ export type CommonProps = {
   onPressedStyle?: StyleProps;
   onReleasedStyle?: StyleProps;
   children?: React.ReactNode;
-  onClick?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-  }) => void;
+  onClick?: (event: OnClickEvent) => void;
   onPressed?: (event: {
     target: any,
     currentTarget: any,
@@ -61,6 +57,19 @@ export type CommonProps = {
     stopPropogation: () => void,
   }) => void;
 };
+
+export type OnChangeEvent = {
+  target: any,
+  currentTarget: any,
+  stopPropogation: () => void,
+  value: number,
+}
+
+export type OnClickEvent = {
+  target: any,
+  currentTarget: any,
+  stopPropogation: () => void,
+}
 
 export const CommonComponentApi = function ({
   compName,

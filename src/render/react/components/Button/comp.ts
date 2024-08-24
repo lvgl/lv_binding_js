@@ -1,5 +1,5 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnClickEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -13,11 +13,7 @@ const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
 export type ButtonProps = CommonProps & {
   onPressedStyle?: StyleProps;
-  onClick?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-  }) => void;
+  onClick?: (event: OnClickEvent) => void;
   onPressed?: (event: {
     target: any,
     currentTarget: any,

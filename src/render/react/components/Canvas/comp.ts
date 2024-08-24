@@ -1,4 +1,4 @@
-import { CommonProps } from "../common";
+import { CommonProps, OnClickEvent } from "../common";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -11,7 +11,7 @@ const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
 export type CanvasProps = CommonProps & {
-  onClick?: () => void;
+  onClick?: (event: OnClickEvent) => void;
   align?: { type: number; pos: [number, number] };
   alignTo?: { type: number; pos: [number, number]; parent: any };
 };
