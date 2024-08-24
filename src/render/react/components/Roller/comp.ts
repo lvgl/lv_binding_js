@@ -18,12 +18,7 @@ export type RollerProps = CommonProps & {
   visibleRowCount: number;
   /** Makes the roller circular */
   infinity?: boolean;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    value: string,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
 };
 
 function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {

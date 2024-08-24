@@ -1,5 +1,5 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -16,12 +16,7 @@ export type InputProps = CommonProps & {
   mode?: "password" | "text";
   /** Maximum number of characters */
   maxlength: number;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    value: string,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
   onFocus?: (event: {
     target: any,
     currentTarget: any,

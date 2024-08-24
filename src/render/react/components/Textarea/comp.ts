@@ -1,5 +1,5 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -15,12 +15,7 @@ export type TextAreaProps = CommonProps & {
   /** `password` mode changes text to `*` */
   mode?: "password" | "text";
   onFocusStyle: StyleProps;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    value: string,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
   onFocus?: (event: {
     target: any,
     currentTarget: any,

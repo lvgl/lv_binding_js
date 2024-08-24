@@ -1,4 +1,4 @@
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EDropdownListArrowDirection,
   EDropdownlistDirection,
@@ -20,12 +20,7 @@ export type DropdownListProps = CommonProps & {
   text?: string;
   direction: typeof EDropdownlistDirection[keyof typeof EDropdownlistDirection];
   highlightSelect: boolean;
-  onChange?: (event: {
-    target: any,
-    currentTarget: any,
-    stopPropogation: () => void,
-    value: string,
-  }) => void;
+  onChange?: (event: OnChangeEvent) => void;
 };
 
 function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListProps) {
