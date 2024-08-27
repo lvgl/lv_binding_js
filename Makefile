@@ -15,7 +15,7 @@ simulator:
 demo: simulator
 	@PROJECT=$${PROJECT:-widgets}; \
 	echo "Running demo with project: $$PROJECT"; \
-	node build.js; \
+	node build.js && \
 	./${BUILD_SIM}/lvgljs run demo/$$PROJECT/index.js
 
 clean:
