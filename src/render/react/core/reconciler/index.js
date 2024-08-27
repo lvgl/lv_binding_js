@@ -11,7 +11,7 @@ export const getUid = () => {
 const instanceMap = new Map();
 
 export const getInstance = (uid) => {
-  return instanceMap[uid];
+  return instanceMap.get(uid);
 };
 
 const HostConfig = {
