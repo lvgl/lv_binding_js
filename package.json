@@ -7,7 +7,10 @@
     "test": "test"
   },
   "scripts": {
+    "sim": "./build/lvgljs run",
+    "sim:watch": "nodemon --watch 'demo/**/*.js' --ext 'js' --exec 'npm run sim'",
     "bundle": "node ./build.js",
+    "bundle:watch": "nodemon --watch 'demo/**/*.jsx' --watch 'test/**/*.jsx' --ext 'jsx' --exec 'npm run bundle'",
     "fmt": "prettier -w src/render/react"
   },
   "dependencies": {
@@ -15,6 +18,7 @@
     "core-js": "^3.23.2",
     "esbuild": "^0.14.43",
     "fetch-blob": "^3.2.0",
+    "nodemon": "^3.1.4",
     "react": "^16.13.1",
     "react-proxy": "^2.0.8",
     "react-reconciler": "^0.25.1",
@@ -32,7 +36,7 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "esbuild-plugin-alias": "^0.2.1",
-    "prettier": "^3.0.1",
-    "glob": "^10.3.15"
+    "glob": "^10.3.15",
+    "prettier": "^3.0.1"
   }
 }
