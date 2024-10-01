@@ -45,9 +45,7 @@ void BasicComponent::insertChildBefore(void *child) {
     }
 };
 
-void BasicComponent::removeChild(void* child) {
-    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
-};
+void BasicComponent::removeChild(void* child) {};
 
 void BasicComponent::appendChild (void* child) {
     static_cast<BasicComponent*>(child)->parent_instance = this->instance;
@@ -260,8 +258,8 @@ BasicComponent::~BasicComponent () {
         lv_style_reset(style.second);
     }
 
-    // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+    lv_obj_remove_event_cb(instance, &BasicComponent::EventCallback);
+    lv_obj_del(this->instance);
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {

@@ -284,10 +284,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
 #define WRAPPED_JS_CLOSE_COMPONENT(COMPONENT,COMPONENT_NAME)                                                                \
     static JSValue NativeCompCloseComponent(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {          \
         COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, COMPONENT##ClassID);                                                \
-        lv_obj_t* instance = ((BasicComponent*)(s->comp))->instance;                                                        \
-        ((BasicComponent*)(s->comp))->instance = nullptr;                                                                   \
-        lv_obj_remove_event_cb(instance, &BasicComponent::EventCallback);                                                   \
-        lv_obj_del_async(instance);                                                                                         \
+        delete (BasicComponent*)(s->comp);                                                                                  \
         return JS_UNDEFINED;                                                                                                \
     }                                                                                                                       \
                                                                                                                             \
