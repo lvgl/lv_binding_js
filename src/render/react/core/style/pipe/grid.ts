@@ -1,6 +1,8 @@
 import { NormalizePx } from "../util";
 
-const GRID_CONTENT = (1 << 13) - 1 - 101;
+const LV_COORD_MAX = ((1 << 29) - 1);
+
+const GRID_CONTENT = LV_COORD_MAX - 101;
 const FR_REG = /([\d]+)fr$/;
 
 const gridChildJustifySelfObj = {
@@ -64,7 +66,7 @@ export function GridStyle(style: GridStyleType, result) {
       }
       const arr = column?.match(FR_REG);
       if (!isNaN(arr?.[1])) {
-        return (1 << 13) - 1 - 100 + Number(arr[1]);
+        return LV_COORD_MAX - 100 + Number(arr[1]);
       }
       return NormalizePx(column);
     });
@@ -74,7 +76,7 @@ export function GridStyle(style: GridStyleType, result) {
       }
       const arr = row?.match(FR_REG);
       if (!isNaN(arr?.[1])) {
-        return (1 << 13) - 1 - 100 + Number(arr[1]);
+        return LV_COORD_MAX - 100 + Number(arr[1]);
       }
       return NormalizePx(row);
     });
