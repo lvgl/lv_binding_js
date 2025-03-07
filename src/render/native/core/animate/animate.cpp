@@ -125,7 +125,7 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         if (JS_IsNumber(readycb_value)) {
             JS_ToInt32(ctx, &readycb_uid, readycb_value);
             ref->readycb_uid = readycb_uid;
-            lv_anim_set_ready_cb(animate, Animate_Ready_Callback);
+            lv_anim_set_completed_cb(animate, Animate_Ready_Callback);
         }
         if (JS_IsBool(use_native_value)) {
             use_native = JS_ToBool(ctx, use_native_value);

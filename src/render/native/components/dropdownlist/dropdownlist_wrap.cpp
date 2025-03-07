@@ -74,7 +74,7 @@ static JSValue NativeCompSetDir(JSContext *ctx, JSValueConst this_val, int argc,
         int32_t dir;
         JS_ToInt32(ctx, &dir, argv[0]);
 
-        ((Dropdownlist*)(ref->comp))->setDir(dir);
+        ((Dropdownlist*)(ref->comp))->setDir(static_cast<lv_dir_t>(dir));
         LV_LOG_USER("Dropdownlist %s setDir", ref->uid);
     }
     return JS_UNDEFINED;

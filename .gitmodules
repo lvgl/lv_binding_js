@@ -1,9 +1,6 @@
 [submodule "deps/lvgl"]
 	path = deps/lvgl
 	url = https://github.com/lvgl/lvgl.git
-[submodule "deps/lv_drivers"]
-	path = deps/lv_drivers
-	url = https://github.com/lvgl/lv_drivers.git
 [submodule "deps/txiki"]
 	path = deps/txiki
 	url = https://github.com/saghul/txiki.js.git

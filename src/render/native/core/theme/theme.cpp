@@ -1,9 +1,8 @@
 #include "./theme.hpp"
 
 static void ThemeDefaultInit () {
-    if (theme_default_init == false) {
-        theme_default_init = true;
-        memcpy(&theme_default, lv_theme_default_get(), sizeof(lv_theme_t));
+    if (theme_default == NULL) {
+        theme_default = lv_theme_default_get();
     }
 };
 
@@ -19,21 +18,21 @@ static JSValue SetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSValue
     const lv_font_t* font_size;
 
     if (JS_IsUndefined(primary_color_value)) {
-        primary_color = theme_default.color_primary;
+        primary_color = lv_theme_get_color_primary(NULL);
     } else {
         JS_ToInt32(ctx, &primary_color_ori, primary_color_value);
         primary_color = lv_color_hex(primary_color_ori);
     }
 
     if (JS_IsUndefined(second_primary_value)) {
-        second_primary = theme_default.color_secondary;
+        second_primary = lv_theme_get_color_secondary(NULL);
     } else {
         JS_ToInt32(ctx, &second_primary_ori, second_primary_value);
         second_primary = lv_color_hex(second_primary_ori);
     }
     
     if (JS_IsUndefined(font_size_value)) {
-        font_size = theme_default.font_normal;
+        font_size = lv_theme_get_font_normal(NULL);
     } else {
         JS_ToInt32(ctx, &font_size_ori, font_size_value);
         font_size = &builtin_font_list[font_size_ori];
@@ -55,10 +54,10 @@ static JSValue ResetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSVal
 
     lv_theme_default_init(
         NULL, 
-        theme_default.color_primary, 
-        theme_default.color_secondary, 
+        lv_theme_get_color_primary(NULL),
+        lv_theme_get_color_secondary(NULL),
         LV_THEME_DEFAULT_DARK, 
-        theme_default.font_normal
+        lv_theme_get_font_normal(NULL)
     );
     return JS_UNDEFINED;
 };
