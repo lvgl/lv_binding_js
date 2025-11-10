@@ -27,4 +27,4 @@ function build(pattern){
 }
 
 build('demo/*/*.{jsx,tsx}')
-build('test/*/*.{jsx,tsx}')
+build('test/**/*.{jsx,tsx}')
