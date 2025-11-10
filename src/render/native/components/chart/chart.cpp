@@ -8,12 +8,12 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 
     lv_group_add_obj(lv_group_get_default(), this->instance);
 
-    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
-    lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
+    lv_obj_add_flag(this->instance, static_cast<lv_obj_flag_t>(LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE));
+    lv_obj_remove_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 
-    lv_obj_add_event_cb(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
+    //lv_obj_add_event_cb(this->instance, &Chart::draw_event_cb, LV_EVENT_DRAW_PART_BEGIN, this);
 };
 
 void Chart::setType (int32_t type) {
@@ -31,7 +31,7 @@ void Chart::setLeftAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setRightAxisOption (
@@ -41,7 +41,7 @@ void Chart::setRightAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_Y, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setTopAxisOption (
@@ -51,7 +51,7 @@ void Chart::setTopAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_SECONDARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setBottomAxisOption (
@@ -61,7 +61,7 @@ void Chart::setBottomAxisOption (
     int32_t minor_num,
     int32_t draw_size
   ) {
-    lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
+    //lv_chart_set_axis_tick(this->instance, LV_CHART_AXIS_PRIMARY_X, major_len, minor_len, major_num, minor_num, true, draw_size);
 };
 
 void Chart::setLeftAxisData (std::vector<axis_data>& data) {
@@ -85,7 +85,7 @@ void Chart::setLeftAxisData (std::vector<axis_data>& data) {
     for (i=0; i<data.size(); i++) {
         item = data[i];
         for (j=0; j<item.data.size(); j++) {
-            this->left_axis[i]->y_points[j] = (lv_coord_t)item.data[j];
+            lv_chart_set_value_by_id(this->instance, this->left_axis[i], j, item.data[j]);
         }
     }
 };
@@ -111,7 +111,7 @@ void Chart::setRightAxisData (std::vector<axis_data>& data) {
     for (i=0; i<data.size(); i++) {
         item = data[i];
         for (j=0; j<item.data.size(); j++) {
-            this->right_axis[i]->y_points[j] = (lv_coord_t)item.data[j];
+            lv_chart_set_value_by_id(this->instance, this->right_axis[i], j, item.data[j]);
         }
     }
 };
@@ -156,6 +156,7 @@ void Chart::setBottomAxisLabels (std::vector<std::string>& labels) {
     this->bottom_axis_labels = labels;
 };
 
+#if 0
 void Chart::draw_event_cb (lv_event_t * e) {
     lv_obj_draw_part_dsc_t * dsc = lv_event_get_draw_part_dsc(e);
     if(!lv_obj_draw_part_check_type(dsc, &lv_chart_class, LV_CHART_DRAW_PART_TICK_LABEL)) return;
@@ -172,6 +173,7 @@ void Chart::draw_event_cb (lv_event_t * e) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->top_axis_labels[dsc->value].c_str());
     }
 };
+#endif
 
 void Chart::setLeftAxisRange (int32_t min, int32_t max) {
     lv_chart_set_range(this->instance, LV_CHART_AXIS_PRIMARY_Y, min, max);
@@ -209,12 +211,8 @@ void Chart::setScatterData (std::vector<axis_data>& data) {
 
     for (i=0; i<data.size(); i++) {
         item = data[i];
-        for (j=0; j<item.data.size(); j++) {
-            if (j % 2 == 0) {
-                this->left_axis[i]->x_points[j / 2] = (lv_coord_t)item.data[j];
-            } else {
-                this->left_axis[i]->y_points[(j - 1) / 2] = (lv_coord_t)item.data[j];
-            }
+        for (j=0; j<item.data.size(); j+=2) {
+            lv_chart_set_value_by_id2(this->instance, this->left_axis[i], j / 2, item.data[j], item.data[j + 1]);
         }
     }
 };

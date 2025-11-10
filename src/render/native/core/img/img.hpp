@@ -11,7 +11,7 @@ typedef enum {
 } IMAGE_TYPE;
 
 typedef struct {
-  lv_img_header_t header;
+  lv_image_header_t header;
   uint32_t data_size;
   const uint8_t* data;
   IMAGE_TYPE type; 

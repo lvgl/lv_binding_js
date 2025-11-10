@@ -1,5 +1,8 @@
 import { colorTransform } from "./color";
 
+const LV_COORD_TYPE_SPEC =  (1 << 29);
+const LV_COORD_MAX       = ((1 << 29) - 1);
+
 export function NormalizePx(value) {
   if (value == void 0) return null;
   if (!isNaN(value)) {
@@ -37,7 +40,7 @@ export type PixelOrPercent = number | `${number}%` | "auto";
 
 export function ProcessPxOrPercent(key, value, result) {
   if (value === "auto") {
-    return (result[key] = 2001 | (1 << 13));
+    return (result[key] = LV_COORD_MAX | LV_COORD_TYPE_SPEC);
   }
   if (!isNaN(value)) {
     return (result[key] = value);

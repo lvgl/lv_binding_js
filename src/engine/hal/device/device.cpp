@@ -1,56 +1,23 @@
 #include "./device.hpp"
 
-#define DISP_BUF_SIZE (1024 * 600)
-
 void hal_init () {
     /*LittlevGL init*/
     lv_init();
 
     /*Linux frame buffer device init*/
-    fbdev_init();
+    lv_display_t *disp = lv_linux_fbdev_create();
+    lv_linux_fbdev_set_file(disp, "/dev/fb0");
 
-    /*A small buffer for LittlevGL to draw the screen's content*/
-    static lv_color_t buf[DISP_BUF_SIZE];
+    /* Linux input device init */
+    lv_indev_t *mouse = lv_evdev_create(LV_INDEV_TYPE_POINTER, "/dev/input/event0");
+    lv_indev_set_group(mouse, lv_group_get_default());
+    lv_indev_set_display(mouse, disp);
 
-    /*Initialize a descriptor for the buffer*/
-    static lv_disp_draw_buf_t disp_buf;
-    lv_disp_draw_buf_init(&disp_buf, buf, NULL, DISP_BUF_SIZE);
-
-    /*Initialize and register a display driver*/
-    static lv_disp_drv_t disp_drv;
-    lv_disp_drv_init(&disp_drv);
-    disp_drv.draw_buf   = &disp_buf;
-    disp_drv.flush_cb   = fbdev_flush;
-    disp_drv.hor_res    = 1024;
-    disp_drv.ver_res    = 600;
-    lv_disp_drv_register(&disp_drv);
-
-	/* Linux input device init */
-    evdev_init();
-	
-    /* Initialize and register a display input driver */
-    static lv_indev_drv_t indev_drv;
-    lv_indev_drv_init(&indev_drv);      /*Basic initialization*/
-
-    indev_drv.type = LV_INDEV_TYPE_POINTER;
-    indev_drv.read_cb = evdev_read;   //lv_gesture_dir_t lv_indev_get_gesture_dir(const lv_indev_t * indev)
-    lv_indev_t * my_indev = lv_indev_drv_register(&indev_drv);
+#ifdef SHOW_CURSOR
+    /* Set a cursor for the mouse */
+    LV_IMAGE_DECLARE(mouse_cursor_icon);                  /* Declare the image file */
+    lv_obj_t *cursor_obj = lv_image_create(lv_screen_active()); /* Create an image object for the cursor */
+    lv_image_set_src(cursor_obj, &mouse_cursor_icon);     /* Set the image source */
+    lv_indev_set_cursor(mouse, cursor_obj);          /* Connect the image  object to the driver */
+#endif
 };
-
-uint32_t custom_tick_get(void)
-{
-    static uint64_t start_ms = 0;
-    if(start_ms == 0) {
-        struct timeval tv_start;
-        gettimeofday(&tv_start, NULL);
-        start_ms = (tv_start.tv_sec * 1000000 + tv_start.tv_usec) / 1000;
-    }
-
-    struct timeval tv_now;
-    gettimeofday(&tv_now, NULL);
-    uint64_t now_ms;
-    now_ms = (tv_now.tv_sec * 1000000 + tv_now.tv_usec) / 1000;
-
-    uint32_t time_ms = now_ms - start_ms;
-    return time_ms;
-}

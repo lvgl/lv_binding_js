@@ -17,9 +17,9 @@ void BasicComponent::addEventListener (int eventType) {
 };
 
 void BasicComponent::EventCallback (lv_event_t * event) {
-    BasicComponent* instance = static_cast<BasicComponent*>(event->user_data);
+    BasicComponent* instance = static_cast<BasicComponent*>(lv_event_get_user_data(event));
     std::string uid = instance->uid;
-    lv_event_code_t code = event->code;
+    lv_event_code_t code = lv_event_get_code(event);
     if (instance->isEventRegist(static_cast<int>(code))) {
         FireEventToJS(event, uid, code);
     }
@@ -207,10 +207,10 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
             uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
             if (img_data != nullptr) {
                 img_desc->data = img_data;
-                lv_style_set_bg_img_src(style, img_desc);
+                lv_style_set_bg_image_src(style, img_desc);
             }
         } else {
-            lv_style_set_bg_img_src(style, NULL);
+            lv_style_set_bg_image_src(style, NULL);
         }
 
         this->image_desc_map[style_type] = img_desc;
@@ -227,7 +227,7 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
         }
         this->symbol_map[style_type] = symbol;
 
-        lv_style_set_bg_img_src(style, this->symbol_map[style_type].c_str());
+        lv_style_set_bg_image_src(style, this->symbol_map[style_type].c_str());
     }
 
     lv_obj_invalidate(this->instance);
@@ -236,9 +236,9 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
 BasicComponent::~BasicComponent () {
     comp_map.erase(this->uid);
 
-    const lv_coord_t* ptr1 = this->grid_row_desc;
-    const lv_coord_t* ptr2 = this->grid_column_desc;
-    
+    const int32_t* ptr1 = this->grid_row_desc;
+    const int32_t* ptr2 = this->grid_column_desc;
+
     for(auto& desc : this->image_desc_map) {
         if (desc.second != nullptr) {
             const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;
@@ -250,13 +250,13 @@ BasicComponent::~BasicComponent () {
     }
 
     if (ptr1) {
-        free((lv_coord_t*)(ptr1));
+        free((int32_t*)(ptr1));
     }
     if (ptr2) {
-        free((lv_coord_t*)(ptr2));
+        free((int32_t*)(ptr2));
     }
     // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+    // lv_obj_delete(this->instance);
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {

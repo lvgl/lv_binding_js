@@ -94,11 +94,11 @@ const uint8_t mouse_cursor_icon_map[] = {
 #endif
 };
 
-lv_img_dsc_t mouse_cursor_icon = {
-    .header.always_zero = 0,
+lv_image_dsc_t mouse_cursor_icon = {
+    .header.magic = LV_IMAGE_HEADER_MAGIC,
     .header.w = 14,
     .header.h = 20,
-    .data_size = 280 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-    .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
+    .data_size = 280 * LV_COLOR_NATIVE_WITH_ALPHA_SIZE,
+    .header.cf = LV_COLOR_FORMAT_NATIVE_WITH_ALPHA,
     .data = mouse_cursor_icon_map,
 };
