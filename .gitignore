@@ -7,6 +7,9 @@ build*/
 dev_*/
 **/.cache/
 
+# For clangd
+compile_commands.json 
+
 # CMake files
 CMakeFiles/
 CMakeCache.txt
