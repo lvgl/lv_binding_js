@@ -13,7 +13,7 @@ WRAPPED_SCROLL_INTO_VIEW(Roller, "Roller")
 WRAPPED_JS_CLOSE_COMPONENT(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
+    if (argc >= 1 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         std::vector<std::string> items;
 

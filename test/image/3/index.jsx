@@ -39,7 +39,7 @@ function App () {
     return (
         <View style={style.window}>
             <Image 
-                src={'./3.png'} 
+                src={'./test/image/3/3.png'} 
                 style={style.image} 
                 ref={ref} 
                 align={{

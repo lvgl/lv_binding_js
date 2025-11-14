@@ -13,7 +13,7 @@ WRAPPED_SCROLL_INTO_VIEW(Calendar, "Calendar")
 WRAPPED_JS_CLOSE_COMPONENT(Calendar, "Calendar")
 
 static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 1 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CalendarClassID);
 
         int32_t len;
@@ -30,7 +30,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
-            if (JS_IsArray(ctx, item)) {
+            if (JS_IsArray(item)) {
                 year_value = JS_GetPropertyUint32(ctx, item, 0);
                 month_value = JS_GetPropertyUint32(ctx, item, 1);
                 day_value = JS_GetPropertyUint32(ctx, item, 2);

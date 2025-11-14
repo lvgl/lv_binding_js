@@ -14,7 +14,7 @@ WRAPPED_SCROLL_INTO_VIEW(Line, "Line")
 WRAPPED_JS_CLOSE_COMPONENT(Line, "Line")
 
 static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 1 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, LineClassID);
 
         int32_t len;
@@ -29,7 +29,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
-            if (JS_IsArray(ctx, item)) {
+            if (JS_IsArray(item)) {
                 first_value = JS_GetPropertyUint32(ctx, item, 0);
                 second_value = JS_GetPropertyUint32(ctx, item, 1);
                 if (JS_IsNumber(first_value) && JS_IsNumber(second_value)) {
