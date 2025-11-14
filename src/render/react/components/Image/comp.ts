@@ -1,5 +1,5 @@
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
-import { isValidUrl } from "../../utils/helpers";
+import { isValidUrl, fetchBinary } from "../../utils/helpers";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
@@ -11,16 +11,6 @@ import path from 'tjs:path';
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeImage = bridge.NativeRender.NativeComponents.Image;
-
-async function getImageBinary(url) {
-  const resp = await fetch(url, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
-  const imageBuffer = await resp.arrayBuffer();
-  return imageBuffer;
-}
 
 export type ImageProps = CommonProps & {
   /** GIF loading resource, support network url, local path, buildtin symbol */
@@ -43,7 +33,7 @@ function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
           if (!path.isAbsolute(url)) {
             url = path.resolve(url);
           }
-          tjs.readFile(url, { encoding: "binary" })
+          tjs.readFile(url)
             .then((data) => {
               comp.setImageBinary(data.buffer);
             })
@@ -51,8 +41,8 @@ function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
               console.log("setImage error", e);
             });
         } else {
-          getImageBinary(url)
-            .then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer))
+          fetchBinary(url)
+            .then((buffer) => comp.setImageBinary(buffer))
             .catch(console.warn);
         }
       }

@@ -13,3 +13,8 @@ export function isValidUrl(str: string) {
     return false;
   }
 }
+
+export async function fetchBinary(url: string): Promise<ArrayBuffer> {
+  const resp = await fetch(url);
+  return await (await resp.blob()).arrayBuffer();
+}
