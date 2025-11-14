@@ -148,7 +148,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
 
 #define WRAPPED_JS_SETSTYLE(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetStyle(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {                \
-        if (argc >= 2 && JS_IsObject(argv[0]) && JS_IsArray(ctx, argv[1]) && JS_IsNumber(argv[2]) && JS_IsNumber(argv[3]) && JS_IsBool(argv[4])) {       \
+        if (argc >= 2 && JS_IsObject(argv[0]) && JS_IsArray(argv[1]) && JS_IsNumber(argv[2]) && JS_IsNumber(argv[3]) && JS_IsBool(argv[4])) {       \
             int len;                                                                                                        \
             std::vector<std::string> keys;                                                                                  \
             std::string key;                                                                                                \
@@ -194,7 +194,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
 
 #define WRAPPED_JS_Align(COMPONENT,COMPONENT_NAME)                                                                          \
     static JSValue NativeCompSetAlign(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {                \
-        if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsArray(ctx, argv[1])) {                                                \
+        if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsArray(argv[1])) {                                                \
             COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, COMPONENT##ClassID);                                            \
             int32_t x;                                                                                                      \
             int32_t y;                                                                                                      \
@@ -217,7 +217,7 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns);
 
 #define WRAPPED_JS_Align_To(COMPONENT,COMPONENT_NAME)                                                                       \
     static JSValue NativeCompSetAlignTo(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {              \
-        if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsArray(ctx, argv[1]) && JS_IsObject(argv[2])) {                        \
+        if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsArray(argv[1]) && JS_IsObject(argv[2])) {                        \
             COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, COMPONENT##ClassID);                                            \
             int32_t x;                                                                                                      \
             int32_t y;                                                                                                      \
