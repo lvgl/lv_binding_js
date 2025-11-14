@@ -16,5 +16,11 @@ export function isValidUrl(str: string) {
 
 export async function fetchBinary(url: string): Promise<ArrayBuffer> {
   const resp = await fetch(url);
-  return await (await resp.blob()).arrayBuffer();
+  
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch ${url}: ${resp.status} ${resp.statusText}`);
+  }
+  
+  const blob = await resp.blob();
+  return await blob.arrayBuffer();
 }
