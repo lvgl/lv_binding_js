@@ -10,10 +10,11 @@ STYLE_INFO(Roller, "Roller")
 WRAPPED_MOVE_TO_FRONT(Roller, "Roller")
 WRAPPED_MOVE_TO_BACKGROUND(Roller, "Roller")
 WRAPPED_SCROLL_INTO_VIEW(Roller, "Roller")
+WRAPPED_FOCUS(Roller, "Roller")
 WRAPPED_JS_CLOSE_COMPONENT(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
+    if (argc >= 1 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         std::vector<std::string> items;
 
@@ -80,6 +81,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("focus", 0, NativeCompFocus),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
@@ -135,9 +137,8 @@ static JSValue RollerConstructor(JSContext *ctx, JSValueConst new_target, int ar
 
 static void RollerFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, RollerClassID);
-    LV_LOG_USER("Roller %s release", th->uid);
     if (th) {
-        delete static_cast<Roller*>(th->comp);
+        LV_LOG_USER("Roller %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

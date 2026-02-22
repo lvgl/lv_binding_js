@@ -13,7 +13,7 @@ export default class SwitchConfig implements LvgljsComponentConfig<SwitchProps, 
   }
   commitMount(instance, newProps: SwitchProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: SwitchProps, newProps: SwitchProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: SwitchProps, oldProps: SwitchProps) {}

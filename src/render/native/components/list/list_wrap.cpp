@@ -103,9 +103,8 @@ static JSValue ListConstructor(JSContext *ctx, JSValueConst new_target, int argc
 
 static void ListFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ListClassID);
-    LV_LOG_USER("List %s release", th->uid);
     if (th) {
-        delete static_cast<List*>(th->comp);
+        LV_LOG_USER("List %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

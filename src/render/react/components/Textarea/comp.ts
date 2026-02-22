@@ -1,5 +1,6 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
+import { setComponentProps, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -26,62 +27,40 @@ export type TextAreaProps = CommonProps & {
   autoKeyBoard: boolean;
 };
 
-function setTextareaProps(comp, newProps: TextAreaProps, oldProps: TextAreaProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Textarea", comp, newProps, oldProps }),
-    placeholder(str) {
-      if (str !== oldProps.placeholder) {
-        comp.setPlaceHolder(str);
-      }
-    },
-    mode(mode) {
-      if (mode === "password") {
-        comp.setPasswordMode(true);
-      } else if (oldProps.mode === "password") {
-        comp.setPasswordMode(false);
-      }
-    },
-    onFocusStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Textarea",
-        styleType: 0x0002,
-        oldStyleSheet: oldProps.onFocusStyle,
-      });
-    },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-    onFocus(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
-    },
-    value(str) {
-      if (str !== oldProps.value) {
-        comp.setText(str);
-      }
-    },
-    autoKeyBoard(payload) {
-      if (payload !== oldProps?.autoKeyBoard) {
-        comp.setAutoKeyboard(payload);
-      }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const textareaSetters = {
+  placeholder(comp, str) {
+    comp.setPlaceHolder(str);
+  },
+  mode(comp, mode) {
+    comp.setPasswordMode(!!(mode === "password"));
+  },
+  onFocusStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Textarea",
+      styleType: 0x0002,
+      oldStyleSheet: oldProps.onFocusStyle,
+    });
+  },
+  onChange(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+  },
+  onFocus(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
+  },
+  value(comp, str) {
+    comp.setText(str);
+  },
+  autoKeyBoard(comp, payload) {
+    comp.setAutoKeyboard(payload);
+  },
+};
 
 export class TextareaComp extends NativeView {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -92,14 +71,15 @@ export class TextareaComp extends NativeView {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: TextAreaProps, oldProps: TextAreaProps) {
-    setTextareaProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<TextAreaProps>, oldProps: TextAreaProps) {
+    setComponentProps(this, "Textarea", updatePayload, oldProps, textareaSetters);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}

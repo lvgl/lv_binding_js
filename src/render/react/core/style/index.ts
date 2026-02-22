@@ -44,6 +44,7 @@ class StyleSheet {
           } else {
             obj.__dirty = value;
           }
+          return true;
         },
       },
     );
@@ -88,12 +89,6 @@ export function setStyle({
 }) {
   if (!styleSheet) return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
-  oldStyleSheet = Array.isArray(oldStyleSheet)
-    ? oldStyleSheet
-    : [oldStyleSheet];
-  const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
-
-  if (!maybeChange) return;
   styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
   const result = StyleSheet.transform(styleSheet, compName);
 

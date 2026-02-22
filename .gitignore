@@ -3,9 +3,12 @@
 
 # Build folders
 debug/
-build*/
+build/*
 dev_*/
 **/.cache/
+
+# For clangd
+compile_commands.json
 
 # CMake files
 CMakeFiles/
@@ -21,3 +24,6 @@ CMakeCache.txt
 # NPM
 node_modules/
 src/render/react/index.js
+
+# Cursor AI
+.cursor/

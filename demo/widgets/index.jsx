@@ -1,5 +1,5 @@
 import { View, Render, Animate, Dimensions, EAlignType, Button, Tabs, Theme } from 'lvgljs-ui';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import Profile from './components/profile'
 import Analytics from './components/analytics';
 import Shop from './components/shop'
@@ -33,6 +33,28 @@ function App () {
     const colorListItemsRef = useRef([])
     const wrapperRef = useRef()
     const colorListRef = useRef()
+
+    const execAnimate = useCallback((expand) => {
+        Animate.timing({
+            duration: 200,
+            startValue: expand ? 0 : 256,
+            endValue: expand ? 256 : 0,
+            execCallback: (value) => {
+                colorListRef.current.setStyle({
+                    width: Math.floor((value / 256) * (width - 60) + 60),
+                })
+                colorListItemsRef.current.forEach(item => {
+                    item.setStyle({
+                        opacity: (value / 256).toFixed(2),
+                    })
+                })
+            }
+        }).start()
+    }, [colorListRef, colorListItemsRef])
+
+    useEffect(() => {
+        execAnimate(colorListExpand)
+    }, [colorListExpand, execAnimate])
 
     return (
         <View ref={wrapperRef} style={style.window}>
@@ -78,43 +100,7 @@ function App () {
                     pos: [-15, -15]
                 }}
                 onClick={() => {
-                    setColorListExpand(!colorListExpand)
-                    const width = wrapperRef.current.style.width - 20
-                    if (!colorListExpand) {
-                        const animate = Animate.timing({
-                            duration: 200,
-                            startValue: 0,
-                            endValue: 256,
-                            execCallback: (value) => {
-                                colorListRef.current.setStyle({
-                                    width: Math.floor((value / 256) * (width - 60) + 60),
-                                })
-                                colorListItemsRef.current.forEach(item => {
-                                    item.setStyle({
-                                        opacity: (value / 256).toFixed(2),
-                                    })
-                                })
-                            }
-                        })
-                        animate.start()
-                    } else {
-                        const animate = Animate.timing({
-                            duration: 200,
-                            startValue: 256,
-                            endValue: 0,
-                            execCallback: (value) => {
-                                colorListRef.current.setStyle({
-                                    width: Math.floor((value / 256) * (width - 60) + 60),
-                                })
-                                colorListItemsRef.current.forEach(item => {
-                                    item.setStyle({
-                                        opacity: (value / 256).toFixed(2),
-                                    })
-                                })
-                            }
-                        })
-                        animate.start()
-                    }
+                    setColorListExpand((prev) => !prev)
                 }}
             />
         </View>

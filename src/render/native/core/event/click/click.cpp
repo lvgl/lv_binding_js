@@ -27,6 +27,8 @@ static JSValue GetPressedPoint (JSContext* ctx, JSValueConst this_val) {
             if(value_num == LV_CHART_POINT_NONE) break;
             return JS_NewInt32(ctx, value_num);
             break;
+        default:
+            break;
     }
 
     return JS_UNDEFINED;
@@ -40,7 +42,7 @@ static JSValue GetPressedPointPos (JSContext* ctx, JSValueConst this_val) {
 
     switch (comp_type)
     {
-        case COMP_TYPE_CHART:
+        case COMP_TYPE_CHART: {
             id = lv_chart_get_pressed_point(comp->instance);
             if(id == LV_CHART_POINT_NONE) break;
             JSValue result = JS_NewArray(ctx);
@@ -62,6 +64,9 @@ static JSValue GetPressedPointPos (JSContext* ctx, JSValueConst this_val) {
             }
 
             return result;
+            break;
+        }
+        default:
             break;
     }
 

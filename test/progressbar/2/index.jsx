@@ -13,7 +13,6 @@ function App () {
                 }}
                 value={100}
                 useAnimation={true}
-                animationTime={1000}
                 indicatorStyle={style.indicator}
             />
         </View>
@@ -31,7 +30,8 @@ const style = {
         'border-color': 'blue',
         'border-width': 2,
         'padding': 6,
-        'border-radius': 6
+        'border-radius': 6,
+        'transition-time': 1000,
     },
     indicator: {
         'background-color': 'blue',

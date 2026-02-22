@@ -1,4 +1,4 @@
-import { colorTransform } from "./color";
+import { colorTransform, extractOpacity } from "./color";
 
 export function NormalizePx(value) {
   if (value == void 0) return null;
@@ -66,9 +66,16 @@ export function ProcessEnum(obj) {
 }
 
 export function ProcessColor(key, value, result) {
-  value = colorTransform(value);
-  if (!isNaN(value)) {
-    result[key] = value;
+  const colorValue = colorTransform(value);
+  if (!isNaN(colorValue)) {
+    result[key] = colorValue;
+    
+    // Detect 8-digit hex color (with alpha channel), automatically set corresponding opacity
+    const opacity = extractOpacity(value);
+    if (opacity !== undefined) {
+      const opacityKey = key.replace("color", "opacity");
+      result[opacityKey] = NormalizeOpacity(opacity);
+    }
   }
 }
 
@@ -108,3 +115,5 @@ export function ProcessDeg(key, value, result) {
 export function ProcessBoolean(key, value, result) {
   result[key] = !!value;
 }
+
+export const CreateStyle = <T extends Record<string, any>>(styles: T): { [K in keyof T]: any } => styles;

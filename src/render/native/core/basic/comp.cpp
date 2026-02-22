@@ -1,6 +1,7 @@
 #include "./comp.hpp"
 
 #include "native/core/utils/utils.hpp"
+#include "native/core/style/style.hpp"
 
 std::unordered_map<std::string, BasicComponent*> comp_map;
 
@@ -35,26 +36,37 @@ bool BasicComponent::isEventRegist(int eventType) {
     return this->registeEvents.count(eventType) > 0;
 };
 
-void BasicComponent::insertChildBefore(void *child) {
-    static_cast<BasicComponent*>(child)->parent_instance = this->instance;
-    if (!(static_cast<BasicComponent*>(child)->is_fixed) && (static_cast<BasicComponent*>(child)->type != COMP_TYPE_MASK)) {
-        lv_obj_t* ins = (static_cast<BasicComponent*>(child))->instance;
-        lv_obj_set_parent(ins, this->instance);
-        uint32_t index = lv_obj_get_index(ins);
-        lv_obj_move_to_index(ins, index);
+void BasicComponent::insertChildBefore(void *child, void *beforeChild) {
+    BasicComponent* childComp = static_cast<BasicComponent*>(child);    
+    BasicComponent* beforeChildComp = static_cast<BasicComponent*>(beforeChild);
+    childComp->parent_instance = this->instance;
+    if (!childComp->is_fixed && childComp->type != COMP_TYPE_MASK) {
+        lv_obj_set_parent(childComp->instance, this->instance);
+        uint32_t index = lv_obj_get_index(beforeChildComp->instance);
+        lv_obj_move_to_index(childComp->instance, index);
+        reorderFocusGroup(this->instance);
     }
 };
 
-void BasicComponent::removeChild(void* child) {
-    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
-};
+void BasicComponent::removeChild(void* child) {};
 
 void BasicComponent::appendChild (void* child) {
-    static_cast<BasicComponent*>(child)->parent_instance = this->instance;
-    if (!(static_cast<BasicComponent*>(child)->is_fixed) && (static_cast<BasicComponent*>(child)->type != COMP_TYPE_MASK)) {
-        lv_obj_set_parent((static_cast<BasicComponent*>(child))->instance, this->instance);
+    BasicComponent* childComp = static_cast<BasicComponent*>(child);
+    childComp->parent_instance = this->instance;
+    if (!childComp->is_fixed && childComp->type != COMP_TYPE_MASK) {
+        lv_obj_set_parent(childComp->instance, this->instance);
     }
 };
+
+void BasicComponent::focus () {
+    if (!this->instance) return;
+    lv_group_t* def_group = lv_group_get_default();
+    if (def_group) {
+        lv_group_focus_obj(this->instance);
+    } else {
+        lv_obj_add_state(this->instance, LV_STATE_FOCUSED);
+    }
+}
 
 void BasicComponent::initCompStyle (int32_t type) {
 
@@ -127,9 +139,9 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
 
 bool BasicComponent::ensureStyle (int32_t type) {
     lv_style_t* style;
-    bool is_new;
+    bool is_new = false;
     if (this->style_map.find(type) != this->style_map.end()) {
-        
+        // style already exists
     } else {
         style = static_cast<lv_style_t*>(style_pool.allocate());
         style_map[type] = style;
@@ -156,18 +168,22 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
     //     this->initStyle(type);
     // }
 
-    for(int i=0; i < keys.size(); i++) {
+    for(size_t i=0; i < keys.size(); i++) {
         std::string key = keys[i];
 
         if (StyleManager::styles.count(key) > 0) {
-            CompSetStyle* func = StyleManager::styles.at(key);
+            const StyleEntryWrapper& wrapper = StyleManager::styles.at(key);
             JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
-            func(this->instance, style, ctx, value);
+            if (wrapper.type == StyleEntryType::SIMPLE) {
+                ApplySimpleStyle(this->instance, style, ctx, value, wrapper.entry.simple);
+            } else {
+                wrapper.entry.complex(this->instance, style, ctx, value);
+            }
             JS_FreeValue(ctx, value);
         }
     }
 
-    for(int i=0; i < keys.size(); i++) {
+    for(size_t i=0; i < keys.size(); i++) {
         std::string key = keys[i];
         if (key == "transition") {
             JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
@@ -255,8 +271,18 @@ BasicComponent::~BasicComponent () {
     if (ptr2) {
         free((lv_coord_t*)(ptr2));
     }
-    // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+
+    for(auto& trans : this->trans_props_map)
+        if (trans.second != nullptr)
+            free(trans.second);
+
+    for(auto &style : style_map) {
+        lv_style_reset(style.second);
+        style_pool.deallocate(style.second);
+    }
+
+    lv_obj_remove_event_cb(instance, &BasicComponent::EventCallback);
+    lv_obj_del(this->instance);
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {

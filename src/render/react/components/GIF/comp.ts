@@ -1,76 +1,55 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
-import { isValidUrl } from "../../utils/helpers";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { isValidUrl, fetchBinary } from "../../utils/helpers";
+import { setComponentProps, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
-  setStyle,
   styleGetterProp,
 } from "../config";
+import path from 'tjs:path';
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeGIF = bridge.NativeRender.NativeComponents.GIF;
-
-async function getGIFBinary(url) {
-  const resp = await fetch(url, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
-  const GIFBuffer = await resp.arrayBuffer();
-  return GIFBuffer;
-}
 
 export type GIFProps = CommonProps & {
   src: string;
 }
 
-function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "GIF", comp, newProps, oldProps }),
-    onClick(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-    },
-    src(url) {
-      if (url && url !== oldProps.src) {
-        if (BUILT_IN_SYMBOL[url]) {
-          comp.setSymbol(BUILT_IN_SYMBOL[url]);
-          return;
-        }
-        if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(__dirname, url);
-          }
-          fs.readFile(url, { encoding: "binary" })
-            .then((data) => {
-              comp.setGIFBinary(data.buffer);
-            })
-            .catch((e) => {
-              console.log("setGIF error", e);
-            });
-        } else {
-          getGIFBinary(url)
-            .then((buffer) => comp.setGIFBinary(Buffer.from(buffer).buffer))
-            .catch(console.warn);
-        }
+const gifSetters = {
+  onClick(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+  },
+  src(comp, url) {
+    if (url) {
+      if (BUILT_IN_SYMBOL[url]) {
+        comp.setSymbol(BUILT_IN_SYMBOL[url]);
+        return;
       }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
+      if (!isValidUrl(url)) {
+        if (!path.isAbsolute(url)) {
+          url = path.resolve(__dirname, url);
+        }
+        tjs.readFile(url)
+          .then((data) => {
+            comp.setGIFBinary(data.buffer);
+          })
+          .catch((e) => {
+            console.log("setGIF error", e);
+          });
+      } else {
+        fetchBinary(url)
+          .then((buffer) => comp.setGIFBinary(buffer))
+          .catch(console.warn);
+      }
     }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+  },
+};
 
 export class GIFComp extends NativeGIF {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -79,14 +58,15 @@ export class GIFComp extends NativeGIF {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: GIFProps, oldProps: GIFProps) {
-    setGIFProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<GIFProps>, oldProps: GIFProps) {
+    setComponentProps(this, "GIF", updatePayload, oldProps, gifSetters);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "GIF";

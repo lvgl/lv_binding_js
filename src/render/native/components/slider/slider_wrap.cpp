@@ -11,10 +11,11 @@ WRAPPED_JS_BACKGROUND_IMAGE(Slider,"Slider")
 WRAPPED_MOVE_TO_FRONT(Slider, "Slider")
 WRAPPED_MOVE_TO_BACKGROUND(Slider, "Slider")
 WRAPPED_SCROLL_INTO_VIEW(Slider, "Slider")
+WRAPPED_FOCUS(Slider, "Slider")
 WRAPPED_JS_CLOSE_COMPONENT(Slider, "Slider")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SliderClassID);
         int32_t min;
         int32_t max;
@@ -55,6 +56,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("focus", 0, NativeCompFocus),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
@@ -110,9 +112,8 @@ static JSValue SliderConstructor(JSContext *ctx, JSValueConst new_target, int ar
 
 static void SliderFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, SliderClassID);
-    LV_LOG_USER("Slider %s release", th->uid);
     if (th) {
-        delete static_cast<Slider*>(th->comp);
+        LV_LOG_USER("Slider %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

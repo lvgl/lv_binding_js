@@ -15,7 +15,7 @@ WRAPPED_JS_REFRESH_COMPONENT(Chart, "Chart")
 WRAPPED_JS_CLOSE_COMPONENT(Chart, "Chart")
 
 static JSValue NativeCompSetLeftAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         int32_t len, i;
@@ -46,7 +46,7 @@ static JSValue NativeCompSetLeftAxisLabels(JSContext *ctx, JSValueConst this_val
 };
 
 static JSValue NativeCompSetRightAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         int32_t len, i;
@@ -77,7 +77,7 @@ static JSValue NativeCompSetRightAxisLabels(JSContext *ctx, JSValueConst this_va
 };
 
 static JSValue NativeCompSetTopAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         int32_t len, i;
@@ -108,7 +108,7 @@ static JSValue NativeCompSetTopAxisLabels(JSContext *ctx, JSValueConst this_val,
 };
 
 static JSValue NativeCompSetBottomAxisLabels(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         int32_t len, i;
@@ -139,7 +139,7 @@ static JSValue NativeCompSetBottomAxisLabels(JSContext *ctx, JSValueConst this_v
 };
 
 static JSValue NativeCompSetDivLine(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
         int32_t hdiv, vdiv;
 
@@ -295,7 +295,7 @@ static JSValue NativeCompSetBottomAxisOption(JSContext *ctx, JSValueConst this_v
 };
 
 // static JSValue NativeCompSetBottomAxisData(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-//     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+//     if (argc >= 1 && JS_IsArray(argv[0])) {
 //         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
 //         int32_t len, i, data_item;
@@ -319,7 +319,7 @@ static JSValue NativeCompSetBottomAxisOption(JSContext *ctx, JSValueConst this_v
 // };
 
 // static JSValue NativeCompSetTopAxisData(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-//     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+//     if (argc >= 1 && JS_IsArray(argv[0])) {
 //         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
 //         int32_t len, i, data_item;
@@ -343,11 +343,11 @@ static JSValue NativeCompSetBottomAxisOption(JSContext *ctx, JSValueConst this_v
 // };
 
 static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         std::vector<axis_data> data;
-        int32_t len1, len2, i, color, data_item;
+        int32_t len1, len2, color, data_item;
         JSValue item_value;
         JSValue color_value;
         JSValue data_value;
@@ -392,11 +392,11 @@ static JSValue NativeCompSetLeftAxisData(JSContext *ctx, JSValueConst this_val, 
 };
 
 static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         std::vector<axis_data> data;
-        int32_t len1, len2, i, color, data_item;
+        int32_t len1, len2, color, data_item;
         JSValue item_value;
         JSValue color_value;
         JSValue data_value;
@@ -441,11 +441,11 @@ static JSValue NativeCompSetRightAxisData(JSContext *ctx, JSValueConst this_val,
 };
 
 static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         std::vector<axis_data> data;
-        int32_t len1, len2, i, color, data_item;
+        int32_t len1, len2, color, data_item;
         JSValue item_value;
         JSValue color_value;
         JSValue data_value;
@@ -490,7 +490,7 @@ static JSValue NativeCompSetScatterData (JSContext *ctx, JSValueConst this_val, 
 };
 
 static JSValue NativeCompSetLeftAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -512,7 +512,7 @@ static JSValue NativeCompSetLeftAxisRange(JSContext *ctx, JSValueConst this_val,
 };
 
 static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -534,7 +534,7 @@ static JSValue NativeCompSetRightAxisRange(JSContext *ctx, JSValueConst this_val
 };
 
 static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -556,7 +556,7 @@ static JSValue NativeCompSetTopAxisRange(JSContext *ctx, JSValueConst this_val, 
 };
 
 static JSValue NativeCompSetBottomAxisRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ChartClassID);
 
         JSValue min_value = JS_GetPropertyUint32(ctx, argv[0], 0);
@@ -666,9 +666,8 @@ static JSValue ChartConstructor(JSContext *ctx, JSValueConst new_target, int arg
 
 static void ChartFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ChartClassID);
-    LV_LOG_USER("Chart %s release", th->uid);
     if (th) {
-        delete static_cast<Chart*>(th->comp);
+        LV_LOG_USER("Chart %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

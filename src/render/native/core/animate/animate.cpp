@@ -100,6 +100,11 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         readycb_value = JS_GetPropertyStr(ctx, argv[0], "readyCbUid");
         use_native_value = JS_GetPropertyStr(ctx, argv[0], "useNative");
 
+        if (JS_IsNumber(uid_value)) {
+            JS_ToInt32(ctx, &uid, uid_value);
+            ref->uid = uid;
+        }
+
         if (animate_map.find(uid) != animate_map.end()) {
             animate = animate_map.at(uid);
         } else {
@@ -108,10 +113,6 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         }
         lv_anim_init(animate);
 
-        if (JS_IsNumber(uid_value)) {
-            JS_ToInt32(ctx, &uid, uid_value);
-            ref->uid = uid;
-        }
         if (JS_IsNumber(execcb_value)) {
             JS_ToInt32(ctx, &exec_uid, execcb_value);
             ref->exec_uid = exec_uid;

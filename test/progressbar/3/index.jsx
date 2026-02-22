@@ -40,7 +40,6 @@ function App () {
                 value={value}
                 range={[-20, 40]}
                 useAnimation={true}
-                animationTime={1000}
                 indicatorStyle={style.indicator}
             />
         </View>
@@ -60,6 +59,7 @@ const style = {
     bar: {
         'width': 20,
         'height': 200,
+        'transition-time': 1000,
     }
 };
 

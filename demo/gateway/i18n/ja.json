@@ -1,0 +1,49 @@
+{
+    "home": {
+      "title": "Smart Gateway [ja]"
+    },
+    "header": {
+      "eventLog": "Event Log [ja]",
+      "deviceInfo": "Device Info [ja]",
+      "deviceStatus": "Device Status [ja]",
+      "settings": "Setting [ja]"
+    },
+    "logs": {
+      "title": "Event Log [ja]",
+      "alerts": "Alerts [ja]",
+      "notification": "Notification [ja]",
+      "detail": "Log Detail [ja]",
+      "prevPage": "前のページ",
+      "nextPage": "次のページ"
+    },
+    "deviceInfo": {
+      "title": "Device Info [ja]"
+    },
+    "deviceStatus": {
+      "title": "Device Status [ja]"
+    },
+    "settings": {
+      "title": "Setting [ja]",
+      "language": "Language [ja]",
+      "exportLogs": "Export Logs To Micro SD [ja]",
+      "clearLogs": "Clear Logs [ja]",
+      "countdown": "Countdown [ja]"
+    },
+    "language": {
+      "title": "Language [ja]"
+    },
+    "countdown": {
+      "title": "Countdown [ja]",
+      "time": "{remain}s [ja]"
+    },
+    "exportLogs": {
+      "title": "Export Logs To Micro SD [ja]"
+    },
+    "clearLogs": {
+      "title": "Clear Logs [ja]",
+      "confirm": "Confirm To Clear The Logs? [ja]",
+      "cancel": "Cancel [ja]",
+      "confirmBtn": "Confirm [ja]"
+    }
+  }
+  

@@ -1,8 +1,6 @@
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
+import { setComponentProps, CommonProps } from "../common/index";
 import {
-  EVENTTYPE_MAP,
-  STYLE_TYPE,
-  handleEvent,
   setStyle,
   styleGetterProp,
 } from "../config";
@@ -12,25 +10,12 @@ const NativeView = bridge.NativeRender.NativeComponents.View;
 
 export type ViewProps = CommonProps
 
-function setViewProps(comp, newProps: ViewProps, oldProps: ViewProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "View", comp, newProps, oldProps }),
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const viewSetters = {};
 
 export class ViewComp extends NativeView {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -39,14 +24,15 @@ export class ViewComp extends NativeView {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: ViewProps, oldProps: ViewProps) {
-    setViewProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<ViewProps>, oldProps: ViewProps) {
+    setComponentProps(this, "View", updatePayload, oldProps, viewSetters);
   }
   insertBefore(child, beforeChild) {
     super.insertChildBefore(child, beforeChild);

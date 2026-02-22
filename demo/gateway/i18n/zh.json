@@ -1,0 +1,48 @@
+{
+  "home": {
+    "title": "Smart Gateway [zh]"
+  },
+  "header": {
+    "eventLog": "Event Log [zh]",
+    "deviceInfo": "Device Info [zh]",
+    "deviceStatus": "Device Status [zh]",
+    "settings": "Setting [zh]"
+  },
+  "logs": {
+    "title": "Event Log [zh]",
+    "alerts": "Alerts [zh]",
+    "notification": "Notification [zh]",
+    "detail": "Log Detail [zh]",
+    "prevPage": "上一页",
+    "nextPage": "下一页"
+  },
+  "deviceInfo": {
+    "title": "Device Info [zh]"
+  },
+  "deviceStatus": {
+    "title": "Device Status [zh]"
+  },
+  "settings": {
+    "title": "Setting [zh]",
+    "language": "Language [zh]",
+    "exportLogs": "Export Logs To Micro SD [zh]",
+    "clearLogs": "Clear Logs [zh]",
+    "countdown": "Countdown [zh]"
+  },
+  "language": {
+    "title": "Language [zh]"
+  },
+  "countdown": {
+    "title": "Countdown [zh]",
+    "time": "{remain}s [zh]"
+  },
+  "exportLogs": {
+    "title": "Export Logs To Micro SD [zh]"
+  },
+  "clearLogs": {
+    "title": "Clear Logs [zh]",
+    "confirm": "Confirm To Clear The Logs? [zh]",
+    "cancel": "Cancel [zh]",
+    "confirmBtn": "Confirm [zh]"
+  }
+}

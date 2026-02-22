@@ -52,7 +52,7 @@ function App () {
                 onChange={e=> setOpacity(e.value)}
             />
             <Image 
-                src={'./2.png'} 
+                src={'./test/image/2/2.png'} 
                 style={[style.image, { recolor: `rgb(${color1}, ${color2}, ${color3})`, 'recolor-opacity': opacity / 100 }]} 
                 align={{
                     type: EAlignType.ALIGN_RIGHT_MID,

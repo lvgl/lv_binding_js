@@ -3,13 +3,23 @@ cmake_minimum_required(VERSION 3.16)
 project(lvgljs LANGUAGES C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
+
+if(NOT DEFINED LVGLJS_CONF_DIR)
+    set(LVGLJS_CONF_DIR ${CMAKE_CURRENT_SOURCE_DIR}/deps CACHE INTERNAL "LVGLJS_CONF_DIR")
+endif()
+
+set(LV_CONF_PATH ${LVGLJS_CONF_DIR}/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
 
 set(BUILD_NATIVE OFF CACHE BOOL "Build wasm3 with native support")
 
+option(BUILD_STATIC_LIB "Build as static library (.a) instead of executable" OFF)
+
+set(DISP_HOR_RES 1024 CACHE STRING "Display horizontal resolution")
+set(DISP_VER_RES 600 CACHE STRING "Display vertical resolution")
+
 find_path(LVGL_PATH lvgl.h PATHS ${CMAKE_CURRENT_SOURCE_DIR}/deps PATH_SUFFIXES lvgl)
 
-add_executable(lvgljs
+set(LVGLJS_SOURCES
     src/engine/engine.cpp
     src/render/native/core/style/style.cpp
     src/render/native/core/style/font/font.cpp
@@ -29,6 +39,7 @@ add_executable(lvgljs
     src/render/native/core/img/img.cpp
     src/render/native/core/utils/utils.hpp
     src/render/native/core/animate/animate.cpp
+    src/render/native/core/focus_group/focus_group.cpp
     src/render/native/components/arc/arc.cpp
     src/render/native/components/arc/arc_wrap.cpp
     src/render/native/components/mask/mask.cpp
@@ -74,6 +85,14 @@ add_executable(lvgljs
     src/render/native/bootstrap/render_bootstrap.cpp
 )
 
+if(BUILD_STATIC_LIB)
+    add_library(lvgljs STATIC ${LVGLJS_SOURCES})
+    message(STATUS "Building lvgljs as static library (.a)")
+else()
+    add_executable(lvgljs ${LVGLJS_SOURCES} src/engine/main.cpp)
+    message(STATUS "Building lvgljs as executable")
+endif()
+
 if(${CMAKE_BUILD_TYPE} MATCHES Simulator)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb -std=c++14")
     set(BUILD_WITH_MIMALLOC OFF) # TODO: SDL and mimalloc don't play well together
@@ -106,6 +125,11 @@ target_include_directories(lvgljs PUBLIC
     src/render/native/bootstrap
     src/render/native/components
     src/render/native/core
+)
+
+target_compile_definitions(lvgljs PRIVATE
+    DISP_HOR_RES=${DISP_HOR_RES}
+    DISP_VER_RES=${DISP_VER_RES}
 )
 
 target_link_libraries(lvgljs PUBLIC

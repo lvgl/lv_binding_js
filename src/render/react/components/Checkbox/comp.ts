@@ -1,5 +1,6 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
+import { setComponentProps, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -21,70 +22,52 @@ export type CheckboxProps = CommonProps & {
   onChange?: (event: OnChangeEvent) => void;
 };
 
-function setCheckboxProps(comp, newProps: CheckboxProps, oldProps: CheckboxProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Checkbox", comp, newProps, oldProps }),
-    checked(val) {
-      if (val !== oldProps.checked) {
-        comp.setChecked(val);
-      }
-    },
-    disabled(val) {
-      if (val !== oldProps.disabled) {
-        comp.setDisabled(val);
-      }
-    },
-    text(val) {
-      if (val !== oldProps.text) {
-        comp.setText(val);
-      }
-    },
-    checkedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Checkbox",
-        styleType: STYLE_TYPE.STATE_CHECKED,
-        oldStyleSheet: oldProps.checkedStyle,
-      });
-    },
-    indicatorStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Checkbox",
-        styleType: STYLE_TYPE.PART_INDICATOR,
-        oldStyleSheet: oldProps.indicatorStyle,
-      });
-    },
-    indicatorCheckedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Checkbox",
-        styleType: STYLE_TYPE.PART_INDICATOR | STYLE_TYPE.STATE_CHECKED,
-        oldStyleSheet: oldProps.indicatorCheckedStyle,
-      });
-    },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const checkboxSetters = {
+  checked(comp, val) {
+    comp.setChecked(val);
+  },
+  disabled(comp, val) {
+    comp.setDisabled(val);
+  },
+  text(comp, val) {
+    comp.setText(val);
+  },
+  checkedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Checkbox",
+      styleType: STYLE_TYPE.STATE_CHECKED,
+      oldStyleSheet: oldProps.checkedStyle,
+    });
+  },
+  indicatorStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Checkbox",
+      styleType: STYLE_TYPE.PART_INDICATOR,
+      oldStyleSheet: oldProps.indicatorStyle,
+    });
+  },
+  indicatorCheckedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Checkbox",
+      styleType: STYLE_TYPE.PART_INDICATOR | STYLE_TYPE.STATE_CHECKED,
+      oldStyleSheet: oldProps.indicatorCheckedStyle,
+    });
+  },
+  onChange(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+  },
+};
 
 export class CheckboxComp extends NativeView {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -93,17 +76,18 @@ export class CheckboxComp extends NativeView {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: CheckboxProps, oldProps: CheckboxProps) {
-    setCheckboxProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<CheckboxProps>, oldProps: CheckboxProps) {
+    setComponentProps(this, "Checkbox", updatePayload, oldProps, checkboxSetters);
   }
   insertBefore(child, beforeChild) {
-    this.insertChildBefore(child, beforeChild);
+    super.insertChildBefore(child, beforeChild);
   }
   appendInitialChild(child) {
     this.appendChild(child);

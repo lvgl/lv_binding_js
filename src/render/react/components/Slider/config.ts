@@ -9,12 +9,12 @@ export default class SliderConfig implements LvgljsComponentConfig<SliderProps, 
   }
   createInstance(newProps: SliderProps, rootInstance, context, workInProgress, uid) {
     const instance = new SliderComp({ uid });
-    instance.setProps(newProps, {});
+    instance.setProps(newProps, {} as SliderProps);
     return instance;
   }
   commitMount(instance, newProps: SliderProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: SliderProps, newProps: SliderProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: SliderProps, oldProps: SliderProps) {}
   insertBefore(child, beforeChild) {}

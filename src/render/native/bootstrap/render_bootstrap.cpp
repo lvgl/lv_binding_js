@@ -5,6 +5,7 @@
 #include "native/core/dimensions/dimensions.hpp"
 #include "native/core/refresh/refresh.hpp"
 #include "native/core/theme/theme.hpp"
+#include "native/core/focus_group/focus_group.hpp"
 
 #define NATIVE_RENDER_OBJ "NativeRender"
 
@@ -23,6 +24,8 @@ void NativeRenderInit (JSContext* ctx, JSValue ns) {
     NativeRenderUtilInit(ctx, obj);
 
     NativeThemeInit(ctx, obj);
+
+    NativeFocusGroupInit(ctx, obj);
 
     lv_init();
     lv_png_init();

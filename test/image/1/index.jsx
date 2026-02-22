@@ -6,7 +6,7 @@ const { width, height } = Dimensions.window
 function App () {
     return (
         <View style={style.window}>
-            <Image src={'./1.png'} style={style.image1} />
+            <Image src={'./test/image/1/1.png'} style={style.image1} />
             <Image src={'https://png.pngtree.com/png-clipart/20220827/ourmid/pngtree-halloween-flowers-png-image_6127104.png'} style={style.image2} />
         </View>
     )

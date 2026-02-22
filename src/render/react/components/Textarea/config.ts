@@ -8,12 +8,12 @@ export default class TextareaConfig implements LvgljsComponentConfig<TextAreaPro
   }
   createInstance(newProps: TextAreaProps, rootInstance, context, workInProgress, uid) {
     const instance = new TextareaComp({ uid });
-    instance.setProps(newProps, {});
+    instance.setProps(newProps, {} as TextAreaProps);
     return instance;
   }
   commitMount(instance, newProps: TextAreaProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: TextAreaProps, newProps: TextAreaProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: TextAreaProps, oldProps: TextAreaProps) {}

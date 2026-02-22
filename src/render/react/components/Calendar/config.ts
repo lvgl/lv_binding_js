@@ -14,7 +14,7 @@ export default class CalendarConfig implements LvgljsComponentConfig<CalendarPro
   }
   commitMount(instance, newProps: CalendarProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: CalendarProps, newProps: CalendarProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: CalendarProps, oldProps: CalendarProps) {}
   insertBefore(child, beforeChild) {}

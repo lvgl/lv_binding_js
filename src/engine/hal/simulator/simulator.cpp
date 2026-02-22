@@ -1,16 +1,40 @@
 #include "./simulator.hpp"
+#include "private.h"
+
+static lv_indev_t *init_input_devices(lv_group_t *g) {
+    /* Add input devices: mouse, keyboard, and encoder */
+    struct {
+        lv_indev_type_t type;
+        void (*read_cb)(lv_indev_drv_t *, lv_indev_data_t *);
+        bool set_group;
+    } indev_configs[] = {
+        {LV_INDEV_TYPE_POINTER, &sdl_mouse_read, false},
+        {LV_INDEV_TYPE_KEYPAD, &sdl_keyboard_read, true},
+        {LV_INDEV_TYPE_ENCODER, &sdl_mousewheel_read, true}
+    };
+
+    static lv_indev_drv_t indev_drvs[3];
+    lv_indev_t *mouse_indev = nullptr;
+
+    for (size_t i = 0; i < ARRAY_SIZE(indev_configs); i++) {
+        lv_indev_drv_init(&indev_drvs[i]); /*Basic initialization*/
+        indev_drvs[i].type = indev_configs[i].type;
+        indev_drvs[i].read_cb = indev_configs[i].read_cb;
+        lv_indev_t *cur_indev = lv_indev_drv_register(&indev_drvs[i]);
+        
+        if (indev_configs[i].set_group)
+            lv_indev_set_group(cur_indev, g);
+        
+        if (indev_configs[i].type == LV_INDEV_TYPE_POINTER)
+            mouse_indev = cur_indev;
+    }
+
+    return mouse_indev;
+}
 
 void hal_init(void) {
-    hor_res = SDL_HOR_RES;
-    ver_res = SDL_VER_RES;
 
     static lv_color_t buf[SDL_HOR_RES * 100];
-
-    flush_cb = sdl_display_flush;
-
-    read_cb1 = &sdl_mouse_read;
-    read_cb2 = &sdl_keyboard_read;
-    read_cb3 = &sdl_mousewheel_read;
 
     /* Use the 'monitor' driver which creates window on PC's monitor to simulate a display*/
     sdl_init();
@@ -23,7 +47,7 @@ void hal_init(void) {
     static lv_disp_drv_t disp_drv;
     lv_disp_drv_init(&disp_drv); /*Basic initialization*/
     disp_drv.draw_buf = &disp_buf1;
-    disp_drv.flush_cb = flush_cb;
+    disp_drv.flush_cb = &sdl_display_flush;
     disp_drv.hor_res = SDL_HOR_RES;
     disp_drv.ver_res = SDL_VER_RES;
 
@@ -35,29 +59,7 @@ void hal_init(void) {
     lv_group_t * g = lv_group_create();
     lv_group_set_default(g);
 
-    /* Add the mouse as input device
-    * Use the 'mouse' driver which reads the PC's mouse*/
-    static lv_indev_drv_t indev_drv_1;
-    lv_indev_drv_init(&indev_drv_1); /*Basic initialization*/
-    indev_drv_1.type = LV_INDEV_TYPE_POINTER;
-
-    /*This function will be called periodically (by the library) to get the mouse position and state*/
-    indev_drv_1.read_cb = read_cb1;
-    lv_indev_t *mouse_indev = lv_indev_drv_register(&indev_drv_1);
-
-    static lv_indev_drv_t indev_drv_2;
-    lv_indev_drv_init(&indev_drv_2); /*Basic initialization*/
-    indev_drv_2.type = LV_INDEV_TYPE_KEYPAD;
-    indev_drv_2.read_cb = read_cb2;
-    lv_indev_t *kb_indev = lv_indev_drv_register(&indev_drv_2);
-    lv_indev_set_group(kb_indev, g);
-
-    static lv_indev_drv_t indev_drv_3;
-    lv_indev_drv_init(&indev_drv_3); /*Basic initialization*/
-    indev_drv_3.type = LV_INDEV_TYPE_ENCODER;
-    indev_drv_3.read_cb = read_cb3;
-    lv_indev_t * enc_indev = lv_indev_drv_register(&indev_drv_3);
-    lv_indev_set_group(enc_indev, g);
+    lv_indev_t *mouse_indev = init_input_devices(g);
 
     /*Set a cursor for the mouse*/
     LV_IMG_DECLARE(mouse_cursor_icon); /*Declare the image file.*/

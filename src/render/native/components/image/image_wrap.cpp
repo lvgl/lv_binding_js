@@ -25,10 +25,8 @@ static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, i
         LV_LOG_USER("Image %s setImage", s->uid);
 
         return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "image setBinary fail");
     }
-    return JS_UNDEFINED;
+    return JS_ThrowInternalError(ctx, "image setBinary fail");
 };
 
 static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -44,9 +42,8 @@ static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int ar
         JS_FreeCString(ctx, str);
 
         return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "image setSymbol fail");
     }
+    return JS_ThrowInternalError(ctx, "image setSymbol fail");
     return JS_UNDEFINED;
 };
 
@@ -117,9 +114,8 @@ static JSValue ImageConstructor(JSContext *ctx, JSValueConst new_target, int arg
 
 static void ImageFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ImageClassID);
-    LV_LOG_USER("Image %s release", th->uid);
     if (th) {
-        delete static_cast<Image*>(th->comp);
+        LV_LOG_USER("Image %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

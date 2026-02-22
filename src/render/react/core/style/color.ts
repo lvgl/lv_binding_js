@@ -30,6 +30,8 @@ export const colorTransform = (data) => {
     return builtinColor[data];
   }
   data = data.replace(/(^\s*)|(\s*$)/g, "");
+  const reg8 = /^#([0-9a-fA-f]{8})$/;
+  const reg4 = /^#([0-9a-fA-f]{4})$/;
   const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
   if (/^(rgb|RGB)/.test(data)) {
     const aColor = data.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
@@ -45,6 +47,17 @@ export const colorTransform = (data) => {
       num = "";
     }
     return num;
+  } else if (reg8.test(data)) {
+    // 8-digit hex: #RRGGBBAA, return RGB part
+    return Number(`0x${data.substring(1, 7)}`);
+  } else if (reg4.test(data)) {
+    // 4-digit hex: #RGBA, return RGB part
+    const aNum = data.replace(/#/, "").split("");
+    let num = "0x";
+    for (let i = 0; i < 3; i += 1) {
+      num += aNum[i] + aNum[i];
+    }
+    return Number(num);
   } else if (reg.test(data)) {
     const aNum = data.replace(/#/, "").split("");
     if (aNum.length === 6) {
@@ -58,4 +71,28 @@ export const colorTransform = (data) => {
     }
   }
   return "";
+};
+
+/**
+ * Extract opacity value (0-1 range) from color string
+ * Supports 8-digit hex format: #RRGGBBAA or #RGBA
+ */
+export const extractOpacity = (data) => {
+  if (builtinColor[data]) {
+    return 255; // Built-in colors don't have opacity information
+  }
+  data = data.replace(/(^\s*)|(\s*$)/g, "");
+  const reg8 = /^#([0-9a-fA-f]{8})$/;
+  const reg4 = /^#([0-9a-fA-f]{4})$/;
+  
+  if (reg8.test(data)) {
+    // 8-digit hex: #RRGGBBAA, extract last two digits AA
+    const alphaHex = data.substring(7, 9);
+    return parseInt(alphaHex, 16) / 255;
+  } else if (reg4.test(data)) {
+    // 4-digit hex: #RGBA, extract last digit A and duplicate
+    const alphaHex = data.substring(4, 5);
+    return parseInt(alphaHex + alphaHex, 16) / 255;
+  }
+  return 255;
 };

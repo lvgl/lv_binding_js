@@ -14,7 +14,7 @@ export default class DropdownlistConfig implements LvgljsComponentConfig<Dropdow
   }
   commitMount(instance, newProps: DropdownListProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: DropdownListProps, newProps: DropdownListProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: DropdownListProps, oldProps: DropdownListProps) {}
   insertBefore(child, beforeChild) {}

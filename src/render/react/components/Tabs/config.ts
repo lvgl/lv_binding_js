@@ -14,7 +14,7 @@ export default class TabsConfig implements LvgljsComponentConfig<TabsProps, Tabs
   }
   commitMount(instance, newProps: TabsProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: TabsProps, newProps: TabsProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: TabsProps, oldProps: TabsProps) {}
   insertBefore(child, beforeChild) {}

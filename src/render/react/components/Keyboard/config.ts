@@ -13,7 +13,7 @@ export default class KeyboardConfig implements LvgljsComponentConfig<KeyboardPro
   }
   commitMount(instance, newProps: KeyboardProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: KeyboardProps, newProps: KeyboardProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: KeyboardProps, oldProps: KeyboardProps) {}

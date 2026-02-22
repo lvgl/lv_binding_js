@@ -1,6 +1,7 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
-import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp } from "../config";
+import { setComponentProps, CommonProps } from "../common/index";
+import { STYLE_TYPE, setStyle, styleGetterProp } from "../config";
 
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar;
@@ -8,66 +9,36 @@ const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar;
 export type ProgressBarProps = CommonProps & {
   value: number;
   range: number[];
-  animationTime?: number;
   useAnimation?: boolean;
   indicatorStyle?: StyleProps;
 };
 
-function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: ProgressBarProps) {
-  const setter = {
-    ...CommonComponentApi({
-      compName: "ProgressBar",
+const progressBarSetters = {
+  indicatorStyle(comp, styleSheet, oldProps) {
+    setStyle({
       comp,
-      newProps,
-      oldProps,
-    }),
-    style(styleSheet) {
-      if (newProps.animationTime) {
-        styleSheet["style-transition-time"] = newProps.animationTime;
-      }
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "ProgressBar",
-        styleType: STYLE_TYPE.PART_MAIN,
-        oldStyleSheet: oldProps.style,
-      });
-    },
-    indicatorStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "ProgressBar",
-        styleType: STYLE_TYPE.PART_INDICATOR,
-        oldStyleSheet: oldProps.style,
-      });
-    },
-    value(value) {
-      if (value !== oldProps.value) {
-        comp.setValue(value, !!newProps.useAnimation);
-      }
-    },
-    range(arr) {
-      if (arr?.[0] !== oldProps?.arr?.[0] || arr?.[1] !== oldProps?.arr?.[1]) {
-        comp.setRange(arr[0], arr[1]);
-      }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+      styleSheet,
+      compName: "ProgressBar",
+      styleType: STYLE_TYPE.PART_INDICATOR,
+      oldStyleSheet: oldProps.indicatorStyle,
+    });
+  },
+  range(comp, arr) {
+    comp.setRange(arr[0], arr[1]);
+  },
+  value(comp, value) {
+    comp.setValue(value, comp.useAnimation);
+  },
+  useAnimation(comp, useAnimation: boolean) {
+    comp.useAnimation = useAnimation;
+  },
+};
 
 export class ProgressBarComp extends NativeProgressBar {
+  uid: string;
+  style: any;
+  useAnimation: boolean = false;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -76,14 +47,15 @@ export class ProgressBarComp extends NativeProgressBar {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: ProgressBarProps, oldProps: ProgressBarProps) {
-    setProgressBarProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<ProgressBarProps>, oldProps: ProgressBarProps) {
+    setComponentProps(this, "ProgressBar", updatePayload, oldProps, progressBarSetters);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "ProgressBar";

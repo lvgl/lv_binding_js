@@ -5,11 +5,9 @@ Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->type = COMP_TYPE_TEXTAREA;
     this->uid = uid;
     this->instance = lv_textarea_create(parent != nullptr ? parent : GetWindowInstance());
-    lv_group_add_obj(lv_group_get_default(), this->instance);
 
     lv_obj_set_user_data(this->instance, this);
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_CLICK_FOCUSABLE);
-    lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     this->initStyle(LV_PART_MAIN);
     this->initStyle(LV_STATE_FOCUSED);
 
@@ -23,9 +21,8 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
     lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
     comp->keyboard = keyboard;
 
-    uint32_t width, height;
+    uint32_t height;
     lv_disp_t* disp_default = lv_disp_get_default();
-    width = disp_default->driver->hor_res;
     height = disp_default->driver->ver_res;
 
     lv_keyboard_set_textarea(keyboard, comp->instance);

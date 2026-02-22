@@ -19,10 +19,11 @@
 - [onLongPressRepeat](../props/onLongPressRepeat.md)
 - [align](../props/align.md)
 - [alignTo](../props/alignTo.md)
+- [groupType](../props/groupType.md)
 
 ## Usage
 ```jsx
-import { View, EAlignType, Button, Text } from 'lvlgjs-ui'
+import { View, EAlignType, Button, Text, AddChildToDefGroup } from 'lvlgjs-ui'
 import { useRef, useEffect } from 'react'
 
 function Component () {
@@ -34,6 +35,7 @@ function Component () {
     return (
        <View
           style={style.view}
+          groupType={AddChildToDefGroup}
           onPressedStyle={style.viewPressed}
           onClick={e => { e.stopPropagation() }}
           onPressed={() => {}}

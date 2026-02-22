@@ -11,159 +11,24 @@ static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
     { "step", &lv_anim_path_step },
 };
 
-static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_width(style, static_cast<int16_t>(width));
-};
-
-static void CompSetMaxWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_max_width(style, static_cast<int16_t>(width));
-};
-
-static void CompSetMinWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_min_width(style, static_cast<int16_t>(width));
-};
-
-static void CompSetMaxWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_max_width(style, lv_pct(static_cast<int16_t>(width)));
-};
-
-static void CompSetMinWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_min_width(style, lv_pct(static_cast<int16_t>(width)));
-};
-
-static void CompSetWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_width(style, lv_pct(static_cast<int16_t>(width)));
-};
-
-static void CompSetHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_height(style, static_cast<int16_t>(height));
-};
-
-static void CompSetHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_height(style, lv_pct(static_cast<int16_t>(height)));
-};
-
-static void CompSetMaxHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_max_height(style, static_cast<int16_t>(height));
-};
-
-static void CompSetMaxHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_max_height(style, lv_pct(static_cast<int16_t>(height)));
-};
-
-static void CompSetMinHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_min_height(style, static_cast<int16_t>(height));
-};
-
-static void CompSetMinHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_min_height(style, lv_pct(static_cast<int16_t>(height)));
-};
-
-static void CompSetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+void ApplySimpleStyle(lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj, const StylePropConfig& config) {
     int x;
     JS_ToInt32(ctx, &x, obj);
-    lv_style_set_x(style, static_cast<int16_t>(x));
-};
-
-static void CompSetXPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-    lv_style_set_x(style, lv_pct(static_cast<int16_t>(x)));
-};
-
-static void CompSetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-    lv_style_set_y(style, static_cast<int16_t>(y));
-};
-
-static void CompSetYPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-    lv_style_set_y(style, lv_pct(static_cast<int16_t>(y)));
-};
-
-static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_color(style, lv_color_hex(y));
-};
-
-static void CompSetBackgroundOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_opa(style, y);
-};
-
-static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_grad_color(style, lv_color_hex(y));
-};
-
-static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_grad_dir(style, y);
-};
-
-static void CompSetArcWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_arc_width(style, static_cast<int16_t>(width));
-};
-
-static void CompSetArcRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    bool rounded = JS_ToBool(ctx, obj);
-    lv_style_set_arc_rounded(style, static_cast<bool>(rounded));
-};
-
-static void CompSetArcColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int color;
-    JS_ToInt32(ctx, &color, obj);
-    lv_style_set_arc_color(style, lv_color_hex(color));
-};
-
-static void CompSetArcOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int opacity;
-    JS_ToInt32(ctx, &opacity, obj);
-    lv_style_set_arc_opa(style, static_cast<int16_t>(opacity));
-};
-
-static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_radius(style, x);
-};
+    
+    lv_style_value_t v;
+    switch (config.type) {
+        case StyleValueType::NUM:
+            v.num = x;
+            break;
+        case StyleValueType::COLOR:
+            v.color = lv_color_hex(x);
+            break;
+        case StyleValueType::PCT:
+            v.num = lv_pct(static_cast<int16_t>(x));
+            break;
+    }
+    lv_style_set_prop(style, config.prop, v);
+}
 
 static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     size_t len;
@@ -207,7 +72,7 @@ static void CompSetFlexGrow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_flex_grow(style, static_cast<lv_flex_flow_t>(x));
+    lv_style_set_flex_grow(style, static_cast<uint8_t>(x));
 };
 
 static void CompSetFlexFlow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -238,123 +103,12 @@ static void CompSetAlignContent (lv_obj_t* comp, lv_style_t* style, JSContext* c
     lv_style_set_flex_track_place(style, static_cast<lv_flex_align_t>(x));
 };
 
-static void CompSetPaddingLeft (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_left(style, x);
-};
-
-static void CompSetPaddingRight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_right(style, x);
-};
-
-static void CompSetPaddingBottom (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_bottom(style, x);
-};
-
-static void CompSetPaddingTop (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_top(style, x);
-};
-
-static void CompSetBorderWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_width(style, x);
-};
-
-static void CompSetBorderOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_opa(style, x);
-};
-
-static void CompSetBorderColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_color(style, lv_color_hex(x));
-};
-
-static void CompSetBorderSide (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_side(style, x);
-};
-
-static void CompSetOutlineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_width(style, x);
-};
-
-static void CompSetOutlineOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_opa(style, x);
-};
-
-static void CompSetOutlineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_color(style, lv_color_hex(x));
-};
-
-static void CompSetOutlinePadding (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_pad(style, x);
-};
 
 static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
     lv_label_set_long_mode(comp, x);
-};
-
-static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_letter_space(style, x);
-};
-
-static void CompSetLineSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_line_space(style, x);
-};
-
-static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_align(style, x);
-};
-
-static void CompSetDecoration (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_decor(style, x);
 };
 
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -402,55 +156,6 @@ static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* 
     } else {
         lv_obj_add_flag(comp, LV_OBJ_FLAG_SNAPPABLE);
     }
-};
-
-static void CompSetOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_opa(style, x);
-};
-
-static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_img_opa(style, x);
-};
-
-static void CompRecolorOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_img_recolor_opa(style, x);
-};
-
-static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_translate_x(style, x);
-};
-
-static void CompSetTranslateY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_translate_y(style, x);
-};
-
-static void CompSetScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_zoom(style, x);
-};
-
-static void CompSetRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_angle(style, x);
 };
 
 static void CompSetImgScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -501,27 +206,6 @@ static void CompSetChartScaleY (lv_obj_t* comp, lv_style_t* style, JSContext* ct
     lv_chart_set_zoom_y(comp, x);
 };
 
-static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_width(style, x);
-};
-
-static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_height(style, x);
-};
-
-static void CompSetStyleTransitionTime (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_anim_time(style, x);
-};
-
 void CompSetTransition (
     lv_style_t* style,
     lv_style_transition_dsc_t* trans, 
@@ -562,8 +246,8 @@ void CompSetAnimation (
 
     dura_value = JS_GetPropertyStr(ctx, obj, "duration");
     if (JS_IsNumber(dura_value)) {
-        lv_anim_set_time(animate, duration);
         JS_ToInt32(ctx, &duration, dura_value);
+        lv_anim_set_time(animate, duration);
     }
     JS_FreeValue(ctx, dura_value);
 
@@ -585,97 +269,6 @@ void CompSetAnimation (
     JS_FreeValue(ctx, delay_value);
 
     lv_anim_start(animate);
-};
-
-static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_text_color(style, lv_color_hex(y));
-};
-
-static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_img_recolor(style, lv_color_hex(y));
-};
-
-static void CompSetRowSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_pad_row(style, y);
-};
-
-static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_pad_column(style, y);
-};
-
-static void CompSetLineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_line_width(style, y);
-};
-
-static void CompSetLineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_line_color(style, lv_color_hex(x));
-};
-
-static void CompSetLineRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_line_rounded(style, x);
-};
-
-static void CompSetShadowWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_width(style, x);
-};
-
-static void CompSetShadowColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_color(style, lv_color_hex(x));
-};
-
-static void CompSetShadowSpread (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_spread(style, x);
-};
-
-static void CompSetShadowOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_opa(style, x);
-};
-
-static void CompSetOffsetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_ofs_x(style, x);
-};
-
-static void CompSetOffsetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_ofs_y(style, x);
 };
 
 static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -702,7 +295,7 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
 };
 
 static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         BasicComponent* instance = static_cast<BasicComponent*>(lv_obj_get_user_data(comp));
         const lv_coord_t* old_ptr1 = instance->grid_column_desc;
         const lv_coord_t* old_ptr2 = instance->grid_row_desc;
@@ -754,7 +347,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
 };
 
 static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
         JSValue JSValue3 = JS_GetPropertyUint32(ctx, obj, 2);
@@ -786,7 +379,7 @@ static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
 };
 
 static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
 
@@ -801,128 +394,111 @@ static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     }
 };
 
-std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
-    /* size && position */
-    {"width", &CompSetWidth},
-    {"max-width", &CompSetMaxWidth},
-    {"max-width_pct", &CompSetMaxWidthPch},
-    {"min-width", &CompSetMinWidth},
-    {"min-width_pct", &CompSetMinWidthPch},
-    {"height", &CompSetHeight},
-    {"max-height", &CompSetMaxHeight},
-    {"max-height_pct", &CompSetMaxHeightPch},
-    {"min-height", &CompSetMinHeight},
-    {"min-height_pct", &CompSetMinHeightPch},
-    {"left", &CompSetX},
-    {"top", &CompSetY},
-    {"width_pct", &CompSetWidthPch},
-    {"height_pct", &CompSetHeightPch},
-    {"left_pct", &CompSetXPch},
-    {"top_pct", &CompSetYPch},
-
-    /* background */
-    {"background-color", &CompSetBackgroundColor},
-    {"background-opacity", &CompSetBackgroundOpacity},
-    {"background-grad-color", &CompSetBackgroundGradColor},
-    {"background-grad-color-dir", &CompSetBackgroundGradColorDir},
-
-    /* border-radius */
-    {"border-radius", &CompSetBorderRadius},
-
-    /* arc */
-    {"arc-width", &CompSetArcWidth},
-    {"arc-rounded", &CompSetArcRounded},
-    {"arc-color", &CompSetArcColor},
-    {"arc-opacity", &CompSetArcOpacity},
-
-    /* layout */
-    {"display", &CompSetDisplay},
-    {"flex-align", &CompSetFlexAlign},
-    {"flex-flow", &CompSetFlexFlow},
-    {"flex-grow", &CompSetFlexGrow},
-    {"justify-content", &CompSetJustifyContent},
-    {"align-items", &CompSetAlignItems},
-    {"align-content", &CompSetAlignContent},
-
-    /* padding */
-    {"padding-left", &CompSetPaddingLeft},
-    {"padding-right", &CompSetPaddingRight},
-    {"padding-bottom", &CompSetPaddingBottom},
-    {"padding-top", &CompSetPaddingTop},
-
-    /* border */
-    {"border-width", &CompSetBorderWidth},
-    {"border-opacity", &CompSetBorderOpacity},
-    {"border-color", &CompSetBorderColor},
-    {"border-side", &CompSetBorderSide},
-
-    /* outline */
-    {"outline-width", &CompSetOutlineWidth},
-    {"outline-opacity", &CompSetOutlineOpacity},
-    {"outline-color", &CompSetOutlineColor},
-    {"outline-padding", &CompSetOutlinePadding},
-
-    /* font */
-    {"font-size", &CompSetFontSize},
-    {"font-size-1", &CompSetFontSize1},
-    {"text-overflow", &CompSetTextOverFLow},
-    {"letter-spacing", &CompSetLetterSpacing},
-    {"text-align", &CompSetTextAlign},
-    {"text-decoration", &CompSetDecoration},
-    {"line-spacing", &CompSetLineSpacing},
-
-    /* scroll */
-    {"overflow-scrolling", &CompSetOverFlowScrolling},
-    {"overflow", &CompSetOverflow},
-    {"scroll-snap-x", &CompSetScrollSnapX},
-    {"scroll-snap-y", &CompSetScrollSnapY},
-    {"scroll-enable-snap", &CompScrollEnableSnap},
-
-    /* opacity */
-    {"opacity", &CompSetOpacity},
-    {"img-opacity", &CompSetImgOpacity},
-    {"recolor-opacity", &CompRecolorOpacity},
-
-    /* transform */
-    {"translateX", &CompSetTranslateX},
-    {"translateY", &CompSetTranslateY},
-    {"scale", &CompSetScale},
-    {"rotate", &CompSetRotate},
-    {"img-scale", &CompSetImgScale},
-    {"img-rotate", &CompSetImgRotate},
-    {"img-origin", &CompSetTransformOrigin},
-    {"chart-scaleX", &CompSetChartScaleX},
-    {"chart-scaleY", &CompSetChartScaleY},
-    {"transform-width", &CompSetTransformWidth},
-    {"transform-height", &CompSetTransformHeight},
-    {"style-transition-time", &CompSetStyleTransitionTime},
-
-    /* color */
-    {"text-color", &CompSetTextColor},
-    {"recolor", &CompSetRecolor},
-
-    /* spacing */
-    {"row-spacing", &CompSetRowSpacing},
-    {"column-spacing", &CompSetColumnSpacing},
+std::unordered_map<std::string, StyleEntryWrapper> StyleManager::styles {
+    {"width",           StyleEntryWrapper({LV_STYLE_WIDTH,        StyleValueType::NUM})},
+    {"max-width",       StyleEntryWrapper({LV_STYLE_MAX_WIDTH,    StyleValueType::NUM})},
+    {"min-width",       StyleEntryWrapper({LV_STYLE_MIN_WIDTH,    StyleValueType::NUM})},
+    {"height",          StyleEntryWrapper({LV_STYLE_HEIGHT,       StyleValueType::NUM})},
+    {"max-height",      StyleEntryWrapper({LV_STYLE_MAX_HEIGHT,   StyleValueType::NUM})},
+    {"min-height",      StyleEntryWrapper({LV_STYLE_MIN_HEIGHT,   StyleValueType::NUM})},
+    {"left",            StyleEntryWrapper({LV_STYLE_X,            StyleValueType::NUM})},
+    {"top",             StyleEntryWrapper({LV_STYLE_Y,            StyleValueType::NUM})},
     
-    /* line comp */
-    {"line-width", &CompSetLineWidth},
-    {"line-color", &CompSetLineColor},
-    {"line-rounded", &CompSetLineRounded},
-
-    /* shadow */
-    {"shadow-width", &CompSetShadowWidth},
-    {"shadow-color", &CompSetShadowColor},
-    {"shadow-spread", &CompSetShadowSpread},
-    {"shadow-opacity", &CompSetShadowOpacity},
-    {"shadow-offset-x", &CompSetOffsetX},
-    {"shadow-offset-y", &CompSetOffsetY},
-
-    /* position */
-    {"position", &CompSetPosition},
-
-    /* grid */
-    {"grid-template", &CompGridColumnRow},
-    {"grid-child", &CompSetGridChild},
-    {"grid-align", &CompsetGridAlign},
+    {"width_pct",       StyleEntryWrapper({LV_STYLE_WIDTH,        StyleValueType::PCT})},
+    {"height_pct",      StyleEntryWrapper({LV_STYLE_HEIGHT,       StyleValueType::PCT})},
+    {"left_pct",        StyleEntryWrapper({LV_STYLE_X,           StyleValueType::PCT})},
+    {"top_pct",         StyleEntryWrapper({LV_STYLE_Y,           StyleValueType::PCT})},
+    {"max-width_pct",   StyleEntryWrapper({LV_STYLE_MAX_WIDTH,    StyleValueType::PCT})},
+    {"min-width_pct",   StyleEntryWrapper({LV_STYLE_MIN_WIDTH,    StyleValueType::PCT})},
+    {"max-height_pct",  StyleEntryWrapper({LV_STYLE_MAX_HEIGHT,   StyleValueType::PCT})},
+    {"min-height_pct",  StyleEntryWrapper({LV_STYLE_MIN_HEIGHT,   StyleValueType::PCT})},
+    
+    {"background-color",        StyleEntryWrapper({LV_STYLE_BG_COLOR,         StyleValueType::COLOR})},
+    {"background-opacity",      StyleEntryWrapper({LV_STYLE_BG_OPA,           StyleValueType::NUM})},
+    {"background-grad-color",   StyleEntryWrapper({LV_STYLE_BG_GRAD_COLOR,    StyleValueType::COLOR})},
+    {"background-grad-color-dir", StyleEntryWrapper({LV_STYLE_BG_GRAD_DIR,    StyleValueType::NUM})},
+    
+    {"border-radius",   StyleEntryWrapper({LV_STYLE_RADIUS,       StyleValueType::NUM})},
+    
+    {"arc-width",       StyleEntryWrapper({LV_STYLE_ARC_WIDTH,    StyleValueType::NUM})},
+    {"arc-rounded",     StyleEntryWrapper({LV_STYLE_ARC_ROUNDED,  StyleValueType::NUM})},
+    {"arc-color",       StyleEntryWrapper({LV_STYLE_ARC_COLOR,    StyleValueType::COLOR})},
+    {"arc-opacity",     StyleEntryWrapper({LV_STYLE_ARC_OPA,      StyleValueType::NUM})},
+    
+    {"display",         StyleEntryWrapper(&CompSetDisplay)},
+    {"flex-align",      StyleEntryWrapper(&CompSetFlexAlign)},
+    {"flex-flow",       StyleEntryWrapper(&CompSetFlexFlow)},
+    {"flex-grow",       StyleEntryWrapper(&CompSetFlexGrow)},
+    {"justify-content", StyleEntryWrapper(&CompSetJustifyContent)},
+    {"align-items",     StyleEntryWrapper(&CompSetAlignItems)},
+    {"align-content",    StyleEntryWrapper(&CompSetAlignContent)},
+    
+    {"padding-left",    StyleEntryWrapper({LV_STYLE_PAD_LEFT,     StyleValueType::NUM})},
+    {"padding-right",   StyleEntryWrapper({LV_STYLE_PAD_RIGHT,    StyleValueType::NUM})},
+    {"padding-bottom",  StyleEntryWrapper({LV_STYLE_PAD_BOTTOM,   StyleValueType::NUM})},
+    {"padding-top",     StyleEntryWrapper({LV_STYLE_PAD_TOP,      StyleValueType::NUM})},
+    
+    {"border-width",    StyleEntryWrapper({LV_STYLE_BORDER_WIDTH, StyleValueType::NUM})},
+    {"border-opacity",  StyleEntryWrapper({LV_STYLE_BORDER_OPA,   StyleValueType::NUM})},
+    {"border-color",    StyleEntryWrapper({LV_STYLE_BORDER_COLOR, StyleValueType::COLOR})},
+    {"border-side",     StyleEntryWrapper({LV_STYLE_BORDER_SIDE,  StyleValueType::NUM})},
+    
+    {"outline-width",   StyleEntryWrapper({LV_STYLE_OUTLINE_WIDTH, StyleValueType::NUM})},
+    {"outline-opacity", StyleEntryWrapper({LV_STYLE_OUTLINE_OPA,   StyleValueType::NUM})},
+    {"outline-color",   StyleEntryWrapper({LV_STYLE_OUTLINE_COLOR, StyleValueType::COLOR})},
+    {"outline-padding", StyleEntryWrapper({LV_STYLE_OUTLINE_PAD,   StyleValueType::NUM})},
+    
+    {"font-size",       StyleEntryWrapper(&CompSetFontSize)},
+    {"font-size-1",    StyleEntryWrapper(&CompSetFontSize1)},
+    {"text-overflow",   StyleEntryWrapper(&CompSetTextOverFLow)},
+    {"letter-spacing",  StyleEntryWrapper({LV_STYLE_TEXT_LETTER_SPACE, StyleValueType::NUM})},
+    {"text-align",      StyleEntryWrapper({LV_STYLE_TEXT_ALIGN,        StyleValueType::NUM})},
+    {"text-decoration", StyleEntryWrapper({LV_STYLE_TEXT_DECOR,        StyleValueType::NUM})},
+    {"line-spacing",    StyleEntryWrapper({LV_STYLE_TEXT_LINE_SPACE,   StyleValueType::NUM})},
+    
+    {"overflow-scrolling", StyleEntryWrapper(&CompSetOverFlowScrolling)},
+    {"overflow",        StyleEntryWrapper(&CompSetOverflow)},
+    {"scroll-snap-x",   StyleEntryWrapper(&CompSetScrollSnapX)},
+    {"scroll-snap-y",   StyleEntryWrapper(&CompSetScrollSnapY)},
+    {"scroll-enable-snap", StyleEntryWrapper(&CompScrollEnableSnap)},
+    
+    {"opacity",         StyleEntryWrapper({LV_STYLE_OPA,          StyleValueType::NUM})},
+    {"img-opacity",     StyleEntryWrapper({LV_STYLE_IMG_OPA,      StyleValueType::NUM})},
+    {"recolor-opacity", StyleEntryWrapper({LV_STYLE_IMG_RECOLOR_OPA, StyleValueType::NUM})},
+    
+    {"translateX",      StyleEntryWrapper({LV_STYLE_TRANSLATE_X,  StyleValueType::NUM})},
+    {"translateY",      StyleEntryWrapper({LV_STYLE_TRANSLATE_Y,  StyleValueType::NUM})},
+    {"scale",           StyleEntryWrapper({LV_STYLE_TRANSFORM_ZOOM, StyleValueType::NUM})},
+    {"rotate",          StyleEntryWrapper({LV_STYLE_TRANSFORM_ANGLE, StyleValueType::NUM})},
+    {"img-scale",       StyleEntryWrapper(&CompSetImgScale)},
+    {"img-rotate",      StyleEntryWrapper(&CompSetImgRotate)},
+    {"img-origin",      StyleEntryWrapper(&CompSetTransformOrigin)},
+    {"chart-scaleX",    StyleEntryWrapper(&CompSetChartScaleX)},
+    {"chart-scaleY",    StyleEntryWrapper(&CompSetChartScaleY)},
+    {"transform-width", StyleEntryWrapper({LV_STYLE_TRANSFORM_WIDTH, StyleValueType::NUM})},
+    {"transform-height", StyleEntryWrapper({LV_STYLE_TRANSFORM_HEIGHT, StyleValueType::NUM})},
+    {"transition-time", StyleEntryWrapper({LV_STYLE_ANIM_TIME, StyleValueType::NUM})},
+    
+    {"text-color",      StyleEntryWrapper({LV_STYLE_TEXT_COLOR,   StyleValueType::COLOR})},
+    {"recolor",         StyleEntryWrapper({LV_STYLE_IMG_RECOLOR,  StyleValueType::COLOR})},
+    
+    {"row-spacing",     StyleEntryWrapper({LV_STYLE_PAD_ROW,      StyleValueType::NUM})},
+    {"column-spacing",  StyleEntryWrapper({LV_STYLE_PAD_COLUMN,   StyleValueType::NUM})},
+    
+    {"line-width",      StyleEntryWrapper({LV_STYLE_LINE_WIDTH,   StyleValueType::NUM})},
+    {"line-color",      StyleEntryWrapper({LV_STYLE_LINE_COLOR,   StyleValueType::COLOR})},
+    {"line-rounded",    StyleEntryWrapper({LV_STYLE_LINE_ROUNDED, StyleValueType::NUM})},
+    
+    {"shadow-width",    StyleEntryWrapper({LV_STYLE_SHADOW_WIDTH, StyleValueType::NUM})},
+    {"shadow-color",    StyleEntryWrapper({LV_STYLE_SHADOW_COLOR, StyleValueType::COLOR})},
+    {"shadow-spread",   StyleEntryWrapper({LV_STYLE_SHADOW_SPREAD, StyleValueType::NUM})},
+    {"shadow-opacity",  StyleEntryWrapper({LV_STYLE_SHADOW_OPA,   StyleValueType::NUM})},
+    {"shadow-offset-x", StyleEntryWrapper({LV_STYLE_SHADOW_OFS_X, StyleValueType::NUM})},
+    {"shadow-offset-y", StyleEntryWrapper({LV_STYLE_SHADOW_OFS_Y, StyleValueType::NUM})},
+    
+    {"position",        StyleEntryWrapper(&CompSetPosition)},
+    
+    {"grid-template",   StyleEntryWrapper(&CompGridColumnRow)},
+    {"grid-child",     StyleEntryWrapper(&CompSetGridChild)},
+    {"grid-align",     StyleEntryWrapper(&CompsetGridAlign)},
 };

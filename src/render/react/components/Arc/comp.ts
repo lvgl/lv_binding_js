@@ -1,5 +1,6 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
+import { setComponentProps, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -35,120 +36,89 @@ export type ArcProps = CommonProps & {
   changeRate?: number;
 };
 
-function setArcProps(comp, newProps: ArcProps, oldProps: ArcProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Arc", comp, newProps, oldProps }),
-    indicatorStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Arc",
-        styleType: STYLE_TYPE.PART_INDICATOR,
-        oldStyleSheet: oldProps.indicatorStyle,
-      });
-    },
-    onIndicatorPressedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Arc",
-        styleType: STYLE_TYPE.PART_INDICATOR | STYLE_TYPE.STATE_PRESSED,
-        oldStyleSheet: oldProps.onIndicatorPressedStyle,
-      });
-    },
-    onPressedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Arc",
-        styleType: STYLE_TYPE.STATE_PRESSED,
-        oldStyleSheet: oldProps.onPressedStyle,
-      });
-    },
-    knobStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Arc",
-        styleType: STYLE_TYPE.PART_KNOB,
-        oldStyleSheet: oldProps.knobStyle,
-      });
-    },
-    onKnobPressedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Arc",
-        styleType: STYLE_TYPE.PART_KNOB | STYLE_TYPE.STATE_PRESSED,
-        oldStyleSheet: oldProps.onKnobPressedStyle,
-      });
-    },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-    range(arr) {
-      if (!Array.isArray(arr)) return;
-      const [min, max] = arr;
-      if (min === oldProps.range?.[0] && max === oldProps.range?.[1]) return;
-      if (isNaN(min) || isNaN(max)) return;
-      comp.setRange([min, max]);
-    },
-    value(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.value) return;
-      comp.setValue(val);
-    },
-    startAngle(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.startAngle) return;
-      comp.setStartAngle(val);
-    },
-    endAngle(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.endAngle) return;
-      comp.setEndAngle(val);
-    },
-    backgroundStartAngle(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.backgroundStartAngle) return;
-      comp.setBackgroundStartAngle(val);
-    },
-    backgroundEndAngle(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.backgroundEndAngle) return;
-      comp.setBackgroundEndAngle(val);
-    },
-    rotation(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.rotation) return;
-      comp.setRotation(val);
-    },
-    mode(val) {
-      if (val !== oldProps.mode && typeof modes[val] !== "undefined") {
-        comp.setMode(modes[val]);
-      }
-    },
-    changeRate(val) {
-      if (isNaN(val)) return;
-      if (val == oldProps.changeRate) return;
-      comp.setChangeRate(val);
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const arcSetters = {
+  indicatorStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Arc",
+      styleType: STYLE_TYPE.PART_INDICATOR,
+      oldStyleSheet: oldProps.indicatorStyle,
+    });
+  },
+  onIndicatorPressedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Arc",
+      styleType: STYLE_TYPE.PART_INDICATOR | STYLE_TYPE.STATE_PRESSED,
+      oldStyleSheet: oldProps.onIndicatorPressedStyle,
+    });
+  },
+  onPressedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Arc",
+      styleType: STYLE_TYPE.STATE_PRESSED,
+      oldStyleSheet: oldProps.onPressedStyle,
+    });
+  },
+  knobStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Arc",
+      styleType: STYLE_TYPE.PART_KNOB,
+      oldStyleSheet: oldProps.knobStyle,
+    });
+  },
+  onKnobPressedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Arc",
+      styleType: STYLE_TYPE.PART_KNOB | STYLE_TYPE.STATE_PRESSED,
+      oldStyleSheet: oldProps.onKnobPressedStyle,
+    });
+  },
+  onChange(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+  },
+  range(comp, arr) {
+    const [min, max] = arr;
+    comp.setRange([min, max]);
+  },
+  value(comp, val) {
+    comp.setValue(val);
+  },
+  startAngle(comp, val) {
+    comp.setStartAngle(val);
+  },
+  endAngle(comp, val) {
+    comp.setEndAngle(val);
+  },
+  backgroundStartAngle(comp, val) {
+    comp.setBackgroundStartAngle(val);
+  },
+  backgroundEndAngle(comp, val) {
+    comp.setBackgroundEndAngle(val);
+  },
+  rotation(comp, val) {
+    comp.setRotation(val);
+  },
+  mode(comp, val) {
+    comp.setMode(modes[val]);
+  },
+  changeRate(comp, val) {
+    comp.setChangeRate(val);
+  },
+};
 
 export class ArcComp extends NativeArc {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -157,14 +127,15 @@ export class ArcComp extends NativeArc {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: ArcProps, oldProps: ArcProps) {
-    setArcProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<ArcProps>, oldProps: ArcProps) {
+    setComponentProps(this, "Arc", updatePayload, oldProps, arcSetters);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Arc";

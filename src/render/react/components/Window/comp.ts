@@ -1,9 +1,8 @@
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { setComponentProps, CommonProps } from "../common/index";
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import {
-  EVENTTYPE_MAP,
-  handleEvent,
-  setStyle,
   styleGetterProp,
+  setStyle,
 } from "../config";
 
 const bridge = globalThis[Symbol.for('lvgljs')];
@@ -13,30 +12,16 @@ export type WindowProps = CommonProps & {
   title: string;
 };
 
-function setWindowProps(comp, newProps: WindowProps, oldProps: WindowProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Window", comp, newProps, oldProps }),
-    title(title) {
-      if (oldProps.title != title) {
-        comp.setTitle(title);
-      }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const windowSetters = {
+  title(comp, title) {
+    comp.setTitle(title);
+  },
+};
 
 export class Window extends NativeComp {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -45,14 +30,15 @@ export class Window extends NativeComp {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: WindowProps, oldProps: WindowProps) {
-    setWindowProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<WindowProps>, oldProps: WindowProps) {
+    setComponentProps(this, "Window", updatePayload, oldProps, windowSetters);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {

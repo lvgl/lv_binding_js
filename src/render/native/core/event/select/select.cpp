@@ -27,6 +27,8 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             if(value_num == LV_CHART_POINT_NONE) break;
             return JS_NewInt32(ctx, value_num);
             break;
+        default:
+            break;
     }
 
     return JS_UNDEFINED;

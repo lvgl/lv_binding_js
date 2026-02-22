@@ -10,6 +10,7 @@ STYLE_INFO(Textarea, "Textarea")
 WRAPPED_MOVE_TO_FRONT(Textarea, "Textarea")
 WRAPPED_MOVE_TO_BACKGROUND(Textarea, "Textarea")
 WRAPPED_SCROLL_INTO_VIEW(Textarea, "Textarea")
+WRAPPED_FOCUS(Textarea, "Textarea")
 WRAPPED_JS_CLOSE_COMPONENT(Textarea, "Textarea")
 
 static JSValue NativeCompSetOneLine(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
@@ -104,6 +105,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("focus", 0, NativeCompFocus),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
@@ -159,9 +161,8 @@ static JSValue TextareaConstructor(JSContext *ctx, JSValueConst new_target, int 
 
 static void TextareaFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, TextareaClassID);
-    LV_LOG_USER("Textarea %s release", th->uid);
     if (th) {
-        delete static_cast<Textarea*>(th->comp);
+        LV_LOG_USER("Textarea %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

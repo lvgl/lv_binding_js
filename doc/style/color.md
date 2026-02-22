@@ -18,9 +18,16 @@ const style = {
 A notation for describing the hexadecimal color syntax of an sRGB color using its primary color components (red, green, blue) written as hexadecimal numbers
 
 ### Usage
+Supports 3-digit, 4-digit, 6-digit, and 8-digit hexadecimal color formats:
+- 3-digit: `#fff` (equivalent to `#ffffff`)
+- 4-digit: `#fff3` (equivalent to `#ffffff33`, includes alpha channel)
+- 6-digit: `#ff0099` (standard RGB color)
+- 8-digit: `#ff009933` (RGB + Alpha channel, automatically sets corresponding opacity property)
+
 ```js
 const style = {
-    "background-color": "#ff0099",
+    "background-color": "#ff0099",      // Standard color, will set background-opacity to 255
+    "background-color": "#FFFFFF33",    // With opacity, automatically sets background-opacity
 }
 ```
 

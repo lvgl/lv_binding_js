@@ -1,5 +1,8 @@
 #include "./theme.hpp"
 
+static lv_theme_t theme_default;
+static bool theme_default_init = false;
+
 static void ThemeDefaultInit () {
     if (theme_default_init == false) {
         theme_default_init = true;

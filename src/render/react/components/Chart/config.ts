@@ -14,7 +14,7 @@ export default class ChartConfig implements LvgljsComponentConfig<ChartProps, Ch
   }
   commitMount(instance, newProps: ChartProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: ChartProps, newProps: ChartProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: ChartProps, oldProps: ChartProps) {}
   insertBefore(child, beforeChild) {}

@@ -1,6 +1,7 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
-import { isValidUrl } from "../../utils/helpers";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { isValidUrl, fetchBinary } from "../../utils/helpers";
+import { setComponentProps, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -12,67 +13,45 @@ import path from 'tjs:path';
 const bridge = globalThis[Symbol.for('lvgljs')];
 const NativeImage = bridge.NativeRender.NativeComponents.Image;
 
-async function getImageBinary(url) {
-  const resp = await fetch(url, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
-  const imageBuffer = await resp.arrayBuffer();
-  return imageBuffer;
-}
-
 export type ImageProps = CommonProps & {
   /** GIF loading resource, support network url, local path, buildtin symbol */
   src: string;
 };
 
-function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Image", comp, newProps, oldProps }),
-    onClick(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
-    },
-    src(url) {
-      if (url && url !== oldProps.src) {
-        if (BUILT_IN_SYMBOL[url]) {
-          comp.setSymbol(BUILT_IN_SYMBOL[url]);
-          return;
-        }
-        if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(url);
-          }
-          tjs.readFile(url, { encoding: "binary" })
-            .then((data) => {
-              comp.setImageBinary(data.buffer);
-            })
-            .catch((e) => {
-              console.log("setImage error", e);
-            });
-        } else {
-          getImageBinary(url)
-            .then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer))
-            .catch(console.warn);
-        }
+const imageSetters = {
+  onClick(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_CLICKED);
+  },
+  src(comp, url) {
+    if (url) {
+      if (BUILT_IN_SYMBOL[url]) {
+        comp.setSymbol(BUILT_IN_SYMBOL[url]);
+        return;
       }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
+      if (!isValidUrl(url)) {
+        if (!path.isAbsolute(url)) {
+          url = path.resolve(url);
+        }
+        tjs.readFile(url)
+          .then((data) => {
+            comp.setImageBinary(data.buffer);
+          })
+          .catch((e) => {
+            console.log("setImage error", e);
+          });
+      } else {
+        fetchBinary(url)
+          .then((buffer) => comp.setImageBinary(buffer))
+          .catch(console.warn);
+      }
     }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+  },
+};
 
 export class ImageComp extends NativeImage {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -81,14 +60,15 @@ export class ImageComp extends NativeImage {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: ImageProps, oldProps: ImageProps) {
-    setImageProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<ImageProps>, oldProps: ImageProps) {
+    setComponentProps(this, "Image", updatePayload, oldProps, imageSetters);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Image";

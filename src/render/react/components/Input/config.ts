@@ -13,7 +13,7 @@ export default class InputConfig implements LvgljsComponentConfig<InputProps, In
   }
   commitMount(instance, newProps: InputProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: InputProps, newProps: InputProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: InputProps, oldProps: InputProps) {}

@@ -13,6 +13,7 @@ function build(pattern){
         entryPoints: [entry],
         bundle: true,
         platform: 'neutral',
+        mainFields: ['module', 'main'],
         external: ['tjs:path'],
         outfile: path.resolve(path.dirname(entry), 'index.js'),
         define: {

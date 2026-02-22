@@ -1,0 +1,46 @@
+{
+  "nav": {
+    "title": "Navigation Demo (5 Pages)",
+    "subTitle": "Four-grid to enter sub-pages, top-left return",
+    "page1": "Page 1",
+    "page2": "Page 2",
+    "page3": "Page 3",
+    "page4": "Page 4",
+    "lang": "Lang"
+  },
+  "header": {
+    "back": "<"
+  },
+  "p1": {
+    "title": "Page 1 - Vertical Scrollable List",
+    "item": "Item {n}"
+  },
+  "p2": {
+    "title": "Page 2 - Info Display/Switch",
+    "prev": "<",
+    "next": ">",
+    "a": { "title": "Info A", "body": "This is the first section of info (for demo switching)." },
+    "b": { "title": "Info B", "body": "This is the second section. Use Left/Right to switch." },
+    "c": { "title": "Info C", "body": "This is the third section. Dots indicate the current page." },
+    "d": { "title": "Info D", "body": "This is the fourth section. A simple info page example." },
+    "e": { "title": "Info E", "body": "This is the fifth section. Switching loops around." }
+  },
+  "p3": {
+    "title": "Page 3 - Control List",
+    "slider": "Slider",
+    "currentValue": "Current Value: {value}%",
+    "checkbox": "Checkbox",
+    "option1": "Option 1",
+    "option2": "Option 2",
+    "buttonText": "Button + Text",
+    "reset": "Reset to Default",
+    "hint": "Hint: This page's controls are vertically arranged, and the container is scrollable.\nAll operable controls are marked with groupType."
+  },
+  "p4": {
+    "title": "Page 4 - 60s Countdown Progress Circle (Circular Progress Bar)",
+    "time": "time{remain}s",
+    "restart": "Restart"
+  }
+}
+
+

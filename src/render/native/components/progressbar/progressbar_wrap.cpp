@@ -108,9 +108,8 @@ static JSValue ProgressBarConstructor(JSContext *ctx, JSValueConst new_target, i
 
 static void ProgressBarFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ProgressBarClassID);
-    LV_LOG_USER("ProgressBar %s release", th->uid);
     if (th) {
-        delete static_cast<ProgressBar*>(th->comp);
+        LV_LOG_USER("ProgressBar %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

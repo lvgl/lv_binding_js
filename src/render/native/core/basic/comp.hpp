@@ -39,7 +39,7 @@ enum ECOMP_TYPE {
 class BasicComponent {
   public:
     BasicComponent(std::string& uid);
-    ~BasicComponent();
+    virtual ~BasicComponent();
 
     lv_obj_t* instance = nullptr;
     lv_obj_t* parent_instance = nullptr;  // used to style position: fixed to normal position
@@ -79,11 +79,12 @@ class BasicComponent {
 
     void appendChild(void* child);
     void removeChild(void* child);
-    void insertChildBefore(void *child);
+    void insertChildBefore(void *child, void *beforeChild);
 
     void moveToFront ();
     void moveToBackground ();
     void scrollIntoView ();
+    void focus ();
 
     void setAlign (int32_t align_type, int32_t x, int32_t y);
     void setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent);

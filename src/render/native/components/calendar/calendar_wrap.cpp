@@ -10,10 +10,11 @@ STYLE_INFO(Calendar, "Calendar")
 WRAPPED_MOVE_TO_FRONT(Calendar, "Calendar")
 WRAPPED_MOVE_TO_BACKGROUND(Calendar, "Calendar")
 WRAPPED_SCROLL_INTO_VIEW(Calendar, "Calendar")
+WRAPPED_FOCUS(Calendar, "Calendar")
 WRAPPED_JS_CLOSE_COMPONENT(Calendar, "Calendar")
 
 static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 1 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CalendarClassID);
 
         int32_t len;
@@ -30,7 +31,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
-            if (JS_IsArray(ctx, item)) {
+            if (JS_IsArray(item)) {
                 year_value = JS_GetPropertyUint32(ctx, item, 0);
                 month_value = JS_GetPropertyUint32(ctx, item, 1);
                 day_value = JS_GetPropertyUint32(ctx, item, 2);
@@ -101,6 +102,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("focus", 0, NativeCompFocus),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
@@ -156,9 +158,8 @@ static JSValue CalendarConstructor(JSContext *ctx, JSValueConst new_target, int 
 
 static void CalendarFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, CalendarClassID);
-    LV_LOG_USER("Calendar %s release", th->uid);
     if (th) {
-        delete static_cast<Calendar*>(th->comp);
+        LV_LOG_USER("Calendar %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

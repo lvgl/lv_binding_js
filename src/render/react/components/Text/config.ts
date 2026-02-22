@@ -8,12 +8,12 @@ export default class TextConfig implements LvgljsComponentConfig<TextProps, Text
   }
   createInstance(newProps: TextProps, rootInstance, context, workInProgress, uid) {
     const instance = new TextComp({ uid });
-    instance.setProps(newProps, {});
+    instance.setProps(newProps, {} as TextProps);
     return instance;
   }
   commitMount(instance, newProps: TextProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: TextProps, newProps: TextProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: TextProps, oldProps: TextProps) {}

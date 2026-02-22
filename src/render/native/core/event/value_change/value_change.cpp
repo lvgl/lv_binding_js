@@ -70,7 +70,7 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             lv_roller_get_selected_str(comp->instance, buf, sizeof(buf));
             return JS_NewString(ctx, buf);
 
-        case COMP_TYPE_CALENDAR:
+        case COMP_TYPE_CALENDAR: {
             lv_calendar_date_t date;
             std::string result;
             lv_calendar_get_pressed_date(comp->instance, &date);
@@ -80,6 +80,9 @@ static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
             result.append("-");
             result.append(std::to_string(date.day));
             return JS_NewString(ctx, result.c_str());
+        }
+        default:
+            break;
     }
 
     return JS_UNDEFINED;

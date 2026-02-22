@@ -1,11 +1,25 @@
 {
     "compilerOptions": {
       "module": "NodeNext",
+      "jsx": "react",
+      "target": "ES2020",
+      "lib": ["ES2020"],
+      "moduleResolution": "NodeNext",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": false,
       "typeRoots": [
         "node_modules/@txikijs/types",
         "node_modules/@types"
-      ]
+      ],
+      "paths": {
+        "lvgljs-ui": ["./src/render/react"]
+      }
     },
-    "include": ["src/**/*"],
-    "exclude": ["**/*.spec.ts"]
+    "include": [
+      "src/**/*",
+      "demo/**/*",
+      "test/**/*"
+    ],
+    "exclude": ["**/*.spec.ts", "node_modules", "build", "deps"]
   }

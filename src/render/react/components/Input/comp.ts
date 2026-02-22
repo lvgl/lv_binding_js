@@ -1,5 +1,6 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
+import { setComponentProps, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   handleEvent,
@@ -33,71 +34,47 @@ export type InputProps = CommonProps & {
   autoKeyBoard: boolean;
 };
 
-function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Input", comp, newProps, oldProps }),
-    placeholder(str) {
-      if (str !== oldProps.placeholder) {
-        comp.setPlaceHolder(str);
-      }
-    },
-    mode(mode) {
-      if (mode == oldProps.mode) return;
-      if (mode === "password") {
-        comp.setPasswordMode(true);
-      } else if (oldProps.mode === "password") {
-        comp.setPasswordMode(false);
-      }
-    },
-    maxlength(len) {
-      if (len === oldProps.maxlength) return;
-      comp.setMaxLength(len);
-    },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-    onFocus(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
-    },
-    onBlur(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_DEFOCUSED);
-    },
-    onFocusStyle(styleSheet) {
-      setStyle({
-        comp,
-        compName: "Input",
-        styleType: 0x0002,
-        oldStyleSheet: oldProps.onFocusStyle,
-        styleSheet,
-      });
-    },
-    value(str) {
-      if (str !== oldProps.value) {
-        comp.setText(str);
-      }
-    },
-    autoKeyBoard(payload) {
-      if (payload !== oldProps?.autoKeyBoard) {
-        comp.setAutoKeyboard(payload);
-      }
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const inputSetters = {
+  placeholder(comp, str) {
+    comp.setPlaceHolder(str);
+  },
+  mode(comp, mode) {
+    comp.setPasswordMode(!!(mode === "password"));
+  },
+  maxlength(comp, len) {
+    comp.setMaxLength(len);
+  },
+  onChange(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+  },
+  onFocus(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_FOCUSED);
+  },
+  onBlur(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_DEFOCUSED);
+  },
+  onFocusStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      compName: "Input",
+      styleType: 0x0002,
+      oldStyleSheet: oldProps.onFocusStyle,
+      styleSheet,
+    });
+  },
+  value(comp, str) {
+    comp.setText(str);
+  },
+  autoKeyBoard(comp, payload) {
+    comp.setAutoKeyboard(payload);
+  },
+};
 
 /** A one line mode of Textarea */
 export class InputComp extends NativeView {
+  uid: string;
+  style: any;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -108,14 +85,15 @@ export class InputComp extends NativeView {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: InputProps, oldProps: InputProps) {
-    setInputProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<InputProps>, oldProps: InputProps) {
+    setComponentProps(this, "Input", updatePayload, oldProps, inputSetters);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}

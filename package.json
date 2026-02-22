@@ -10,7 +10,7 @@
     "sim": "./build/lvgljs run",
     "sim:watch": "nodemon --watch 'demo/**/*.js' --ext 'js' --exec 'npm run sim'",
     "bundle": "node ./build.js",
-    "bundle:watch": "nodemon --watch 'demo/**/*.jsx' --watch 'test/**/*.jsx' --ext 'jsx' --exec 'npm run bundle'",
+    "bundle:watch": "nodemon --watch 'demo/**/*.jsx' --watch 'demo/**/*.tsx' --watch 'test/**/*.jsx' --watch 'test/**/*.tsx' --ext 'jsx,tsx' --exec 'npm run bundle'",
     "fmt": "prettier -w src/render/react"
   },
   "dependencies": {
@@ -20,9 +20,9 @@
     "fetch-blob": "^3.2.0",
     "nodemon": "^3.1.4",
     "lvgljs-ui": "file:src/render/react",
-    "react": "^16.13.1",
+    "react": "18.3.1",
     "react-proxy": "^2.0.8",
-    "react-reconciler": "^0.25.1",
+    "react-reconciler": "0.29.2",
     "react-router": "^6.3.0",
     "text-encoding": "^0.7.0",
     "urlpattern-polyfill": "^5.0.3",
@@ -37,7 +37,7 @@
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
     "@txikijs/types": "^24.6.0",
-    "@types/react": "^16.3.1",
+    "@types/react": "^18.3.0",
     "@types/react-reconciler": "^0.18.0",
     "esbuild-plugin-alias": "^0.2.1",
     "glob": "^10.3.15",

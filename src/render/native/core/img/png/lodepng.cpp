@@ -612,7 +612,7 @@ static unsigned readBits(LodePNGBitReader* reader, size_t nbits) {
 }
 
 /* Public for testing only. steps and result must have numsteps values. */
-static unsigned lode_png_test_bitreader(const unsigned char* data, size_t size,
+[[maybe_unused]] static unsigned lode_png_test_bitreader(const unsigned char* data, size_t size,
                                  size_t numsteps, const size_t* steps, unsigned* result) {
   size_t i;
   LodePNGBitReader reader;

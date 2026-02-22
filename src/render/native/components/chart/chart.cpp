@@ -6,10 +6,7 @@ Chart::Chart(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     this->uid = uid;
     this->instance = lv_chart_create(parent != nullptr ? parent : GetWindowInstance());
 
-    lv_group_add_obj(lv_group_get_default(), this->instance);
-
     lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICK_FOCUSABLE);
-    lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 
@@ -65,7 +62,8 @@ void Chart::setBottomAxisOption (
 };
 
 void Chart::setLeftAxisData (std::vector<axis_data>& data) {
-    int32_t i, j, color;
+    size_t i,j;
+    int32_t color;
     axis_data item;
 
     for (i=0; i<this->left_axis.size(); i++) {
@@ -91,7 +89,8 @@ void Chart::setLeftAxisData (std::vector<axis_data>& data) {
 };
 
 void Chart::setRightAxisData (std::vector<axis_data>& data) {
-    int32_t i, j, color;
+    size_t i, j;
+    int32_t color;
     axis_data item;
 
     for (i=0; i<this->right_axis.size(); i++) {
@@ -162,13 +161,13 @@ void Chart::draw_event_cb (lv_event_t * e) {
 
     Chart* comp = (Chart*)e->user_data;
 
-    if(comp->bottom_axis_labels.size() > dsc->value && dsc->id == LV_CHART_AXIS_PRIMARY_X && dsc->text) {
+    if(comp->bottom_axis_labels.size() > static_cast<size_t>(dsc->value) && dsc->id == LV_CHART_AXIS_PRIMARY_X && dsc->text) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->bottom_axis_labels[dsc->value].c_str());
-    } else if (comp->left_axis_labels.size() > dsc->value && dsc->id == LV_CHART_AXIS_PRIMARY_Y && dsc->text) {
+    } else if (comp->left_axis_labels.size() > static_cast<size_t>(dsc->value) && dsc->id == LV_CHART_AXIS_PRIMARY_Y && dsc->text) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->left_axis_labels[dsc->value].c_str());
-    } else if (comp->right_axis_labels.size() > dsc->value && dsc->id == LV_CHART_AXIS_SECONDARY_Y && dsc->text) {
+    } else if (comp->right_axis_labels.size() > static_cast<size_t>(dsc->value) && dsc->id == LV_CHART_AXIS_SECONDARY_Y && dsc->text) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->right_axis_labels[dsc->value].c_str());
-    } else if (comp->top_axis_labels.size() > dsc->value && dsc->id == LV_CHART_AXIS_SECONDARY_X && dsc->text) {
+    } else if (comp->top_axis_labels.size() > static_cast<size_t>(dsc->value) && dsc->id == LV_CHART_AXIS_SECONDARY_X && dsc->text) {
         lv_snprintf(dsc->text, dsc->text_length, "%s", comp->top_axis_labels[dsc->value].c_str());
     }
 };
@@ -190,7 +189,8 @@ void Chart::setBottomAxisRange (int32_t min, int32_t max) {
 };
 
 void Chart::setScatterData (std::vector<axis_data>& data) {
-    int32_t i, j, color;
+    size_t i, j;
+    int32_t color;
     axis_data item;
 
     for (i=0; i<this->left_axis.size(); i++) {

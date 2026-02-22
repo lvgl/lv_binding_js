@@ -9,12 +9,12 @@ export default class ImageConfig implements LvgljsComponentConfig<ImageProps, Im
   }
   createInstance(newProps: ImageProps, rootInstance, context, workInProgress, uid) {
     const instance = new ImageComp({ uid });
-    instance.setProps(newProps, {});
+    instance.setProps(newProps, {} as ImageProps);
     return instance;
   }
   commitMount(instance, newProps: ImageProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: ImageProps, newProps: ImageProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   setProps(newProps: ImageProps, oldProps: ImageProps) {}
   insertBefore(child, beforeChild) {}

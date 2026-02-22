@@ -25,10 +25,8 @@ static JSValue NativeCompSetGIFBinary(JSContext *ctx, JSValueConst this_val, int
         LV_LOG_USER("GIF %s setGIF", s->uid);
 
         return JS_NewBool(ctx, 1);
-    fail:
-        return JS_ThrowInternalError(ctx, "GIF setBinary fail");
     }
-    return JS_UNDEFINED;
+    return JS_ThrowInternalError(ctx, "GIF setBinary fail");
 };
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
@@ -97,9 +95,8 @@ static JSValue GIFConstructor(JSContext *ctx, JSValueConst new_target, int argc,
 
 static void GIFFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, GIFClassID);
-    LV_LOG_USER("GIF %s release", th->uid);
     if (th) {
-        delete static_cast<GIF*>(th->comp);
+        LV_LOG_USER("GIF %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

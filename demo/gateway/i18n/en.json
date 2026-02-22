@@ -1,0 +1,48 @@
+{
+  "home": {
+    "title": "Smart Gateway"
+  },
+  "header": {
+    "eventLog": "Event Log",
+    "deviceInfo": "Device Info",
+    "deviceStatus": "Device Status",
+    "settings": "Setting"
+  },
+  "logs": {
+    "title": "Event Log",
+    "alerts": "Alerts",
+    "notification": "Notification",
+    "detail": "Log Detail",
+    "prevPage": "Previous Page",
+    "nextPage": "Next Page"
+  },
+  "deviceInfo": {
+    "title": "Device Info"
+  },
+  "deviceStatus": {
+    "title": "Device Status"
+  },
+  "settings": {
+    "title": "Setting",
+    "language": "Language",
+    "exportLogs": "Export Logs To Micro SD",
+    "clearLogs": "Clear Logs",
+    "countdown": "Countdown"
+  },
+  "language": {
+    "title": "Language"
+  },
+  "countdown": {
+    "title": "Countdown",
+    "time": "{remain}s"
+  },
+  "exportLogs": {
+    "title": "Export Logs To Micro SD"
+  },
+  "clearLogs": {
+    "title": "Clear Logs",
+    "confirm": "Confirm To Clear The Logs?",
+    "cancel": "Cancel",
+    "confirmBtn": "Confirm"
+  }
+}

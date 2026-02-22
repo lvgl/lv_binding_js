@@ -7,9 +7,10 @@
 
 extern "C" {
     #include "lvgl.h"
-
     #include "private.h"
 };
+
+void reorderFocusGroup(lv_obj_t * parent);
 
 template<size_t BlockSize, size_t BlockNum = 10>
 class MemoryPool {
@@ -54,7 +55,7 @@ class MemoryPool {
 			free_block_head = &(new_chunk->blocks[0]);
 
 			// link the new chunk's all blocks
-			for (int i = 1; i < BlockNum; i++)
+			for (size_t i = 1; i < BlockNum; i++)
 				new_chunk->blocks[i - 1].next = &(new_chunk->blocks[i]);
 			new_chunk->blocks[BlockNum - 1].next = NULL; // final block next is NULL
 			

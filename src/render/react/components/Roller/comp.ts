@@ -1,5 +1,6 @@
+import { UpdatePayload } from "../../core/reconciler/propDiffer";
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { setComponentProps, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
@@ -21,52 +22,38 @@ export type RollerProps = CommonProps & {
   onChange?: (event: OnChangeEvent) => void;
 };
 
-function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {
-  const setter = {
-    ...CommonComponentApi({ compName: "Roller", comp, newProps, oldProps }),
-    selectedStyle(styleSheet) {
-      setStyle({
-        comp,
-        styleSheet,
-        compName: "Roller",
-        styleType: STYLE_TYPE.PART_SELECTED,
-        oldStyleSheet: oldProps.selectedStyle,
-      });
-    },
-    options(options) {
-      if (options !== oldProps.options && Array.isArray(options)) {
-        comp.setOptions(options, options.length, !!newProps.infinity);
-      }
-    },
-    selectIndex(selectIndex) {
-      if (selectIndex !== oldProps.selectIndex) {
-        comp.setSelectIndex(selectIndex);
-      }
-    },
-    visibleRowCount(count) {
-      if (count !== oldProps.visibleRowCount) {
-        comp.setVisibleRowCount(count);
-      }
-    },
-    onChange(fn) {
-      handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
-    },
-  };
-  Object.keys(setter).forEach((key) => {
-    if (newProps.hasOwnProperty(key)) {
-      setter[key](newProps[key]);
-    }
-  });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
-}
+const rollerSetters = {
+  selectedStyle(comp, styleSheet, oldProps) {
+    setStyle({
+      comp,
+      styleSheet,
+      compName: "Roller",
+      styleType: STYLE_TYPE.PART_SELECTED,
+      oldStyleSheet: oldProps.selectedStyle,
+    });
+  },
+  options(comp, options) {
+    comp.setOptions(options, options.length, comp.infinity);
+  },
+  selectIndex(comp, selectIndex) {
+    comp.setSelectIndex(selectIndex);
+  },
+  visibleRowCount(comp, count) {
+    comp.setVisibleRowCount(count);
+  },
+  onChange(comp, fn) {
+    handleEvent(comp, fn, EVENTTYPE_MAP.EVENT_VALUE_CHANGED);
+  },
+  infinity(comp, infinity: boolean) {
+    comp.infinity = infinity;
+  },
+};
 
 export class RollerComp extends NativeRoller {
+  uid: string;
+  style: any;
+  infinity: boolean = false;
+  
   constructor({ uid }) {
     super({ uid });
     this.uid = uid;
@@ -75,14 +62,15 @@ export class RollerComp extends NativeRoller {
     const that = this;
     this.style = new Proxy(this, {
       get(obj, prop) {
-        if (styleGetterProp.includes(prop)) {
-          return style[prop].call(that);
+        const propStr = String(prop);
+        if (styleGetterProp.includes(propStr)) {
+          return style[propStr].call(that);
         }
       },
     });
   }
-  setProps(newProps: RollerProps, oldProps: RollerProps) {
-    setRollerProps(this, newProps, oldProps);
+  setProps(updatePayload: UpdatePayload<RollerProps>, oldProps: RollerProps) {
+    setComponentProps(this, "Roller", updatePayload, oldProps, rollerSetters);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Roller";

@@ -29,7 +29,6 @@ uint8_t* GetImgDesc (uint8_t* buf, size_t len, lv_img_dsc_t_1* image_desc) {
         return nullptr;
     }
     
-    lv_img_dsc_t_1* prev_desc = image_desc;
     image_desc->type = image_type;
 
     image_desc->header.always_zero = 0;

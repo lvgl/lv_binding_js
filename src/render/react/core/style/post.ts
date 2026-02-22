@@ -1,12 +1,6 @@
 import { StyleProps } from "./index";
-import { isValidUrl } from "../../utils/helpers";
+import { isValidUrl, fetchBinary } from "../../utils/helpers";
 import { BUILT_IN_SYMBOL } from "./symbol";
-
-async function getImageBinary(url) {
-  const resp = await fetch(url, {});
-  const imageBuffer = await resp.arrayBuffer();
-  return imageBuffer;
-}
 
 export function PostProcessStyle({ comp, styleSheet, styleType }: { comp: any; styleSheet: StyleProps; styleType: any }) {
   if (styleSheet["background-image"] !== void 0) {
@@ -31,11 +25,8 @@ export function PostProcessStyle({ comp, styleSheet, styleType }: { comp: any; s
           console.log("setBackground error", e);
         });
     } else {
-      getImageBinary(url)
-        .then(
-          (buffer) => comp.setBackgroundImage(Buffer.from(buffer).buffer),
-          styleType,
-        )
+      fetchBinary(url)
+        .then((buffer) => comp.setBackgroundImage(buffer, styleType))
         .catch(console.warn);
     }
   }
@@ -62,11 +53,8 @@ export function PostProcessStyle({ comp, styleSheet, styleType }: { comp: any; s
           console.log("setArcImage error", e);
         });
     } else {
-      getImageBinary(url)
-        .then(
-          (buffer) => comp.setArcImage(Buffer.from(buffer).buffer),
-          styleType,
-        )
+      fetchBinary(url)
+        .then((buffer) => comp.setArcImage(buffer, styleType))
         .catch(console.warn);
     }
   }

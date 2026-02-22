@@ -17,7 +17,7 @@ WRAPPED_SCROLL_INTO_VIEW(TabView, "TabView")
 WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 
 // static JSValue NativeCompSetTabs(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-//     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+//     if (argc >= 1 && JS_IsArray(argv[0])) {
 //         COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
 
 //         COMP_REF* ref_content;
@@ -154,9 +154,8 @@ static JSValue TabViewConstructor(JSContext *ctx, JSValueConst new_target, int a
 
 static void TabViewFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, TabViewClassID);
-    LV_LOG_USER("TabView %s release", th->uid);
     if (th) {
-        delete static_cast<TabView*>(th->comp);
+        LV_LOG_USER("TabView %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

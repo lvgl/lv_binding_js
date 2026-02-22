@@ -11,31 +11,8 @@ WRAPPED_JS_BACKGROUND_IMAGE(Switch,"Switch")
 WRAPPED_MOVE_TO_FRONT(Switch, "Switch")
 WRAPPED_MOVE_TO_BACKGROUND(Switch, "Switch")
 WRAPPED_SCROLL_INTO_VIEW(Switch, "Switch")
+WRAPPED_FOCUS(Switch, "Switch")
 WRAPPED_JS_CLOSE_COMPONENT(Switch, "Switch")
-
-static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        JSClassID _class_id;
-        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-
-        ((Switch*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("Switch %s remove child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
-
-static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        JSClassID _class_id;
-        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, SwitchClassID);
-
-        ((Switch*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("Switch %s append child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
 
 static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsBool(argv[0])) {
@@ -74,6 +51,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToFront", 0, NativeCompMoveToFront),
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
+    TJS_CFUNC_DEF("focus", 0, NativeCompFocus),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
 };
 
@@ -129,9 +107,8 @@ static JSValue SwitchConstructor(JSContext *ctx, JSValueConst new_target, int ar
 
 static void ViewFinalizer(JSRuntime *rt, JSValue val) {
     COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, SwitchClassID);
-    LV_LOG_USER("Switch %s release", th->uid);
     if (th) {
-        delete static_cast<Switch*>(th->comp);
+        LV_LOG_USER("Switch %s release", th->uid);
         js_free_rt(rt, th);
     }
 };

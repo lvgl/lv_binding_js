@@ -56,6 +56,7 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
         if (ref) {                                                                                                                    \
             ref->stop_bubbling = 1;                                                                                                   \
         }                                                                                                                             \
+        return JS_UNDEFINED;                                                                                                          \
     };                                                                                                                                \
                                                                                                                                       \
 

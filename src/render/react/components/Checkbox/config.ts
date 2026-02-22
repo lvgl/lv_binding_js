@@ -13,7 +13,7 @@ export default class CheckboxConfig implements LvgljsComponentConfig<CheckboxPro
   }
   commitMount(instance, newProps: CheckboxProps, internalInstanceHandle) {}
   commitUpdate(instance, updatePayload, oldProps: CheckboxProps, newProps: CheckboxProps, finishedWork) {
-    instance.setProps(newProps, oldProps);
+    instance.setProps(updatePayload, oldProps);
   }
   commitUnmount(instance) {}
   setProps(newProps: CheckboxProps, oldProps: CheckboxProps) {}
