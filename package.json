@@ -36,7 +36,7 @@
   "license": "MIT",
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
-    "@txikijs/types": "^24.6.0",
+    "@txikijs/types": "^26.5.0",
     "@types/react": "^16.3.1",
     "@types/react-reconciler": "^0.18.0",
     "esbuild-plugin-alias": "^0.2.1",

@@ -196,10 +196,10 @@
     javascript-natural-sort "0.7.1"
     lodash "^4.17.21"
 
-"@txikijs/types@^24.6.0":
-  version "24.12.0"
-  resolved "https://registry.yarnpkg.com/@txikijs/types/-/types-24.12.0.tgz#3b486bfce829ccd88a9e3880aa7487125d45fa45"
-  integrity sha512-NllY8bX3sn2PLx83QlNuKpWNqbPXWEZk8Uwh4E0fhe0hGHiBzFemXb9KS0wq3ymfzyiOKOT5YohKf8+z60HCdg==
+"@txikijs/types@^26.5.0":
+  version "26.5.0"
+  resolved "https://registry.yarnpkg.com/@txikijs/types/-/types-26.5.0.tgz#727d32fb138ce2fdead1fc56b91ee18cf11ca6e0"
+  integrity sha512-FQ8fJs1mImaVP7ZZmFugXNVhnz7//0b5Yh4BQmZvpWcPYBtYeKRsaIHs8Ksvz+aMOLE8+EaUg+R9UUq1BnBb2A==
 
 "@types/body-parser@*":
   version "1.19.6"
