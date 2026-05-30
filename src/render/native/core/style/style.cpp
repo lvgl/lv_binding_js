@@ -702,7 +702,7 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
 };
 
 static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         BasicComponent* instance = static_cast<BasicComponent*>(lv_obj_get_user_data(comp));
         const lv_coord_t* old_ptr1 = instance->grid_column_desc;
         const lv_coord_t* old_ptr2 = instance->grid_row_desc;
@@ -754,7 +754,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
 };
 
 static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
         JSValue JSValue3 = JS_GetPropertyUint32(ctx, obj, 2);
@@ -786,7 +786,7 @@ static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
 };
 
 static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
 

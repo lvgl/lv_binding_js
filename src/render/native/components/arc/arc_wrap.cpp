@@ -21,7 +21,7 @@ WRAPPED_SCROLL_INTO_VIEW(Arc, "Arc")
 WRAPPED_JS_CLOSE_COMPONENT(Arc, "Arc")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t min;
         int32_t max;
