@@ -1,19 +1,23 @@
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeLine = bridge.NativeRender.NativeComponents.Line;
 
 export type LineProps = CommonProps & {
   points: [number, number][];
 };
 
-function setLineProps(comp, newProps, oldProps) {
+function setLineProps(comp, newProps: LineProps, oldProps: Partial<LineProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
     points(points) {
@@ -30,13 +34,7 @@ function setLineProps(comp, newProps, oldProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class LineComp extends NativeLine {
@@ -54,22 +52,17 @@ export class LineComp extends NativeLine {
       },
     });
   }
-  setProps(newProps: LineProps, oldProps: LineProps) {
+  setProps(newProps: LineProps, oldProps: Partial<LineProps>) {
     setLineProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Line";
   appendInitialChild(child) {}
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

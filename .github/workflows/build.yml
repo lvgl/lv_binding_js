@@ -1,0 +1,231 @@
+name: Build & Test
+
+on:
+  push:
+    branches: ['develop/*', 'main', 'master', 'release/*']
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  # Baselines live on GitHub Releases (not in git). See doc/wiki/CI-Screenshot-Artifacts.md
+  # Asset name per job: <github.job>-<filter>.tar.gz (jobs from collect-screenshots.needs; filter defaults to "all")
+  SCREENSHOT_DIFF_BASELINE_RELEASE: ''
+  # Optional override when asset name does not follow the default pattern above.
+  SCREENSHOT_DIFF_BASELINE_ASSET: ''
+  # Fallback: download baseline from an Actions run (90-day artifact expiry).
+  SCREENSHOT_DIFF_BASELINE_RUN_ID: ''
+  # Optional substring filter for capture + diff (e.g. chart). Empty = all GUI tests.
+  SCREENSHOT_DIFF_FILTER: ''
+
+jobs:
+  linux-device:
+    name: Linux device
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libffi-dev libcurl4-openssl-dev
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      # gen:all:check - fails fast if generated files or doc/ markdown are out of date.
+      - name: gen:all:check
+        run: npm run gen:all:check
+      - name: Bundle the React UI bindings, demos and tests
+        run: yarn run build
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_LVGL_SIMULATOR=OFF \
+            -DUSE_EXTERNAL_FFI=ON
+      - name: Build lvgljs
+        run: cmake --build build -j
+      - name: Run tests
+        run: yarn capture:screenshots
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-test-screenshots-linux-device
+          path: _screenshots/capture/
+          retention-days: 90
+
+  linux:
+    name: Linux
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libffi-dev libsdl2-dev libcurl4-openssl-dev xvfb
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Bundle the React UI bindings, demos and tests
+        run: yarn run build
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_LVGL_SIMULATOR=ON \
+            -DUSE_EXTERNAL_FFI=ON
+      - name: Build lvgljs
+        run: cmake --build build -j
+      - name: Capture screenshots
+        env:
+          SCREENSHOT_USE_XVFB: '1'
+        run: yarn capture:screenshots ${SCREENSHOT_DIFF_FILTER}
+      - name: Diff screenshots
+        if: env.SCREENSHOT_DIFF_BASELINE_RELEASE != '' || env.SCREENSHOT_DIFF_BASELINE_RUN_ID != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: yarn diff:screenshots --baseline _screenshots/baseline ${SCREENSHOT_DIFF_FILTER}
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-test-screenshots-linux
+          path: _screenshots/capture/
+          retention-days: 90
+      - name: Upload screenshot diffs
+        if: failure() && hashFiles('_screenshots/diff/**') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-screenshot-diffs-linux
+          path: _screenshots/diff/
+          retention-days: 14
+
+  macos:
+    name: macOS
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Install system dependencies
+        run: |
+          for pkg in ninja sdl2 libffi curl; do
+            brew list "$pkg" &>/dev/null || brew install "$pkg"
+          done
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Bundle the React UI bindings, demos and tests
+        run: yarn run build
+      - name: Configure
+        run: |
+          cmake -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_LVGL_SIMULATOR=ON \
+            -DUSE_EXTERNAL_FFI=ON \
+            -DCMAKE_PREFIX_PATH="$(brew --prefix sdl2);$(brew --prefix libffi);$(brew --prefix curl)"
+      - name: Build lvgljs
+        run: cmake --build build -j
+      - name: Run tests
+        run: yarn capture:screenshots
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-test-screenshots-macos
+          path: _screenshots/capture/
+          retention-days: 90
+
+  windows:
+    name: Windows
+    runs-on: windows-2022
+    env:
+      VCPKG_DEFAULT_TRIPLET: x64-windows-static
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg-binary-cache
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - name: Resolve vcpkg revision
+        id: vcpkg
+        shell: pwsh
+        run: |
+          $rev = git -C "$env:VCPKG_INSTALLATION_ROOT" rev-parse HEAD
+          "rev=$rev" >> $env:GITHUB_OUTPUT
+      - name: Prepare vcpkg binary cache directory
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force -Path "$env:VCPKG_DEFAULT_BINARY_CACHE" | Out-Null
+      - name: Cache vcpkg binary artifacts
+        uses: actions/cache@v5
+        with:
+          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+          key: vcpkg-${{ runner.os }}-${{ steps.vcpkg.outputs.rev }}-${{ hashFiles('.github/workflows/build.yml') }}
+          restore-keys: |
+            vcpkg-${{ runner.os }}-${{ steps.vcpkg.outputs.rev }}-
+            vcpkg-${{ runner.os }}-
+      - name: Install vcpkg dependencies
+        run: vcpkg install curl:x64-windows-static zlib:x64-windows-static libffi:x64-windows-static sdl2:x64-windows-static
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Bundle the React UI bindings, demos and tests
+        run: yarn bundle
+      - name: Configure
+        run: >
+          cmake -B build
+          -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+          -DVCPKG_TARGET_TRIPLET=x64-windows-static
+          -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded$<$<CONFIG:Debug>:Debug>
+          -DBUILD_LVGL_SIMULATOR=ON
+      - name: Build lvgljs
+        run: cmake --build build --config Release
+      - name: Run tests
+        run: yarn capture:screenshots
+      - name: Upload test screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-test-screenshots-windows
+          path: _screenshots/capture/
+          retention-days: 90
+
+  collect-screenshots:
+    name: Collect test screenshots
+    needs: [linux-device, linux, macos, windows]
+    if: always() && !cancelled()
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v7
+        continue-on-error: true
+        with:
+          pattern: lvgljs-test-screenshots-*
+          path: artifacts
+      - name: Upload combined test screenshots
+        if: hashFiles('artifacts/**') != ''
+        uses: actions/upload-artifact@v7
+        with:
+          name: lvgljs-test-screenshots
+          path: artifacts/
+          retention-days: 90

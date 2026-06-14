@@ -1,19 +1,23 @@
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeComp = bridge.NativeRender.NativeComponents.Window;
 
 export type WindowProps = CommonProps & {
   title: string;
 };
 
-function setWindowProps(comp, newProps: WindowProps, oldProps: WindowProps) {
+function setWindowProps(comp, newProps: WindowProps, oldProps: Partial<WindowProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Window", comp, newProps, oldProps }),
     title(title) {
@@ -27,13 +31,7 @@ function setWindowProps(comp, newProps: WindowProps, oldProps: WindowProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class Window extends NativeComp {
@@ -51,7 +49,7 @@ export class Window extends NativeComp {
       },
     });
   }
-  setProps(newProps: WindowProps, oldProps: WindowProps) {
+  setProps(newProps: WindowProps, oldProps: Partial<WindowProps>) {
     setWindowProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
@@ -61,13 +59,10 @@ export class Window extends NativeComp {
   appendChild(child) {
     super.appendChild(child);
   }
-  removeChild(child) {
-    super.removeChild(child);
-  }
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

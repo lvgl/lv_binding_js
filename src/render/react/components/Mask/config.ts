@@ -20,5 +20,4 @@ export default class MaskConfig implements LvgljsComponentConfig<MaskProps, Mask
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

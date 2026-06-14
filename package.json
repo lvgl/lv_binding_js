@@ -9,17 +9,30 @@
   "scripts": {
     "sim": "./build/lvgljs run",
     "sim:watch": "nodemon --watch 'demo/**/*.js' --ext 'js' --exec 'npm run sim'",
+    "build": "yarn run rimraf node_modules/lvgljs-ui && yarn run react-bundle && yarn install --check-files && yarn run bundle",
+    "react-bundle": "cd src/render/react && yarn run build",
+    "capture:screenshots": "node scripts/capture-screenshots.js",
+    "diff:screenshots": "node scripts/diff-screenshots.js",
+    "package:screenshots:baseline": "node scripts/screenshot-baseline.js package",
+    "fetch:screenshots:baseline": "node scripts/screenshot-baseline.js fetch",
     "bundle": "node ./build.js",
     "bundle:watch": "nodemon --watch 'demo/**/*.jsx' --watch 'test/**/*.jsx' --ext 'jsx' --exec 'npm run bundle'",
-    "fmt": "prettier -w src/render/react"
+    "fmt": "prettier -w src/render/react",
+    "typecheck": "yarn run typecheck:base && yarn run typecheck:react && yarn run test:unit",
+    "typecheck:base": "tsc --noEmit",
+    "typecheck:react": "tsc -p src/render/react/core --noEmit",
+    "gen:all": "python scripts/codegen.py",
+    "gen:all:check": "python scripts/codegen.py --check",
+    "test:wiki": "python -m unittest discover -s doc/wiki -p \"test_*.py\"",
+    "test:unit": "node scripts/run-specs.js"
   },
   "dependencies": {
     "buffer": "^6.0.3",
     "core-js": "^3.23.2",
     "esbuild": "^0.14.43",
     "fetch-blob": "^3.2.0",
-    "nodemon": "^3.1.4",
     "lvgljs-ui": "file:src/render/react",
+    "nodemon": "^3.1.4",
     "react": "^16.13.1",
     "react-proxy": "^2.0.8",
     "react-reconciler": "^0.25.1",
@@ -36,11 +49,16 @@
   "license": "MIT",
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
-    "@txikijs/types": "^24.6.0",
+    "@txikijs/types": "^26.5.0",
     "@types/react": "^16.3.1",
     "@types/react-reconciler": "^0.18.0",
     "esbuild-plugin-alias": "^0.2.1",
     "glob": "^10.3.15",
-    "prettier": "^3.0.1"
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
+    "prettier": "^3.0.1",
+    "rimraf": "^6.1.3",
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.0"
   }
 }

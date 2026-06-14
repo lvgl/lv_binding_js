@@ -2,12 +2,16 @@ import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
 export type InputProps = CommonProps & {
@@ -33,7 +37,7 @@ export type InputProps = CommonProps & {
   autoKeyBoard: boolean;
 };
 
-function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
+function setInputProps(comp, newProps: InputProps, oldProps: Partial<InputProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Input", comp, newProps, oldProps }),
     placeholder(str) {
@@ -66,7 +70,7 @@ function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
       setStyle({
         comp,
         compName: "Input",
-        styleType: 0x0002,
+        styleType: STYLE_TYPE.STATE_FOCUSED,
         oldStyleSheet: oldProps.onFocusStyle,
         styleSheet,
       });
@@ -87,13 +91,7 @@ function setInputProps(comp, newProps: InputProps, oldProps: InputProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 /** A one line mode of Textarea */
@@ -114,17 +112,16 @@ export class InputComp extends NativeView {
       },
     });
   }
-  setProps(newProps: InputProps, oldProps: InputProps) {
+  setProps(newProps: InputProps, oldProps: Partial<InputProps>) {
     setInputProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

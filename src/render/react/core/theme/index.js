@@ -1,4 +1,6 @@
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from '../bridge';
+
+const bridge = GetBridge();
 const nativeTheme = bridge.NativeRender.theme;
 
 export const Theme = {

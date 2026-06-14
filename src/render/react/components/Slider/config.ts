@@ -20,5 +20,4 @@ export default class SliderConfig implements LvgljsComponentConfig<SliderProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

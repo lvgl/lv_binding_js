@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lvgl/lvgl.h"
+#include <lvgl.h>
 
 bool isgif (uint16_t* buf);
 

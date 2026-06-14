@@ -20,5 +20,4 @@ export default class KeyboardConfig implements LvgljsComponentConfig<KeyboardPro
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

@@ -4,6 +4,7 @@ static JSClassID KeyboardClassID;
 
 WRAPPED_JS_SETSTYLE(Keyboard, "Keyboard")
 WRAPPED_JS_AddEventListener(Keyboard, "Keyboard")
+WRAPPED_JS_RemoveEventListener(Keyboard, "Keyboard")
 WRAPPED_JS_Align(Keyboard, "Keyboard")
 WRAPPED_JS_Align_To(Keyboard, "Keyboard")
 STYLE_INFO(Keyboard, "Keyboard")
@@ -19,7 +20,7 @@ static JSValue NativeCompSetTextarea(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, KeyboardClassID);
 
         ((Keyboard*)(parent->comp))->setTextarea(static_cast<BasicComponent*>(child->comp));
-        LV_LOG_USER("Keyboard %s setTextarea %s", parent->uid, child->uid);
+        LV_LOG_USER("Keyboard %s setTextarea %s", parent->getUid(), child->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -31,7 +32,7 @@ static JSValue NativeCompSetMode(JSContext *ctx, JSValueConst this_val, int argc
         JS_ToInt32(ctx, &mode, argv[0]);
 
         ((Keyboard*)(ref->comp))->setMode(mode);
-        LV_LOG_USER("Keyboard %s setMode %d", ref->uid, mode);
+        LV_LOG_USER("Keyboard %s setMode %d", ref->getUid(), mode);
     }
     return JS_UNDEFINED;
 };
@@ -39,6 +40,7 @@ static JSValue NativeCompSetMode(JSContext *ctx, JSValueConst this_val, int argc
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
@@ -49,9 +51,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue KeyboardConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -85,7 +84,7 @@ static JSValue KeyboardConstructor(JSContext *ctx, JSValueConst new_target, int 
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Keyboard(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -101,14 +100,7 @@ static JSValue KeyboardConstructor(JSContext *ctx, JSValueConst new_target, int 
     return JS_EXCEPTION;
 };
 
-static void KeyboardFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, KeyboardClassID);
-    LV_LOG_USER("Keyboard %s release", th->uid);
-    if (th) {
-        delete static_cast<Keyboard*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(KeyboardFinalizer, Keyboard, KeyboardClassID)
 
 static JSClassDef KeyboardClass = {
     .class_name = "Keyboard",
@@ -124,7 +116,6 @@ void NativeComponentKeyboardInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, KeyboardConstructor, "Keyboard", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Keyboard", obj, JS_PROP_C_W_E);
 };
 

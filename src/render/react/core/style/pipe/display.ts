@@ -1,11 +1,9 @@
-import { ProcessColor, ProcessPx, ProcessPxOrPercent } from "../util";
+import { CSS_DISPLAY_MAP, type DisplayStyleType } from "../type";
+import { StyleTransformResult } from "../batch";
 
-export type DisplayStyleType = {
-  "display"?: "flex" | "grid" | "block" | "inline" | "none";
-}
-
-export function DisplayStyle(style: DisplayStyleType, result, compName) {
-  if (style["display"]) {
-    result["display"] = style["display"];
-  }
+export function DisplayStyle(
+  style: DisplayStyleType,
+  result: StyleTransformResult,
+) {
+  result.batch.pushStyleEnum(style, "display", CSS_DISPLAY_MAP);
 }

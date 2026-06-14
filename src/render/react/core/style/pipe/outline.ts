@@ -1,23 +1,10 @@
-import { ColorType } from "../color";
-import { PixelOrPercent, ProcessColor, ProcessPx, ProcessPxOrPercent } from "../util";
+import { StyleTransformResult } from "../batch";
+import type { OutlineStyleType } from "../type";
+import { colorTransform, NormalizeCoord, NormalizePositivePx } from "../util";
 
-const obj = {
-  "outline-width": ProcessPx,
-  "outline-color": ProcessColor,
-  "outline-padding": ProcessPxOrPercent,
-};
-const keys = Object.keys(obj);
-
-export type OutlineStyleType = {
-  "outline-width"?: number;
-  "outline-color"?: ColorType;
-  "outline-padding"?: PixelOrPercent;
-};
-
-export function OutlineStyle(style: OutlineStyleType, result, compName) {
-  keys.forEach((key) => {
-    if (style[key] !== void 0) {
-      obj[key](key, style[key], result);
-    }
-  });
+export function OutlineStyle(style: OutlineStyleType, result: StyleTransformResult) {
+  const batch = result.batch;
+  batch.pushStyle(style, "outline-width", NormalizePositivePx);
+  batch.pushStyle(style, "outline-color", colorTransform);
+  batch.pushStyle(style, "outline-padding", NormalizeCoord);
 }

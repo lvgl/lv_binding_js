@@ -1,33 +1,27 @@
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
 import { isValidUrl } from "../../utils/helpers";
+import { fetchAssetBinary, loadLocalAsset } from "../../utils/assets";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
-import path from 'tjs:path';
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeImage = bridge.NativeRender.NativeComponents.Image;
-
-async function getImageBinary(url) {
-  const resp = await fetch(url, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
-  const imageBuffer = await resp.arrayBuffer();
-  return imageBuffer;
-}
 
 export type ImageProps = CommonProps & {
   /** GIF loading resource, support network url, local path, buildtin symbol */
   src: string;
 };
 
-function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
+function setImageProps(comp, newProps: ImageProps, oldProps: Partial<ImageProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Image", comp, newProps, oldProps }),
     onClick(fn) {
@@ -40,19 +34,11 @@ function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
           return;
         }
         if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(url);
-          }
-          tjs.readFile(url, { encoding: "binary" })
-            .then((data) => {
-              comp.setImageBinary(data.buffer);
-            })
-            .catch((e) => {
-              console.log("setImage error", e);
-            });
+          loadLocalAsset(url, "setImage error", (buffer) =>
+            comp.setImageBinary(buffer));
         } else {
-          getImageBinary(url)
-            .then((buffer) => comp.setImageBinary(Buffer.from(buffer).buffer))
+          fetchAssetBinary(url)
+            .then((buffer) => comp.setImageBinary(buffer))
             .catch(console.warn);
         }
       }
@@ -63,13 +49,7 @@ function setImageProps(comp, newProps: ImageProps, oldProps: ImageProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class ImageComp extends NativeImage {
@@ -87,18 +67,17 @@ export class ImageComp extends NativeImage {
       },
     });
   }
-  setProps(newProps: ImageProps, oldProps: ImageProps) {
+  setProps(newProps: ImageProps, oldProps: Partial<ImageProps>) {
     setImageProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Image";
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

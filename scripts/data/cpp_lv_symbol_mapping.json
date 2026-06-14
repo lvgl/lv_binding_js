@@ -1,0 +1,1171 @@
+{
+  "generated_by": "doc/wiki/cpp_lv_symbol_mapping.py",
+  "sources": {
+    "style_cpp": "src/render/native/core/style/style.cpp",
+    "style_cpp_ref": "22819e608442143e8521bbd8e13b594bb59c2d86",
+    "lvgl_ref": "v8.3.0"
+  },
+  "summary": {
+    "cpp_key_count": 88,
+    "real": 71,
+    "virtual": 17
+  },
+  "raw": [
+    {
+      "cpp_key": "width",
+      "handler": "CompSetWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_WIDTH"
+    },
+    {
+      "cpp_key": "max-width",
+      "handler": "CompSetMaxWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MAX_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MAX_WIDTH"
+    },
+    {
+      "cpp_key": "max-width_pct",
+      "handler": "CompSetMaxWidthPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MAX_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MAX_WIDTH"
+    },
+    {
+      "cpp_key": "min-width",
+      "handler": "CompSetMinWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MIN_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MIN_WIDTH"
+    },
+    {
+      "cpp_key": "min-width_pct",
+      "handler": "CompSetMinWidthPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MIN_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MIN_WIDTH"
+    },
+    {
+      "cpp_key": "height",
+      "handler": "CompSetHeight",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_HEIGHT"
+    },
+    {
+      "cpp_key": "max-height",
+      "handler": "CompSetMaxHeight",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MAX_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MAX_HEIGHT"
+    },
+    {
+      "cpp_key": "max-height_pct",
+      "handler": "CompSetMaxHeightPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MAX_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MAX_HEIGHT"
+    },
+    {
+      "cpp_key": "min-height",
+      "handler": "CompSetMinHeight",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MIN_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MIN_HEIGHT"
+    },
+    {
+      "cpp_key": "min-height_pct",
+      "handler": "CompSetMinHeightPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_MIN_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_MIN_HEIGHT"
+    },
+    {
+      "cpp_key": "left",
+      "handler": "CompSetX",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_X",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_X"
+    },
+    {
+      "cpp_key": "top",
+      "handler": "CompSetY",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_Y",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_Y"
+    },
+    {
+      "cpp_key": "width_pct",
+      "handler": "CompSetWidthPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_WIDTH"
+    },
+    {
+      "cpp_key": "height_pct",
+      "handler": "CompSetHeightPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_HEIGHT"
+    },
+    {
+      "cpp_key": "left_pct",
+      "handler": "CompSetXPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_X",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_X"
+    },
+    {
+      "cpp_key": "top_pct",
+      "handler": "CompSetYPch",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_Y",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_Y"
+    },
+    {
+      "cpp_key": "background-color",
+      "handler": "CompSetBackgroundColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BG_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_BG_COLOR"
+    },
+    {
+      "cpp_key": "background-opacity",
+      "handler": "CompSetBackgroundOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BG_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_BG_OPA"
+    },
+    {
+      "cpp_key": "background-grad-color",
+      "handler": "CompSetBackgroundGradColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BG_GRAD_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_BG_GRAD_COLOR"
+    },
+    {
+      "cpp_key": "background-grad-color-dir",
+      "handler": "CompSetBackgroundGradColorDir",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BG_GRAD_DIR",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_BG_GRAD_DIR"
+    },
+    {
+      "cpp_key": "border-radius",
+      "handler": "CompSetBorderRadius",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_RADIUS",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_RADIUS"
+    },
+    {
+      "cpp_key": "arc-width",
+      "handler": "CompSetArcWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_ARC_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_ARC_WIDTH"
+    },
+    {
+      "cpp_key": "arc-rounded",
+      "handler": "CompSetArcRounded",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_ARC_ROUNDED",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_ARC_ROUNDED"
+    },
+    {
+      "cpp_key": "arc-color",
+      "handler": "CompSetArcColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_ARC_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_ARC_COLOR"
+    },
+    {
+      "cpp_key": "arc-opacity",
+      "handler": "CompSetArcOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_ARC_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_ARC_OPA"
+    },
+    {
+      "cpp_key": "display",
+      "handler": "CompSetDisplay",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_DISPLAY"
+    },
+    {
+      "cpp_key": "flex-align",
+      "handler": "CompSetFlexAlign",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_FLEX_ALIGN"
+    },
+    {
+      "cpp_key": "flex-flow",
+      "handler": "CompSetFlexFlow",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_FLEX_FLOW",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_FLEX_FLOW"
+    },
+    {
+      "cpp_key": "flex-grow",
+      "handler": "CompSetFlexGrow",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_FLEX_GROW",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_FLEX_GROW"
+    },
+    {
+      "cpp_key": "justify-content",
+      "handler": "CompSetJustifyContent",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_FLEX_MAIN_PLACE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_FLEX_MAIN_PLACE"
+    },
+    {
+      "cpp_key": "align-items",
+      "handler": "CompSetAlignItems",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_FLEX_CROSS_PLACE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_FLEX_CROSS_PLACE"
+    },
+    {
+      "cpp_key": "align-content",
+      "handler": "CompSetAlignContent",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_FLEX_TRACK_PLACE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_FLEX_TRACK_PLACE"
+    },
+    {
+      "cpp_key": "padding-left",
+      "handler": "CompSetPaddingLeft",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_LEFT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_LEFT"
+    },
+    {
+      "cpp_key": "padding-right",
+      "handler": "CompSetPaddingRight",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_RIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_RIGHT"
+    },
+    {
+      "cpp_key": "padding-bottom",
+      "handler": "CompSetPaddingBottom",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_BOTTOM",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_BOTTOM"
+    },
+    {
+      "cpp_key": "padding-top",
+      "handler": "CompSetPaddingTop",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_TOP",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_TOP"
+    },
+    {
+      "cpp_key": "border-width",
+      "handler": "CompSetBorderWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BORDER_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_BORDER_WIDTH"
+    },
+    {
+      "cpp_key": "border-opacity",
+      "handler": "CompSetBorderOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BORDER_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_BORDER_OPA"
+    },
+    {
+      "cpp_key": "border-color",
+      "handler": "CompSetBorderColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BORDER_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_BORDER_COLOR"
+    },
+    {
+      "cpp_key": "border-side",
+      "handler": "CompSetBorderSide",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_BORDER_SIDE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_BORDER_SIDE"
+    },
+    {
+      "cpp_key": "outline-width",
+      "handler": "CompSetOutlineWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_OUTLINE_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_OUTLINE_WIDTH"
+    },
+    {
+      "cpp_key": "outline-opacity",
+      "handler": "CompSetOutlineOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_OUTLINE_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_OUTLINE_OPA"
+    },
+    {
+      "cpp_key": "outline-color",
+      "handler": "CompSetOutlineColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_OUTLINE_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_OUTLINE_COLOR"
+    },
+    {
+      "cpp_key": "outline-padding",
+      "handler": "CompSetOutlinePadding",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_OUTLINE_PAD",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_OUTLINE_PAD"
+    },
+    {
+      "cpp_key": "font-size",
+      "handler": "CompSetFontSize",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_FONT",
+          "value_kind": "Ptr"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Ptr",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_FONT"
+    },
+    {
+      "cpp_key": "text-overflow",
+      "handler": "CompSetTextOverFLow",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_TEXT_OVERFLOW"
+    },
+    {
+      "cpp_key": "letter-spacing",
+      "handler": "CompSetLetterSpacing",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_LETTER_SPACE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_LETTER_SPACE"
+    },
+    {
+      "cpp_key": "text-align",
+      "handler": "CompSetTextAlign",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_ALIGN",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_ALIGN"
+    },
+    {
+      "cpp_key": "text-decoration",
+      "handler": "CompSetDecoration",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_DECOR",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_DECOR"
+    },
+    {
+      "cpp_key": "line-spacing",
+      "handler": "CompSetLineSpacing",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_LINE_SPACE",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_LINE_SPACE"
+    },
+    {
+      "cpp_key": "overflow-scrolling",
+      "handler": "CompSetOverFlowScrolling",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_OVERFLOW_SCROLLING"
+    },
+    {
+      "cpp_key": "overflow",
+      "handler": "CompSetOverflow",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_OVERFLOW"
+    },
+    {
+      "cpp_key": "scroll-snap-x",
+      "handler": "CompSetScrollSnapX",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_SCROLL_SNAP_X"
+    },
+    {
+      "cpp_key": "scroll-snap-y",
+      "handler": "CompSetScrollSnapY",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_SCROLL_SNAP_Y"
+    },
+    {
+      "cpp_key": "scroll-enable-snap",
+      "handler": "CompScrollEnableSnap",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_SCROLL_ENABLE_SNAP"
+    },
+    {
+      "cpp_key": "opacity",
+      "handler": "CompSetOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_OPA"
+    },
+    {
+      "cpp_key": "img-opacity",
+      "handler": "CompSetImgOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_IMAGE_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_IMAGE_OPA"
+    },
+    {
+      "cpp_key": "recolor-opacity",
+      "handler": "CompRecolorOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_IMAGE_RECOLOR_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_IMAGE_RECOLOR_OPA"
+    },
+    {
+      "cpp_key": "translateX",
+      "handler": "CompSetTranslateX",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSLATE_X",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSLATE_X"
+    },
+    {
+      "cpp_key": "translateY",
+      "handler": "CompSetTranslateY",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSLATE_Y",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSLATE_Y"
+    },
+    {
+      "cpp_key": "scaleX",
+      "handler": "CompSetScaleX",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSFORM_SCALE_X",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSFORM_SCALE_X"
+    },
+    {
+      "cpp_key": "scaleY",
+      "handler": "CompSetScaleY",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSFORM_SCALE_Y",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSFORM_SCALE_Y"
+    },
+    {
+      "cpp_key": "rotate",
+      "handler": "CompSetRotate",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSFORM_ROTATION",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSFORM_ROTATION"
+    },
+    {
+      "cpp_key": "img-scaleX",
+      "handler": "CompSetImgScaleX",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_IMG_SCALE_X"
+    },
+    {
+      "cpp_key": "img-scaleY",
+      "handler": "CompSetImgScaleY",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_IMG_SCALE_Y"
+    },
+    {
+      "cpp_key": "img-rotate",
+      "handler": "CompSetImgRotate",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_IMG_ROTATE"
+    },
+    {
+      "cpp_key": "img-origin",
+      "handler": "CompSetTransformOrigin",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_IMG_ORIGIN"
+    },
+    {
+      "cpp_key": "chart-scaleX",
+      "handler": "CompSetChartScaleX",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_CHART_SCALE_X"
+    },
+    {
+      "cpp_key": "chart-scaleY",
+      "handler": "CompSetChartScaleY",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_CHART_SCALE_Y"
+    },
+    {
+      "cpp_key": "transform-width",
+      "handler": "CompSetTransformWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSFORM_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSFORM_WIDTH"
+    },
+    {
+      "cpp_key": "transform-height",
+      "handler": "CompSetTransformHeight",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TRANSFORM_HEIGHT",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_TRANSFORM_HEIGHT"
+    },
+    {
+      "cpp_key": "style-transition-time",
+      "handler": "CompSetStyleTransitionTime",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_ANIM_DURATION",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_ANIM_DURATION"
+    },
+    {
+      "cpp_key": "text-color",
+      "handler": "CompSetTextColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_TEXT_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_TEXT_COLOR"
+    },
+    {
+      "cpp_key": "recolor",
+      "handler": "CompSetRecolor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_IMAGE_RECOLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_IMAGE_RECOLOR"
+    },
+    {
+      "cpp_key": "row-spacing",
+      "handler": "CompSetRowSpacing",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_ROW",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_ROW"
+    },
+    {
+      "cpp_key": "column-spacing",
+      "handler": "CompSetColumnSpacing",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_PAD_COLUMN",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_PAD_COLUMN"
+    },
+    {
+      "cpp_key": "line-width",
+      "handler": "CompSetLineWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_LINE_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_LINE_WIDTH"
+    },
+    {
+      "cpp_key": "line-color",
+      "handler": "CompSetLineColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_LINE_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_LINE_COLOR"
+    },
+    {
+      "cpp_key": "line-rounded",
+      "handler": "CompSetLineRounded",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_LINE_ROUNDED",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_LINE_ROUNDED"
+    },
+    {
+      "cpp_key": "shadow-width",
+      "handler": "CompSetShadowWidth",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_WIDTH",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_WIDTH"
+    },
+    {
+      "cpp_key": "shadow-color",
+      "handler": "CompSetShadowColor",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_COLOR",
+          "value_kind": "Color"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Color",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_COLOR"
+    },
+    {
+      "cpp_key": "shadow-spread",
+      "handler": "CompSetShadowSpread",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_SPREAD",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_SPREAD"
+    },
+    {
+      "cpp_key": "shadow-opacity",
+      "handler": "CompSetShadowOpacity",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_OPA",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_OPA"
+    },
+    {
+      "cpp_key": "shadow-offset-x",
+      "handler": "CompSetOffsetX",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_OFFSET_X",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_OFFSET_X"
+    },
+    {
+      "cpp_key": "shadow-offset-y",
+      "handler": "CompSetOffsetY",
+      "setter_count": 1,
+      "slots": [
+        {
+          "lv_symbol": "LV_STYLE_SHADOW_OFFSET_Y",
+          "value_kind": "Num"
+        }
+      ],
+      "status": "REAL",
+      "value_kind": "Num",
+      "cpp_lv_symbol": "LV_STYLE_SHADOW_OFFSET_Y"
+    },
+    {
+      "cpp_key": "position",
+      "handler": "CompSetPosition",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_POSITION"
+    },
+    {
+      "cpp_key": "grid-template",
+      "handler": "CompGridColumnRow",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_GRID_TEMPLATE"
+    },
+    {
+      "cpp_key": "grid-child",
+      "handler": "CompSetGridChild",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_GRID_CHILD"
+    },
+    {
+      "cpp_key": "grid-align",
+      "handler": "CompsetGridAlign",
+      "setter_count": 0,
+      "slots": [],
+      "status": "VIRTUAL",
+      "value_kind": "CSS",
+      "cpp_lv_symbol": "LV_STYLE_CSS_GRID_ALIGN"
+    }
+  ]
+}

@@ -1,9 +1,5 @@
 #pragma once
 
-extern "C" {
-    #include "lvgl.h"
-
-    #include "private.h"
-};
+#include "lv_bindings_js.h"
 
 void NativeDimensionsInit (JSContext* ctx, JSValue& ns);

@@ -4,6 +4,7 @@ static JSClassID GIFClassID;
 
 WRAPPED_JS_SETSTYLE(GIF, "GIF")
 WRAPPED_JS_AddEventListener(GIF, "GIF")
+WRAPPED_JS_RemoveEventListener(GIF, "GIF")
 WRAPPED_JS_Align(GIF, "GIF")
 WRAPPED_JS_Align_To(GIF, "GIF")
 STYLE_INFO(GIF, "GIF")
@@ -22,7 +23,7 @@ static JSValue NativeCompSetGIFBinary(JSContext *ctx, JSValueConst this_val, int
         JS_ToInt32(ctx, &GIF_bytelength, byteLength);
 
         ((GIF*)(s->comp))->setGIFBinary(buf, static_cast<size_t>(GIF_bytelength));
-        LV_LOG_USER("GIF %s setGIF", s->uid);
+        LV_LOG_USER("GIF %s setGIF", s->getUid());
 
         return JS_NewBool(ctx, 1);
     fail:
@@ -31,10 +32,35 @@ static JSValue NativeCompSetGIFBinary(JSContext *ctx, JSValueConst this_val, int
     return JS_UNDEFINED;
 };
 
+static JSValue NativeCompPause(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, GIFClassID);
+    if (s == nullptr) {
+        return JS_UNDEFINED;
+    }
+
+    ((GIF*)(s->comp))->pause();
+    LV_LOG_USER("GIF %s pause", s->getUid());
+    return JS_UNDEFINED;
+};
+
+static JSValue NativeCompResume(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
+    COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, GIFClassID);
+    if (s == nullptr) {
+        return JS_UNDEFINED;
+    }
+
+    ((GIF*)(s->comp))->resume();
+    LV_LOG_USER("GIF %s resume", s->getUid());
+    return JS_UNDEFINED;
+};
+
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("setGIFBinary", 0, NativeCompSetGIFBinary),
+    TJS_CFUNC_DEF("pause", 0, NativeCompPause),
+    TJS_CFUNC_DEF("resume", 0, NativeCompResume),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
@@ -43,9 +69,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue GIFConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -79,7 +102,7 @@ static JSValue GIFConstructor(JSContext *ctx, JSValueConst new_target, int argc,
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new GIF(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -95,14 +118,7 @@ static JSValue GIFConstructor(JSContext *ctx, JSValueConst new_target, int argc,
     return JS_EXCEPTION;
 };
 
-static void GIFFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, GIFClassID);
-    LV_LOG_USER("GIF %s release", th->uid);
-    if (th) {
-        delete static_cast<GIF*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(GIFFinalizer, GIF, GIFClassID)
 
 static JSClassDef GIFClass = {
     .class_name = "GIF",
@@ -118,7 +134,6 @@ void NativeComponentGIFInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, GIFConstructor, "GIF", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "GIF", obj, JS_PROP_C_W_E);
 };
 

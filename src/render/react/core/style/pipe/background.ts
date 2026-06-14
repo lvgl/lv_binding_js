@@ -1,27 +1,14 @@
-import { ColorType } from "../color";
-import { ProcessColor, ProcessEnum } from "../util";
+import { LV_GRAD_DIR_MAP } from "../../lv_types";
+import type { BackgroundStyleType } from "../type";
+import { StyleTransformResult } from "../batch";
+import { colorTransform } from "../util";
 
-const obj = {
-  "background-color": ProcessColor,
-  "background-grad-color": ProcessColor,
-  "background-grad-color-dir": ProcessEnum({
-    none: 0,
-    vertical: 1,
-    horizontal: 2,
-  }),
-};
-const keys = Object.keys(obj);
-
-export type BackgroundStyleType = {
-  "background-color"?: ColorType;
-  "background-grad-color"?: ColorType;
-  "background-grad-color-dir"?: "none" | "vertical" | "horizontal";
-};
-
-export function BackgroundStyle(style: BackgroundStyleType, result, compName) {
-  keys.forEach((key) => {
-    if (style[key] !== void 0) {
-      obj[key](key, style[key], result);
-    }
-  });
+export function BackgroundStyle(
+  style: BackgroundStyleType,
+  result: StyleTransformResult,
+) {
+  const batch = result.batch;
+  batch.pushStyle(style, "background-color", colorTransform);
+  batch.pushStyle(style, "background-grad-color", colorTransform);
+  batch.pushStyleEnum(style, "background-grad-color-dir", LV_GRAD_DIR_MAP);
 }

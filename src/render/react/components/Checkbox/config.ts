@@ -20,5 +20,4 @@ export default class CheckboxConfig implements LvgljsComponentConfig<CheckboxPro
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

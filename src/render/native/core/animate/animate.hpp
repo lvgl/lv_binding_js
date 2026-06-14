@@ -1,6 +1,5 @@
 #pragma once
 
-#include "render/native/core/style/style.hpp"
 #include "render/native/core/utils/utils.hpp"
 
 typedef struct ANIMATE_REF {

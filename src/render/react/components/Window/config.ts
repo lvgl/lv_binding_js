@@ -19,5 +19,4 @@ export default class WindowConfig implements LvgljsComponentConfig<WindowProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

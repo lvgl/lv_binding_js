@@ -1,20 +1,25 @@
+import * as lv_conf from "../../core/lv_conf";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 import { InputComp } from "../Input/comp";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeView = bridge.NativeRender.NativeComponents.Keyboard;
 
 const modes = {
-  lower: 0,
-  upper: 1,
-  special: 2,
-  number: 3,
+  lower: lv_conf.LV_KEYBOARD_MODE_TEXT_LOWER,
+  upper: lv_conf.LV_KEYBOARD_MODE_TEXT_UPPER,
+  special: lv_conf.LV_KEYBOARD_MODE_SPECIAL,
+  number: lv_conf.LV_KEYBOARD_MODE_NUMBER,
 };
 
 export type KeyboardProps = CommonProps & {
@@ -30,7 +35,7 @@ export type KeyboardProps = CommonProps & {
   onOk?: () => void;
 };
 
-function setKeyboardProps(comp, newProps: KeyboardProps, oldProps: KeyboardProps) {
+function setKeyboardProps(comp, newProps: KeyboardProps, oldProps: Partial<KeyboardProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Keyboard", comp, newProps, oldProps }),
     mode(mode) {
@@ -55,13 +60,7 @@ function setKeyboardProps(comp, newProps: KeyboardProps, oldProps: KeyboardProps
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class KeyboardComp extends NativeView {
@@ -79,17 +78,16 @@ export class KeyboardComp extends NativeView {
       },
     });
   }
-  setProps(newProps: KeyboardProps, oldProps: KeyboardProps) {
+  setProps(newProps: KeyboardProps, oldProps: Partial<KeyboardProps>) {
     setKeyboardProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

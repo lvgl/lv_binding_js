@@ -1,0 +1,16 @@
+[
+  {
+    "x": 383,
+    "y": 498,
+    "delayMs": 100,
+    "repeat": 50,
+    "comment": "Birthday input center (measured via test/probe-birthday-coord)"
+  },
+  {
+    "x": 512,
+    "y": 300,
+    "delayMs": 2000,
+    "repeat": 1,
+    "comment": "Mask backdrop center - dismiss calendar"
+  }
+]

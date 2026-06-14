@@ -6,9 +6,12 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeMask = bridge.NativeRender.NativeComponents.Mask;
 
 export type MaskProps = CommonProps & {
@@ -61,13 +64,7 @@ function setMaskProps(comp, newProps: MaskProps, oldProps: MaskProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class MaskComp extends NativeMask {
@@ -94,13 +91,10 @@ export class MaskComp extends NativeMask {
   appendChild(child) {
     super.appendChild(child);
   }
-  removeChild(child) {
-    super.removeChild(child);
-  }
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,
@@ -110,13 +104,7 @@ export class MaskComp extends NativeMask {
       isInit: false,
     });
   }
-  moveToFront() {
-    super.moveToFront();
-  }
-  moveToBackground() {
-    super.moveToBackground();
-  }
-  scrollIntoView() {
-    super.scrollIntoView();
-  }
+  moveToFront() {}
+  moveToBackground() {}
+  scrollIntoView() {}
 }

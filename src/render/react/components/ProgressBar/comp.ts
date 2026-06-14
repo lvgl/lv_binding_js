@@ -1,8 +1,10 @@
 import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps } from "../common/index";
-import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp } from "../config";
+import { STYLE_TYPE, handleEvent, setStyle, styleGetterProp, applyDataPropsToDataset } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeProgressBar = bridge.NativeRender.NativeComponents.ProgressBar;
 
 export type ProgressBarProps = CommonProps & {
@@ -13,7 +15,7 @@ export type ProgressBarProps = CommonProps & {
   indicatorStyle?: StyleProps;
 };
 
-function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: ProgressBarProps) {
+function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: Partial<ProgressBarProps>) {
   const setter = {
     ...CommonComponentApi({
       compName: "ProgressBar",
@@ -48,7 +50,7 @@ function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: Progres
       }
     },
     range(arr) {
-      if (arr?.[0] !== oldProps?.arr?.[0] || arr?.[1] !== oldProps?.arr?.[1]) {
+      if (arr?.[0] !== oldProps?.range?.[0] || arr?.[1] !== oldProps?.range?.[1]) {
         comp.setRange(arr[0], arr[1]);
       }
     },
@@ -58,13 +60,7 @@ function setProgressBarProps(comp, newProps: ProgressBarProps, oldProps: Progres
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class ProgressBarComp extends NativeProgressBar {
@@ -82,18 +78,17 @@ export class ProgressBarComp extends NativeProgressBar {
       },
     });
   }
-  setProps(newProps: ProgressBarProps, oldProps: ProgressBarProps) {
+  setProps(newProps: ProgressBarProps, oldProps: Partial<ProgressBarProps>) {
     setProgressBarProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "ProgressBar";
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

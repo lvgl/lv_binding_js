@@ -4,6 +4,7 @@ static JSClassID LineClassID;
 
 WRAPPED_JS_SETSTYLE(Line, "Line")
 WRAPPED_JS_AddEventListener(Line, "Line")
+WRAPPED_JS_RemoveEventListener(Line, "Line")
 WRAPPED_JS_Align(Line, "Line")
 WRAPPED_JS_Align_To(Line, "Line")
 STYLE_INFO(Line, "Line")
@@ -14,7 +15,7 @@ WRAPPED_SCROLL_INTO_VIEW(Line, "Line")
 WRAPPED_JS_CLOSE_COMPONENT(Line, "Line")
 
 static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 2 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, LineClassID);
 
         int32_t len;
@@ -25,11 +26,11 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
         JSValue second_value;
         int32_t first;
         int32_t second;
-        std::vector<lv_point_t> points;
+        std::vector<lv_point_precise_t> points;
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
-            if (JS_IsArray(ctx, item)) {
+            if (JS_IsArray(item)) {
                 first_value = JS_GetPropertyUint32(ctx, item, 0);
                 second_value = JS_GetPropertyUint32(ctx, item, 1);
                 if (JS_IsNumber(first_value) && JS_IsNumber(second_value)) {
@@ -37,7 +38,9 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
                     JS_ToInt32(ctx, &second, second_value);
 
                     num += 1;
-                    points.push_back({ .x = static_cast<lv_coord_t>(first), .y = static_cast<lv_coord_t>(second) });
+                    lv_point_precise_t pt;
+                    lv_point_precise_set(&pt, first, second);
+                    points.push_back(pt);
                 }
 
                 JS_FreeValue(ctx, first_value);
@@ -47,7 +50,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
         }
 
         ((Line*)(ref->comp))->setPoints(points, num);
-        LV_LOG_USER("Line %s setPoints", ref->uid);
+        LV_LOG_USER("Line %s setPoints", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -55,6 +58,7 @@ static JSValue NativeCompSetPoints(JSContext *ctx, JSValueConst this_val, int ar
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
@@ -64,9 +68,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue LineConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -100,7 +101,7 @@ static JSValue LineConstructor(JSContext *ctx, JSValueConst new_target, int argc
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Line(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -116,14 +117,7 @@ static JSValue LineConstructor(JSContext *ctx, JSValueConst new_target, int argc
     return JS_EXCEPTION;
 };
 
-static void LineFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, LineClassID);
-    LV_LOG_USER("Line %s release", th->uid);
-    if (th) {
-        delete static_cast<Line*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(LineFinalizer, Line, LineClassID)
 
 static JSClassDef LineClass = {
     .class_name = "Line",
@@ -139,7 +133,6 @@ void NativeComponentLineInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, LineConstructor, "Line", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Line", obj, JS_PROP_C_W_E);
 };
 

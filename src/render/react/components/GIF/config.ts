@@ -20,5 +20,4 @@ export default class GIFConfig implements LvgljsComponentConfig<GIFProps, GIFCom
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

@@ -6,9 +6,12 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeComp = bridge.NativeRender.NativeComponents.Switch;
 
 export type SwitchProps = CommonProps & {
@@ -35,7 +38,7 @@ function setSwitchProps(comp, newProps: SwitchProps, oldProps: SwitchProps) {
     },
     checked(val) {
       if (isNaN(val)) return;
-      if (val == oldProps.value) return;
+      if (val == oldProps.checked) return;
       comp.setChecked(val);
     },
     disabled(val) {
@@ -49,13 +52,7 @@ function setSwitchProps(comp, newProps: SwitchProps, oldProps: SwitchProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class SwitchComp extends NativeComp {
@@ -76,22 +73,13 @@ export class SwitchComp extends NativeComp {
   setProps(newProps, oldProps) {
     setSwitchProps(this, newProps, oldProps);
   }
-  insertBefore(child, beforeChild) {
-    this.insertChildBefore(child, beforeChild);
-  }
-  appendInitialChild(child) {
-    this.appendChild(child);
-  }
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  insertBefore(child, beforeChild) {}
+  appendInitialChild(child) {}
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

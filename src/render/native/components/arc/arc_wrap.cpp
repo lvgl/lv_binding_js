@@ -4,6 +4,7 @@ static JSClassID ArcClassID;
 
 WRAPPED_JS_SETSTYLE(Arc, "Arc")
 WRAPPED_JS_AddEventListener(Arc, "Arc")
+WRAPPED_JS_RemoveEventListener(Arc, "Arc")
 WRAPPED_JS_Align(Arc, "Arc")
 WRAPPED_JS_Align_To(Arc, "Arc")
 STYLE_INFO(Arc, "Arc")
@@ -21,7 +22,7 @@ WRAPPED_SCROLL_INTO_VIEW(Arc, "Arc")
 WRAPPED_JS_CLOSE_COMPONENT(Arc, "Arc")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
         int32_t min;
         int32_t max;
@@ -32,7 +33,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &max, max_value);
 
         ((Arc*)(ref->comp))->setRange(min, max);
-        LV_LOG_USER("Arc %s set range", ref->uid);
+        LV_LOG_USER("Arc %s set range", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -44,13 +45,13 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &value, argv[0]);
 
         ((Arc*)(ref->comp))->setValue(value);
-        LV_LOG_USER("Arc %s set value", ref->uid);
+        LV_LOG_USER("Arc %s set value", ref->getUid());
     }
     return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-  if (argc >= 1 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {
+  if (argc >= 3 && (JS_IsObject(argv[0]) || JS_IsNull(argv[0])) && JS_IsNumber(argv[1])) {
     COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, ArcClassID);
     size_t size;
     int32_t type;
@@ -72,7 +73,7 @@ static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int 
     JS_ToInt32(ctx, &type, argv[1]);
 
     ((Arc*)(s->comp))->setArcImage(buf, static_cast<size_t>(image_bytelength), type, image_symbol);
-    LV_LOG_USER("%s %s setArcImage type %d", "Arc", s->uid, type);
+    LV_LOG_USER("%s %s setArcImage type %d", "Arc", s->getUid(), type);
     return JS_NewBool(ctx, 1);
   }
   return JS_NewBool(ctx, 0);
@@ -81,6 +82,7 @@ static JSValue NativeCompSetArcImage(JSContext *ctx, JSValueConst this_val, int 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
     TJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
     TJS_CFUNC_DEF("setStartAngle", 0, NativeCompSetStartAngle),
@@ -100,9 +102,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ArcConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -136,7 +135,7 @@ static JSValue ArcConstructor(JSContext *ctx, JSValueConst new_target, int argc,
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Arc(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -152,14 +151,7 @@ static JSValue ArcConstructor(JSContext *ctx, JSValueConst new_target, int argc,
     return JS_EXCEPTION;
 };
 
-static void ArcFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ArcClassID);
-    LV_LOG_USER("Arc %s release", th->uid);
-    if (th) {
-        delete static_cast<Arc*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ArcFinalizer, Arc, ArcClassID)
 
 static JSClassDef ArcClass = {
     .class_name = "Arc",
@@ -175,7 +167,6 @@ void NativeComponentArcInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ArcConstructor, "Arc", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Arc", obj, JS_PROP_C_W_E);
 };
 

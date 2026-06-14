@@ -1,3 +1,4 @@
+import * as lv_conf from "../../core/lv_conf";
 import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
@@ -6,15 +7,18 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeArc = bridge.NativeRender.NativeComponents.Arc;
 
 const modes = {
-  normal: 0,
-  symmetrical: 1,
-  reverse: 2,
+  normal: lv_conf.LV_ARC_MODE_NORMAL,
+  symmetrical: lv_conf.LV_ARC_MODE_SYMMETRICAL,
+  reverse: lv_conf.LV_ARC_MODE_REVERSE,
 };
 
 export type ArcProps = CommonProps & {
@@ -139,13 +143,7 @@ function setArcProps(comp, newProps: ArcProps, oldProps: ArcProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class ArcComp extends NativeArc {
@@ -169,16 +167,11 @@ export class ArcComp extends NativeArc {
   insertBefore(child, beforeChild) {}
   static tagName = "Arc";
   appendInitialChild(child) {}
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

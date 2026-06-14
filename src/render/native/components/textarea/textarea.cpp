@@ -18,15 +18,15 @@ Textarea::Textarea(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
 };
 
 void Textarea::raiseKeyboard (lv_event_t* event) {
-    Textarea* comp = static_cast<Textarea*>(event->user_data);
+    Textarea* comp = static_cast<Textarea*>(lv_event_get_user_data(event));
     if (!comp->auto_raise_keyboard) return;
     lv_obj_t* keyboard = lv_keyboard_create(lv_layer_top());
     comp->keyboard = keyboard;
 
     uint32_t width, height;
-    lv_disp_t* disp_default = lv_disp_get_default();
-    width = disp_default->driver->hor_res;
-    height = disp_default->driver->ver_res;
+    lv_display_t* disp_default = lv_display_get_default();
+    width = lv_display_get_horizontal_resolution(disp_default);
+    height = lv_display_get_vertical_resolution(disp_default);
 
     lv_keyboard_set_textarea(keyboard, comp->instance);
     lv_obj_set_style_height(keyboard, height * 2 / 3, 0);
@@ -40,15 +40,15 @@ void Textarea::raiseKeyboard (lv_event_t* event) {
 };
 
 void Textarea::hideKeyboard (lv_event_t * event) {
-    Textarea* comp = static_cast<Textarea*>(event->user_data);
+    Textarea* comp = static_cast<Textarea*>(lv_event_get_user_data(event));
     if (comp->keyboard == nullptr || !comp->auto_raise_keyboard) return;
 
     lv_keyboard_set_textarea(comp->keyboard, nullptr);
     lv_obj_del_async(comp->keyboard);
 
-    lv_disp_t* disp_default = lv_disp_get_default();
-    lv_obj_set_style_height(GetWindowInstance(), disp_default->driver->ver_res, 0);
-    lv_obj_update_layout(lv_scr_act());
+    lv_display_t* disp_default = lv_display_get_default();
+    lv_obj_set_style_height(GetWindowInstance(), lv_display_get_vertical_resolution(disp_default), 0);
+    lv_obj_update_layout(lv_screen_active());
     lv_obj_clear_state(comp->instance, LV_STATE_FOCUSED);
     lv_indev_reset(NULL, comp->instance);
     comp->keyboard = nullptr;

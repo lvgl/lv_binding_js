@@ -1,10 +1,6 @@
 #pragma once
 
-extern "C" {
-    #include "lvgl.h"
-    #include "private.h"
-    #include "utils.h"
-};
+#include "lv_bindings_js.h"
 
 #include <map>
 #include <stdlib.h>
@@ -54,8 +50,9 @@ static std::map<lv_event_code_t, EventWrapFunc> WrapEventDict {
         JSClassID _class_id;                                                                                                          \
         lv_event_t* ref = static_cast<lv_event_t*>(JS_GetAnyOpaque(this_val, &_class_id));                                            \
         if (ref) {                                                                                                                    \
-            ref->stop_bubbling = 1;                                                                                                   \
+            lv_event_stop_bubbling(ref);                                                                                              \
         }                                                                                                                             \
+        return JS_UNDEFINED;                                                                                                          \
     };                                                                                                                                \
                                                                                                                                       \
 

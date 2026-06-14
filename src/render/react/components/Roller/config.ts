@@ -20,5 +20,4 @@ export default class RollerConfig implements LvgljsComponentConfig<RollerProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

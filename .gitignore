@@ -1,5 +1,8 @@
 # Editor configuration
 .vscode/
+.cursor/
+.clangd
+.git-commit-msg-tmp.txt
 
 # Build folders
 debug/
@@ -21,3 +24,11 @@ CMakeCache.txt
 # NPM
 node_modules/
 src/render/react/index.js
+
+# Screenshots (capture, diff, baseline, packages ¡ª baselines published via GitHub Releases)
+_screenshots
+_compare
+__pycache__
+
+# GitHub wiki clone (separate git repo)
+doc/wiki/

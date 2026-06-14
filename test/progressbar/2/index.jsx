@@ -1,6 +1,7 @@
 import { View, Render, Dimensions, Text, ProgressBar, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
 import React, { useRef, useEffect } from 'react';
 
+const captureMode = tjs.env.TEST_CAPTURE === '1';
 const { width, height } = Dimensions.window
 
 function App () {
@@ -12,7 +13,7 @@ function App () {
                     type: EAlignType.ALIGN_CENTER
                 }}
                 value={100}
-                useAnimation={true}
+                useAnimation={!captureMode}
                 animationTime={1000}
                 indicatorStyle={style.indicator}
             />

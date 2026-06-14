@@ -5,16 +5,19 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeText = bridge.NativeRender.NativeComponents.Text;
 
 export type TextProps = CommonProps & {
   children: string | number | (string | number)[];
 };
 
-function setTextProps(comp, newProps: TextProps, oldProps: TextProps) {
+function setTextProps(comp, newProps: TextProps, oldProps: Partial<TextProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Text", comp, newProps, oldProps }),
     children(str) {
@@ -36,13 +39,7 @@ function setTextProps(comp, newProps: TextProps, oldProps: TextProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class TextComp extends NativeText {
@@ -60,17 +57,16 @@ export class TextComp extends NativeText {
       },
     });
   }
-  setProps(newProps: TextProps, oldProps: TextProps) {
+  setProps(newProps: TextProps, oldProps: Partial<TextProps>) {
     setTextProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

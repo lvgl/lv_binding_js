@@ -4,6 +4,7 @@ static JSClassID SliderClassID;
 
 WRAPPED_JS_SETSTYLE(Slider, "Slider")
 WRAPPED_JS_AddEventListener(Slider, "Slider")
+WRAPPED_JS_RemoveEventListener(Slider, "Slider")
 WRAPPED_JS_Align(Slider, "Slider")
 WRAPPED_JS_Align_To(Slider, "Slider")
 STYLE_INFO(Slider, "Slider")
@@ -14,7 +15,7 @@ WRAPPED_SCROLL_INTO_VIEW(Slider, "Slider")
 WRAPPED_JS_CLOSE_COMPONENT(Slider, "Slider")
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+    if (argc >= 1 && JS_IsArray(argv[0])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, SliderClassID);
         int32_t min;
         int32_t max;
@@ -25,7 +26,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &max, max_value);
 
         ((Slider*)(ref->comp))->setRange(min, max);
-        LV_LOG_USER("Slider %s set range", ref->uid);
+        LV_LOG_USER("Slider %s set range", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -37,7 +38,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &value, argv[0]);
 
         ((Slider*)(ref->comp))->setValue(value);
-        LV_LOG_USER("Slider %s set value", ref->uid);
+        LV_LOG_USER("Slider %s set value", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -45,6 +46,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("setRange", 0, NativeCompSetRange),
     TJS_CFUNC_DEF("setValue", 0, NativeCompSetValue),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -56,9 +58,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue SliderConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -92,7 +91,7 @@ static JSValue SliderConstructor(JSContext *ctx, JSValueConst new_target, int ar
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Slider(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -108,14 +107,7 @@ static JSValue SliderConstructor(JSContext *ctx, JSValueConst new_target, int ar
     return JS_EXCEPTION;
 };
 
-static void SliderFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, SliderClassID);
-    LV_LOG_USER("Slider %s release", th->uid);
-    if (th) {
-        delete static_cast<Slider*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(SliderFinalizer, Slider, SliderClassID)
 
 static JSClassDef SliderClass = {
     .class_name = "Slider",
@@ -131,7 +123,6 @@ void NativeComponentSliderInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, SliderConstructor, "Slider", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Slider", obj, JS_PROP_C_W_E);
 };
 

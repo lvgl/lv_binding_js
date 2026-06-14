@@ -1,31 +1,39 @@
 import { BUILT_IN_SYMBOL } from "../../core/style/symbol";
 import { isValidUrl } from "../../utils/helpers";
+import { fetchAssetBinary, loadLocalAsset } from "../../utils/assets";
 import { CommonComponentApi, CommonProps } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
-const NativeGIF = bridge.NativeRender.NativeComponents.GIF;
+import { GetBridge } from "../../core/bridge";
 
-async function getGIFBinary(url) {
-  const resp = await fetch(url, {
-    headers: {
-      "Content-Type": "application/octet-stream",
-    },
-  });
-  const GIFBuffer = await resp.arrayBuffer();
-  return GIFBuffer;
-}
+const bridge = GetBridge();
+const NativeGIF = bridge.NativeRender.NativeComponents.GIF;
 
 export type GIFProps = CommonProps & {
   src: string;
+  /** When true, pause animation; when false, resume (also applied after the GIF loads). */
+  paused?: boolean;
 }
 
-function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {
+function applyGIF(comp, buffer?: ArrayBuffer, paused?: boolean) {
+  if (buffer != null) {
+    comp.setGIFBinary(buffer);
+  }
+  if (paused) {
+    comp.pause();
+  } else if (paused === false) {
+    comp.resume();
+  }
+}
+
+function setGIFProps(comp, newProps: GIFProps, oldProps: Partial<GIFProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "GIF", comp, newProps, oldProps }),
     onClick(fn) {
@@ -38,22 +46,17 @@ function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {
           return;
         }
         if (!isValidUrl(url)) {
-          if (!path.isAbsolute(url)) {
-            url = path.resolve(__dirname, url);
-          }
-          fs.readFile(url, { encoding: "binary" })
-            .then((data) => {
-              comp.setGIFBinary(data.buffer);
-            })
-            .catch((e) => {
-              console.log("setGIF error", e);
-            });
+          loadLocalAsset(url, "setGIF error", (buffer) =>
+            applyGIF(comp, buffer, newProps.paused));
         } else {
-          getGIFBinary(url)
-            .then((buffer) => comp.setGIFBinary(Buffer.from(buffer).buffer))
+          fetchAssetBinary(url)
+            .then((buffer) => applyGIF(comp, buffer, newProps.paused))
             .catch(console.warn);
         }
       }
+    },
+    paused(shouldPause) {
+      applyGIF(comp, undefined, shouldPause);
     },
   };
   Object.keys(setter).forEach((key) => {
@@ -61,13 +64,7 @@ function setGIFProps(comp, newProps: GIFProps, oldProps: GIFProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class GIFComp extends NativeGIF {
@@ -85,18 +82,17 @@ export class GIFComp extends NativeGIF {
       },
     });
   }
-  setProps(newProps: GIFProps, oldProps: GIFProps) {
+  setProps(newProps: GIFProps, oldProps: Partial<GIFProps>) {
     setGIFProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "GIF";
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,
@@ -114,5 +110,11 @@ export class GIFComp extends NativeGIF {
   }
   scrollIntoView() {
     super.scrollIntoView();
+  }
+  pause() {
+    super.pause();
+  }
+  resume() {
+    super.resume();
   }
 }

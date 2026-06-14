@@ -1,14 +1,17 @@
 import { StyleProps } from "../../core/style";
-import { CommonComponentApi, CommonProps } from "../common/index";
+import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
   STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeRoller = bridge.NativeRender.NativeComponents.Roller;
 
 export type RollerProps = CommonProps & {
@@ -21,7 +24,7 @@ export type RollerProps = CommonProps & {
   onChange?: (event: OnChangeEvent) => void;
 };
 
-function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {
+function setRollerProps(comp, newProps: RollerProps, oldProps: Partial<RollerProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Roller", comp, newProps, oldProps }),
     selectedStyle(styleSheet) {
@@ -57,13 +60,7 @@ function setRollerProps(comp, newProps: RollerProps, oldProps: RollerProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class RollerComp extends NativeRoller {
@@ -81,18 +78,17 @@ export class RollerComp extends NativeRoller {
       },
     });
   }
-  setProps(newProps: RollerProps, oldProps: RollerProps) {
+  setProps(newProps: RollerProps, oldProps: Partial<RollerProps>) {
     setRollerProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Roller";
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

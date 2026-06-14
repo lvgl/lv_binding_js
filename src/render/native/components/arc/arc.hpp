@@ -4,6 +4,10 @@
 #include "native/components/component.hpp"
 #include "native/core/basic/comp.hpp"
 
+#ifdef _WIN32
+/* The Arc conflict with existing Arc in Windows.h, so we need to rename it to ArcShape */
+#define Arc ArcShape
+#endif
 class Arc final : public BasicComponent {
  public:
   Arc(std::string uid, lv_obj_t* parent = nullptr);

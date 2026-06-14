@@ -2,6 +2,21 @@
 
 #define NATIVE_COMPONENT "NativeComponents"
 
+void CompRefStoreUid(JSContext* ctx, COMP_REF* ref, const char* uid) {
+    if (!ref || !uid) {
+        return;
+    }
+    ref->uid_ = js_strdup(ctx, uid);
+}
+
+void CompRefFreeUid(JSRuntime* rt, COMP_REF* ref) {
+    if (!ref || !ref->uid_) {
+        return;
+    }
+    js_free_rt(rt, (void*)ref->uid_);
+    ref->uid_ = nullptr;
+}
+
 void NativeComponentInit (JSContext* ctx, JSValue ns) {
     JSValue component_obj = JS_NewObject(ctx);
     JS_SetPropertyStr(ctx, ns, NATIVE_COMPONENT, component_obj);

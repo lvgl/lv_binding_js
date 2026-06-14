@@ -13,7 +13,8 @@ sets whether flex items are forced onto one line or can wrap onto multiple lines
 The property with the following value
 - wrap
 - nowrap
-- reverse
+- reverse (main-axis reverse: `row_reverse` / `column_reverse`)
+- wrap-reverse (CSS `flex-wrap: wrap-reverse`; cross-axis line order reversed)
 
 ### justify-content
 defines how the browser distributes space between and around content items along the main-axis of a flex container, and the inline axis of a grid container.
@@ -43,7 +44,7 @@ sets the distribution of space between and around content items along a flexbox'
 - space-between
 
 ### flex-grow
-sets the flex grow factor of a flex item's main size. value must be int and > 1
+sets the flex grow factor of a flex item's main size. Non-negative integer: `0` disables grow; `1` or greater distributes leftover space proportionally among grow items (LVGL semantics).
 
 ## Usage
 ```js

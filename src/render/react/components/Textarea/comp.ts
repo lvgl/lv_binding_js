@@ -2,12 +2,16 @@ import { StyleProps } from "../../core/style";
 import { CommonComponentApi, CommonProps, OnChangeEvent } from "../common/index";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeView = bridge.NativeRender.NativeComponents.Textarea;
 
 export type TextAreaProps = CommonProps & {
@@ -26,7 +30,7 @@ export type TextAreaProps = CommonProps & {
   autoKeyBoard: boolean;
 };
 
-function setTextareaProps(comp, newProps: TextAreaProps, oldProps: TextAreaProps) {
+function setTextareaProps(comp, newProps: TextAreaProps, oldProps: Partial<TextAreaProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Textarea", comp, newProps, oldProps }),
     placeholder(str) {
@@ -46,7 +50,7 @@ function setTextareaProps(comp, newProps: TextAreaProps, oldProps: TextAreaProps
         comp,
         styleSheet,
         compName: "Textarea",
-        styleType: 0x0002,
+        styleType: STYLE_TYPE.STATE_FOCUSED,
         oldStyleSheet: oldProps.onFocusStyle,
       });
     },
@@ -72,13 +76,7 @@ function setTextareaProps(comp, newProps: TextAreaProps, oldProps: TextAreaProps
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class TextareaComp extends NativeView {
@@ -98,15 +96,14 @@ export class TextareaComp extends NativeView {
       },
     });
   }
-  setProps(newProps: TextAreaProps, oldProps: TextAreaProps) {
+  setProps(newProps: TextAreaProps, oldProps: Partial<TextAreaProps>) {
     setTextareaProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {}
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

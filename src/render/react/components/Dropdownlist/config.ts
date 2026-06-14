@@ -20,5 +20,4 @@ export default class DropdownlistConfig implements LvgljsComponentConfig<Dropdow
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

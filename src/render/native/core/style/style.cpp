@@ -1,169 +1,145 @@
 #include "style.hpp"
-#include "private.h"
+#include "lv_bindings_js.h"
 
-static std::unordered_map<std::string, lv_anim_path_cb_t> transition_funcs = {
-    { "linear", &lv_anim_path_linear },
-    { "ease-in", &lv_anim_path_ease_in },
-    { "ease-out", &lv_anim_path_ease_out },
-    { "ease-in-out", &lv_anim_path_ease_in_out },
-    { "overshoot", &lv_anim_path_overshoot },
-    { "bounce", &lv_anim_path_bounce },
-    { "step", &lv_anim_path_step },
-};
+#include "native/core/basic/style_prop_value_kind.hpp"
+#include "native/core/lv_conf/lv_anim_path.h"
+#include "native/core/lv_conf/lv_style_prop_extend.h"
+#include "native/core/style/font/font.hpp"
+#include "native/core/basic/comp.hpp"
+#include "native/components/chart/chart.hpp"
 
-static void CompSetWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_width(style, static_cast<int16_t>(width));
-};
+#include <unordered_map>
+#include <string>
 
-static void CompSetMaxWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_max_width(style, static_cast<int16_t>(width));
-};
+using CompSetStyle = void (lv_obj_t*, lv_style_t*, JSContext*, JSValue);
 
-static void CompSetMinWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_min_width(style, static_cast<int16_t>(width));
-};
+static std::unordered_map<lv_style_prop_t, CompSetStyle*> g_native_style_prop_handlers;
 
-static void CompSetMaxWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_max_width(style, lv_pct(static_cast<int16_t>(width)));
-};
+JSValue JS_AcquireTypedArray(JSContext *ctx, JSValueConst val, void **parray_ptr, size_t *parray_length, size_t *pbytes_per_element) {
+  size_t byte_offset = 0;
+  size_t byte_length = 0;
+  size_t buffer_size = 0;
 
-static void CompSetMinWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_min_width(style, lv_pct(static_cast<int16_t>(width)));
-};
+  *parray_ptr = nullptr;
+  *parray_length = 0;
+  *pbytes_per_element = 0;
 
-static void CompSetWidthPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_width(style, lv_pct(static_cast<int16_t>(width)));
-};
+  // 1. Get the underlying ArrayBuffer, offset, and length
+  JSValue array_buffer = JS_GetTypedArrayBuffer(ctx, val, &byte_offset, &byte_length,
+                                                pbytes_per_element);
 
-static void CompSetHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_height(style, static_cast<int16_t>(height));
-};
+  if (JS_IsException(array_buffer)) {
+    // Handle the error (val was not a TypedArray)
+    return JS_UNDEFINED;
+  }
 
-static void CompSetHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_height(style, lv_pct(static_cast<int16_t>(height)));
-};
+  // 2. Get the raw pointer to the buffer's data
+  uint8_t *buffer_ptr = JS_GetArrayBuffer(ctx, &buffer_size, array_buffer);
 
-static void CompSetMaxHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_max_height(style, static_cast<int16_t>(height));
-};
+  if (buffer_ptr && *pbytes_per_element > 0) {
+    // 3. Offset the pointer to match the Uint32Array's start
+    *parray_ptr = (void*)(buffer_ptr + byte_offset);
+    *parray_length = byte_length / *pbytes_per_element;
+  } else {
+    JS_FreeValue(ctx, array_buffer);
+    return JS_UNDEFINED;
+  }
+  return array_buffer;
+}
 
-static void CompSetMaxHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_max_height(style, lv_pct(static_cast<int16_t>(height)));
-};
+void JS_ReleaseTypedArray(JSContext *ctx, const JSValue &array_buffer) {
+    // 4. Free the ArrayBuffer JSValue
+    JS_FreeValue(ctx, array_buffer);
+}
 
-static void CompSetMinHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_min_height(style, static_cast<int16_t>(height));
-};
+static void apply_style_props_single_value(JSContext *ctx, lv_obj_t *instance,
+                                    lv_style_t *style, uint32_t key,
+                                    JSValue value, int32_t style_type) {
+    const auto prop = StylePropKeyUnpackId(key);
+    const auto kind = StylePropKeyUnpackKind(key);
+    switch (kind) {
+        case StylePropValueKindNum: {
+            lv_style_value_t lv_v{};
+            int32_t num = 0;
+            JS_ToInt32(ctx, &num, value);
+            lv_v.num = num;
+            lv_style_set_prop(style, prop, lv_v);
+            break;
+        }
+        case StylePropValueKindColor: {
+            lv_style_value_t lv_v{};
+            int32_t num = 0;
+            JS_ToInt32(ctx, &num, value);
+            lv_v.color = lv_color_hex(static_cast<uint32_t>(num));
+            lv_style_set_prop(style, prop, lv_v);
+            break;
+        }
+        case StylePropValueKindPtr:
+        case StylePropValueKindCSS: {
+            const auto it = g_native_style_prop_handlers.find(prop);
+            if (it == g_native_style_prop_handlers.end() || it->second == nullptr) {
+                LV_LOG_USER("style batch: no CSS/PTR handler for prop %d, kind:%d, skip", prop, kind);
+            } else {
+                it->second(instance, style, ctx, value);
+            }
+            break;
+        }
+    }
+}
 
-static void CompSetMinHeightPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int height;
-    JS_ToInt32(ctx, &height, obj);
-    lv_style_set_min_height(style, lv_pct(static_cast<int16_t>(height)));
-};
+void apply_style_props_batch(
+    JSContext* ctx,
+    lv_obj_t* instance,
+    lv_style_t* style,
+    JSValue batch,
+    int32_t style_type
+) {
+    if (!JS_IsObject(batch)) {
+        return;
+    }
 
-static void CompSetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-    lv_style_set_x(style, static_cast<int16_t>(x));
-};
+    JSValue keys = JS_GetPropertyStr(ctx, batch, "keys");
+    JSValue values = JS_GetPropertyStr(ctx, batch, "values");
+    if (!JS_IsArray(values)) {
+        LV_LOG_USER("style batch: values is not an array, skip");
+        JS_FreeValue(ctx, values);
+        JS_FreeValue(ctx, keys);
+        return;
+    }
 
-static void CompSetXPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-    lv_style_set_x(style, lv_pct(static_cast<int16_t>(x)));
-};
+    int32_t values_len = 0;
+    JSValue values_len_v = JS_GetPropertyStr(ctx, values, "length");
+    JS_ToInt32(ctx, &values_len, values_len_v);
+    JS_FreeValue(ctx, values_len_v);
 
-static void CompSetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-    lv_style_set_y(style, static_cast<int16_t>(y));
-};
+    size_t array_size = 0;
+    size_t array_bytes_per_element = 0;
+    uint32_t* keys_uint32 = nullptr;
+    JSValue keys_array_buffer = JS_AcquireTypedArray(
+        ctx, keys, (void**)&keys_uint32, &array_size, &array_bytes_per_element);
 
-static void CompSetYPch (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-    lv_style_set_y(style, lv_pct(static_cast<int16_t>(y)));
-};
+    if (!JS_IsUndefined(keys_array_buffer) && keys_uint32 != nullptr
+        && array_bytes_per_element == 4 && values_len > 0) {
+        size_t count = array_size;
+        if (static_cast<int32_t>(array_size) > values_len) {
+            count = static_cast<size_t>(values_len);
+        }
+        for (size_t i = 0; i < count; i++) {
+            JSValue value = JS_GetPropertyUint32(ctx, values, static_cast<uint32_t>(i));
+            apply_style_props_single_value(
+                ctx, instance, style, keys_uint32[i], value, style_type);
+            JS_FreeValue(ctx, value);
+        }
+    } else {
+        LV_LOG_USER("style batch: keys is not a Uint32Array or values empty, skip");
+    }
 
-static void CompSetBackgroundColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_color(style, lv_color_hex(y));
-};
-
-static void CompSetBackgroundOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_opa(style, y);
-};
-
-static void CompSetBackgroundGradColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_grad_color(style, lv_color_hex(y));
-};
-
-static void CompSetBackgroundGradColorDir (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_bg_grad_dir(style, y);
-};
-
-static void CompSetArcWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int width;
-    JS_ToInt32(ctx, &width, obj);
-    lv_style_set_arc_width(style, static_cast<int16_t>(width));
-};
-
-static void CompSetArcRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    bool rounded = JS_ToBool(ctx, obj);
-    lv_style_set_arc_rounded(style, static_cast<bool>(rounded));
-};
-
-static void CompSetArcColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int color;
-    JS_ToInt32(ctx, &color, obj);
-    lv_style_set_arc_color(style, lv_color_hex(color));
-};
-
-static void CompSetArcOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int opacity;
-    JS_ToInt32(ctx, &opacity, obj);
-    lv_style_set_arc_opa(style, static_cast<int16_t>(opacity));
-};
-
-static void CompSetBorderRadius (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_radius(style, x);
-};
+    if (!JS_IsUndefined(keys_array_buffer)) {
+        JS_ReleaseTypedArray(ctx, keys_array_buffer);
+    }
+    JS_FreeValue(ctx, values);
+    JS_FreeValue(ctx, keys);
+}
 
 static void CompSetDisplay (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     size_t len;
@@ -196,165 +172,18 @@ static void CompSetFlexAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     JS_ToInt32(ctx, &cross_place, value2);
     JS_ToInt32(ctx, &track_cross_place, value3);
     lv_obj_set_flex_align(
-        comp, 
-        static_cast<lv_flex_align_t>(main_place), 
-        static_cast<lv_flex_align_t>(cross_place), 
+        comp,
+        static_cast<lv_flex_align_t>(main_place),
+        static_cast<lv_flex_align_t>(cross_place),
         static_cast<lv_flex_align_t>(track_cross_place)
     );
-};
-
-static void CompSetFlexGrow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_flex_grow(style, static_cast<lv_flex_flow_t>(x));
-};
-
-static void CompSetFlexFlow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_flex_flow(style, static_cast<lv_flex_flow_t>(x));
-};
-
-static void CompSetJustifyContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_flex_main_place(style, static_cast<lv_flex_align_t>(x));
-};
-
-static void CompSetAlignItems (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_flex_cross_place(style, static_cast<lv_flex_align_t>(x));
-};
-
-static void CompSetAlignContent (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_flex_track_place(style, static_cast<lv_flex_align_t>(x));
-};
-
-static void CompSetPaddingLeft (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_left(style, x);
-};
-
-static void CompSetPaddingRight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_right(style, x);
-};
-
-static void CompSetPaddingBottom (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_bottom(style, x);
-};
-
-static void CompSetPaddingTop (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_pad_top(style, x);
-};
-
-static void CompSetBorderWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_width(style, x);
-};
-
-static void CompSetBorderOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_opa(style, x);
-};
-
-static void CompSetBorderColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_color(style, lv_color_hex(x));
-};
-
-static void CompSetBorderSide (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_border_side(style, x);
-};
-
-static void CompSetOutlineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_width(style, x);
-};
-
-static void CompSetOutlineOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_opa(style, x);
-};
-
-static void CompSetOutlineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_color(style, lv_color_hex(x));
-};
-
-static void CompSetOutlinePadding (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_outline_pad(style, x);
 };
 
 static void CompSetTextOverFLow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_label_set_long_mode(comp, x);
-};
-
-static void CompSetLetterSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_letter_space(style, x);
-};
-
-static void CompSetLineSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_line_space(style, x);
-};
-
-static void CompSetTextAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_align(style, x);
-};
-
-static void CompSetDecoration (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_text_decor(style, x);
+    lv_label_set_long_mode(comp, static_cast<lv_label_long_mode_t>(x));
 };
 
 static void CompSetOverFlowScrolling (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -383,14 +212,14 @@ static void CompSetScrollSnapX (lv_obj_t* comp, lv_style_t* style, JSContext* ct
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_obj_set_scroll_snap_x(comp, x);
+    lv_obj_set_scroll_snap_x(comp, static_cast<lv_scroll_snap_t>(x));
 };
 
 static void CompSetScrollSnapY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_obj_set_scroll_snap_y(comp, x);
+    lv_obj_set_scroll_snap_y(comp, static_cast<lv_scroll_snap_t>(x));
 };
 
 static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -404,60 +233,18 @@ static void CompScrollEnableSnap (lv_obj_t* comp, lv_style_t* style, JSContext* 
     }
 };
 
-static void CompSetOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetImgScaleX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_opa(style, x);
+    lv_image_set_scale_x(comp, x);
 };
 
-static void CompSetImgOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
+static void CompSetImgScaleY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_style_set_img_opa(style, x);
-};
-
-static void CompRecolorOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_img_recolor_opa(style, x);
-};
-
-static void CompSetTranslateX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_translate_x(style, x);
-};
-
-static void CompSetTranslateY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_translate_y(style, x);
-};
-
-static void CompSetScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_zoom(style, x);
-};
-
-static void CompSetRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_angle(style, x);
-};
-
-static void CompSetImgScale (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_img_set_zoom(comp, x);
+    lv_image_set_scale_y(comp, x);
 };
 
 static void CompSetImgRotate (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -487,195 +274,42 @@ static void CompSetTransformOrigin (lv_obj_t* comp, lv_style_t* style, JSContext
     lv_img_set_pivot(comp, x, y);
 };
 
+/* lv_chart_set_zoom_x/y() were removed in LVGL 9; the Chart component
+ * emulates them with a scrollable viewport (value is still 256-based) */
 static void CompSetChartScaleX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_chart_set_zoom_x(comp, x);
+    Chart* chart = static_cast<Chart*>(lv_obj_get_user_data(comp));
+    if (chart != nullptr) {
+        chart->setZoomX(x);
+    }
 };
 
 static void CompSetChartScaleY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
     int x;
     JS_ToInt32(ctx, &x, obj);
 
-    lv_chart_set_zoom_y(comp, x);
-};
-
-static void CompSetTransformWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_width(style, x);
-};
-
-static void CompSetTransformHeight (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_transform_height(style, x);
-};
-
-static void CompSetStyleTransitionTime (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_anim_time(style, x);
+    Chart* chart = static_cast<Chart*>(lv_obj_get_user_data(comp));
+    if (chart != nullptr) {
+        chart->setZoomY(x);
+    }
 };
 
 void CompSetTransition (
     lv_style_t* style,
-    lv_style_transition_dsc_t* trans, 
+    lv_style_transition_dsc_t* trans,
     lv_style_prop_t props[],
-    std::string func_str,
+    int32_t func_idx,
     int32_t time,
     int32_t delay
 ) {
-    lv_anim_path_cb_t func = &lv_anim_path_linear;
-    if (transition_funcs.find(func_str) != transition_funcs.end()) {
-        func = transition_funcs.at(func_str);
+    lv_anim_path_cb_t func = lv_anim_path_funcs[0];
+    if (func_idx >= 0 && static_cast<size_t>(func_idx) < LV_ANIM_PATH_COUNT) {
+        func = lv_anim_path_funcs[func_idx];
     }
-    lv_style_transition_dsc_init(trans, props, func, time, 0, NULL);
+    lv_style_transition_dsc_init(trans, props, func, time, delay, NULL);
     lv_style_set_transition(style, trans);
-};
-
-void CompSetAnimation (
-    lv_obj_t* comp,
-    void* opaque,
-    lv_anim_t* animate,
-    JSContext* ctx,
-    JSValue obj
-) {
-    lv_anim_init(animate);
-
-    int32_t duration;
-    JSValue dura_value;
-
-    int32_t start;
-    int32_t end;
-    JSValue start_value;
-    JSValue end_value;
-
-    int32_t delay;
-    JSValue delay_value;
-
-    lv_anim_set_var(animate, opaque);
-
-    dura_value = JS_GetPropertyStr(ctx, obj, "duration");
-    if (JS_IsNumber(dura_value)) {
-        lv_anim_set_time(animate, duration);
-        JS_ToInt32(ctx, &duration, dura_value);
-    }
-    JS_FreeValue(ctx, dura_value);
-
-    start_value = JS_GetPropertyStr(ctx, obj, "startValue");
-    end_value = JS_GetPropertyStr(ctx, obj, "endValue");
-    if (JS_IsNumber(start_value) && JS_IsNumber(end_value)) {
-        JS_ToInt32(ctx, &start, start_value);
-        JS_ToInt32(ctx, &end, end_value);
-        lv_anim_set_values(animate, start, end);
-    }
-    JS_FreeValue(ctx, start_value);
-    JS_FreeValue(ctx, end_value);
-
-    delay_value = JS_GetPropertyStr(ctx, obj, "delay");
-    if (JS_IsNumber(delay_value)) {
-        JS_ToInt32(ctx, &delay, delay_value);
-        lv_anim_set_delay(animate, delay);
-    }
-    JS_FreeValue(ctx, delay_value);
-
-    lv_anim_start(animate);
-};
-
-static void CompSetTextColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_text_color(style, lv_color_hex(y));
-};
-
-static void CompSetRecolor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_img_recolor(style, lv_color_hex(y));
-};
-
-static void CompSetRowSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_pad_row(style, y);
-};
-
-static void CompSetColumnSpacing (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_pad_column(style, y);
-};
-
-static void CompSetLineWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int y;
-    JS_ToInt32(ctx, &y, obj);
-
-    lv_style_set_line_width(style, y);
-};
-
-static void CompSetLineColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_line_color(style, lv_color_hex(x));
-};
-
-static void CompSetLineRounded (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_line_rounded(style, x);
-};
-
-static void CompSetShadowWidth (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_width(style, x);
-};
-
-static void CompSetShadowColor (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_color(style, lv_color_hex(x));
-};
-
-static void CompSetShadowSpread (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_spread(style, x);
-};
-
-static void CompSetShadowOpacity (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_opa(style, x);
-};
-
-static void CompSetOffsetX (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_ofs_x(style, x);
-};
-
-static void CompSetOffsetY (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    int x;
-    JS_ToInt32(ctx, &x, obj);
-
-    lv_style_set_shadow_ofs_y(style, x);
 };
 
 static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
@@ -685,7 +319,7 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
     value.resize(len);
 
     lv_obj_clear_flag(comp, LV_OBJ_FLAG_FLOATING);
-    BasicComponent* instance = static_cast<BasicComponent*>(comp->user_data);
+    BasicComponent* instance = static_cast<BasicComponent*>(lv_obj_get_user_data(comp));
     instance->is_fixed = false;
     if (instance->parent_instance != nullptr) {
         lv_obj_set_parent(comp, instance->parent_instance);
@@ -695,14 +329,14 @@ static void CompSetPosition (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, 
         lv_obj_add_flag(comp, LV_OBJ_FLAG_FLOATING);
     } else if (value == "fixed") {
         instance->is_fixed = true;
-        lv_obj_set_parent(comp, lv_scr_act());
+        lv_obj_set_parent(comp, lv_screen_active());
     }
 
     JS_FreeCString(ctx, str);
 };
 
 static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         BasicComponent* instance = static_cast<BasicComponent*>(lv_obj_get_user_data(comp));
         const lv_coord_t* old_ptr1 = instance->grid_column_desc;
         const lv_coord_t* old_ptr2 = instance->grid_row_desc;
@@ -726,7 +360,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
         column_ptr[len] = LV_GRID_TEMPLATE_LAST;
         instance->grid_column_desc = column_ptr;
         JS_FreeValue(ctx, column_len_value);
-        
+
         JSValue row_len_value = JS_GetPropertyStr(ctx, row_value, "length");
         JS_ToInt32(ctx, &len, row_len_value);
         lv_coord_t* row_ptr = static_cast<lv_coord_t*>(malloc((len + 1) * sizeof(lv_coord_t)));
@@ -739,7 +373,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
         row_ptr[len] = LV_GRID_TEMPLATE_LAST;
         instance->grid_row_desc = row_ptr;
         JS_FreeValue(ctx, row_len_value);
-        
+
         JS_FreeValue(ctx, column_value);
         JS_FreeValue(ctx, row_value);
 
@@ -754,7 +388,7 @@ static void CompGridColumnRow (lv_obj_t* comp, lv_style_t* style, JSContext* ctx
 };
 
 static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
         JSValue JSValue3 = JS_GetPropertyUint32(ctx, obj, 2);
@@ -786,7 +420,7 @@ static void CompSetGridChild (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
 };
 
 static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj) {
-    if (JS_IsArray(ctx, obj)) {
+    if (JS_IsArray(obj)) {
         JSValue JSValue1 = JS_GetPropertyUint32(ctx, obj, 0);
         JSValue JSValue2 = JS_GetPropertyUint32(ctx, obj, 1);
 
@@ -801,128 +435,33 @@ static void CompsetGridAlign (lv_obj_t* comp, lv_style_t* style, JSContext* ctx,
     }
 };
 
-std::unordered_map<std::string, CompSetStyle*> StyleManager::styles {
-    /* size && position */
-    {"width", &CompSetWidth},
-    {"max-width", &CompSetMaxWidth},
-    {"max-width_pct", &CompSetMaxWidthPch},
-    {"min-width", &CompSetMinWidth},
-    {"min-width_pct", &CompSetMinWidthPch},
-    {"height", &CompSetHeight},
-    {"max-height", &CompSetMaxHeight},
-    {"max-height_pct", &CompSetMaxHeightPch},
-    {"min-height", &CompSetMinHeight},
-    {"min-height_pct", &CompSetMinHeightPch},
-    {"left", &CompSetX},
-    {"top", &CompSetY},
-    {"width_pct", &CompSetWidthPch},
-    {"height_pct", &CompSetHeightPch},
-    {"left_pct", &CompSetXPch},
-    {"top_pct", &CompSetYPch},
+void NativeStyleInit(JSContext* ctx) {
+    (void)ctx;
+    if (!g_native_style_prop_handlers.empty()) {
+        return;
+    }
+    // NativeStylePropValueKindPtr
+    // Currently for lv_style_prop_t that use pointer still needs to have the handler.
+    // TODO: In future, we can remove the handler by passing pointer with BigInt.
+    g_native_style_prop_handlers[LV_STYLE_TEXT_FONT] = &CompSetFontSize;
 
-    /* background */
-    {"background-color", &CompSetBackgroundColor},
-    {"background-opacity", &CompSetBackgroundOpacity},
-    {"background-grad-color", &CompSetBackgroundGradColor},
-    {"background-grad-color-dir", &CompSetBackgroundGradColorDir},
-
-    /* border-radius */
-    {"border-radius", &CompSetBorderRadius},
-
-    /* arc */
-    {"arc-width", &CompSetArcWidth},
-    {"arc-rounded", &CompSetArcRounded},
-    {"arc-color", &CompSetArcColor},
-    {"arc-opacity", &CompSetArcOpacity},
-
-    /* layout */
-    {"display", &CompSetDisplay},
-    {"flex-align", &CompSetFlexAlign},
-    {"flex-flow", &CompSetFlexFlow},
-    {"flex-grow", &CompSetFlexGrow},
-    {"justify-content", &CompSetJustifyContent},
-    {"align-items", &CompSetAlignItems},
-    {"align-content", &CompSetAlignContent},
-
-    /* padding */
-    {"padding-left", &CompSetPaddingLeft},
-    {"padding-right", &CompSetPaddingRight},
-    {"padding-bottom", &CompSetPaddingBottom},
-    {"padding-top", &CompSetPaddingTop},
-
-    /* border */
-    {"border-width", &CompSetBorderWidth},
-    {"border-opacity", &CompSetBorderOpacity},
-    {"border-color", &CompSetBorderColor},
-    {"border-side", &CompSetBorderSide},
-
-    /* outline */
-    {"outline-width", &CompSetOutlineWidth},
-    {"outline-opacity", &CompSetOutlineOpacity},
-    {"outline-color", &CompSetOutlineColor},
-    {"outline-padding", &CompSetOutlinePadding},
-
-    /* font */
-    {"font-size", &CompSetFontSize},
-    {"font-size-1", &CompSetFontSize1},
-    {"text-overflow", &CompSetTextOverFLow},
-    {"letter-spacing", &CompSetLetterSpacing},
-    {"text-align", &CompSetTextAlign},
-    {"text-decoration", &CompSetDecoration},
-    {"line-spacing", &CompSetLineSpacing},
-
-    /* scroll */
-    {"overflow-scrolling", &CompSetOverFlowScrolling},
-    {"overflow", &CompSetOverflow},
-    {"scroll-snap-x", &CompSetScrollSnapX},
-    {"scroll-snap-y", &CompSetScrollSnapY},
-    {"scroll-enable-snap", &CompScrollEnableSnap},
-
-    /* opacity */
-    {"opacity", &CompSetOpacity},
-    {"img-opacity", &CompSetImgOpacity},
-    {"recolor-opacity", &CompRecolorOpacity},
-
-    /* transform */
-    {"translateX", &CompSetTranslateX},
-    {"translateY", &CompSetTranslateY},
-    {"scale", &CompSetScale},
-    {"rotate", &CompSetRotate},
-    {"img-scale", &CompSetImgScale},
-    {"img-rotate", &CompSetImgRotate},
-    {"img-origin", &CompSetTransformOrigin},
-    {"chart-scaleX", &CompSetChartScaleX},
-    {"chart-scaleY", &CompSetChartScaleY},
-    {"transform-width", &CompSetTransformWidth},
-    {"transform-height", &CompSetTransformHeight},
-    {"style-transition-time", &CompSetStyleTransitionTime},
-
-    /* color */
-    {"text-color", &CompSetTextColor},
-    {"recolor", &CompSetRecolor},
-
-    /* spacing */
-    {"row-spacing", &CompSetRowSpacing},
-    {"column-spacing", &CompSetColumnSpacing},
-    
-    /* line comp */
-    {"line-width", &CompSetLineWidth},
-    {"line-color", &CompSetLineColor},
-    {"line-rounded", &CompSetLineRounded},
-
-    /* shadow */
-    {"shadow-width", &CompSetShadowWidth},
-    {"shadow-color", &CompSetShadowColor},
-    {"shadow-spread", &CompSetShadowSpread},
-    {"shadow-opacity", &CompSetShadowOpacity},
-    {"shadow-offset-x", &CompSetOffsetX},
-    {"shadow-offset-y", &CompSetOffsetY},
-
-    /* position */
-    {"position", &CompSetPosition},
-
-    /* grid */
-    {"grid-template", &CompGridColumnRow},
-    {"grid-child", &CompSetGridChild},
-    {"grid-align", &CompsetGridAlign},
-};
+    // NativeStylePropValueKindCSS
+    g_native_style_prop_handlers[LV_STYLE_CSS_CHART_SCALE_X] = &CompSetChartScaleX;
+    g_native_style_prop_handlers[LV_STYLE_CSS_CHART_SCALE_Y] = &CompSetChartScaleY;
+    g_native_style_prop_handlers[LV_STYLE_CSS_DISPLAY] = &CompSetDisplay;
+    g_native_style_prop_handlers[LV_STYLE_CSS_FLEX_ALIGN] = &CompSetFlexAlign;
+    g_native_style_prop_handlers[LV_STYLE_CSS_GRID_ALIGN] = &CompsetGridAlign;
+    g_native_style_prop_handlers[LV_STYLE_CSS_GRID_CHILD] = &CompSetGridChild;
+    g_native_style_prop_handlers[LV_STYLE_CSS_GRID_TEMPLATE] = &CompGridColumnRow;
+    g_native_style_prop_handlers[LV_STYLE_CSS_IMG_ORIGIN] = &CompSetTransformOrigin;
+    g_native_style_prop_handlers[LV_STYLE_CSS_IMG_ROTATE] = &CompSetImgRotate;
+    g_native_style_prop_handlers[LV_STYLE_CSS_IMG_SCALE_X] = &CompSetImgScaleX;
+    g_native_style_prop_handlers[LV_STYLE_CSS_IMG_SCALE_Y] = &CompSetImgScaleY;
+    g_native_style_prop_handlers[LV_STYLE_CSS_OVERFLOW] = &CompSetOverflow;
+    g_native_style_prop_handlers[LV_STYLE_CSS_OVERFLOW_SCROLLING] = &CompSetOverFlowScrolling;
+    g_native_style_prop_handlers[LV_STYLE_CSS_POSITION] = &CompSetPosition;
+    g_native_style_prop_handlers[LV_STYLE_CSS_SCROLL_ENABLE_SNAP] = &CompScrollEnableSnap;
+    g_native_style_prop_handlers[LV_STYLE_CSS_SCROLL_SNAP_X] = &CompSetScrollSnapX;
+    g_native_style_prop_handlers[LV_STYLE_CSS_SCROLL_SNAP_Y] = &CompSetScrollSnapY;
+    g_native_style_prop_handlers[LV_STYLE_CSS_TEXT_OVERFLOW] = &CompSetTextOverFLow;
+}

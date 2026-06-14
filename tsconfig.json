@@ -1,11 +1,19 @@
 {
-    "compilerOptions": {
-      "module": "NodeNext",
-      "typeRoots": [
-        "node_modules/@txikijs/types",
-        "node_modules/@types"
-      ]
-    },
-    "include": ["src/**/*"],
-    "exclude": ["**/*.spec.ts"]
-  }
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": false,
+    "lib": ["DOM", "ES2020", "es2024.arraybuffer"],
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/render/react/**/*.ts",
+    "src/render/react/**/*.d.ts"
+  ],
+  "exclude": [
+    "**/*.spec.ts"
+  ]
+}

@@ -4,12 +4,12 @@ static JSClassID ButtonClassID;
 
 WRAPPED_JS_SETSTYLE(Button, "Button")
 WRAPPED_JS_AddEventListener(Button, "Button")
+WRAPPED_JS_RemoveEventListener(Button, "Button")
 WRAPPED_JS_Align(Button, "Button")
 WRAPPED_JS_Align_To(Button, "Button")
 STYLE_INFO(Button, "Button")
 WRAPPED_JS_BACKGROUND_IMAGE(Button,"Button")
 WRAPPED_APPEND_CHILD(Button,"Button")
-WRAPPED_REMOVE_CHILD(Button,"Button")
 WRAPPED_INSERT_CHILD(Button,"Button")
 WRAPPED_MOVE_TO_FRONT(Button, "Button")
 WRAPPED_MOVE_TO_BACKGROUND(Button, "Button")
@@ -19,7 +19,7 @@ WRAPPED_JS_CLOSE_COMPONENT(Button, "Button")
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -31,9 +31,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ButtonConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -67,7 +64,7 @@ static JSValue ButtonConstructor(JSContext *ctx, JSValueConst new_target, int ar
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Button(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -83,14 +80,7 @@ static JSValue ButtonConstructor(JSContext *ctx, JSValueConst new_target, int ar
     return JS_EXCEPTION;
 };
 
-static void ButtonFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ButtonClassID);
-    LV_LOG_USER("Button %s release", th->uid);
-    if (th) {
-        delete static_cast<Button*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ButtonFinalizer, Button, ButtonClassID)
 
 static JSClassDef ButtonClass = {
     .class_name = "Button",
@@ -106,7 +96,6 @@ void NativeComponentButtonInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ButtonConstructor, "Button", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Button", obj, JS_PROP_C_W_E);
 };
 

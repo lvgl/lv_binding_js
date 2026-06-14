@@ -1,11 +1,9 @@
 #pragma once
 
+#include "lv_bindings_js.h"
+
 #include <vector>
 
-extern "C" {
-    #include "lvgl.h"
-    #include "private.h"
-};
 
 static const lv_font_t builtin_font_list[] = {
     lv_font_montserrat_8,
@@ -32,5 +30,3 @@ static const lv_font_t builtin_font_list[] = {
 };
 
 void CompSetFontSize (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj);
-
-void CompSetFontSize1 (lv_obj_t* comp, lv_style_t* style, JSContext* ctx, JSValue obj);

@@ -1,30 +1,39 @@
 const path = require('path');
-const alias = require('esbuild-plugin-alias');
-const glob = require('glob')
+const glob = require('glob');
+const esbuild = require('esbuild');
 
-function build(pattern){
-  const jsxfiles = new glob.Glob(pattern, {})
+async function build(pattern) {
+  const jsxfiles = new glob.Glob(pattern, {});
+  const jobs = [];
 
   for (const file of jsxfiles) {
-    const entry = path.resolve(__dirname, file)
+    const entry = path.resolve(__dirname, file);
 
-    require('esbuild')
-      .build({
-        entryPoints: [entry],
-        bundle: true,
-        platform: 'neutral',
-        external: ['tjs:path'],
-        outfile: path.resolve(path.dirname(entry), 'index.js'),
-        define: {
-          'process.env.NODE_ENV': '"development"',
-        }
-      })
-      .then(() => console.log('Build %s complete', file))
-      .catch(() => {
-        process.exit(1);
-      });
+    jobs.push(
+      esbuild
+        .build({
+          entryPoints: [entry],
+          bundle: true,
+          platform: 'neutral',
+          external: ['tjs:path'],
+          outfile: path.resolve(path.dirname(entry), 'index.js'),
+          define: {
+            'process.env.NODE_ENV': '"development"',
+          },
+        })
+        .then(() => console.log('Build %s complete', file)),
+    );
   }
+
+  await Promise.all(jobs);
 }
 
-build('demo/*/*.{jsx,tsx}')
-build('test/**/*.{jsx,tsx}')
+async function main() {
+  await build('demo/*/index.{jsx,tsx}');
+  await build('test/**/index.{jsx,tsx,ts}');
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

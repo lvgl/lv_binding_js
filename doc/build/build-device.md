@@ -1,8 +1,12 @@
 # Target Build Guide
-This guide gives an overview on how to build lvgljs for an embedded Linux target.
+
+This guide covers building lvgljs for an **embedded Linux target**.
+
+> [!NOTE]
+> **Windows is not supported** for device (embedded) builds. The device HAL targets Linux framebuffer and related display drivers. Use Linux (native or WSL) for cross-compiling to embedded targets. On Windows, use the [simulator build guide](./build-simulator.md) only.
 
 This is not too different from building for a regular Linux target,
-besides that you will probably need to cross-compile and won't want to use the sdl2 simulator.
+besides that you will probably need to cross-compile and won't want to use the SDL2 simulator.
 
 When building for a target device, the [*device HAL*](../../src/engine/hal/device) is selected.\
 Currently it is not possible to configure the properties of the device and
@@ -25,7 +29,7 @@ You can now cross-compile like normal.
 For instance, if you're using Yocto, you source your SDK environment and then do
 
 ```sh
-cmake -B build -DUSE_EXTERNAL_FFI=ON
+cmake -B build -DBUILD_LVGL_SIMULATOR=OFF -DUSE_EXTERNAL_FFI=ON
 cmake --build build
 ```
 

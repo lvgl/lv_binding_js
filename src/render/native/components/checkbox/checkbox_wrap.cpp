@@ -4,6 +4,7 @@ static JSClassID CheckboxClassID;
 
 WRAPPED_JS_SETSTYLE(Checkbox, "Checkbox")
 WRAPPED_JS_AddEventListener(Checkbox, "Checkbox")
+WRAPPED_JS_RemoveEventListener(Checkbox, "Checkbox")
 WRAPPED_JS_Align(Checkbox, "Checkbox")
 WRAPPED_JS_Align_To(Checkbox, "Checkbox")
 STYLE_INFO(Checkbox, "Checkbox")
@@ -22,7 +23,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         s.resize(len);
 
         ((Checkbox*)(ref->comp))->setText(s);
-        LV_LOG_USER("Checkbox %s setText", ref->uid);
+        LV_LOG_USER("Checkbox %s setText", ref->getUid());
         JS_FreeCString(ctx, str);
     }
     return JS_UNDEFINED;
@@ -34,7 +35,7 @@ static JSValue NativeCompSetChecked(JSContext *ctx, JSValueConst this_val, int a
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Checkbox*)(ref->comp))->setChecked(payload);
-        LV_LOG_USER("Checkbox %s setChecked %d", ref->uid, payload);
+        LV_LOG_USER("Checkbox %s setChecked %d", ref->getUid(), payload);
     }
     return JS_UNDEFINED;
 };
@@ -45,7 +46,7 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Checkbox*)(ref->comp))->setDisabled(payload);
-        LV_LOG_USER("Checkbox %s setDisabled", ref->uid);
+        LV_LOG_USER("Checkbox %s setDisabled", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -53,6 +54,7 @@ static JSValue NativeCompSetDisabled(JSContext *ctx, JSValueConst this_val, int 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
@@ -65,9 +67,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue CheckboxConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -101,7 +100,7 @@ static JSValue CheckboxConstructor(JSContext *ctx, JSValueConst new_target, int 
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Checkbox(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -117,14 +116,7 @@ static JSValue CheckboxConstructor(JSContext *ctx, JSValueConst new_target, int 
     return JS_EXCEPTION;
 };
 
-static void CheckboxFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, CheckboxClassID);
-    LV_LOG_USER("Checkbox %s release", th->uid);
-    if (th) {
-        delete static_cast<Checkbox*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(CheckboxFinalizer, Checkbox, CheckboxClassID)
 
 static JSClassDef CheckboxClass = {
     .class_name = "Checkbox",
@@ -140,7 +132,6 @@ void NativeComponentCheckboxInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, CheckboxConstructor, "Checkbox", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Checkbox", obj, JS_PROP_C_W_E);
 };
 

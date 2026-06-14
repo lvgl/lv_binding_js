@@ -16,7 +16,7 @@ static JSClassDef ValueChangeEventWrapClass = {
 
 static JSValue GetChecked (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapValueChangeEventID));
-    BasicComponent* comp = static_cast<BasicComponent*>(e->user_data);
+    BasicComponent* comp = static_cast<BasicComponent*>(lv_event_get_user_data(e));
     ECOMP_TYPE comp_type = comp->type;
     bool checked = false;
 
@@ -40,7 +40,7 @@ static JSValue GetChecked (JSContext* ctx, JSValueConst this_val) {
 
 static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapValueChangeEventID));
-    BasicComponent* comp = static_cast<BasicComponent*>(e->user_data);
+    BasicComponent* comp = static_cast<BasicComponent*>(lv_event_get_user_data(e));
     ECOMP_TYPE comp_type = comp->type;
     int32_t value_num = 0;
     const char* value_str;

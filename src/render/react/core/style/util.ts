@@ -1,110 +1,177 @@
-import { colorTransform } from "./color";
+import { LV_SIZE_CONTENT, lv_pct } from "../lv_conf_macros";
+import {
+  type Deg,
+  type FlexGrow,
+  type GridCellIndex,
+  IsNullishOrNaN,
+  type Opacity,
+  type Px,
+  type PxOrPercent,
+  type Scale,
+  type Time,
+} from "./type";
+export { colorTransform } from "./color";
 
-export function NormalizePx(value) {
-  if (value == void 0) return null;
-  if (!isNaN(value)) {
-    return value;
-  }
-  value = value.replace(/(^\s*)|(\s*$)/g, "");
-  const reg = /(-?\d+\.?\d*)(px)?$/;
-  value = value.match(reg)?.[1];
+/** deps/lvgl/src/misc/lv_color.h - LV_OPA_COVER */
+const LV_OPA_COVER = 255;
+/** deps/lvgl/src/misc/lv_style.h - LV_IMG_ZOOM_NONE */
+const LV_IMG_ZOOM_NONE = 256;
 
-  if (!isNaN(value)) {
-    return value;
-  }
+// Contract: every Normalize* function maps nullish and NaN input to null,
+// never NaN. Callers outside the batch path (CSS composite payloads,
+// transition side-channel, future consumers) can rely on a `!== null` check.
+// StyleBatch.push additionally drops NaN as a defense-in-depth gate.
+
+// -?(?:\d+\.?\d*|\.\d+) accepts CSS-style decimals like ".5" and "-.5".
+const RE_NUM_UNITLESS = /^(-?(?:\d+\.?\d*|\.\d+))$/;
+const RE_NUM_PX = /^(-?(?:\d+\.?\d*|\.\d+))(px)?$/;
+const RE_NUM_DEG = /^(-?(?:\d+\.?\d*|\.\d+))(deg)?$/;
+// % suffix required (unlike px's optional suffix) so bare "50" is px, not percent.
+const RE_NUM_PERCENT = /^(-?(?:\d+\.?\d*|\.\d+))%$/;
+// Suffix required (unlike px's optional suffix) so "5s" and "100ms" stay distinct;
+// try ms before s. Bare strings fall back to RE_NUM_UNITLESS in NormalizeTime.
+const RE_NUM_MS = /^(-?(?:\d+\.?\d*|\.\d+))ms$/;
+const RE_NUM_S = /^(-?(?:\d+\.?\d*|\.\d+))s$/;
+
+function parseSuffixed(
+  value: number | string | null | undefined,
+  reg: RegExp = RE_NUM_UNITLESS,
+): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  if (typeof value === "number") return value;
+  const num = Number(value.trim().match(reg)?.[1]);
+  return Number.isNaN(num) ? null : num;
+}
+
+function excludeNegative(num: number | null): number | null {
+  if (num == null || num < 0) return null;
+  return num;
+}
+
+/** Non-negative px lengths (e.g. font-size, width). Rejects negative numbers. */
+export function NormalizePositivePx(value: Px): number | null {
+  return excludeNegative(parseSuffixed(value, RE_NUM_PX));
+}
+
+/** Signed px lengths (e.g. translate, shadow offset, letter-spacing). */
+export function NormalizePx(value: Px): number | null {
+  return parseSuffixed(value, RE_NUM_PX);
+}
+
+// NormalizeCoord has three paths that cannot share one parseSuffixed call:
+// - "auto" (trimmed) -> LV_SIZE_CONTENT
+// - number -> excludeNegative
+// - string -> parse signed px/%, then excludeNegative before lv_pct
+// Negative numbers and negative px/% strings all return null (unlike NormalizePx).
+// TODO: decide whether left/top should accept negative coords.
+export function NormalizeCoord(value: PxOrPercent): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  if (typeof value === "number") return excludeNegative(value);
+  if (value.trim() === "auto") return LV_SIZE_CONTENT;
+
+  const px = excludeNegative(parseSuffixed(value, RE_NUM_PX));
+  if (px != null) return px;
+
+  const pct = excludeNegative(parseSuffixed(value, RE_NUM_PERCENT));
+  if (pct != null) return lv_pct(pct);
+
   return null;
 }
 
-export function ProcessPx(key, value, result) {
-  // if (!value) return null
-  // if (!isNaN(value)) {
-  //     return result[key] = value
-  // }
-  // value = value.replace(/(^\s*)|(\s*$)/g, "")
-  // const reg = /(\d+\.?\d*)(px)?$/
-  // value = value.match(reg)?.[1]
-
-  // if (!isNaN(value)) {
-  //     result[key] = value
-  // }
-  value = NormalizePx(value);
-  if (value !== null) {
-    result[key] = value;
+export function NormalizeEnum<T extends Record<string, number | string>>(
+  map: T,
+  value: keyof T | string | null | undefined,
+): T[keyof T] | null {
+  if (IsNullishOrNaN(value) || !(value in map)) {
+    return null;
   }
+  return map[value as keyof T];
 }
 
-export type PixelOrPercent = number | `${number}%` | "auto";
-
-export function ProcessPxOrPercent(key, value, result) {
-  if (value === "auto") {
-    return (result[key] = 2001 | (1 << 13));
+export function NormalizeEnumDefault<T extends Record<string, number | string>>(
+  map: T,
+  value: keyof T | string | null | undefined,
+  defaultValue: T[keyof T],
+): T[keyof T] {
+  const normalized = NormalizeEnum(map, value);
+  if (normalized === null) {
+    return defaultValue;
   }
-  if (!isNaN(value)) {
-    return (result[key] = value);
-  }
-  value = value.replace(/(^\s*)|(\s*$)/g, "");
-  const reg1 = /(\d+\.?\d*)(%)?$/;
-  const reg2 = /(\d+\.?\d*)(px)?$/;
-
-  const value2 = value.match(reg2)?.[1];
-  if (!isNaN(value2)) {
-    return (result[key] = value2);
-  }
-
-  const value1 = value.match(reg1)?.[1];
-  if (!isNaN(value1)) {
-    return (result[`${key}_pct`] = value1);
-  }
+  return normalized;
 }
 
-export function ProcessEnum(obj) {
-  return (key, value, result) => {
-    if (obj[value] !== void 0) {
-      result[key] = obj[value];
-    }
-  };
+// Numbers are already in ms. Strings: ms suffix, then s (* 1000), then unitless
+// fallback (treated as ms, same as a bare number).
+// Deliberate behavior change: NormalizeTime(0) returns 0 instead of null
+// (the old `!value` check conflated falsy with invalid). Callers in trans.ts
+// use `?? 0`, so the final transition tuple is identical.
+export function NormalizeTime(value: Time): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  if (typeof value === "number") return value;
+  const ms = parseSuffixed(value, RE_NUM_MS);
+  if (ms != null) return ms;
+  const sec = parseSuffixed(value, RE_NUM_S);
+  if (sec != null) return sec * 1000;
+  return parseSuffixed(value, RE_NUM_UNITLESS);
 }
 
-export function ProcessColor(key, value, result) {
-  value = colorTransform(value);
-  if (!isNaN(value)) {
-    result[key] = value;
-  }
+export function NormalizeOpacity(value: Opacity): number | null {
+  const num = parseSuffixed(value);
+  if (num == null) return null;
+  if (num > 1) return LV_OPA_COVER;
+  if (num <= 0) return 0;
+  return Math.floor(num * LV_OPA_COVER);
 }
 
-export function NormalizeTime(value) {
-  if (!value) return null;
-  if (!isNaN(value)) return value;
-  const reg = /([^ms]+)(ms|s)/;
-  const [_, time, unit] = value.match(reg);
-  if (!isNaN(time)) {
-    if (unit == "s") {
-      return time * 1000;
-    } else if (unit == "ms") {
-      return time;
-    }
-  }
-  return null;
+export function NormalizeScale(value: Scale): number | null {
+  const num = parseSuffixed(value);
+  if (num == null) return null;
+  return Math.floor(num * LV_IMG_ZOOM_NONE);
 }
 
-export function NormalizeOpacity(value) {
-  if (isNaN(value) || value > 1) return 255;
-  if (value <= 0) return 0;
-  return Math.floor(value * 255);
+export function NormalizeDeg(value: Deg): number | null {
+  return parseSuffixed(value, RE_NUM_DEG);
 }
 
-export function ProcessScale(key, value, result) {
-  if (!value && isNaN(value)) return null;
-  result[key] = Math.floor(value * 256);
+function parseUnitlessInteger(
+  value: number | string | null | undefined,
+): number | null {
+  const num =
+    typeof value === "number" ? value : parseSuffixed(value, RE_NUM_UNITLESS);
+  if (num == null || !Number.isInteger(num)) return null;
+  return num;
 }
 
-export function ProcessDeg(key, value, result) {
-  const reg = /([^deg]+)(deg)?/;
-  const [_, deg] = value.match(reg);
-  if (isNaN(deg)) return;
-  result[key] = +deg;
+/** LVGL flex-grow: 0 disables grow; non-negative integers only. */
+export function NormalizeFlexGrow(
+  value: FlexGrow | null | undefined,
+): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  const num = parseUnitlessInteger(value);
+  if (num == null || num < 0) return null;
+  return num;
 }
 
-export function ProcessBoolean(key, value, result) {
-  result[key] = !!value;
+/** Grid line index (0-based); non-negative integers only. */
+export function NormalizeGridCellPos(
+  value: GridCellIndex | null | undefined,
+): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  const num = parseUnitlessInteger(value);
+  if (num == null || num < 0) return null;
+  return num;
+}
+
+/** Grid span; positive integers only (default 1 in grid pipe when omitted). */
+export function NormalizeGridCellSpan(
+  value: GridCellIndex | null | undefined,
+): number | null {
+  if (IsNullishOrNaN(value)) return null;
+  const num = parseUnitlessInteger(value);
+  if (num == null || num < 1) return null;
+  return num;
+}
+
+export function NormalizeBoolean(value: boolean | null | undefined): boolean {
+  return !!value;
 }

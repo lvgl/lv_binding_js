@@ -4,6 +4,7 @@ static JSClassID TextClassID;
 
 WRAPPED_JS_SETSTYLE(Text, "Text")
 WRAPPED_JS_AddEventListener(Text, "Text")
+WRAPPED_JS_RemoveEventListener(Text, "Text")
 WRAPPED_JS_Align(Text, "Text")
 WRAPPED_JS_Align_To(Text, "Text")
 STYLE_INFO(Text, "Text")
@@ -21,7 +22,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         COMP_REF* s = (COMP_REF*)JS_GetOpaque(this_val, TextClassID);
         ((Text*)(s->comp))->setText(str);
         JS_FreeCString(ctx, ori_str);
-        LV_LOG_USER("Text %s setText\n", s->uid);
+        LV_LOG_USER("Text %s setText\n", s->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -29,6 +30,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("setText", 0, NativeCompSetText),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
@@ -38,10 +40,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
-
 };
 
 static JSValue TextConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -75,7 +73,7 @@ static JSValue TextConstructor(JSContext *ctx, JSValueConst new_target, int argc
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Text(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -91,14 +89,7 @@ static JSValue TextConstructor(JSContext *ctx, JSValueConst new_target, int argc
     return JS_EXCEPTION;
 };
 
-static void TextFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, TextClassID);
-    LV_LOG_USER("Text %s release", th->uid);
-    if (th) {
-        delete static_cast<Text*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(TextFinalizer, Text, TextClassID)
 
 static JSClassDef ViewClass = {
     .class_name = "Text",
@@ -114,7 +105,6 @@ void NativeComponentTextInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, TextConstructor, "Text", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Text", obj, JS_PROP_C_W_E);
 };
 

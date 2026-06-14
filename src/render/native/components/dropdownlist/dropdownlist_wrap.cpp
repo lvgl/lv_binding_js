@@ -4,6 +4,7 @@ static JSClassID DropdownlistClassID;
 
 WRAPPED_JS_SETSTYLE(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_AddEventListener(Dropdownlist, "Dropdownlist")
+WRAPPED_JS_RemoveEventListener(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_Align(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_Align_To(Dropdownlist, "Dropdownlist")
 STYLE_INFO(Dropdownlist, "Dropdownlist")
@@ -13,7 +14,7 @@ WRAPPED_SCROLL_INTO_VIEW(Dropdownlist, "Dropdownlist")
 WRAPPED_JS_CLOSE_COMPONENT(Dropdownlist, "Dropdownlist")
 
 static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 2 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, DropdownlistClassID);
         std::vector<std::string> items;
 
@@ -36,7 +37,7 @@ static JSValue NativeCompSetItems(JSContext *ctx, JSValueConst this_val, int arg
         }
 
         ((Dropdownlist*)(ref->comp))->setItems(items);
-        LV_LOG_USER("Dropdownlist %s setItems", ref->uid);
+        LV_LOG_USER("Dropdownlist %s setItems", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -48,7 +49,7 @@ static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &index, argv[0]);
 
         ((Dropdownlist*)(ref->comp))->setSelectIndex(index);
-        LV_LOG_USER("Dropdownlist %s setSelectIndex", ref->uid);
+        LV_LOG_USER("Dropdownlist %s setSelectIndex", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -62,7 +63,7 @@ static JSValue NativeCompSeText(JSContext *ctx, JSValueConst this_val, int argc,
         s.resize(len);
 
         ((Dropdownlist*)(ref->comp))->setText(s);
-        LV_LOG_USER("Dropdownlist %s setText", ref->uid);
+        LV_LOG_USER("Dropdownlist %s setText", ref->getUid());
         JS_FreeCString(ctx, str);
     }
     return JS_UNDEFINED;
@@ -74,8 +75,8 @@ static JSValue NativeCompSetDir(JSContext *ctx, JSValueConst this_val, int argc,
         int32_t dir;
         JS_ToInt32(ctx, &dir, argv[0]);
 
-        ((Dropdownlist*)(ref->comp))->setDir(dir);
-        LV_LOG_USER("Dropdownlist %s setDir", ref->uid);
+        ((Dropdownlist*)(ref->comp))->setDir(static_cast<lv_dir_t>(dir));
+        LV_LOG_USER("Dropdownlist %s setDir", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -87,7 +88,7 @@ static JSValue NativeCompSetArrowDir(JSContext *ctx, JSValueConst this_val, int 
         JS_ToInt32(ctx, &dir, argv[0]);
 
         ((Dropdownlist*)(ref->comp))->setArrowDir(dir);
-        LV_LOG_USER("Dropdownlist %s setArrowDir", ref->uid);
+        LV_LOG_USER("Dropdownlist %s setArrowDir", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -98,7 +99,7 @@ static JSValue NativeCompSetHighLightSelect(JSContext *ctx, JSValueConst this_va
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Dropdownlist*)(ref->comp))->setHighLightSelect(payload);
-        LV_LOG_USER("Dropdownlist %s setHighLightSelect", ref->uid);
+        LV_LOG_USER("Dropdownlist %s setHighLightSelect", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -106,6 +107,7 @@ static JSValue NativeCompSetHighLightSelect(JSContext *ctx, JSValueConst this_va
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
@@ -120,9 +122,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue DropdownlistConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -156,7 +155,7 @@ static JSValue DropdownlistConstructor(JSContext *ctx, JSValueConst new_target, 
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Dropdownlist(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -172,14 +171,7 @@ static JSValue DropdownlistConstructor(JSContext *ctx, JSValueConst new_target, 
     return JS_EXCEPTION;
 };
 
-static void DropdownlistFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, DropdownlistClassID);
-    LV_LOG_USER("Dropdownlist %s release", th->uid);
-    if (th) {
-        delete static_cast<Dropdownlist*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(DropdownlistFinalizer, Dropdownlist, DropdownlistClassID)
 
 static JSClassDef DropdownlistClass = {
     .class_name = "Dropdownlist",
@@ -195,7 +187,6 @@ void NativeComponentDropdownlistInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, DropdownlistConstructor, "Dropdownlist", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Dropdownlist", obj, JS_PROP_C_W_E);
 };
 

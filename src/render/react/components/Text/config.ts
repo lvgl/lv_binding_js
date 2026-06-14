@@ -20,5 +20,4 @@ export default class TextConfig implements LvgljsComponentConfig<TextProps, Text
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

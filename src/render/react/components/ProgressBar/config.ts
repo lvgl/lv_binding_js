@@ -20,5 +20,4 @@ export default class ProgressBarConfig implements LvgljsComponentConfig<Progress
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

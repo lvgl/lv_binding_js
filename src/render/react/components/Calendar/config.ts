@@ -13,12 +13,11 @@ export default class CalendarConfig implements LvgljsComponentConfig<CalendarPro
     return instance;
   }
   commitMount(instance, newProps: CalendarProps, internalInstanceHandle) {}
-  commitUpdate(instance, updatePayload, oldProps: CalendarProps, newProps: CalendarProps, finishedWork) {
+  commitUpdate(instance, updatePayload, oldProps: Partial<CalendarProps>, newProps: CalendarProps, finishedWork) {
     instance.setProps(newProps, oldProps);
   }
-  setProps(newProps: CalendarProps, oldProps: CalendarProps) {}
+  setProps(newProps: CalendarProps, oldProps: Partial<CalendarProps>) {}
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

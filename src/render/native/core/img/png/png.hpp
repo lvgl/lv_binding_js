@@ -1,6 +1,6 @@
 #pragma once
 
-#include "lvgl/lvgl.h"
+#include <lvgl.h>
 #include "render/native/core/img/img.hpp"
 
 #include "./lodepng.h"

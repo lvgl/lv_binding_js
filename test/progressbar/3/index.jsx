@@ -1,12 +1,15 @@
 import { View, Render, Dimensions, Text, Image, EAlignType, Animate, ProgressBar } from 'lvgljs-ui';
 import React, { useState, useEffect } from 'react';
 
+const captureMode = tjs.env.TEST_CAPTURE === '1';
 const { width, height } = Dimensions.window
 
 function App () {
-    const [value, setValue] = useState(-20)
+    const [value, setValue] = useState(captureMode ? 10 : -20)
 
     useEffect(() => {
+        if (captureMode) return;
+
         try {
             const animate = Animate.timing({
                 duration: 3000,
@@ -39,7 +42,7 @@ function App () {
                 }}
                 value={value}
                 range={[-20, 40]}
-                useAnimation={true}
+                useAnimation={!captureMode}
                 animationTime={1000}
                 indicatorStyle={style.indicator}
             />

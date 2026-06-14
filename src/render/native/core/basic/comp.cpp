@@ -17,9 +17,9 @@ void BasicComponent::addEventListener (int eventType) {
 };
 
 void BasicComponent::EventCallback (lv_event_t * event) {
-    BasicComponent* instance = static_cast<BasicComponent*>(event->user_data);
+    BasicComponent* instance = static_cast<BasicComponent*>(lv_event_get_user_data(event));
     std::string uid = instance->uid;
-    lv_event_code_t code = event->code;
+    lv_event_code_t code = lv_event_get_code(event);
     if (instance->isEventRegist(static_cast<int>(code))) {
         FireEventToJS(event, uid, code);
     }
@@ -28,7 +28,10 @@ void BasicComponent::EventCallback (lv_event_t * event) {
 void BasicComponent::removeEventListener (int eventType) {
     this->registeEvents.erase(eventType);
 
-    lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
+    if (this->registeEvents.empty() && this->listening) {
+        this->listening = false;
+        lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
+    }
 };
 
 bool BasicComponent::isEventRegist(int eventType) {
@@ -43,10 +46,6 @@ void BasicComponent::insertChildBefore(void *child) {
         uint32_t index = lv_obj_get_index(ins);
         lv_obj_move_to_index(ins, index);
     }
-};
-
-void BasicComponent::removeChild(void* child) {
-    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
 };
 
 void BasicComponent::appendChild (void* child) {
@@ -101,24 +100,21 @@ void BasicComponent::setTransition (JSContext* ctx, JSValue obj, lv_style_t* sty
     JSValue dura_value = JS_GetPropertyUint32(ctx, obj, 2);
     JS_ToInt32(ctx, &dura, dura_value);
 
+    int32_t func_idx = 0;
     JSValue func_value = JS_GetPropertyUint32(ctx, obj, 3);
-    size_t func_str_len;
-    const char* func_str = JS_ToCStringLen(ctx, &func_str_len, func_value);
-    std::string func_str_1 = func_str;
-    func_str_1.resize(func_str_len);
+    JS_ToInt32(ctx, &func_idx, func_value);
 
     int32_t delay;
     JSValue delay_value = JS_GetPropertyUint32(ctx, obj, 4);
     JS_ToInt32(ctx, &delay, delay_value);
 
-    CompSetTransition(style, &this->trans, this->trans_props_map[type], func_str_1, dura, delay);
+    CompSetTransition(style, &this->trans, this->trans_props_map[type], func_idx, dura, delay);
 
     JS_FreeValue(ctx, value_len);
     JS_FreeValue(ctx, props);
     JS_FreeValue(ctx, func_value);
     JS_FreeValue(ctx, dura_value);
     JS_FreeValue(ctx, delay_value);
-    JS_FreeCString(ctx, func_str);
 
     if (old_transProps != nullptr) {
         free(old_transProps);
@@ -129,7 +125,7 @@ bool BasicComponent::ensureStyle (int32_t type) {
     lv_style_t* style;
     bool is_new;
     if (this->style_map.find(type) != this->style_map.end()) {
-        
+        is_new = false;
     } else {
         style = static_cast<lv_style_t*>(style_pool.allocate());
         style_map[type] = style;
@@ -138,7 +134,7 @@ bool BasicComponent::ensureStyle (int32_t type) {
     return is_new;
 };
 
-void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::string>& keys, int32_t type, bool isinit) {
+void BasicComponent::setStyle(JSContext* ctx, JSValue& nativeStyle, int32_t type, bool isinit) {
 
     lv_style_t* style;
     bool is_new = false;
@@ -156,25 +152,17 @@ void BasicComponent::setStyle(JSContext* ctx, JSValue& obj, std::vector<std::str
     //     this->initStyle(type);
     // }
 
-    for(int i=0; i < keys.size(); i++) {
-        std::string key = keys[i];
-
-        if (StyleManager::styles.count(key) > 0) {
-            CompSetStyle* func = StyleManager::styles.at(key);
-            JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
-            func(this->instance, style, ctx, value);
-            JS_FreeValue(ctx, value);
-        }
+    JSValue batch = JS_GetPropertyStr(ctx, nativeStyle, "batch");
+    if (JS_IsObject(batch)) {
+        apply_style_props_batch(ctx, this->instance, style, batch, type);
     }
+    JS_FreeValue(ctx, batch);
 
-    for(int i=0; i < keys.size(); i++) {
-        std::string key = keys[i];
-        if (key == "transition") {
-            JSValue value = JS_GetPropertyStr(ctx, obj, key.c_str());
-            this->setTransition(ctx, value, style, type);
-            JS_FreeValue(ctx, value);
-        }
+    JSValue transition = JS_GetPropertyStr(ctx, nativeStyle, "transition");
+    if (JS_IsArray(transition)) {
+        this->setTransition(ctx, transition, style, type);
     }
+    JS_FreeValue(ctx, transition);
 
     if (is_new) {
         lv_obj_add_style(this->instance, style, type);
@@ -198,7 +186,7 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
             old_img_desc = this->image_desc_map.at(style_type);
         }
         if (old_img_desc != nullptr) {
-            prev_buf = old_img_desc->data;
+            prev_buf = old_img_desc->dsc.data;
         }
         img_desc = static_cast<lv_img_dsc_t_1*>(malloc(sizeof(lv_img_dsc_t_1)));
         image_desc_map[style_type] = img_desc;
@@ -206,7 +194,6 @@ void BasicComponent::setBackgroundImage (uint8_t* buf, size_t buf_len, int32_t s
         if (buf != nullptr) {
             uint8_t* img_data = GetImgDesc(buf, buf_len, img_desc);
             if (img_data != nullptr) {
-                img_desc->data = img_data;
                 lv_style_set_bg_img_src(style, img_desc);
             }
         } else {
@@ -241,7 +228,7 @@ BasicComponent::~BasicComponent () {
     
     for(auto& desc : this->image_desc_map) {
         if (desc.second != nullptr) {
-            const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->data;
+            const uint8_t* buf = (static_cast<lv_img_dsc_t_1*>(desc.second))->dsc.data;
             if (buf != nullptr) {
                 free((void*)(buf));
             }
@@ -255,16 +242,26 @@ BasicComponent::~BasicComponent () {
     if (ptr2) {
         free((lv_coord_t*)(ptr2));
     }
-    // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+
+    for(auto &style : style_map) {
+        lv_style_reset(style.second);
+    }
+
+    // close() deletes this object; JS unRegistEvent clears handlers but cannot reach
+    // the LVGL callback on the finalizer-only path. Detach callback before lv_obj_del.
+    lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
+    if (this->instance != nullptr && lv_obj_is_valid(this->instance)) {
+        lv_obj_del(this->instance);
+    }
+    this->instance = nullptr;
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {
-    lv_obj_align(this->instance, static_cast<lv_align_t>(align_type), x, y);
+    lv_obj_align(this->alignInstance(), static_cast<lv_align_t>(align_type), x, y);
 };
 
 void BasicComponent::setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent) {
-    lv_obj_align_to(this->instance, parent->instance, static_cast<lv_align_t>(align_type), x, y);
+    lv_obj_align_to(this->alignInstance(), parent->instance, static_cast<lv_align_t>(align_type), x, y);
 };
 
 void BasicComponent::moveToFront () {

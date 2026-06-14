@@ -20,5 +20,4 @@ export default class LineConfig implements LvgljsComponentConfig<LineProps, Line
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

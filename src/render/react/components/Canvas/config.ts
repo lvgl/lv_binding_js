@@ -20,5 +20,4 @@ export default class CanvasConfig implements LvgljsComponentConfig<CanvasProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

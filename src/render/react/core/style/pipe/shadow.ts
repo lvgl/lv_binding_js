@@ -1,27 +1,15 @@
-import { ColorType } from "../color";
-import { ProcessColor, ProcessPx, ProcessPxOrPercent } from "../util";
+import type { ShadowStyleType } from "../type";
+import { colorTransform, NormalizePx, NormalizePositivePx } from "../util";
+import { StyleTransformResult } from "../batch";
 
-const obj = {
-  "shadow-width": ProcessPx,
-  "shadow-color": ProcessColor,
-  "shadow-offset-x": ProcessPx,
-  "shadow-offset-y": ProcessPx,
-  "shadow-spread": ProcessPx,
-};
-const keys = Object.keys(obj);
-
-export type ShadowStyleType = {
-  "shadow-width"?: number;
-  "shadow-color"?: ColorType;
-  "shadow-offset-x"?: number;
-  "shadow-offset-y"?: number;
-  "shadow-spread"?: number;
-};
-
-export function ShadowStyle(style: ShadowStyleType, result, compName) {
-  keys.forEach((key) => {
-    if (style[key] !== void 0) {
-      obj[key](key, style[key], result);
-    }
-  });
+export function ShadowStyle(
+  style: ShadowStyleType,
+  result: StyleTransformResult,
+) {
+  const batch = result.batch;
+  batch.pushStyle(style, "shadow-width", NormalizePositivePx);
+  batch.pushStyle(style, "shadow-color", colorTransform);
+  batch.pushStyle(style, "shadow-offset-x", NormalizePx);
+  batch.pushStyle(style, "shadow-offset-y", NormalizePx);
+  batch.pushStyle(style, "shadow-spread", NormalizePositivePx);
 }

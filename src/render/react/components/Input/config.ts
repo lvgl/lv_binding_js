@@ -20,5 +20,4 @@ export default class InputConfig implements LvgljsComponentConfig<InputProps, In
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

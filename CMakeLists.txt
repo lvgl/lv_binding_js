@@ -3,14 +3,23 @@ cmake_minimum_required(VERSION 3.16)
 project(lvgljs LANGUAGES C CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/deps/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
+set(LV_CONF_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lv_conf.h CACHE INTERNAL "LV_CONF_PATH")
 
 set(BUILD_NATIVE OFF CACHE BOOL "Build wasm3 with native support")
+set(BUILD_LVGL_SIMULATOR OFF CACHE BOOL "Build as lvgl simulator")
 
 find_path(LVGL_PATH lvgl.h PATHS ${CMAKE_CURRENT_SOURCE_DIR}/deps PATH_SUFFIXES lvgl)
 
+if (MSVC)
+    set(CMAKE_CXX_STANDARD 23)
+else()
+    set(CMAKE_CXX_STANDARD 14)
+endif()
+
 add_executable(lvgljs
     src/engine/engine.cpp
+    src/engine/hal/framebuffer32_to_rgba.c
+    src/engine/hal/screenshot.cpp
     src/render/native/core/style/style.cpp
     src/render/native/core/style/font/font.cpp
     src/render/native/core/event/value_change/value_change.cpp
@@ -18,6 +27,9 @@ add_executable(lvgljs
     src/render/native/core/event/select/select.cpp
     src/render/native/core/event/click/click.cpp
     src/render/native/core/refresh/refresh.cpp
+    src/render/native/core/lv_conf/lv_conf.cpp
+    src/render/native/core/lv_conf/lv_anim_path.cpp
+    src/render/native/core/lv_conf/lv_style_prop_extend.cpp
     src/render/native/core/utils/utils.cpp
     src/render/native/core/theme/theme.cpp
     src/render/native/core/dimensions/dimensions.cpp
@@ -74,16 +86,25 @@ add_executable(lvgljs
     src/render/native/bootstrap/render_bootstrap.cpp
 )
 
-if(${CMAKE_BUILD_TYPE} MATCHES Simulator)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb -std=c++14")
+if(BUILD_LVGL_SIMULATOR)
+    if (MSVC)
+        add_compile_options("/utf-8")
+        target_compile_definitions(lvgljs PRIVATE WIN32_LEAN_AND_MEAN)
+    else()
+        add_compile_options(-Wno-error=unused-but-set-variable)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -Wall -g -ggdb")
+    endif()
     set(BUILD_WITH_MIMALLOC OFF) # TODO: SDL and mimalloc don't play well together
     add_definitions(-DIS_SIM)
+    # LVGL v9 ships its own SDL drivers, so the lvgl target needs the SDL2
+    # headers too. Find SDL2 before adding the lvgl subdirectory.
+    find_package(SDL2 REQUIRED)
     target_sources(lvgljs PRIVATE
         src/engine/hal/simulator/simulator.cpp
         src/engine/hal/simulator/mouse_cursor_icon.c
     )
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -std=c++14")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall")
     add_definitions(-DIS_DEVICE)
     target_sources(lvgljs PRIVATE
         src/engine/hal/device/device.cpp
@@ -92,11 +113,13 @@ endif()
 
 add_subdirectory(deps/txiki EXCLUDE_FROM_ALL)
 add_subdirectory(deps/lvgl EXCLUDE_FROM_ALL)
-add_subdirectory(deps/lv_drivers EXCLUDE_FROM_ALL)
+
+if(BUILD_LVGL_SIMULATOR)
+    target_include_directories(lvgl PRIVATE ${SDL2_INCLUDE_DIRS})
+endif()
 
 target_include_directories(lvgljs PUBLIC
     ${LVGL_PATH}
-    deps
     src/
     src/engine
     src/engine/hal
@@ -111,11 +134,8 @@ target_include_directories(lvgljs PUBLIC
 target_link_libraries(lvgljs PUBLIC
     tjs
     lvgl
-    lv_drivers
 )
 
-if(${CMAKE_BUILD_TYPE} MATCHES Simulator)
-    find_package(SDL2 REQUIRED)
-    target_include_directories(lv_drivers PUBLIC ${SDL2_INCLUDE_DIRS})
+if(BUILD_LVGL_SIMULATOR)
     target_link_libraries(lvgljs PUBLIC ${SDL2_LIBRARIES})
 endif()

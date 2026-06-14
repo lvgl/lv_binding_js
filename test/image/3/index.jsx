@@ -1,12 +1,17 @@
 import { View, Render, Dimensions, EAlignType, Image, Animate } from 'lvgljs-ui';
 import React, { useEffect, useRef } from 'react';
 
+const captureMode = tjs.env.TEST_CAPTURE === '1';
 const { width, height } = Dimensions.window
 
 function App () {
     const ref = useRef()
 
     useEffect(() => {
+        if (captureMode) {
+            return
+        }
+
         const animate = Animate.parallel([
             Animate.timing({
                 duration: 5000,

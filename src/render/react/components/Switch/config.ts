@@ -20,5 +20,4 @@ export default class SwitchConfig implements LvgljsComponentConfig<SwitchProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

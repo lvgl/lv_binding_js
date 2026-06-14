@@ -20,5 +20,4 @@ export default class ButtonConfig implements LvgljsComponentConfig<ButtonProps, 
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

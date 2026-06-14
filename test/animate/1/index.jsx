@@ -1,10 +1,21 @@
 import { View, Render, Text, Image, EAlignType, Animate, EAnimateEasingFunc } from 'lvgljs-ui';
 import React, { useRef, useEffect } from 'react';
 
+const captureMode = tjs.env.TEST_CAPTURE === '1';
+
 function App () {
     const ref = useRef()
 
     useEffect(() => {
+        if (captureMode) {
+            ref.current?.setStyle({
+                left: 200,
+                width: 30,
+                height: 30,
+            })
+            return
+        }
+
         try {
             const animate = Animate.parallel([
                 Animate.timing({

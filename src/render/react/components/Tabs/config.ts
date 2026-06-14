@@ -20,5 +20,4 @@ export default class TabsConfig implements LvgljsComponentConfig<TabsProps, Tabs
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

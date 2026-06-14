@@ -1,9 +1,19 @@
 import { Chart, Render, View, Text, EAlignType } from 'lvgljs-ui';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef } from 'react';
+
+const captureMode = tjs.env.TEST_CAPTURE === '1';
+
+let captureRndStep = 0;
 
 function getRandom (n, m) {
-    var num = Math.floor(Math.random() * (m - n + 1) + n)
-    return num
+    if (captureMode) {
+        const step = captureRndStep++;
+        if (n === 60) {
+            return [72, 84, 68, 77, 63, 88, 71, 79, 66, 82, 74, 69][step];
+        }
+        return [18, 32, 24, 15, 28, 21, 35, 12, 27, 19, 31, 22][step - 12];
+    }
+    return Math.floor(Math.random() * (m - n + 1) + n);
 }
 
 const data1 = [

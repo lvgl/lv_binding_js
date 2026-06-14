@@ -4,6 +4,7 @@ static JSClassID RollerClassID;
 
 WRAPPED_JS_SETSTYLE(Roller, "Roller")
 WRAPPED_JS_AddEventListener(Roller, "Roller")
+WRAPPED_JS_RemoveEventListener(Roller, "Roller")
 WRAPPED_JS_Align(Roller, "Roller")
 WRAPPED_JS_Align_To(Roller, "Roller")
 STYLE_INFO(Roller, "Roller")
@@ -13,7 +14,7 @@ WRAPPED_SCROLL_INTO_VIEW(Roller, "Roller")
 WRAPPED_JS_CLOSE_COMPONENT(Roller, "Roller")
 
 static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
+    if (argc >= 3 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1]) && JS_IsBool(argv[2])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, RollerClassID);
         std::vector<std::string> items;
 
@@ -38,7 +39,7 @@ static JSValue NativeCompSetOptions(JSContext *ctx, JSValueConst this_val, int a
         }
 
         ((Roller*)(ref->comp))->setOptions(items, mode);
-        LV_LOG_USER("Roller %s setOptions", ref->uid);
+        LV_LOG_USER("Roller %s setOptions", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -50,7 +51,7 @@ static JSValue NativeCompSetSelectIndex(JSContext *ctx, JSValueConst this_val, i
         JS_ToInt32(ctx, &index, argv[0]);
 
         ((Roller*)(ref->comp))->setSelectIndex(index);
-        LV_LOG_USER("Roller %s setSelectIndex", ref->uid);
+        LV_LOG_USER("Roller %s setSelectIndex", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -62,7 +63,7 @@ static JSValue NativeCompSetVisibleRowCount(JSContext *ctx, JSValueConst this_va
         JS_ToInt32(ctx, &count, argv[0]);
 
         ((Roller*)(ref->comp))->setVisibleRowCount(count);
-        LV_LOG_USER("Roller %s setVisibleRowCount", ref->uid);
+        LV_LOG_USER("Roller %s setVisibleRowCount", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -70,6 +71,7 @@ static JSValue NativeCompSetVisibleRowCount(JSContext *ctx, JSValueConst this_va
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
@@ -81,9 +83,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue RollerConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -117,7 +116,7 @@ static JSValue RollerConstructor(JSContext *ctx, JSValueConst new_target, int ar
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Roller(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -133,14 +132,7 @@ static JSValue RollerConstructor(JSContext *ctx, JSValueConst new_target, int ar
     return JS_EXCEPTION;
 };
 
-static void RollerFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, RollerClassID);
-    LV_LOG_USER("Roller %s release", th->uid);
-    if (th) {
-        delete static_cast<Roller*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(RollerFinalizer, Roller, RollerClassID)
 
 static JSClassDef RollerClass = {
     .class_name = "Roller",
@@ -156,7 +148,6 @@ void NativeComponentRollerInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, RollerConstructor, "Roller", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Roller", obj, JS_PROP_C_W_E);
 };
 

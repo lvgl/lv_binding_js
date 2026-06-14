@@ -1,0 +1,275 @@
+{
+  "lvgl_root": "deps/lvgl/src",
+  "_fields": {
+    "header": "LVGL header path relative to lvgl_root",
+    "name": "Section label in generated lv_conf.cpp / lv_conf.ts",
+    "symbols": "Export these C symbols by name (#define or extern lv_style_prop_t / uint16_t / uint32_t; no enum parsing)",
+    "extern_type": "Auto-detect and export every `extern <type> NAME;` in the header (e.g. lv_style_prop_t); like enum_typedef but for extern declarations",
+    "define_prefix": "Auto-detect and export every object-like `#define <prefix>...` macro in the header (function-like macros are skipped)",
+    "enum_typedef": "C typedef naming the enum block to export (typedef enum {...} T, enum {...}; typedef ... T;, or enum T {...})",
+    "guard": "Wrap section in #if guard in lv_conf.cpp",
+    "renames": "Section-level: map C enum member to lv_conf export name (lv_conf.ts/cpp and alias value side). Example: _LV_EVENT_LAST -> LV_EVENT_LAST",
+    "doc": "Optional section doc in generated lv_conf.cpp / lv_conf.ts (string or string array). Member comments are parsed from enum bodies only.",
+    "relationship": "Key in scripts/data/style_relationship_report.json (e.g. css_extend) supplying symbols and doc",
+    "alias": "Optional enum alias map in lv_types.ts: export, doc, type_name (keyof alias), exclude, source (lv_conf or header), strip_prefix, strip_suffix, to_lowercase, underscore_to_hyphen (opt-in: replace _ with - after other transforms), renames (semantic alias-map keys only - applied before strip_*; does not change lv_conf export names)",
+    "function_prefix": "Auto-detect function declarations with this prefix in header order; generates lv_anim_path.cpp/.h and a numeric-index alias map (requires alias.export and export_cpp_array)",
+    "export_cpp_array": "Generated const lv_anim_path_cb_t[] name (function_prefix sections only)",
+    "stub": "When true, lv_conf.stub.ts resolves numeric literals from C headers (fake from 1 per section when unresolvable); when false/omitted, stub uses fake values from 1 per section"
+  },
+  "sections": [
+    {
+      "header": "misc/lv_area.h",
+      "name": "coord constants",
+      "symbols": ["LV_COORD_MAX"],
+      "stub": true
+    },
+    {
+      "header": "core/lv_obj_style.h",
+      "name": "lv_part_t",
+      "enum_typedef": "lv_part_t",
+      "alias": {
+        "export": "PART_TYPE",
+        "strip_prefix": "LV_",
+        "exclude": ["LV_PART_CUSTOM_FIRST", "LV_PART_ANY"],
+        "doc": "LVGL lv_part_t with LV_ prefix stripped."
+      }
+    },
+    {
+      "header": "core/lv_obj_style.h",
+      "name": "lv_state_t",
+      "enum_typedef": "lv_state_t",
+      "alias": {
+        "export": "STATE_TYPE",
+        "strip_prefix": "LV_",
+        "exclude": [
+          "LV_STATE_USER_1",
+          "LV_STATE_USER_2",
+          "LV_STATE_USER_3",
+          "LV_STATE_USER_4",
+          "LV_STATE_ANY"
+        ],
+        "doc": "LVGL lv_state_t with LV_ prefix stripped."
+      }
+    },
+    {
+      "header": "misc/lv_area.h",
+      "name": "lv_align_t",
+      "enum_typedef": "lv_align_t",
+      "alias": {
+        "export": "ALIGN_TYPE_MAP",
+        "strip_prefix": "LV_",
+        "doc": "LVGL lv_align_t values with LV_ prefix stripped for align / alignTo props."
+      }
+    },
+    {
+      "header": "misc/lv_area.h",
+      "name": "lv_dir_t",
+      "enum_typedef": "lv_dir_t",
+      "alias": {
+        "export": "LV_DIR_MAP",
+        "renames": {
+          "LV_DIR_HOR": "LV_DIR_HORIZONTAL",
+          "LV_DIR_VER": "LV_DIR_VERTICAL"
+        },
+        "strip_prefix": "LV_DIR_",
+        "to_lowercase": true,
+        "type_name": "DirMapKey",
+        "doc": "Scroll direction string -> LVGL lv_dir_t"
+      }
+    },
+    {
+      "header": "layouts/flex/lv_flex.h",
+      "name": "lv_flex_flow_t",
+      "enum_typedef": "lv_flex_flow_t",
+      "stub": true,
+      "guard": "LV_USE_FLEX",
+      "alias": {
+        "export": "LV_FLEX_FLOW_MAP",
+        "type_name": "FlexFlowMapKey",
+        "doc": "flex-direction + flex-wrap composite key -> LVGL lv_flex_flow_t",
+        "strip_prefix": "LV_FLEX_FLOW_",
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "layouts/flex/lv_flex.h",
+      "name": "lv_flex_align_t",
+      "enum_typedef": "lv_flex_align_t",
+      "stub": true,
+      "guard": "LV_USE_FLEX",
+      "alias": {
+        "export": "LV_FLEX_ALIGN_MAP",
+        "type_name": "FlexAlignMapKey",
+        "doc": "CSS flex alignment keyword -> LVGL lv_flex_align_t",
+        "renames": {
+          "LV_FLEX_ALIGN_START": "LV_FLEX_ALIGN_flex-start",
+          "LV_FLEX_ALIGN_END": "LV_FLEX_ALIGN_flex-end"
+        },
+        "strip_prefix": "LV_FLEX_ALIGN_",
+        "to_lowercase": true,
+        "underscore_to_hyphen": true
+      }
+    },
+    {
+      "header": "layouts/lv_layout.h",
+      "name": "lv_layout_t",
+      "enum_typedef": "lv_layout_t"
+    },
+    {
+      "header": "layouts/grid/lv_grid.h",
+      "name": "lv_grid_align_t",
+      "enum_typedef": "lv_grid_align_t",
+      "stub": true,
+      "guard": "LV_USE_GRID",
+      "alias": {
+        "export": "LV_GRID_ALIGN_MAP",
+        "type_name": "GridAlignMapKey",
+        "doc": "CSS grid alignment keyword -> LVGL lv_grid_align_t",
+        "strip_prefix": "LV_GRID_ALIGN_",
+        "to_lowercase": true,
+        "underscore_to_hyphen": true
+      }
+    },
+    {
+      "header": "core/lv_obj_scroll.h",
+      "name": "lv_scroll_snap_t",
+      "enum_typedef": "lv_scroll_snap_t",
+      "alias": {
+        "export": "LV_SCROLL_SNAP_MAP",
+        "type_name": "ScrollSnapMapKey",
+        "doc": "Scroll snap string -> LVGL lv_scroll_snap_t",
+        "strip_prefix": "LV_SCROLL_",
+        "renames": {
+          "LV_SCROLL_SNAP_NONE": "LV_SCROLL_none"
+        },
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "misc/lv_text.h",
+      "name": "lv_text_align_t",
+      "enum_typedef": "lv_text_align_t",
+      "alias": {
+        "export": "LV_TEXT_ALIGN_MAP",
+        "type_name": "TextAlignMapKey",
+        "doc": "text-align keyword -> LVGL lv_text_align_t",
+        "strip_prefix": "LV_TEXT_ALIGN_",
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "misc/lv_style.h",
+      "name": "lv_text_decor_t",
+      "enum_typedef": "lv_text_decor_t",
+      "alias": {
+        "export": "LV_TEXT_DECOR_MAP",
+        "type_name": "TextDecorMapKey",
+        "doc": "text-decoration keyword -> LVGL lv_text_decor_t",
+        "strip_prefix": "LV_TEXT_DECOR_",
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "misc/lv_grad.h",
+      "name": "lv_grad_dir_t",
+      "enum_typedef": "lv_grad_dir_t",
+      "alias": {
+        "export": "LV_GRAD_DIR_MAP",
+        "type_name": "GradDirMapKey",
+        "doc": "background-grad-color-dir keyword -> LVGL lv_grad_dir_t",
+        "renames": {
+          "LV_GRAD_DIR_VER": "LV_GRAD_DIR_vertical",
+          "LV_GRAD_DIR_HOR": "LV_GRAD_DIR_horizontal"
+        },
+        "strip_prefix": "LV_GRAD_DIR_",
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "misc/lv_style.h",
+      "name": "lv_border_side_t",
+      "enum_typedef": "lv_border_side_t",
+      "stub": true
+    },
+    {
+      "header": "widgets/label/lv_label.h",
+      "name": "lv_label_long_mode_t",
+      "enum_typedef": "lv_label_long_mode_t",
+      "alias": {
+        "export": "LV_LABEL_LONG_MODE_MAP",
+        "type_name": "LabelLongModeMapKey",
+        "doc": "text-overflow keyword -> LVGL lv_label_long_mode_t",
+        "renames": {
+          "LV_LABEL_LONG_MODE_DOTS": "LV_LABEL_LONG_ellipsis",
+          "LV_LABEL_LONG_MODE_WRAP": "LV_LABEL_LONG_auto",
+          "LV_LABEL_LONG_MODE_SCROLL_CIRCULAR": "LV_LABEL_LONG_circular"
+        },
+        "strip_prefix": "LV_LABEL_LONG_",
+        "to_lowercase": true
+      }
+    },
+    {
+      "header": "misc/lv_style.h",
+      "name": "lv_style_prop_meta",
+      "define_prefix": "LV_STYLE_PROP_"
+    },
+    {
+      "header": "misc/lv_style.h",
+      "name": "lv_style_prop_t",
+      "enum_typedef": "_lv_style_id_t"
+    },
+    {
+      "project_root": "repo",
+      "header": "src/render/native/core/lv_conf/lv_style_prop_extend.h",
+      "name": "lv_style_prop_t_extend_css",
+      "extern_type": "lv_style_prop_t"
+    },
+    {
+      "header": "misc/lv_event.h",
+      "name": "lv_event_code_t",
+      "enum_typedef": "lv_event_code_t",
+      "alias": {
+        "export": "EVENT_TYPE_MAP",
+        "strip_prefix": "LV_",
+        "source": "header",
+        "doc": "EVENT_* names mapped to cached NativeRender.lv_conf values."
+      }
+    },
+    {
+      "header": "widgets/arc/lv_arc.h",
+      "name": "lv_arc_mode_t",
+      "enum_typedef": "lv_arc_mode_t",
+      "guard": "LV_USE_ARC"
+    },
+    {
+      "header": "widgets/chart/lv_chart.h",
+      "name": "lv_chart_type_t",
+      "enum_typedef": "lv_chart_type_t",
+      "guard": "LV_USE_CHART"
+    },
+    {
+      "header": "widgets/keyboard/lv_keyboard.h",
+      "name": "lv_keyboard_mode_t",
+      "enum_typedef": "lv_keyboard_mode_t",
+      "guard": "LV_USE_KEYBOARD"
+    },
+    {
+      "header": "misc/lv_anim.h",
+      "name": "lv_anim_path",
+      "function_prefix": "lv_anim_path_",
+      "export_cpp_array": "lv_anim_path_funcs",
+      "alias": {
+        "export": "ANIM_PATH",
+        "type_name": "AnimPathKey",
+        "doc": "LVGL lv_anim_path_cb_t index map for CSS transition-timing-function and animation easing.",
+        "strip_prefix": "lv_anim_path_",
+        "underscore_to_hyphen": true
+      }
+    }
+  ],
+  "transition": {
+    "typoHints": {
+      "boder-post": "border-post"
+    }
+  }
+}

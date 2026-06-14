@@ -5,9 +5,13 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+import { LV_DIR_MAP } from "../../core/lv_types";
+
+const bridge = GetBridge();
 const NativeTabs = bridge.NativeRender.NativeComponents.TabView;
 
 export type TabsProps = CommonProps & {
@@ -16,7 +20,7 @@ export type TabsProps = CommonProps & {
   tabSize?: number;
 };
 
-function setTabsProps(comp, newProps: TabsProps, oldProps: TabsProps) {
+function setTabsProps(comp, newProps: TabsProps, oldProps: Partial<TabsProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Tabs", comp, newProps, oldProps }),
     onClick(fn) {
@@ -37,20 +41,14 @@ function setTabsProps(comp, newProps: TabsProps, oldProps: TabsProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 const tabPositionObj = {
-  left: 1 << 0,
-  top: 1 << 2,
-  right: 1 << 1,
-  bottom: 1 << 3,
+  left: LV_DIR_MAP.left,
+  top: LV_DIR_MAP.top,
+  right: LV_DIR_MAP.right,
+  bottom: LV_DIR_MAP.bottom,
 };
 
 export class TabsComp extends NativeTabs {
@@ -70,7 +68,7 @@ export class TabsComp extends NativeTabs {
     });
     this.currentAppendIndex = 0;
   }
-  setProps(newProps: TabsProps, oldProps: TabsProps) {
+  setProps(newProps: TabsProps, oldProps: Partial<TabsProps>) {
     this.tabs = newProps.tabs;
     setTabsProps(this, newProps, oldProps);
   }
@@ -83,11 +81,10 @@ export class TabsComp extends NativeTabs {
     this.setTab(this.tabs[this.currentAppendIndex] || "", child);
     this.currentAppendIndex++;
   }
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

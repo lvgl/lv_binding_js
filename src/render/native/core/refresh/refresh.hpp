@@ -4,11 +4,7 @@
 #include <utility>
 #include <vector>
 
-extern "C" {
-    #include "lvgl.h"
-
-    #include "private.h"
-};
+#include "lv_bindings_js.h"
 
 void NativeRenderUtilInit (JSContext* ctx, JSValue& ns);
 

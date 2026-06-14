@@ -4,6 +4,7 @@ static JSClassID ProgressBarClassID;
 
 WRAPPED_JS_SETSTYLE(ProgressBar, "ProgressBar")
 WRAPPED_JS_AddEventListener(ProgressBar, "ProgressBar")
+WRAPPED_JS_RemoveEventListener(ProgressBar, "ProgressBar")
 WRAPPED_JS_Align(ProgressBar, "ProgressBar")
 WRAPPED_JS_Align_To(ProgressBar, "ProgressBar")
 STYLE_INFO(ProgressBar, "ProgressBar")
@@ -14,20 +15,20 @@ WRAPPED_SCROLL_INTO_VIEW(ProgressBar, "ProgressBar")
 WRAPPED_JS_CLOSE_COMPONENT(ProgressBar, "ProgressBar")
 
 static JSValue NativeCompSetValue(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsBool(argv[1])) {
+    if (argc >= 2 && JS_IsNumber(argv[0]) && JS_IsBool(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ProgressBarClassID);
         int32_t value;
         JS_ToInt32(ctx, &value, argv[0]);
         bool use_animation = JS_ToBool(ctx, argv[1]);
 
         ((ProgressBar*)(ref->comp))->setValue(value, use_animation);
-        LV_LOG_USER("ProgressBar %s setValue", ref->uid);
+        LV_LOG_USER("ProgressBar %s setValue", ref->getUid());
     }
     return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 2 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, ProgressBarClassID);
         int32_t start;
         JS_ToInt32(ctx, &start, argv[0]);
@@ -35,7 +36,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
         JS_ToInt32(ctx, &end, argv[1]);
 
         ((ProgressBar*)(ref->comp))->setRange(start, end);
-        LV_LOG_USER("ProgressBar %s setRange", ref->uid);
+        LV_LOG_USER("ProgressBar %s setRange", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -43,6 +44,7 @@ static JSValue NativeCompSetRange(JSContext *ctx, JSValueConst this_val, int arg
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
@@ -54,9 +56,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ProgressBarConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -90,7 +89,7 @@ static JSValue ProgressBarConstructor(JSContext *ctx, JSValueConst new_target, i
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new ProgressBar(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -106,14 +105,7 @@ static JSValue ProgressBarConstructor(JSContext *ctx, JSValueConst new_target, i
     return JS_EXCEPTION;
 };
 
-static void ProgressBarFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ProgressBarClassID);
-    LV_LOG_USER("ProgressBar %s release", th->uid);
-    if (th) {
-        delete static_cast<ProgressBar*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ProgressBarFinalizer, ProgressBar, ProgressBarClassID)
 
 static JSClassDef ProgressBarClass = {
     .class_name = "ProgressBar",
@@ -129,7 +121,6 @@ void NativeComponentProgressBarInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ProgressBarConstructor, "ProgressBar", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "ProgressBar", obj, JS_PROP_C_W_E);
 };
 

@@ -4,6 +4,7 @@ static JSClassID CalendarClassID;
 
 WRAPPED_JS_SETSTYLE(Calendar, "Calendar")
 WRAPPED_JS_AddEventListener(Calendar, "Calendar")
+WRAPPED_JS_RemoveEventListener(Calendar, "Calendar")
 WRAPPED_JS_Align(Calendar, "Calendar")
 WRAPPED_JS_Align_To(Calendar, "Calendar")
 STYLE_INFO(Calendar, "Calendar")
@@ -13,7 +14,7 @@ WRAPPED_SCROLL_INTO_VIEW(Calendar, "Calendar")
 WRAPPED_JS_CLOSE_COMPONENT(Calendar, "Calendar")
 
 static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsArray(ctx, argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 2 && JS_IsArray(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CalendarClassID);
 
         int32_t len;
@@ -30,7 +31,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
 
         for (int i=0; i<len; i++) {
             item = JS_GetPropertyUint32(ctx, argv[0], i);
-            if (JS_IsArray(ctx, item)) {
+            if (JS_IsArray(item)) {
                 year_value = JS_GetPropertyUint32(ctx, item, 0);
                 month_value = JS_GetPropertyUint32(ctx, item, 1);
                 day_value = JS_GetPropertyUint32(ctx, item, 2);
@@ -40,7 +41,7 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
                     JS_ToInt32(ctx, &day, day_value);
 
                     num += 1;
-                    dates.push_back({ .year = static_cast<uint16_t>(year), .month = static_cast<int8_t>(month), .day = static_cast<int8_t>(day) });
+                    dates.push_back({ .year = static_cast<uint16_t>(year), .month = static_cast<uint8_t>(month), .day = static_cast<uint8_t>(day) });
                 }
 
                 JS_FreeValue(ctx, year_value);
@@ -51,13 +52,13 @@ static JSValue NativeCompSetHightLights(JSContext *ctx, JSValueConst this_val, i
         }
 
         ((Calendar*)(ref->comp))->setHighlightDates(dates, num);
-        LV_LOG_USER("Calendar %s setHighlightDates", ref->uid);
+        LV_LOG_USER("Calendar %s setHighlightDates", ref->getUid());
     }
     return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetToday (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1]) && JS_IsNumber(argv[2])) {
+    if (argc >= 3 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1]) && JS_IsNumber(argv[2])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CalendarClassID);
 
         int32_t year;
@@ -68,13 +69,13 @@ static JSValue NativeCompSetToday (JSContext *ctx, JSValueConst this_val, int ar
         JS_ToInt32(ctx, &day, argv[2]);
 
         ((Calendar*)(ref->comp))->setToday(year, month, day);
-        LV_LOG_USER("Calendar %s setToday", ref->uid);
+        LV_LOG_USER("Calendar %s setToday", ref->getUid());
     }
     return JS_UNDEFINED;
 };
 
 static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
+    if (argc >= 2 && JS_IsNumber(argv[0]) && JS_IsNumber(argv[1])) {
         COMP_REF* ref = (COMP_REF*)JS_GetOpaque(this_val, CalendarClassID);
 
         int32_t year;
@@ -83,7 +84,7 @@ static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, i
         JS_ToInt32(ctx, &month, argv[1]);
 
         ((Calendar*)(ref->comp))->setShownMonth(year, month);
-        LV_LOG_USER("Calendar %s setShownMonth", ref->uid);
+        LV_LOG_USER("Calendar %s setShownMonth", ref->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -91,6 +92,7 @@ static JSValue NativeCompSetShownMonth (JSContext *ctx, JSValueConst this_val, i
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
@@ -102,9 +104,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue CalendarConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -138,7 +137,7 @@ static JSValue CalendarConstructor(JSContext *ctx, JSValueConst new_target, int 
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Calendar(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -154,14 +153,7 @@ static JSValue CalendarConstructor(JSContext *ctx, JSValueConst new_target, int 
     return JS_EXCEPTION;
 };
 
-static void CalendarFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, CalendarClassID);
-    LV_LOG_USER("Calendar %s release", th->uid);
-    if (th) {
-        delete static_cast<Calendar*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(CalendarFinalizer, Calendar, CalendarClassID)
 
 static JSClassDef CalendarClass = {
     .class_name = "Calendar",
@@ -177,7 +169,6 @@ void NativeComponentCalendarInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, CalendarConstructor, "Calendar", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Calendar", obj, JS_PROP_C_W_E);
 };
 

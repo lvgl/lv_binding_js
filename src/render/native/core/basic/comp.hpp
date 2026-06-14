@@ -3,11 +3,10 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <unordered_map>
 
-extern "C" {
-    #include "lvgl.h"
-    #include "private.h"
-};
+
+#include "lv_bindings_js.h"
 
 enum ECOMP_TYPE {
   COMP_TYPE_VIEW,
@@ -74,11 +73,10 @@ class BasicComponent {
   
     void initStyle (int32_t type);
     virtual void initCompStyle (int32_t type);
-    void setStyle(JSContext* ctx, JSValue& obj, std::vector<std::string>& keys, int32_t type, bool isinit = true);
+    void setStyle(JSContext* ctx, JSValue& nativeStyle, int32_t type, bool isinit = true);
     bool ensureStyle (int32_t type);
 
     void appendChild(void* child);
-    void removeChild(void* child);
     void insertChildBefore(void *child);
 
     void moveToFront ();
@@ -87,6 +85,10 @@ class BasicComponent {
 
     void setAlign (int32_t align_type, int32_t x, int32_t y);
     void setAlignTo (int32_t align_type, int32_t x, int32_t y, BasicComponent* parent);
+
+    /* object that positioning (align/align_to) should be applied to;
+     * components with an internal wrapper (e.g. zoomed Chart) override this */
+    virtual lv_obj_t* alignInstance () { return this->instance; }
 };
 
 extern std::unordered_map<std::string, BasicComponent*> comp_map;

@@ -3,11 +3,17 @@
 static void ThemeDefaultInit () {
     if (theme_default_init == false) {
         theme_default_init = true;
-        memcpy(&theme_default, lv_theme_default_get(), sizeof(lv_theme_t));
+        lv_obj_t * scr = lv_screen_active();
+        theme_default.color_primary = lv_theme_get_color_primary(scr);
+        theme_default.color_secondary = lv_theme_get_color_secondary(scr);
+        theme_default.font_normal = lv_theme_get_font_normal(scr);
     }
 };
 
 static JSValue SetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSValueConst* argv) {
+    if (argc < 1 || !JS_IsObject(argv[0]))
+        return JS_UNDEFINED;
+
     ThemeDefaultInit();
 
     JSValue primary_color_value = JS_GetPropertyStr(ctx, argv[0], "primaryColor");
@@ -47,6 +53,10 @@ static JSValue SetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSValue
         font_size
     );
 
+    JS_FreeValue(ctx, primary_color_value);
+    JS_FreeValue(ctx, second_primary_value);
+    JS_FreeValue(ctx, font_size_value);
+
     return JS_UNDEFINED;
 };
 
@@ -64,7 +74,7 @@ static JSValue ResetTheme(JSContext* ctx, JSValueConst this_val, int argc, JSVal
 };
 
 static const JSCFunctionListEntry theme_funcs[] = {
-    TJS_CFUNC_DEF("setTheme", 1, SetTheme),
+    TJS_CFUNC_DEF("setTheme", 0, SetTheme),
     TJS_CFUNC_DEF("resetTheme", 0, ResetTheme),
 };
 

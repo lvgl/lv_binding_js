@@ -4,24 +4,21 @@ static JSClassID MaskClassID;
 
 WRAPPED_JS_SETSTYLE(Mask, "Mask")
 WRAPPED_JS_AddEventListener(Mask, "Mask")
+WRAPPED_JS_RemoveEventListener(Mask, "Mask")
 STYLE_INFO(Mask, "Mask")
 WRAPPED_APPEND_CHILD(Mask,"Mask")
-WRAPPED_REMOVE_CHILD(Mask,"Mask")
 WRAPPED_INSERT_CHILD(Mask,"Mask")
 WRAPPED_JS_CLOSE_COMPONENT(Mask, "Mask")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue MaskConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -55,7 +52,7 @@ static JSValue MaskConstructor(JSContext *ctx, JSValueConst new_target, int argc
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Mask(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -71,14 +68,7 @@ static JSValue MaskConstructor(JSContext *ctx, JSValueConst new_target, int argc
     return JS_EXCEPTION;
 };
 
-static void MaskFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, MaskClassID);
-    LV_LOG_USER("Mask %s release", th->uid);
-    if (th) {
-        delete static_cast<Mask*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(MaskFinalizer, Mask, MaskClassID)
 
 static JSClassDef MaskClass = {
     .class_name = "Mask",
@@ -94,7 +84,6 @@ void NativeComponentMaskInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, MaskConstructor, "Mask", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Mask", obj, JS_PROP_C_W_E);
 };
 

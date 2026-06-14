@@ -1,41 +1,25 @@
-import { PixelOrPercent, ProcessEnum, ProcessPx, ProcessPxOrPercent } from "../util";
+import { CSS_POSITION_MAP, type PosStyleType } from "../type";
+import { NormalizeCoord } from "../util";
+import { StyleTransformResult } from "../batch";
 
-const obj = {
-  height: ProcessPxOrPercent,
-  "max-height": ProcessPxOrPercent,
-  "min-height": ProcessPxOrPercent,
-  width: ProcessPxOrPercent,
-  "max-width": ProcessPxOrPercent,
-  "min-width": ProcessPxOrPercent,
-  left: ProcessPxOrPercent,
-  top: ProcessPxOrPercent,
-  "row-spacing": ProcessPxOrPercent,
-  "column-spacing": ProcessPxOrPercent,
-  position: ProcessEnum({
-    absolute: "absolute",
-    fixed: "fixed",
-  }),
-};
-const keys = Object.keys(obj);
+const COORD_KEYS = [
+  "height",
+  "max-height",
+  "min-height",
+  "width",
+  "max-width",
+  "min-width",
+  "left",
+  "top",
+  "row-spacing",
+  "column-spacing",
+] as const;
 
-export type PosStyleType = {
-  height?: PixelOrPercent;
-  "max-height"?: PixelOrPercent;
-  "min-height"?: PixelOrPercent;
-  width?: PixelOrPercent;
-  "max-width"?: PixelOrPercent;
-  "min-width"?: PixelOrPercent;
-  left?: PixelOrPercent;
-  top?: PixelOrPercent;
-  "row-spacing"?: PixelOrPercent;
-  "column-spacing"?: PixelOrPercent;
-  position?: "absolute" | "fixed";
-};
+export function PosStyle(style: PosStyleType, result: StyleTransformResult) {
+  const batch = result.batch;
 
-export function PosStyle(style: PosStyleType, result, compName) {
-  keys.forEach((key) => {
-    if (style[key] !== void 0) {
-      obj[key](key, style[key], result);
-    }
-  });
+  for (const key of COORD_KEYS) {
+    batch.pushStyle(style, key, NormalizeCoord);
+  }
+  batch.pushStyleEnum(style, "position", CSS_POSITION_MAP);
 }

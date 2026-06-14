@@ -8,7 +8,7 @@ setup:
 
 simulator:
 	@mkdir -p $(BUILD_SIM)
-	cmake -B "$(BUILD_SIM)" -DCMAKE_BUILD_TYPE=Simulator
+	cmake -B "$(BUILD_SIM)" -DCMAKE_BUILD_TYPE=Release -DBUILD_LVGL_SIMULATOR=ON
 	cmake --build $(BUILD_SIM) -j
 
 # Set default project argument to 'widgets' if no project is provided

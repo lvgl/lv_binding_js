@@ -1,7 +1,5 @@
 #pragma once
 
-extern "C" {
-    #include "private.h"
-};
+#include "lv_bindings_js.h"
 
 TJSRuntime* GetRuntime();

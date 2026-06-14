@@ -4,24 +4,21 @@ static JSClassID WindowClassID;
 
 WRAPPED_JS_SETSTYLE(Window, "Window")
 WRAPPED_JS_AddEventListener(Window, "Window")
+WRAPPED_JS_RemoveEventListener(Window, "Window")
 STYLE_INFO(Window, "Window")
 WRAPPED_APPEND_CHILD(Window,"Window")
-WRAPPED_REMOVE_CHILD(Window,"Window")
 WRAPPED_INSERT_CHILD(Window,"Window")
 WRAPPED_JS_CLOSE_COMPONENT(Window, "Window")
 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
-    TJS_CFUNC_DEF("nativeSetStyle", 4, NativeCompSetStyle),
-    TJS_CFUNC_DEF("addEventListener", 4, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
+    TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
     TJS_CFUNC_DEF("getBoundingClientRect", 0, GetStyleBoundClinetRect),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -55,7 +52,7 @@ static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int ar
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Window(uid);
 
     JS_FreeCString(ctx, uid);
@@ -71,14 +68,7 @@ static JSValue WindowConstructor(JSContext *ctx, JSValueConst new_target, int ar
     return JS_EXCEPTION;
 };
 
-static void WindowFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, WindowClassID);
-    LV_LOG_USER("Window %s release", th->uid);
-    if (th) {
-        delete static_cast<Window*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(WindowFinalizer, Window, WindowClassID)
 
 static JSClassDef WindowClass = {
     .class_name = "Window",
@@ -94,7 +84,6 @@ void NativeComponentWindowInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, WindowConstructor, "Window", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Window", obj, JS_PROP_C_W_E);
 };
 

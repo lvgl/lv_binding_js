@@ -20,5 +20,4 @@ export default class TextareaConfig implements LvgljsComponentConfig<TextAreaPro
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

@@ -1,7 +1,9 @@
 import { View, Render, GIF, EAlignType, Dimensions } from 'lvgljs-ui';
-import React, { useState } from 'react';
+import React from 'react';
 
 const { width, height } = Dimensions.window
+
+const captureMode = tjs.env.TEST_CAPTURE === '1';
 
 function App () {
     return (
@@ -10,8 +12,9 @@ function App () {
                 align={{
                     type: EAlignType.ALIGN_CENTER,
                 }}
+                paused={captureMode}
                 style={style.gif}
-                src="http://p0.itc.cn/q_70/images03/20200807/9405b7432e34421b866f35a087812b6f.gif"
+                src={"./sample.gif"}
             />
         </View>
     )

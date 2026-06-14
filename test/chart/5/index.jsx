@@ -1,9 +1,18 @@
 import { Chart, Render, Line, EAlignType } from 'lvgljs-ui';
 import React, { useState, useEffect } from 'react';
 
+const captureMode = tjs.env.TEST_CAPTURE === '1';
+
+let captureRndStep = 0;
+
 function getRandom (n, m) {
-    var num = Math.floor(Math.random() * (m - n + 1) + n)
-    return num
+    if (captureMode) {
+        const pt = Math.floor(captureRndStep / 2);
+        const isY = captureRndStep++ % 2 === 1;
+        const span = m - n + 1;
+        return ((pt * (isY ? 37 : 17) + (isY ? 11 : 23)) % span) + n;
+    }
+    return Math.floor(Math.random() * (m - n + 1) + n);
 }
 
 let index = 0
@@ -12,6 +21,8 @@ function App () {
     const [data, setData] = useState(Array(50).fill(0).map(item => [getRandom(0, 200), getRandom(0, 1000)]))
 
     useEffect(() => {
+        if (captureMode) return;
+
         setInterval(() => {
             const d = [...data]
             d[index] = [getRandom(0, 200), getRandom(0, 1000)]

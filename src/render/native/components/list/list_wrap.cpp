@@ -4,6 +4,7 @@ static JSClassID ListClassID;
 
 WRAPPED_JS_SETSTYLE(List, "List")
 WRAPPED_JS_AddEventListener(List, "List")
+WRAPPED_JS_RemoveEventListener(List, "List")
 WRAPPED_JS_Align(List, "List")
 WRAPPED_JS_Align_To(List, "List")
 STYLE_INFO(List, "List")
@@ -12,18 +13,6 @@ WRAPPED_MOVE_TO_BACKGROUND(List, "List")
 WRAPPED_SCROLL_INTO_VIEW(List, "List")
 WRAPPED_JS_CLOSE_COMPONENT(List, "List")
 
-static JSValue NativeCompRemoveChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-    if (argc >= 1 && JS_IsObject(argv[0])) {
-        JSClassID _class_id;
-        COMP_REF* child = (COMP_REF*)JS_GetAnyOpaque(argv[0], &_class_id);
-        COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
-
-        ((List*)(parent->comp))->removeChild((void*)(child->comp));
-        LV_LOG_USER("List %s remove child %s", parent->uid, child->uid);
-    }
-    return JS_UNDEFINED;
-};
-
 static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
     if (argc >= 1 && JS_IsObject(argv[0])) {
         JSClassID _class_id;
@@ -31,7 +20,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
         COMP_REF* parent = (COMP_REF*)JS_GetOpaque(this_val, ListClassID);
 
         ((List*)(parent->comp))->appendChild((void*)(child->comp));
-        LV_LOG_USER("List %s append child %s", parent->uid, child->uid);
+        LV_LOG_USER("List %s append child %s", parent->getUid(), child->getUid());
     }
     return JS_UNDEFINED;
 };
@@ -39,7 +28,7 @@ static JSValue NativeCompAppendChild(JSContext *ctx, JSValueConst this_val, int 
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
@@ -49,9 +38,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ListConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -85,7 +71,7 @@ static JSValue ListConstructor(JSContext *ctx, JSValueConst new_target, int argc
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new List(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -101,14 +87,7 @@ static JSValue ListConstructor(JSContext *ctx, JSValueConst new_target, int argc
     return JS_EXCEPTION;
 };
 
-static void ListFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ListClassID);
-    LV_LOG_USER("List %s release", th->uid);
-    if (th) {
-        delete static_cast<List*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ListFinalizer, List, ListClassID)
 
 static JSClassDef ListClass = {
     .class_name = "List",
@@ -124,7 +103,6 @@ void NativeComponentListInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ListConstructor, "List", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "List", obj, JS_PROP_C_W_E);
 };
 

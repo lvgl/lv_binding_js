@@ -21,5 +21,4 @@ export default class ArcConfig implements LvgljsComponentConfig<ArcProps, ArcCom
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

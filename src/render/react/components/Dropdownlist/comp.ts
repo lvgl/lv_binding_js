@@ -7,9 +7,12 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeDropdownlist = bridge.NativeRender.NativeComponents.Dropdownlist;
 
 export type DropdownListProps = CommonProps & {
@@ -23,7 +26,7 @@ export type DropdownListProps = CommonProps & {
   onChange?: (event: OnChangeEvent) => void;
 };
 
-function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListProps) {
+function setListProps(comp, newProps: DropdownListProps, oldProps: Partial<DropdownListProps>) {
   const setter = {
     ...CommonComponentApi({
       compName: "Dropdownlist",
@@ -70,13 +73,7 @@ function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListP
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class DropdownlistComp extends NativeDropdownlist {
@@ -94,18 +91,17 @@ export class DropdownlistComp extends NativeDropdownlist {
       },
     });
   }
-  setProps(newProps: DropdownListProps, oldProps: DropdownListProps) {
+  setProps(newProps: DropdownListProps, oldProps: Partial<DropdownListProps>) {
     setListProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Dropdownlist";
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

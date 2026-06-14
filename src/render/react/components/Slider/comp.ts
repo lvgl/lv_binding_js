@@ -6,9 +6,12 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeSlider = bridge.NativeRender.NativeComponents.Slider;
 
 export type SliderProps = CommonProps & {
@@ -22,7 +25,7 @@ export type SliderProps = CommonProps & {
   value: number;
 };
 
-function setSliderProps(comp, newProps: SliderProps, oldProps: SliderProps) {
+function setSliderProps(comp, newProps: SliderProps, oldProps: Partial<SliderProps>) {
   const setter = {
     ...CommonComponentApi({ compName: "Slider", comp, newProps, oldProps }),
     indicatorStyle(styleSheet) {
@@ -91,13 +94,7 @@ function setSliderProps(comp, newProps: SliderProps, oldProps: SliderProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class SliderComp extends NativeSlider {
@@ -115,22 +112,17 @@ export class SliderComp extends NativeSlider {
       },
     });
   }
-  setProps(newProps: SliderProps, oldProps: SliderProps) {
+  setProps(newProps: SliderProps, oldProps: Partial<SliderProps>) {
     setSliderProps(this, newProps, oldProps);
   }
   insertBefore(child, beforeChild) {}
   static tagName = "Slider";
   appendInitialChild(child) {}
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

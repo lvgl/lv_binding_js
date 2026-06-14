@@ -1,56 +1,34 @@
-import { ArcStyle, ArcStyleType } from "./pipe/arc";
-import { BackgroundStyle, BackgroundStyleType } from "./pipe/background";
-import { BorderStyle, BorderStyleType } from "./pipe/border";
-import { DisplayStyle, DisplayStyleType } from "./pipe/display";
-import { FlexStyle, FlexStyleType } from "./pipe/flex";
-import { GridStyle, GridStyleType } from "./pipe/grid";
-import { LineStyle, LineStyleType } from "./pipe/line";
-import { MiscStyle, MiscStyleType } from "./pipe/misc";
-import { OpacityStyle, OpacityStyleProp } from "./pipe/opacity";
-import { OutlineStyle, OutlineStyleType } from "./pipe/outline";
-import { PaddingStyle, PaddingStyleType } from "./pipe/padding";
-import { PosStyle, PosStyleType } from "./pipe/pos";
-import { ScrollStyle, ScrollStyleType } from "./pipe/scoll";
-import { ShadowStyle, ShadowStyleType } from "./pipe/shadow";
-import { TextStyle, TextStyleType } from "./pipe/text";
-import { TransStyle, TransStyleType } from "./pipe/trans";
+import { ArcStyle } from "./pipe/arc";
+import { BackgroundStyle } from "./pipe/background";
+import { BorderStyle } from "./pipe/border";
+import { DisplayStyle } from "./pipe/display";
+import { FlexStyle } from "./pipe/flex";
+import { GridStyle } from "./pipe/grid";
+import { LineStyle } from "./pipe/line";
+import { MiscStyle } from "./pipe/misc";
+import { OpacityStyle } from "./pipe/opacity";
+import { OutlineStyle } from "./pipe/outline";
+import { PaddingStyle } from "./pipe/padding";
+import { PosStyle } from "./pipe/pos";
+import { ScrollStyle } from "./pipe/scroll";
+import { ShadowStyle } from "./pipe/shadow";
+import { TextStyle } from "./pipe/text";
+import { TransStyle } from "./pipe/trans";
 import { PostProcessStyle } from "./post";
 
-class StyleSheet {
-  static transformStyle: (style, compName) => {};
+import type { StyleProps, StyleType } from "./type";
+import { StyleBatch, StyleTransformResult } from "./batch";
 
-  static pipeline(args: any[]) {
-    StyleSheet.transformStyle = (style, compName) => {
-      const result = {};
-      args.reduce((_, func) => func(style, result, compName), null);
-      return result;
-    };
-  }
+/** Stage function in the style transform pipeline. */
+export type StylePipelineFn = (
+  style: StyleType,
+  result: StyleTransformResult,
+  compName?: string,
+) => void;
 
-  static transform(style, compName) {
-    const result = StyleSheet.transformStyle(style, compName);
-
-    return result;
-  }
-
-  static create() {
-    return new Proxy(
-      { __dirty: true },
-      {
-        set(obj, prop, value) {
-          if (prop !== "__dirty") {
-            obj[prop] = value;
-            obj.__dirty = true;
-          } else {
-            obj.__dirty = value;
-          }
-        },
-      },
-    );
-  }
-}
-
-StyleSheet.pipeline([
+// FlexStyle/GridStyle declare the display-narrowed slice of StyleType as their
+// parameter; the merged runtime style is a plain dict, so widen them here.
+const StylePipelineList = [
   FlexStyle,
   GridStyle,
   TextStyle,
@@ -67,7 +45,21 @@ StyleSheet.pipeline([
   ShadowStyle,
   DisplayStyle,
   ArcStyle,
-]);
+] as readonly StylePipelineFn[];
+
+function transformStyle(
+  style: StyleType,
+  compName: string,
+): NativeStylePayload {
+  const result: StyleTransformResult = {
+    batch: new StyleBatch(),
+    transition: undefined,
+  };
+  for (const func of StylePipelineList) {
+    func(style, result, compName);
+  }
+  return { batch: result.batch.get(), transition: result.transition };
+}
 
 export function setStyle({
   comp,
@@ -82,40 +74,28 @@ export function setStyle({
   styleSheet: StyleProps;
   compName: string;
   styleType: number;
-  oldStyleSheet: StyleProps| null;
+  oldStyleSheet: StyleProps | null;
   isInit?: boolean;
-  defaultStyle?: any;
+  defaultStyle?: Record<string, unknown>;
 }) {
   if (!styleSheet) return;
   styleSheet = Array.isArray(styleSheet) ? styleSheet : [styleSheet];
   oldStyleSheet = Array.isArray(oldStyleSheet)
     ? oldStyleSheet
-    : [oldStyleSheet];
+    : oldStyleSheet
+      ? [oldStyleSheet]
+      : [];
   const maybeChange = styleSheet.some((item, i) => item !== oldStyleSheet[i]);
 
   if (!maybeChange) return;
-  styleSheet = Object.assign({}, defaultStyle, ...styleSheet);
-  const result = StyleSheet.transform(styleSheet, compName);
-
-  const keys = Object.keys(result);
-  comp.nativeSetStyle(result, keys, keys.length, styleType, isInit);
+  const mergedStyle = Object.assign(
+    {},
+    defaultStyle,
+    ...styleSheet,
+  ) as StyleType;
+  const nativeStyle = transformStyle(mergedStyle, compName);
+  comp.nativeSetStyle(nativeStyle, styleType, isInit);
   PostProcessStyle({ comp, styleSheet, styleType });
 }
 
-type StyleType = 
-& ArcStyleType
-& BackgroundStyleType
-& BorderStyleType
-& (DisplayStyleType | FlexStyleType | GridStyleType)
-& LineStyleType
-& MiscStyleType
-& OpacityStyleProp
-& OutlineStyleType
-& PaddingStyleType
-& PosStyleType
-& ScrollStyleType
-& ShadowStyleType
-& TextStyleType
-& TransStyleType;
-
-export type StyleProps =  StyleType | StyleType[];
+export type { StyleProps } from "./type";

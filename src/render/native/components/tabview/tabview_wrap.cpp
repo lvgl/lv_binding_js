@@ -4,12 +4,12 @@ static JSClassID TabViewClassID;
 
 WRAPPED_JS_SETSTYLE(TabView, "TabView")
 WRAPPED_JS_AddEventListener(TabView, "TabView")
+WRAPPED_JS_RemoveEventListener(TabView, "TabView")
 WRAPPED_JS_Align(TabView, "TabView")
 WRAPPED_JS_Align_To(TabView, "TabView")
 STYLE_INFO(TabView, "TabView")
 WRAPPED_JS_BACKGROUND_IMAGE(TabView,"TabView")
 WRAPPED_APPEND_CHILD(TabView,"TabView")
-WRAPPED_REMOVE_CHILD(TabView,"TabView")
 WRAPPED_INSERT_CHILD(TabView,"TabView")
 WRAPPED_MOVE_TO_FRONT(TabView, "TabView")
 WRAPPED_MOVE_TO_BACKGROUND(TabView, "TabView")
@@ -17,7 +17,7 @@ WRAPPED_SCROLL_INTO_VIEW(TabView, "TabView")
 WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 
 // static JSValue NativeCompSetTabs(JSContext *ctx, JSValueConst this_val, int argc, JSValueConst *argv) {
-//     if (argc >= 1 && JS_IsArray(ctx, argv[0])) {
+//     if (argc >= 1 && JS_IsArray(argv[0])) {
 //         COMP_REF* ref = (COMP_REF*)JS_GetOpaque3(this_val);
 
 //         COMP_REF* ref_content;
@@ -47,7 +47,7 @@ WRAPPED_JS_CLOSE_COMPONENT(TabView, "TabView")
 
 //         JS_FreeValue(ctx, len_value);
 
-//         LV_LOG_USER("TabView %s setTab", ref->uid);
+//         LV_LOG_USER("TabView %s setTab", ref->getUid());
 //     };
 //     return JS_UNDEFINED;
 // };
@@ -66,7 +66,7 @@ static JSValue NativeCompSetTab(JSContext *ctx, JSValueConst this_val, int argc,
         static_cast<TabView*>(ref->comp)->setTab(str, static_cast<BasicComponent*>(ref_content->comp));
         JS_FreeCString(ctx, str_ori);
 
-        LV_LOG_USER("TabView %s setTab child %s", ref->uid, ref_content->uid);
+        LV_LOG_USER("TabView %s setTab child %s", ref->getUid(), ref_content->getUid());
     };
     return JS_UNDEFINED;
 };
@@ -75,7 +75,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("setTab", 0, NativeCompSetTab),
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -87,9 +87,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue TabViewConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -136,7 +133,7 @@ static JSValue TabViewConstructor(JSContext *ctx, JSValueConst new_target, int a
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new TabView(uid, pos, size, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -152,14 +149,7 @@ static JSValue TabViewConstructor(JSContext *ctx, JSValueConst new_target, int a
     return JS_EXCEPTION;
 };
 
-static void TabViewFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, TabViewClassID);
-    LV_LOG_USER("TabView %s release", th->uid);
-    if (th) {
-        delete static_cast<TabView*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(TabViewFinalizer, TabView, TabViewClassID)
 
 static JSClassDef TabViewClass = {
     .class_name = "TabView",
@@ -175,7 +165,6 @@ void NativeComponentTabViewInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, TabViewConstructor, "TabView", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "TabView", obj, JS_PROP_C_W_E);
 };
 

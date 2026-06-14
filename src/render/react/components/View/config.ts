@@ -20,5 +20,4 @@ export default class ViewConfig implements LvgljsComponentConfig<ViewProps, View
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

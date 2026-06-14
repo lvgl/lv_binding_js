@@ -5,11 +5,7 @@
 #include <mutex>
 #include <string>
 
-extern "C" {
-    #include "lvgl.h"
-
-    #include "private.h"
-};
+#include "lv_bindings_js.h"
 
 template<size_t BlockSize, size_t BlockNum = 10>
 class MemoryPool {

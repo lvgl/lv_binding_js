@@ -17,6 +17,8 @@ class GIF final : public BasicComponent {
   uint8_t* gif_buf = nullptr;
 
   void setGIFBinary(uint8_t* buf, size_t len);
+  void pause();
+  void resume();
 
   void virtual initCompStyle (int32_t type);
 };

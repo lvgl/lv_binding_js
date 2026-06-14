@@ -9,8 +9,8 @@ GIF::GIF(std::string uid, lv_obj_t* parent): BasicComponent(uid) {
     lv_group_add_obj(lv_group_get_default(), this->instance);
 
     lv_obj_clear_flag(this->instance, LV_OBJ_FLAG_SCROLL_ON_FOCUS);
-    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE | LV_OBJ_FLAG_CLICKABLE);
-    lv_img_set_size_mode(this->instance, LV_IMG_SIZE_MODE_REAL);
+    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_EVENT_BUBBLE);
+    lv_obj_add_flag(this->instance, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_set_user_data(this->instance, this);
     this->initStyle(LV_PART_MAIN);
 };
@@ -32,6 +32,26 @@ void GIF::setGIFBinary(uint8_t* buf, size_t len) {
     if (prev_desc != nullptr) {
         free(prev_desc);
     }
+};
+
+void GIF::pause() {
+#if LV_USE_GIF
+    if (this->instance == nullptr) {
+        return;
+    }
+
+    lv_gif_pause(this->instance);
+#endif
+};
+
+void GIF::resume() {
+#if LV_USE_GIF
+    if (this->instance == nullptr) {
+        return;
+    }
+
+    lv_gif_resume(this->instance);
+#endif
 };
 
 GIF::~GIF () {

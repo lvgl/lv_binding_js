@@ -20,5 +20,4 @@ export default class ImageConfig implements LvgljsComponentConfig<ImageProps, Im
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

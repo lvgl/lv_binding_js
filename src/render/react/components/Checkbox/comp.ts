@@ -6,9 +6,12 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeView = bridge.NativeRender.NativeComponents.Checkbox;
 
 export type CheckboxProps = CommonProps & {
@@ -75,13 +78,7 @@ function setCheckboxProps(comp, newProps: CheckboxProps, oldProps: CheckboxProps
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class CheckboxComp extends NativeView {
@@ -102,22 +99,13 @@ export class CheckboxComp extends NativeView {
   setProps(newProps: CheckboxProps, oldProps: CheckboxProps) {
     setCheckboxProps(this, newProps, oldProps);
   }
-  insertBefore(child, beforeChild) {
-    this.insertChildBefore(child, beforeChild);
-  }
-  appendInitialChild(child) {
-    this.appendChild(child);
-  }
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  insertBefore(child, beforeChild) {}
+  appendInitialChild(child) {}
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

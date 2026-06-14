@@ -20,5 +20,4 @@ export default class ChartConfig implements LvgljsComponentConfig<ChartProps, Ch
   insertBefore(child, beforeChild) {}
   appendInitialChild(child) {}
   appendChild(child) {}
-  removeChild(child) {}
 }

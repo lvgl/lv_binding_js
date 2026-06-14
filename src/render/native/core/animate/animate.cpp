@@ -1,22 +1,15 @@
 #include "animate.hpp"
 
 #include "engine.hpp"
+#include "native/core/lv_conf/lv_anim_path.h"
+
+#include <unordered_map>
 
 static JSClassID AnimateClassID;
 
 static MemoryPool<sizeof(lv_anim_t), 30> animate_pool;
 
 std::unordered_map<int32_t, lv_anim_t*> animate_map;
-
-static std::unordered_map<std::string, lv_anim_path_cb_t> animate_funcs = {
-    { "linear", &lv_anim_path_linear },
-    { "ease-in", &lv_anim_path_ease_in },
-    { "ease-out", &lv_anim_path_ease_out },
-    { "ease-in-out", &lv_anim_path_ease_in_out },
-    { "overshoot", &lv_anim_path_overshoot },
-    { "bounce", &lv_anim_path_bounce },
-    { "step", &lv_anim_path_step },
-};
 
 static void Animate_Exec_Callback (void* opaque, int32_t v) {
     JSValue argv[2];
@@ -160,11 +153,9 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         int32_t repeat_count;
         JSValue repeat_count_value;
 
-        size_t func_len;
-        const char* func;
+        int32_t func_idx = 0;
         JSValue func_value;
-        std::string func_str;
-        lv_anim_path_cb_t path_func = lv_anim_path_linear;
+        lv_anim_path_cb_t path_func = lv_anim_path_funcs[0];
 
         lv_anim_set_var(animate, ref);
 
@@ -221,14 +212,13 @@ static JSValue NativeAnimateStart(JSContext *ctx, JSValueConst this_val, int arg
         JS_FreeValue(ctx, repeat_count_value);
 
         func_value = JS_GetPropertyStr(ctx, argv[0], "easing");
-        func = JS_ToCStringLen(ctx, &func_len, func_value);
-        func_str = func;
-        func_str.resize(func_len);
-        if (animate_funcs.find(func_str) != animate_funcs.end()) {
-            path_func = animate_funcs.at(func_str);
+        if (JS_IsNumber(func_value)) {
+            JS_ToInt32(ctx, &func_idx, func_value);
+            if (func_idx >= 0 && static_cast<size_t>(func_idx) < LV_ANIM_PATH_COUNT) {
+                path_func = lv_anim_path_funcs[func_idx];
+            }
         }
         lv_anim_set_path_cb(animate, path_func);
-        JS_FreeCString(ctx, func);
         JS_FreeValue(ctx, func_value);
 
         lv_anim_start(animate);
@@ -285,9 +275,6 @@ static JSClassDef AnimateClass = {
     .finalizer = AnimateFinalizer,
 };
 
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
-};
-
 void NativeAnimateInit (JSContext* ctx, JSValue ns) {
     JS_NewClassID(JS_GetRuntime(ctx), &AnimateClassID);
     JS_NewClass(JS_GetRuntime(ctx), AnimateClassID, &AnimateClass);
@@ -297,6 +284,5 @@ void NativeAnimateInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, AnimateConstructor, "Animate", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Animate", obj, JS_PROP_C_W_E);
 };

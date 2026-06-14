@@ -16,7 +16,7 @@ static JSClassDef SelectEventWrapClass = {
 
 static JSValue GetValue (JSContext* ctx, JSValueConst this_val) {
     lv_event_t* e = static_cast<lv_event_t*>(JS_GetOpaque(this_val, WrapSelectEventID));
-    BasicComponent* comp = static_cast<BasicComponent*>(e->user_data);
+    BasicComponent* comp = static_cast<BasicComponent*>(lv_event_get_user_data(e));
     ECOMP_TYPE comp_type = comp->type;
     int32_t value_num = 0;
 

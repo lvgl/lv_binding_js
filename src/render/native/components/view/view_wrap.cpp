@@ -4,12 +4,12 @@ static JSClassID ViewClassID;
 
 WRAPPED_JS_SETSTYLE(View, "View")
 WRAPPED_JS_AddEventListener(View, "View")
+WRAPPED_JS_RemoveEventListener(View, "View")
 WRAPPED_JS_Align(View, "View")
 WRAPPED_JS_Align_To(View, "View")
 STYLE_INFO(View, "View")
 WRAPPED_JS_BACKGROUND_IMAGE(View,"View")
 WRAPPED_APPEND_CHILD(View,"View")
-WRAPPED_REMOVE_CHILD(View,"View")
 WRAPPED_INSERT_CHILD(View,"View")
 WRAPPED_MOVE_TO_FRONT(View, "View")
 WRAPPED_MOVE_TO_BACKGROUND(View, "View")
@@ -19,7 +19,7 @@ WRAPPED_JS_CLOSE_COMPONENT(View, "View")
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
-    TJS_CFUNC_DEF("removeChild", 0, NativeCompRemoveChild),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("appendChild", 0, NativeCompAppendChild),
     TJS_CFUNC_DEF("insertChildBefore", 0, NativeCompInsertChildBefore),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -31,9 +31,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -67,7 +64,7 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new View(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -83,14 +80,7 @@ static JSValue ViewConstructor(JSContext *ctx, JSValueConst new_target, int argc
     return JS_EXCEPTION;
 };
 
-static void ViewFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ViewClassID);
-    LV_LOG_USER("View %s release", th->uid);
-    if (th) {
-        delete static_cast<View*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ViewFinalizer, View, ViewClassID)
 
 static JSClassDef ViewClass = {
     .class_name = "View",
@@ -106,7 +96,6 @@ void NativeComponentViewInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ViewConstructor, "View", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "View", obj, JS_PROP_C_W_E);
 };
 

@@ -1,13 +1,17 @@
 import { CommonProps, OnClickEvent } from "../common";
 import {
   EVENTTYPE_MAP,
+  STYLE_TYPE,
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 import CanvasContext from "./context";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+const bridge = GetBridge();
 const NativeButton = bridge.NativeRender.NativeComponents.Button;
 
 export type CanvasProps = CommonProps & {
@@ -23,7 +27,7 @@ function setCanvasProps(comp, newProps: CanvasProps, oldProps: CanvasProps) {
         comp,
         styleSheet,
         compName: "Canvas",
-        styleType: 0x0000,
+        styleType: STYLE_TYPE.PART_MAIN,
         oldStyleSheet: oldProps.style,
       });
     },
@@ -53,13 +57,7 @@ function setCanvasProps(comp, newProps: CanvasProps, oldProps: CanvasProps) {
     },
   };
   Object.assign(setter, newProps);
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
 }
 
 export class CanvasComp extends NativeButton {
@@ -86,13 +84,10 @@ export class CanvasComp extends NativeButton {
   appendChild(child) {
     super.appendChild(child);
   }
-  removeChild(child) {
-    super.removeChild(child);
-  }
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

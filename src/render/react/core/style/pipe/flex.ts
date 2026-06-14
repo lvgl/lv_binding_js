@@ -1,76 +1,26 @@
-const flexFlowObj = {
-  row_nowrap: 0x00,
-  column_nowrap: 1 << 0,
-  row_wrap: 0x00 | (1 << 2),
-  column_wrap: (1 << 0) | (1 << 2),
-  "row_wrap-reverse": 0x00 | (1 << 2) | (1 << 3),
-  "column_wrap-reverse": (1 << 0) | (1 << 2) | (1 << 3),
-  row_reverse: 0x00 | (1 << 3),
-  column_reverse: 0x00 | (1 << 3),
-};
+import { LV_FLEX_ALIGN_MAP, LV_FLEX_FLOW_MAP } from "../../lv_types";
+import { STYLE_PROP, StyleTransformResult } from "../batch";
+import { type FlexStyleType, LV_WRAP_MAP } from "../type";
+import { NormalizeEnum, NormalizeFlexGrow } from "../util";
 
-const flexAlignObj = {
-  "flex-start": 0,
-  "flex-end": 1,
-  center: 2,
-  "space-evenly": 3,
-  "space-around": 4,
-  "space-between": 5,
-};
+export function FlexStyle(style: FlexStyleType, result: StyleTransformResult) {
+  if (style.display !== "flex") return;
 
-type IntegerGreaterThanOne = number;
-
-export type FlexStyleType = {
-  "display"?: "flex";
-  "flex-direction"?: "row" | "column";
-  "flex-wrap"?: "wrap" | "nowrap" | "reverse";
-  "justify-content"?: "flex-start" | "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
-  "align-items"?: "flex-start" | "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
-  "align-content"?: "flex-end" | "center" | "space-evenly" | "space-around" | "space-between";
-  "flex-grow"?: IntegerGreaterThanOne;
-};
-
-export function FlexStyle(style: FlexStyleType, result) {
-  if (style.display !== "flex") return result;
-
-  let flexFlow = 0x00;
+  const batch = result.batch;
   const flexDirection = style["flex-direction"] || "row";
   const flexWrap = style["flex-wrap"] || "nowrap";
+  const flexFlow = LV_FLEX_FLOW_MAP[`${flexDirection}${LV_WRAP_MAP[flexWrap]}`];
 
-  if (flexFlowObj[`${flexDirection}_${flexWrap}`]) {
-    flexFlow = flexFlowObj[`${flexDirection}_${flexWrap}`];
-  }
-  result["flex-flow"] = flexFlow;
+  batch.push(STYLE_PROP["flex-flow"], flexFlow);
+  batch.pushStyleEnum(style, "justify-content", LV_FLEX_ALIGN_MAP);
+  batch.pushStyleEnum(style, "align-items", LV_FLEX_ALIGN_MAP);
 
-  let mainPlace = 0;
-  let crossPlace = 0;
-  let trackCrossPlace = 0;
-  const justifyContent = style["justify-content"];
-  const alignItems = style["align-items"];
   const alignContent =
     style["align-content"] ||
-    (flexWrap === "nowrap" ? alignItems : "flex-start");
-
-  if (justifyContent && flexAlignObj[justifyContent]) {
-    mainPlace = flexAlignObj[justifyContent];
-  }
-  if (alignItems && flexAlignObj[alignItems]) {
-    crossPlace = flexAlignObj[alignItems];
-  }
-  trackCrossPlace = alignContent ? flexAlignObj[alignContent] : crossPlace;
-  // result['flex-align'] = [mainPlace, crossPlace, trackCrossPlace]
-
-  if (justifyContent) {
-    result["justify-content"] = mainPlace;
-  }
-  if (alignItems) {
-    result["align-items"] = crossPlace;
-  }
-  if (alignContent) {
-    result["align-content"] = trackCrossPlace;
-  }
-  if (style["flex-grow"] && !isNaN(style["flex-grow"])) {
-    result["flex-grow"] = style["flex-grow"];
-  }
-  return result;
+    (flexWrap === "nowrap" ? style["align-items"] : "flex-start");
+  batch.push(
+    STYLE_PROP["align-content"],
+    NormalizeEnum(LV_FLEX_ALIGN_MAP, alignContent),
+  );
+  batch.pushStyle(style, "flex-grow", NormalizeFlexGrow);
 }

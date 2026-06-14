@@ -1,15 +1,20 @@
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from '../bridge';
+import { ANIM_PATH } from '../lv_types';
+
+const bridge = GetBridge();
 const NativeAnimate = bridge.NativeRender.Animate;
 
-export const EAnimateEasingFunc = {
-  linear: "linear",
-  "ease-in": "ease-in",
-  "ease-out": "ease-out",
-  "ease-in-out": "ease-in-out",
-  overshoot: "overshoot",
-  bounce: "bounce",
-  step: "step",
-};
+export const EAnimateEasingFunc = ANIM_PATH;
+
+function resolveEasing(easing) {
+  if (typeof easing === "number") {
+    return easing;
+  }
+  if (typeof easing === "string") {
+    return ANIM_PATH[easing] ?? ANIM_PATH.linear;
+  }
+  return ANIM_PATH.linear;
+}
 
 let uid = 0;
 const callbackObj = {};
@@ -101,7 +106,7 @@ class AnimateBase extends NativeAnimate {
       duration,
       startValue,
       endValue,
-      easing,
+      easing: resolveEasing(easing),
       instanceId,
       useNative,
       delay,

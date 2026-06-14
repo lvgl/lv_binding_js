@@ -18,6 +18,7 @@ export const builtinColor = {
   brown: 0x795548,
   "blue-grey": 0x607d8b,
   grey: 0x9e9e9e,
+  gray: 0x898989,
   white: 0xffffff,
   black: 0,
 };
@@ -25,9 +26,11 @@ export const builtinColor = {
 /** Either one of the builtin colors or a hex code representing the color e.g. `#ffffff` for white */
 export type ColorType = keyof typeof builtinColor | `#${string}`;
 
-export const colorTransform = (data) => {
-  if (builtinColor[data]) {
-    return builtinColor[data];
+// Invalid input maps to NaN; StyleBatch.push (Color kind) drops NaN centrally.
+export const colorTransform = (data: string | null | undefined): number => {
+  if (typeof data !== "string") return NaN;
+  if (data in builtinColor) {
+    return builtinColor[data as keyof typeof builtinColor];
   }
   data = data.replace(/(^\s*)|(\s*$)/g, "");
   const reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
@@ -42,9 +45,9 @@ export const colorTransform = (data) => {
       num += hex;
     }
     if (num.length !== 8) {
-      num = "";
+      return NaN;
     }
-    return num;
+    return Number(num);
   } else if (reg.test(data)) {
     const aNum = data.replace(/#/, "").split("");
     if (aNum.length === 6) {
@@ -57,5 +60,5 @@ export const colorTransform = (data) => {
       return Number(num);
     }
   }
-  return "";
+  return NaN;
 };

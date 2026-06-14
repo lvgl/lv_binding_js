@@ -1,3 +1,4 @@
+import * as lv_conf from "../../core/lv_conf";
 import { StyleProps } from "../../core/style";
 import { colorTransform } from "../../core/style/color";
 import { CommonComponentApi, CommonProps } from "../common/index";
@@ -7,16 +8,22 @@ import {
   handleEvent,
   setStyle,
   styleGetterProp,
+  applyDataPropsToDataset,
 } from "../config";
 
-const bridge = globalThis[Symbol.for('lvgljs')];
+import { GetBridge } from "../../core/bridge";
+
+/** chart.cpp: color == -1 uses lv_theme_get_color_primary for the series. */
+const CHART_COLOR_USE_THEME = -1;
+
+const bridge = GetBridge();
 const NativeChart = bridge.NativeRender.NativeComponents.Chart;
 
 const chartType = {
-  none: 0,
-  line: 1,
-  bar: 2,
-  scatter: 3,
+  none: lv_conf.LV_CHART_TYPE_NONE,
+  line: lv_conf.LV_CHART_TYPE_LINE,
+  bar: lv_conf.LV_CHART_TYPE_BAR,
+  scatter: lv_conf.LV_CHART_TYPE_SCATTER,
 };
 
 export type ChartProps = CommonProps & {
@@ -103,7 +110,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
             arr.push(item1[1]);
           });
           return {
-            color: item.color === void 0 ? -1 : colorTransform(item.color),
+            color: item.color === void 0 ? CHART_COLOR_USE_THEME : colorTransform(item.color),
             data: arr,
           };
         });
@@ -129,7 +136,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
       if (data !== oldProps?.leftAxisData) {
         data = data.map((item) => ({
           ...item,
-          color: item.color === void 0 ? -1 : colorTransform(item.color),
+          color: item.color === void 0 ? CHART_COLOR_USE_THEME : colorTransform(item.color),
         }));
         comp.setLeftAxisData(data);
       }
@@ -153,7 +160,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
       if (data !== oldProps?.bottomAxisData) {
         data = data.map((item) => ({
           ...item,
-          color: item.color === void 0 ? -1 : colorTransform(item.color),
+          color: item.color === void 0 ? CHART_COLOR_USE_THEME : colorTransform(item.color),
         }));
         comp.setBottomAxisData(data);
       }
@@ -177,7 +184,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
       if (data !== oldProps?.rightAxisData) {
         data = data.map((item) => ({
           ...item,
-          color: item.color === void 0 ? -1 : colorTransform(item.color),
+          color: item.color === void 0 ? CHART_COLOR_USE_THEME : colorTransform(item.color),
         }));
         comp.setRightAxisData(data);
       }
@@ -201,7 +208,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
       if (data !== oldProps?.topAxisData) {
         data = data.map((item) => ({
           ...item,
-          color: item.color === void 0 ? -1 : colorTransform(item.color),
+          color: item.color === void 0 ? CHART_COLOR_USE_THEME : colorTransform(item.color),
         }));
         comp.setTopAxisData(data);
       }
@@ -264,13 +271,7 @@ function setChartProps(comp, newProps: ChartProps, oldProps: ChartProps) {
       setter[key](newProps[key]);
     }
   });
-  comp.dataset = {};
-  Object.keys(newProps).forEach((prop) => {
-    const index = prop.indexOf("data-");
-    if (index === 0) {
-      comp.dataset[prop.substring(5)] = newProps[prop];
-    }
-  });
+  applyDataPropsToDataset(comp, newProps);
   // This gives issues: invalid call to setPointNum?
   // comp.refresh();
 }
@@ -296,16 +297,11 @@ export class ChartComp extends NativeChart {
   insertBefore(child, beforeChild) {}
   static tagName = "Chart";
   appendInitialChild(child) {}
-  appendChild(child) {
-    super.appendChild(child);
-  }
-  removeChild(child) {
-    super.removeChild(child);
-  }
+  appendChild(child) {}
   close() {
     super.close();
   }
-  setStyle(style, type = 0x0000) {
+  setStyle(style, type = STYLE_TYPE.PART_MAIN) {
     setStyle({
       comp: this,
       styleSheet: style,

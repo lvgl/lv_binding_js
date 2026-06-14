@@ -4,6 +4,7 @@ static JSClassID ImageClassID;
 
 WRAPPED_JS_SETSTYLE(Image, "Image")
 WRAPPED_JS_AddEventListener(Image, "Image")
+WRAPPED_JS_RemoveEventListener(Image, "Image")
 WRAPPED_JS_Align(Image, "Image")
 WRAPPED_JS_Align_To(Image, "Image")
 STYLE_INFO(Image, "Image")
@@ -22,7 +23,7 @@ static JSValue NativeCompSetImageBinary(JSContext *ctx, JSValueConst this_val, i
         JS_ToInt32(ctx, &image_bytelength, byteLength);
 
         ((Image*)(s->comp))->setImageBinary(buf, static_cast<size_t>(image_bytelength));
-        LV_LOG_USER("Image %s setImage", s->uid);
+        LV_LOG_USER("Image %s setImage", s->getUid());
 
         return JS_NewBool(ctx, 1);
     fail:
@@ -40,7 +41,7 @@ static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int ar
         s.resize(len);
 
         ((Image*)(ref->comp))->setSymbol(s);
-        LV_LOG_USER("Image %s setYmbol", ref->uid);
+        LV_LOG_USER("Image %s setYmbol", ref->getUid());
         JS_FreeCString(ctx, str);
 
         return JS_NewBool(ctx, 1);
@@ -53,6 +54,7 @@ static JSValue NativeCompSetSymbol(JSContext *ctx, JSValueConst this_val, int ar
 static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("setImageBinary", 0, NativeCompSetImageBinary),
     TJS_CFUNC_DEF("setSymbol", 0, NativeCompSetSymbol),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
@@ -63,9 +65,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue ImageConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -99,7 +98,7 @@ static JSValue ImageConstructor(JSContext *ctx, JSValueConst new_target, int arg
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Image(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -115,14 +114,7 @@ static JSValue ImageConstructor(JSContext *ctx, JSValueConst new_target, int arg
     return JS_EXCEPTION;
 };
 
-static void ImageFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, ImageClassID);
-    LV_LOG_USER("Image %s release", th->uid);
-    if (th) {
-        delete static_cast<Image*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(ImageFinalizer, Image, ImageClassID)
 
 static JSClassDef ImageClass = {
     .class_name = "Image",
@@ -138,7 +130,6 @@ void NativeComponentImageInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, ImageConstructor, "Image", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Image", obj, JS_PROP_C_W_E);
 };
 

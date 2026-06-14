@@ -1,0 +1,597 @@
+{
+  "generated_by": "doc/wiki/transition_lvgl_compare.py",
+  "source": {
+    "transition_property": "src/render/react/core/style/pipe/trans.ts",
+    "transition_property_ref": "22819e608442143e8521bbd8e13b594bb59c2d86",
+    "lvgl_header": "src/misc/lv_style.h",
+    "lvgl_ref": "v8.3.0"
+  },
+  "summary": {
+    "entry_count": 82,
+    "matched": 84,
+    "mismatched": 0
+  },
+  "entries": [
+    {
+      "trans_key": "width",
+      "trans_id": 1,
+      "lv_symbol": "LV_STYLE_WIDTH",
+      "lv_base": 1,
+      "match": true
+    },
+    {
+      "trans_key": "min-width",
+      "trans_id": 2,
+      "lv_symbol": "LV_STYLE_MIN_WIDTH",
+      "lv_base": 2,
+      "match": true
+    },
+    {
+      "trans_key": "max-width",
+      "trans_id": 3,
+      "lv_symbol": "LV_STYLE_MAX_WIDTH",
+      "lv_base": 3,
+      "match": true
+    },
+    {
+      "trans_key": "height",
+      "trans_id": 4,
+      "lv_symbol": "LV_STYLE_HEIGHT",
+      "lv_base": 4,
+      "match": true
+    },
+    {
+      "trans_key": "min-height",
+      "trans_id": 5,
+      "lv_symbol": "LV_STYLE_MIN_HEIGHT",
+      "lv_base": 5,
+      "match": true
+    },
+    {
+      "trans_key": "max-height",
+      "trans_id": 6,
+      "lv_symbol": "LV_STYLE_MAX_HEIGHT",
+      "lv_base": 6,
+      "match": true
+    },
+    {
+      "trans_key": "left",
+      "trans_id": 7,
+      "lv_symbol": "LV_STYLE_X",
+      "lv_base": 7,
+      "match": true
+    },
+    {
+      "trans_key": "top",
+      "trans_id": 8,
+      "lv_symbol": "LV_STYLE_Y",
+      "lv_base": 8,
+      "match": true
+    },
+    {
+      "trans_key": "align",
+      "trans_id": 9,
+      "lv_symbol": "LV_STYLE_ALIGN",
+      "lv_base": 9,
+      "match": true
+    },
+    {
+      "trans_key": "display",
+      "trans_id": 10,
+      "lv_symbol": "LV_STYLE_LAYOUT",
+      "lv_base": 10,
+      "match": true
+    },
+    {
+      "trans_key": "border-radius",
+      "trans_id": 11,
+      "lv_symbol": "LV_STYLE_RADIUS",
+      "lv_base": 11,
+      "match": true
+    },
+    {
+      "trans_key": "padding-top",
+      "trans_id": 16,
+      "lv_symbol": "LV_STYLE_PAD_TOP",
+      "lv_base": 16,
+      "match": true
+    },
+    {
+      "trans_key": "padding-bottom",
+      "trans_id": 17,
+      "lv_symbol": "LV_STYLE_PAD_BOTTOM",
+      "lv_base": 17,
+      "match": true
+    },
+    {
+      "trans_key": "padding-left",
+      "trans_id": 18,
+      "lv_symbol": "LV_STYLE_PAD_LEFT",
+      "lv_base": 18,
+      "match": true
+    },
+    {
+      "trans_key": "padding-right",
+      "trans_id": 19,
+      "lv_symbol": "LV_STYLE_PAD_RIGHT",
+      "lv_base": 19,
+      "match": true
+    },
+    {
+      "trans_key": "padding-row",
+      "trans_id": 20,
+      "lv_symbol": "LV_STYLE_PAD_ROW",
+      "lv_base": 20,
+      "match": true
+    },
+    {
+      "trans_key": "padding-column",
+      "trans_id": 21,
+      "lv_symbol": "LV_STYLE_PAD_COLUMN",
+      "lv_base": 21,
+      "match": true
+    },
+    {
+      "trans_key": "base-dir",
+      "trans_id": 22,
+      "lv_symbol": "LV_STYLE_BASE_DIR",
+      "lv_base": 22,
+      "match": true
+    },
+    {
+      "trans_key": "clip-corner",
+      "trans_id": 23,
+      "lv_symbol": "LV_STYLE_CLIP_CORNER",
+      "lv_base": 23,
+      "match": true
+    },
+    {
+      "trans_key": "background-color",
+      "trans_id": 32,
+      "lv_symbol": "LV_STYLE_BG_COLOR",
+      "lv_base": 32,
+      "match": true
+    },
+    {
+      "trans_key": "background-opacity",
+      "trans_id": 33,
+      "lv_symbol": "LV_STYLE_BG_OPA",
+      "lv_base": 33,
+      "match": true
+    },
+    {
+      "trans_key": "background-grad-color",
+      "trans_id": 34,
+      "lv_symbol": "LV_STYLE_BG_GRAD_COLOR",
+      "lv_base": 34,
+      "match": true
+    },
+    {
+      "trans_key": "background-grad-dir",
+      "trans_id": 35,
+      "lv_symbol": "LV_STYLE_BG_GRAD_DIR",
+      "lv_base": 35,
+      "match": true
+    },
+    {
+      "trans_key": "background-main-stop",
+      "trans_id": 36,
+      "lv_symbol": "LV_STYLE_BG_MAIN_STOP",
+      "lv_base": 36,
+      "match": true
+    },
+    {
+      "trans_key": "background-grad-stop",
+      "trans_id": 37,
+      "lv_symbol": "LV_STYLE_BG_GRAD_STOP",
+      "lv_base": 37,
+      "match": true
+    },
+    {
+      "trans_key": "background-grad",
+      "trans_id": 38,
+      "lv_symbol": "LV_STYLE_BG_GRAD",
+      "lv_base": 38,
+      "match": true
+    },
+    {
+      "trans_key": "background-image",
+      "trans_id": 40,
+      "lv_symbol": "LV_STYLE_BG_IMAGE_SRC",
+      "lv_base": 40,
+      "match": true
+    },
+    {
+      "trans_key": "background-image-opacity",
+      "trans_id": 41,
+      "lv_symbol": "LV_STYLE_BG_IMAGE_OPA",
+      "lv_base": 41,
+      "match": true
+    },
+    {
+      "trans_key": "background-image-recolor",
+      "trans_id": 42,
+      "lv_symbol": "LV_STYLE_BG_IMAGE_RECOLOR",
+      "lv_base": 42,
+      "match": true
+    },
+    {
+      "trans_key": "background-image-recolor-opacity",
+      "trans_id": 43,
+      "lv_symbol": "LV_STYLE_BG_IMAGE_RECOLOR_OPA",
+      "lv_base": 43,
+      "match": true
+    },
+    {
+      "trans_key": "background-image-tiled",
+      "trans_id": 44,
+      "lv_symbol": "LV_STYLE_BG_IMAGE_TILED",
+      "lv_base": 44,
+      "match": true
+    },
+    {
+      "trans_key": "border-color",
+      "trans_id": 48,
+      "lv_symbol": "LV_STYLE_BORDER_COLOR",
+      "lv_base": 48,
+      "match": true
+    },
+    {
+      "trans_key": "border-opacity",
+      "trans_id": 49,
+      "lv_symbol": "LV_STYLE_BORDER_OPA",
+      "lv_base": 49,
+      "match": true
+    },
+    {
+      "trans_key": "border-width",
+      "trans_id": 50,
+      "lv_symbol": "LV_STYLE_BORDER_WIDTH",
+      "lv_base": 50,
+      "match": true
+    },
+    {
+      "trans_key": "border-side",
+      "trans_id": 51,
+      "lv_symbol": "LV_STYLE_BORDER_SIDE",
+      "lv_base": 51,
+      "match": true
+    },
+    {
+      "trans_key": "boder-post",
+      "trans_id": 52,
+      "lv_symbol": "LV_STYLE_BORDER_POST",
+      "lv_base": 52,
+      "match": true
+    },
+    {
+      "trans_key": "outline-width",
+      "trans_id": 53,
+      "lv_symbol": "LV_STYLE_OUTLINE_WIDTH",
+      "lv_base": 53,
+      "match": true
+    },
+    {
+      "trans_key": "outline-color",
+      "trans_id": 54,
+      "lv_symbol": "LV_STYLE_OUTLINE_COLOR",
+      "lv_base": 54,
+      "match": true
+    },
+    {
+      "trans_key": "outline-opacity",
+      "trans_id": 55,
+      "lv_symbol": "LV_STYLE_OUTLINE_OPA",
+      "lv_base": 55,
+      "match": true
+    },
+    {
+      "trans_key": "outline-padding",
+      "trans_id": 56,
+      "lv_symbol": "LV_STYLE_OUTLINE_PAD",
+      "lv_base": 56,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-width",
+      "trans_id": 64,
+      "lv_symbol": "LV_STYLE_SHADOW_WIDTH",
+      "lv_base": 64,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-ofs-x",
+      "trans_id": 65,
+      "lv_symbol": "LV_STYLE_SHADOW_OFFSET_X",
+      "lv_base": 65,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-ofs-y",
+      "trans_id": 66,
+      "lv_symbol": "LV_STYLE_SHADOW_OFFSET_Y",
+      "lv_base": 66,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-spread",
+      "trans_id": 67,
+      "lv_symbol": "LV_STYLE_SHADOW_SPREAD",
+      "lv_base": 67,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-color",
+      "trans_id": 68,
+      "lv_symbol": "LV_STYLE_SHADOW_COLOR",
+      "lv_base": 68,
+      "match": true
+    },
+    {
+      "trans_key": "shadow-opacity",
+      "trans_id": 69,
+      "lv_symbol": "LV_STYLE_SHADOW_OPA",
+      "lv_base": 69,
+      "match": true
+    },
+    {
+      "trans_key": "img-opacity",
+      "trans_id": 70,
+      "lv_symbol": "LV_STYLE_IMAGE_OPA",
+      "lv_base": 70,
+      "match": true
+    },
+    {
+      "trans_key": "img-recolor",
+      "trans_id": 71,
+      "lv_symbol": "LV_STYLE_IMAGE_RECOLOR",
+      "lv_base": 71,
+      "match": true
+    },
+    {
+      "trans_key": "img-recolor-opacity",
+      "trans_id": 72,
+      "lv_symbol": "LV_STYLE_IMAGE_RECOLOR_OPA",
+      "lv_base": 72,
+      "match": true
+    },
+    {
+      "trans_key": "line-width",
+      "trans_id": 73,
+      "lv_symbol": "LV_STYLE_LINE_WIDTH",
+      "lv_base": 73,
+      "match": true
+    },
+    {
+      "trans_key": "line-dash-width",
+      "trans_id": 74,
+      "lv_symbol": "LV_STYLE_LINE_DASH_WIDTH",
+      "lv_base": 74,
+      "match": true
+    },
+    {
+      "trans_key": "line-dash-gap",
+      "trans_id": 75,
+      "lv_symbol": "LV_STYLE_LINE_DASH_GAP",
+      "lv_base": 75,
+      "match": true
+    },
+    {
+      "trans_key": "line-rounded",
+      "trans_id": 76,
+      "lv_symbol": "LV_STYLE_LINE_ROUNDED",
+      "lv_base": 76,
+      "match": true
+    },
+    {
+      "trans_key": "line-color",
+      "trans_id": 77,
+      "lv_symbol": "LV_STYLE_LINE_COLOR",
+      "lv_base": 77,
+      "match": true
+    },
+    {
+      "trans_key": "line-opacity",
+      "trans_id": 78,
+      "lv_symbol": "LV_STYLE_LINE_OPA",
+      "lv_base": 78,
+      "match": true
+    },
+    {
+      "trans_key": "arc-width",
+      "trans_id": 80,
+      "lv_symbol": "LV_STYLE_ARC_WIDTH",
+      "lv_base": 80,
+      "match": true
+    },
+    {
+      "trans_key": "arc-rounded",
+      "trans_id": 81,
+      "lv_symbol": "LV_STYLE_ARC_ROUNDED",
+      "lv_base": 81,
+      "match": true
+    },
+    {
+      "trans_key": "arc-color",
+      "trans_id": 82,
+      "lv_symbol": "LV_STYLE_ARC_COLOR",
+      "lv_base": 82,
+      "match": true
+    },
+    {
+      "trans_key": "arc-opacity",
+      "trans_id": 83,
+      "lv_symbol": "LV_STYLE_ARC_OPA",
+      "lv_base": 83,
+      "match": true
+    },
+    {
+      "trans_key": "arc-image",
+      "trans_id": 84,
+      "lv_symbol": "LV_STYLE_ARC_IMAGE_SRC",
+      "lv_base": 84,
+      "match": true
+    },
+    {
+      "trans_key": "text-color",
+      "trans_id": 85,
+      "lv_symbol": "LV_STYLE_TEXT_COLOR",
+      "lv_base": 85,
+      "match": true
+    },
+    {
+      "trans_key": "text-opacity",
+      "trans_id": 86,
+      "lv_symbol": "LV_STYLE_TEXT_OPA",
+      "lv_base": 86,
+      "match": true
+    },
+    {
+      "trans_key": "font-size",
+      "trans_id": 87,
+      "lv_symbol": "LV_STYLE_TEXT_FONT",
+      "lv_base": 87,
+      "match": true
+    },
+    {
+      "trans_key": "letter-spacing",
+      "trans_id": 88,
+      "lv_symbol": "LV_STYLE_TEXT_LETTER_SPACE",
+      "lv_base": 88,
+      "match": true
+    },
+    {
+      "trans_key": "line-height",
+      "trans_id": 89,
+      "lv_symbol": "LV_STYLE_TEXT_LINE_SPACE",
+      "lv_base": 89,
+      "match": true
+    },
+    {
+      "trans_key": "text-decor",
+      "trans_id": 90,
+      "lv_symbol": "LV_STYLE_TEXT_DECOR",
+      "lv_base": 90,
+      "match": true
+    },
+    {
+      "trans_key": "text-align",
+      "trans_id": 91,
+      "lv_symbol": "LV_STYLE_TEXT_ALIGN",
+      "lv_base": 91,
+      "match": true
+    },
+    {
+      "trans_key": "opacity",
+      "trans_id": 96,
+      "lv_symbol": "LV_STYLE_OPA",
+      "lv_base": 96,
+      "match": true
+    },
+    {
+      "trans_key": "color-filter-dsc",
+      "trans_id": 97,
+      "lv_symbol": "LV_STYLE_COLOR_FILTER_DSC",
+      "lv_base": 97,
+      "match": true
+    },
+    {
+      "trans_key": "color-filter-opacity",
+      "trans_id": 98,
+      "lv_symbol": "LV_STYLE_COLOR_FILTER_OPA",
+      "lv_base": 98,
+      "match": true
+    },
+    {
+      "trans_key": "animate",
+      "trans_id": 99,
+      "lv_symbol": "LV_STYLE_ANIM",
+      "lv_base": 99,
+      "match": true
+    },
+    {
+      "trans_key": "animate-time",
+      "trans_id": 100,
+      "lv_symbol": "LV_STYLE_ANIM_DURATION",
+      "lv_base": 100,
+      "match": true
+    },
+    {
+      "trans_key": "transition",
+      "trans_id": 102,
+      "lv_symbol": "LV_STYLE_TRANSITION",
+      "lv_base": 102,
+      "match": true
+    },
+    {
+      "trans_key": "blend-mode",
+      "trans_id": 103,
+      "lv_symbol": "LV_STYLE_BLEND_MODE",
+      "lv_base": 103,
+      "match": true
+    },
+    {
+      "trans_key": "transform-width",
+      "trans_id": 104,
+      "lv_symbol": "LV_STYLE_TRANSFORM_WIDTH",
+      "lv_base": 104,
+      "match": true
+    },
+    {
+      "trans_key": "transform-height",
+      "trans_id": 105,
+      "lv_symbol": "LV_STYLE_TRANSFORM_HEIGHT",
+      "lv_base": 105,
+      "match": true
+    },
+    {
+      "trans_key": "translate-x",
+      "trans_id": 106,
+      "lv_symbol": "LV_STYLE_TRANSLATE_X",
+      "lv_base": 106,
+      "match": true
+    },
+    {
+      "trans_key": "translate-y",
+      "trans_id": 107,
+      "lv_symbol": "LV_STYLE_TRANSLATE_Y",
+      "lv_base": 107,
+      "match": true
+    },
+    {
+      "trans_key": "transform-scale-x",
+      "trans_id": 108,
+      "lv_symbol": "LV_STYLE_TRANSFORM_SCALE_X",
+      "lv_base": 108,
+      "match": true
+    },
+    {
+      "trans_key": "transform-rotate",
+      "trans_id": 109,
+      "lv_symbol": "LV_STYLE_TRANSFORM_ROTATION",
+      "lv_base": 109,
+      "match": true
+    },
+    {
+      "trans_key": "transform-pivot-x",
+      "trans_id": 110,
+      "lv_symbol": "LV_STYLE_TRANSFORM_PIVOT_X",
+      "lv_base": 110,
+      "match": true
+    },
+    {
+      "trans_key": "transform-pivot-y",
+      "trans_id": 111,
+      "lv_symbol": "LV_STYLE_TRANSFORM_PIVOT_Y",
+      "lv_base": 111,
+      "match": true
+    },
+    {
+      "trans_key": "transform-scale-y",
+      "trans_id": 108,
+      "lv_symbol": "LV_STYLE_TRANSFORM_SCALE_Y",
+      "lv_base": 108,
+      "match": true
+    }
+  ]
+}

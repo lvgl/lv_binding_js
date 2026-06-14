@@ -4,6 +4,7 @@ static JSClassID TextareaClassID;
 
 WRAPPED_JS_SETSTYLE(Textarea, "Textarea")
 WRAPPED_JS_AddEventListener(Textarea, "Textarea")
+WRAPPED_JS_RemoveEventListener(Textarea, "Textarea")
 WRAPPED_JS_Align(Textarea, "Textarea")
 WRAPPED_JS_Align_To(Textarea, "Textarea")
 STYLE_INFO(Textarea, "Textarea")
@@ -18,7 +19,7 @@ static JSValue NativeCompSetOneLine(JSContext *ctx, JSValueConst this_val, int a
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Textarea*)(ref->comp))->setOneLine(payload);
-        LV_LOG_USER("Textarea %s setOneLine %d", ref->uid, payload);
+        LV_LOG_USER("Textarea %s setOneLine %d", ref->getUid(), payload);
     }
     return JS_UNDEFINED;
 };
@@ -32,7 +33,7 @@ static JSValue NativeCompSetText(JSContext *ctx, JSValueConst this_val, int argc
         s.resize(len);
 
         ((Textarea*)(ref->comp))->setText(s);
-        LV_LOG_USER("Textarea %s setText", ref->uid);
+        LV_LOG_USER("Textarea %s setText", ref->getUid());
         JS_FreeCString(ctx, str);
     }
     return JS_UNDEFINED;
@@ -47,7 +48,7 @@ static JSValue NativeCompPlaceHolder(JSContext *ctx, JSValueConst this_val, int 
         s.resize(len);
 
         ((Textarea*)(ref->comp))->setPlaceHolder(s);
-        LV_LOG_USER("Textarea %s setPlaceHolder", ref->uid);
+        LV_LOG_USER("Textarea %s setPlaceHolder", ref->getUid());
         JS_FreeCString(ctx, str);
     }
     return JS_UNDEFINED;
@@ -59,7 +60,7 @@ static JSValue NativeCompPasswordMode(JSContext *ctx, JSValueConst this_val, int
         bool payload = JS_ToBool(ctx, argv[0]);
 
         ((Textarea*)(ref->comp))->setPasswordMode(payload);
-        LV_LOG_USER("Textarea %s setPasswordMode %d", ref->uid, payload);
+        LV_LOG_USER("Textarea %s setPasswordMode %d", ref->getUid(), payload);
     }
     return JS_UNDEFINED;
 };
@@ -71,7 +72,7 @@ static JSValue NativeCompSetMaxLength(JSContext *ctx, JSValueConst this_val, int
         JS_ToInt32(ctx, &len, argv[0]);
 
         ((Textarea*)(ref->comp))->setMaxLength(len);
-        LV_LOG_USER("Textarea %s setMaxLength %d", ref->uid, len);
+        LV_LOG_USER("Textarea %s setMaxLength %d", ref->getUid(), len);
     }
     return JS_UNDEFINED;
 };
@@ -83,7 +84,7 @@ static JSValue NativeCompSetAutoKeyboard (JSContext *ctx, JSValueConst this_val,
         JS_ToInt32(ctx, &payload, argv[0]);
 
         ((Textarea*)(ref->comp))->setAutoRaiseKeyboard(payload);
-        LV_LOG_USER("Textarea %s setAutoRaiseKeyboard %d", ref->uid, payload);
+        LV_LOG_USER("Textarea %s setAutoRaiseKeyboard %d", ref->getUid(), payload);
     }
     return JS_UNDEFINED;
 };
@@ -92,6 +93,7 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("setAutoKeyboard", 0, NativeCompSetAutoKeyboard),
     TJS_CFUNC_DEF("nativeSetStyle", 0, NativeCompSetStyle),
     TJS_CFUNC_DEF("addEventListener", 0, NativeCompAddEventListener),
+    TJS_CFUNC_DEF("removeEventListener", 0, NativeCompRemoveEventListener),
     TJS_CFUNC_DEF("align", 0, NativeCompSetAlign),
     TJS_CFUNC_DEF("alignTo", 0, NativeCompSetAlignTo),
     JS_OBJECT_DEF("style", style_funcs, countof(style_funcs), JS_PROP_WRITABLE | JS_PROP_CONFIGURABLE),
@@ -105,9 +107,6 @@ static const JSCFunctionListEntry ComponentProtoFuncs[] = {
     TJS_CFUNC_DEF("moveToBackground", 0, NativeCompMoveToBackground),
     TJS_CFUNC_DEF("scrollIntoView", 0, NativeCompScrollIntoView),
     TJS_CFUNC_DEF("close", 0, NativeCompCloseComponent),
-};
-
-static const JSCFunctionListEntry ComponentClassFuncs[] = {
 };
 
 static JSValue TextareaConstructor(JSContext *ctx, JSValueConst new_target, int argc, JSValueConst *argv) {
@@ -141,7 +140,7 @@ static JSValue TextareaConstructor(JSContext *ctx, JSValueConst new_target, int 
     if (JS_IsException(obj))
         goto fail;
     s = (COMP_REF*)js_mallocz(ctx, sizeof(*s));
-    s->uid = uid;
+    CompRefStoreUid(ctx, s, uid);
     s->comp = new Textarea(uid, NULL);
 
     JS_FreeCString(ctx, uid);
@@ -157,14 +156,7 @@ static JSValue TextareaConstructor(JSContext *ctx, JSValueConst new_target, int 
     return JS_EXCEPTION;
 };
 
-static void TextareaFinalizer(JSRuntime *rt, JSValue val) {
-    COMP_REF *th = (COMP_REF *)JS_GetOpaque(val, TextareaClassID);
-    LV_LOG_USER("Textarea %s release", th->uid);
-    if (th) {
-        delete static_cast<Textarea*>(th->comp);
-        js_free_rt(rt, th);
-    }
-};
+COMP_FINALIZER(TextareaFinalizer, Textarea, TextareaClassID)
 
 static JSClassDef TextareaClass = {
     .class_name = "Textarea",
@@ -180,7 +172,6 @@ void NativeComponentTextareaInit (JSContext* ctx, JSValue ns) {
 
     JSValue obj = JS_NewCFunction2(ctx, TextareaConstructor, "Textarea", 1, JS_CFUNC_constructor, 0);
     JS_SetConstructor(ctx, obj, proto);
-    JS_SetPropertyFunctionList(ctx, obj, ComponentClassFuncs, countof(ComponentClassFuncs));
     JS_DefinePropertyValueStr(ctx, ns, "Textarea", obj, JS_PROP_C_W_E);
 };
 
