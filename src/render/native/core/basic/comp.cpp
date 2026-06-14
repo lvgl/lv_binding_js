@@ -46,7 +46,9 @@ void BasicComponent::insertChildBefore(void *child) {
 };
 
 void BasicComponent::removeChild(void* child) {
-    lv_obj_del_async((static_cast<BasicComponent*>(child))->instance);
+    // No-op only. Reconciler detachInstance closes children before parents so
+    // lv_obj_del on the parent does not cascade-delete live child widgets. Do not
+    // reparent to GetWindowInstance() here; teardown order is owned by JS.
 };
 
 void BasicComponent::appendChild (void* child) {
@@ -255,8 +257,18 @@ BasicComponent::~BasicComponent () {
     if (ptr2) {
         free((lv_coord_t*)(ptr2));
     }
-    // do not del here, remove child will do the action
-    // lv_obj_del(this->instance);
+
+    for(auto &style : style_map) {
+        lv_style_reset(style.second);
+    }
+
+    // close() deletes this object; JS unRegistEvent clears handlers but cannot reach
+    // the LVGL callback on the finalizer-only path. Detach callback before lv_obj_del.
+    lv_obj_remove_event_cb(this->instance, &BasicComponent::EventCallback);
+    if (this->instance != nullptr && lv_obj_is_valid(this->instance)) {
+        lv_obj_del(this->instance);
+    }
+    this->instance = nullptr;
 };
 
 void BasicComponent::setAlign (int32_t align_type, int32_t x, int32_t y) {
