@@ -43,7 +43,7 @@ function setListProps(comp, newProps: DropdownListProps, oldProps: DropdownListP
     },
     selectIndex(selectIndex) {
       if (selectIndex !== oldProps.selectIndex) {
-        comp.setselectIndex(selectIndex);
+        comp.setSelectIndex(selectIndex);
       }
     },
     text(text) {

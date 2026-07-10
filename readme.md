@@ -61,6 +61,9 @@ to compile for a target device.
 - [Keyboard](./doc/component/Keyboard.md)
 - [Calendar](./doc/component/Calendar.md)
 - [Chart](./doc/component/Chart.md)
+- [Arc](./doc/component/Arc.md)
+- [GIF](./doc/component/GIF.md)
+- [Tabs](./doc/component/Tabs.md)
 
 ## Font
 [Buitin-Symbol](./doc/Symbol/symbol.md)
